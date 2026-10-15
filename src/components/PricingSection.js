@@ -128,19 +128,23 @@ export default function PricingSection() {
         {/* HERO HEADER */}
         <Box ref={headRef} sx={{ textAlign: 'center', mb: { xs: 8, md: 10 }, ...revealSx(headShown) }}>
           <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em', color: '#ff6600', textTransform: 'uppercase', mb: 2 }}>
-            One subscription
+            One bill
           </Typography>
           <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem', lg: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: primaryText, mb: 2.5, textWrap: 'balance' }}>
-            Stop paying for eight AI subscriptions.
+            Eight subscriptions to do{' '}
+            <Box component="span" sx={{ color: '#ff6600' }}>one job.</Box>
           </Typography>
           {/* The figures are the ones the cards below show: eight of them at
               $165 the hard way against $20 here. $20 is what ChatGPT Plus,
               Claude Pro, Gemini Pro and Perplexity Pro each ask on their own,
               which is the comparison being drawn. It does not claim to undercut
               the cheapest, since Copilot is $10 and Runway $15. */}
-          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 640, mx: 'auto', lineHeight: 1.6, textWrap: 'balance' }}>
-            Paying for each one separately adds up to $165 a month. Hey Open gives you 200+ models
-            in one place for $20, which is what a single one of them costs on its own.
+          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 600, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
+            Kept apart they come to{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
+            All of it together is{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box>, which is
+            what one of those eight charges by itself.
           </Typography>
         </Box>
 

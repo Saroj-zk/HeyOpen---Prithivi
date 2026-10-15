@@ -51,11 +51,16 @@ export default function TokenOptimizationSection() {
               <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em', color: '#ff6600', textTransform: 'uppercase', mb: 2 }}>
                 Token Optimisation
               </Typography>
-              <Typography variant="h3" sx={{ fontSize: { xs: '2.5rem', md: '3rem' }, fontWeight: 700, color: 'var(--text-primary)', mb: 2, letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                And it keeps getting efficient.
+              <Typography variant="h3" sx={{ fontSize: { xs: '2.5rem', md: '3rem' }, fontWeight: 700, color: 'var(--text-primary)', mb: 2, letterSpacing: '-0.03em', lineHeight: 1.1, textWrap: 'balance' }}>
+                Same answer,{' '}
+                <Box component="span" sx={{ color: '#ff6600' }}>6,000 fewer tokens.</Box>
               </Typography>
-              <Typography sx={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                The router spends what a request needs, not what the biggest model charges.
+              {/* The numbers are the ones the picture states: about 10,000
+                  against about 4,000, which is the 60% on the card below. */}
+              <Typography sx={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                A typical request runs around 10,000 tokens. Routing it to the right model, reusing
+                context you have already sent and trimming what the model never reads brings it to
+                about 4,000. You are billed for the work, not for the largest model in the list.
               </Typography>
             </Box>
             
@@ -79,7 +84,7 @@ export default function TokenOptimizationSection() {
                   </Typography>
                 </Box>
                 <Typography sx={{ fontSize: '0.95rem', color: isDark ? '#94A3B8' : '#64748B', mt: 2 }}>
-                  Smarter model selection.<br/>Lower cost. Same quality.
+                  Fewer tokens through the meter.<br/>Same models. Same answer.
                 </Typography>
               </Box>
             </Box>
