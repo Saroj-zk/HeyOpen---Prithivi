@@ -131,8 +131,8 @@ export default function PricingSection() {
             One bill
           </Typography>
           <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem', lg: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: primaryText, mb: 2.5, textWrap: 'balance' }}>
-            Eight subscriptions to do{' '}
-            <Box component="span" sx={{ color: '#ff6600' }}>one job.</Box>
+            Keep the models.{' '}
+            <Box component="span" sx={{ color: '#ff6600' }}>Lose the bills.</Box>
           </Typography>
           {/* The figures are the ones the cards below show: eight of them at
               $165 the hard way against $20 here. $20 is what ChatGPT Plus,
@@ -140,11 +140,11 @@ export default function PricingSection() {
               which is the comparison being drawn. It does not claim to undercut
               the cheapest, since Copilot is $10 and Runway $15. */}
           <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 600, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
-            Kept apart they come to{' '}
+            Bought one at a time they come to{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
-            All of it together is{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box>, which is
-            what one of those eight charges by itself.
+            Together here they are{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box>, the price
+            of a single one of them.
           </Typography>
         </Box>
 

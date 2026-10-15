@@ -52,15 +52,15 @@ export default function TokenOptimizationSection() {
                 Token Optimisation
               </Typography>
               <Typography variant="h3" sx={{ fontSize: { xs: '2.5rem', md: '3rem' }, fontWeight: 700, color: 'var(--text-primary)', mb: 2, letterSpacing: '-0.03em', lineHeight: 1.1, textWrap: 'balance' }}>
-                Same answer,{' '}
-                <Box component="span" sx={{ color: '#ff6600' }}>6,000 fewer tokens.</Box>
+                Not every question needs{' '}
+                <Box component="span" sx={{ color: '#ff6600' }}>the biggest model.</Box>
               </Typography>
-              {/* The numbers are the ones the picture states: about 10,000
-                  against about 4,000, which is the 60% on the card below. */}
+              {/* The picture beside this one carries the figures, so the copy
+                  does not repeat them. It says what is being done instead. */}
               <Typography sx={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                A typical request runs around 10,000 tokens. Routing it to the right model, reusing
-                context you have already sent and trimming what the model never reads brings it to
-                about 4,000. You are billed for the work, not for the largest model in the list.
+                Each request goes to a model that can actually handle it, reuses the context you
+                have already sent, and drops what the model was never going to read. You are billed
+                for the work, not for the largest name in the list.
               </Typography>
             </Box>
             
