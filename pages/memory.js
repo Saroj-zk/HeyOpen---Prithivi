@@ -102,6 +102,17 @@ const getPrimaryCtaSx = (isDark) => ({
 /* Every section opens the same way. They had drifted to four different
    measures (36rem, 820, none, 46rem), three body sizes and three sets of gaps,
    which is what made the page feel like several pages. */
+/* The controls sit on dark, matching the pane directly above them. On a pale
+   page a hairline grid reads as a footnote, and these four are the privacy
+   claims, which is the last thing that should whisper. */
+const CTRL = {
+  shell: '#0B0B0D',
+  line: '#26262A',
+  ink: '#F4F4F5',
+  inkMid: '#A1A1AA',
+  inkDim: '#6D6D73',
+};
+
 const LEAD_BLOCK = {
   maxWidth: 820,
   mx: 'auto',
@@ -1007,46 +1018,46 @@ export default function MemoryPage() {
             </Reveal>
 
             <Reveal delay={190}>
-              {/* A ruled grid rather than four things floating next to each
-                  other: the lines are the structure, so the cells need no
-                  borders of their own. Mono for the label and the index,
-                  because they are machine marks and should not read as copy. */}
+              {/* A ruled grid on dark, continuing the pane above rather than
+                  starting a new light block under it. The lines are the
+                  structure, so no cell carries a border of its own. */}
               <Box
                 sx={{
                   mt: { xs: 5, md: 7 },
                   display: 'grid',
                   gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
-                  border: '1px solid var(--border-normal)',
-                  borderRadius: '14px',
+                  backgroundColor: CTRL.shell,
+                  borderRadius: { xs: '18px', md: '22px' },
                   overflow: 'hidden',
+                  boxShadow: '0 24px 60px -28px rgba(15, 23, 42, 0.45)',
                 }}
               >
                 {CONTROLS.map((c, i) => (
                   <Box
                     key={c.term}
                     sx={{
-                      p: { xs: 2.75, md: 3.25 },
+                      p: { xs: 3, md: 3.75 },
                       display: 'flex',
                       flexDirection: 'column',
                       borderTop: {
-                        xs: i === 0 ? 'none' : '1px solid var(--border-subtle)',
-                        sm: i < 2 ? 'none' : '1px solid var(--border-subtle)',
+                        xs: i === 0 ? 'none' : `1px solid ${CTRL.line}`,
+                        sm: i < 2 ? 'none' : `1px solid ${CTRL.line}`,
                         lg: 'none',
                       },
                       borderLeft: {
                         xs: 'none',
-                        sm: i % 2 === 0 ? 'none' : '1px solid var(--border-subtle)',
-                        lg: i === 0 ? 'none' : '1px solid var(--border-subtle)',
+                        sm: i % 2 === 0 ? 'none' : `1px solid ${CTRL.line}`,
+                        lg: i === 0 ? 'none' : `1px solid ${CTRL.line}`,
                       },
                     }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 2.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 3 }}>
                       <Typography
                         sx={{
                           fontFamily: '"Roboto Mono", ui-monospace, monospace',
-                          fontSize: '0.68rem',
+                          fontSize: '0.7rem',
                           fontWeight: 600,
-                          letterSpacing: '0.14em',
+                          letterSpacing: '0.16em',
                           color: '#FF6600',
                           whiteSpace: 'nowrap',
                         }}
@@ -1056,21 +1067,20 @@ export default function MemoryPage() {
                       <Typography
                         sx={{
                           fontFamily: '"Roboto Mono", ui-monospace, monospace',
-                          fontSize: '0.68rem',
+                          fontSize: '0.7rem',
                           letterSpacing: '0.12em',
-                          color: 'var(--text-muted)',
-                          opacity: 0.7,
+                          color: CTRL.inkDim,
                         }}
                       >
                         {String(i + 1).padStart(3, '0')}
                       </Typography>
                     </Box>
 
-                    <Typography sx={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-heading)', mb: 1.2, textWrap: 'balance' }}>
+                    <Typography sx={{ fontSize: { xs: '1.15rem', md: '1.28rem' }, fontWeight: 700, letterSpacing: '-0.01em', color: CTRL.ink, mb: 1.4, textWrap: 'balance' }}>
                       {c.term}
                     </Typography>
 
-                    <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.6, color: 'var(--text-secondary)', textWrap: 'pretty' }}>
+                    <Typography sx={{ fontSize: '0.92rem', lineHeight: 1.65, color: CTRL.inkMid, textWrap: 'pretty' }}>
                       {c.detail}
                     </Typography>
                   </Box>
