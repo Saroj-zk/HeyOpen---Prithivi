@@ -40,14 +40,14 @@ export default function TokenOptimizationSection() {
   const { isDark } = useThemeMode();
 
   return (
-    <Container id="token" maxWidth="xl" sx={{ pb: { xs: 8, md: 10 }, overflow: 'hidden', scrollMarginTop: '96px' }}>
+    <Container id="token" maxWidth="xl" sx={{ pb: { xs: 6, md: 8 }, overflow: 'hidden', scrollMarginTop: '96px' }}>
       {/* NEW TOKEN OPTIMIZATION LAYOUT */}
-      <Box sx={{ maxWidth: 1400, mx: 'auto', mt: 4 }}>
+      <Box sx={{ maxWidth: 1400, mx: 'auto', mt: { xs: 2, md: 3 } }}>
         <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 4, alignItems: 'stretch' }}>
           
           {/* Left Column (Text & Blue Card) */}
           <Box ref={leftRef} sx={{ width: { xs: '100%', lg: '33.333%' }, display: 'flex', flexDirection: 'column', ...revealSx(leftShown) }}>
-            <Box sx={{ mb: { xs: 4, md: 8 } }}>
+            <Box sx={{ mb: { xs: 3, md: 5 } }}>
               <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em', color: '#ff6600', textTransform: 'uppercase', mb: 2 }}>
                 Token Optimisation
               </Typography>
@@ -62,7 +62,7 @@ export default function TokenOptimizationSection() {
             {/* Orange Card */}
             <Box sx={{ 
               background: isDark ? 'linear-gradient(135deg, rgba(255,102,0,0.1) 0%, rgba(255,102,0,0.02) 100%)' : 'linear-gradient(135deg, rgba(255,102,0,0.05) 0%, #FFFFFF 100%)',
-              borderRadius: '24px', p: 4, mt: 'auto',
+              borderRadius: '20px', p: { xs: 3, md: 3.5 }, mt: 'auto',
               border: isDark ? '1px solid rgba(255, 102, 0, 0.2)' : '1px solid rgba(255, 102, 0, 0.1)',
               boxShadow: isDark ? 'none' : '0 10px 40px rgba(0,0,0,0.03)',
               position: 'relative',
@@ -72,13 +72,13 @@ export default function TokenOptimizationSection() {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 3 }}>
                   <Box>
                     <Typography sx={{ fontSize: '1rem', color: isDark ? '#ff6600' : '#ff6600', fontWeight: 600, lineHeight: 1, mb: 0.5 }}>Up to</Typography>
-                    <Typography sx={{ fontSize: '4.5rem', fontWeight: 800, color: '#ff6600', lineHeight: 1, letterSpacing: '-0.03em' }}>60%</Typography>
+                    <Typography sx={{ fontSize: { xs: '3rem', md: '3.6rem' }, fontWeight: 800, color: '#ff6600', lineHeight: 1, letterSpacing: '-0.03em' }}>60%</Typography>
                   </Box>
                   <Typography sx={{ fontSize: '0.95rem', color: isDark ? '#ff6600' : '#ff6600', fontWeight: 600, lineHeight: 1.3, opacity: 0.8 }}>
                     fewer<br/>tokens<br/>billed.
                   </Typography>
                 </Box>
-                <Typography sx={{ fontSize: '0.95rem', color: isDark ? '#94A3B8' : '#64748B', mt: 3 }}>
+                <Typography sx={{ fontSize: '0.95rem', color: isDark ? '#94A3B8' : '#64748B', mt: 2 }}>
                   Smarter model selection.<br/>Lower cost. Same quality.
                 </Typography>
               </Box>
@@ -95,15 +95,14 @@ export default function TokenOptimizationSection() {
           }}>
             <Box 
               component="img"
-              src="/images/optimization.png"
-              alt="Token Optimization Router"
+              src="/images/token-optimisation.png"
+              alt="Tokens in a typical request: around 10,000 without optimisation against around 4,000 with smart routing, a saving of 6,000 tokens per request, through smart routing, context caching and prompt trimming"
               sx={{
                 width: '100%',
                 height: 'auto',
                 maxWidth: '100%',
                 display: 'block',
-                borderRadius: '32px',
-                boxShadow: isDark ? '0 20px 40px rgba(0,0,0,0.5)' : '0 20px 40px rgba(0,0,0,0.05)'
+                borderRadius: '20px'
               }}
             />
           </Box>
