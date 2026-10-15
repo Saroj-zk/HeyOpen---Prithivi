@@ -131,20 +131,19 @@ export default function PricingSection() {
             One bill
           </Typography>
           <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem', lg: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: primaryText, mb: 2.5, textWrap: 'balance' }}>
-            Pay for one.{' '}
-            <Box component="span" sx={{ color: '#ff6600' }}>Use all of them.</Box>
+            Stop paying for{' '}
+            <Box component="span" sx={{ color: '#ff6600' }}>every AI separately.</Box>
           </Typography>
           {/* The figures are the ones the cards below show: eight of them at
               $165 the hard way against $20 here. $20 is what ChatGPT Plus,
               Claude Pro, Gemini Pro and Perplexity Pro each ask on their own,
               which is the comparison being drawn. It does not claim to undercut
               the cheapest, since Copilot is $10 and Runway $15. */}
-          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 600, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
-            Subscribing to ChatGPT, Claude, Gemini and the rest separately comes to{' '}
+          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 660, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
+            Separate subscriptions to ChatGPT, Claude, Gemini and the rest come to{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
-            Hey Open gives you those and 200+ more for{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box>, which is
-            what a single one of them costs on its own.
+            All of them, and 200+ more, cost{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here.
           </Typography>
         </Box>
 
