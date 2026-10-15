@@ -131,8 +131,8 @@ export default function PricingSection() {
             One bill
           </Typography>
           <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem', lg: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: primaryText, mb: 2.5, textWrap: 'balance' }}>
-            Keep the models.{' '}
-            <Box component="span" sx={{ color: '#ff6600' }}>Lose the bills.</Box>
+            Pay for one.{' '}
+            <Box component="span" sx={{ color: '#ff6600' }}>Use all of them.</Box>
           </Typography>
           {/* The figures are the ones the cards below show: eight of them at
               $165 the hard way against $20 here. $20 is what ChatGPT Plus,
@@ -140,11 +140,11 @@ export default function PricingSection() {
               which is the comparison being drawn. It does not claim to undercut
               the cheapest, since Copilot is $10 and Runway $15. */}
           <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 600, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
-            Bought one at a time they come to{' '}
+            Subscribing to ChatGPT, Claude, Gemini and the rest separately comes to{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
-            Together here they are{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box>, the price
-            of a single one of them.
+            Hey Open gives you those and 200+ more for{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box>, which is
+            what a single one of them costs on its own.
           </Typography>
         </Box>
 
