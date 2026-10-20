@@ -36,56 +36,28 @@ const SocialIcons = {
   ),
 };
 
-/* Anything still on '#' has no page behind it yet. They are listed so the
-   footer is complete, but each one needs a real destination before launch. */
+/* Only destinations that exist. Anchors are written against the home page
+   rather than bare, because this footer renders on every route and a bare
+   #pricing resolves to nothing on a subpage. */
 const FOOTER_COLUMNS = [
   {
     title: 'Product',
     links: [
       { label: 'Chat', href: 'https://ais.openledger.xyz/chat', external: true },
       { label: 'Models', href: '/models' },
-      { label: 'Consensus Mode', href: '#consensus-mode' },
       { label: 'Universal Memory', href: '/memory' },
       { label: 'Private AI', href: '/private' },
       { label: 'Token', href: '/token' },
-      { label: 'Pricing', href: '#pricing' },
-      { label: 'iOS app', href: '#' },
-      { label: 'Android app', href: '#' },
-    ],
-  },
-  {
-    title: 'Developers',
-    links: [
-      { label: 'API reference', href: '#api' },
-      { label: 'Quickstart', href: '#api' },
-      { label: 'Model IDs', href: '/models' },
-      { label: 'Documentation', href: '#' },
-      { label: 'Guides', href: '#' },
-      { label: 'Changelog', href: '#' },
-      { label: 'Status', href: '#' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { label: 'About', href: '#' },
-      { label: 'Blog', href: '#' },
-      { label: 'Careers', href: '#' },
-      { label: 'Investors', href: '#' },
-      { label: 'Press', href: '#' },
-      { label: 'Contact', href: '#' },
-      { label: '$OPEN token', href: '/token' },
+      { label: 'Consensus Mode', href: '/#consensus-mode' },
+      { label: 'Pricing', href: '/#pricing' },
+      { label: 'API', href: '/#api' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms of Service', href: '#' },
-      { label: 'Cookie Policy', href: '#' },
-      { label: 'Acceptable Use', href: '#' },
-      { label: 'Data Processing', href: '#' },
-      { label: 'Security', href: '#' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms and Conditions', href: '/terms' },
     ],
   },
 ];
@@ -341,7 +313,7 @@ export default function Footer({ showCta = false }) {
               xs: '1fr',
               sm: '1fr 1fr',
               md: 'repeat(2, 1fr)',
-              lg: '1.5fr repeat(4, 1fr)',
+              lg: '1.7fr 1fr 1fr',
             },
             gap: { xs: 5, sm: 6, md: 5, lg: 6 },
             pt: 2,
@@ -353,7 +325,7 @@ export default function Footer({ showCta = false }) {
             {/* Logo */}
             <Box
               component="a"
-              href="#"
+              href="/"
               onClick={(e) => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -503,7 +475,7 @@ export default function Footer({ showCta = false }) {
           </Box>
           </Box>
 
-          {/* COLUMNS 2 TO 5: Product, Developers, Legal. Rendered from the
+          {/* THE LINK COLUMNS: Product, Developers, Legal. Rendered from the
               data rather than by index, so a new column is a new entry. */}
           {FOOTER_COLUMNS.map((col) => (
             <Box key={col.title} sx={{ display: 'flex', flexDirection: 'column' }}>
