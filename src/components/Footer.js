@@ -36,6 +36,8 @@ const SocialIcons = {
   ),
 };
 
+/* Anything still on '#' has no page behind it yet. They are listed so the
+   footer is complete, but each one needs a real destination before launch. */
 const FOOTER_COLUMNS = [
   {
     title: 'Product',
@@ -43,9 +45,12 @@ const FOOTER_COLUMNS = [
       { label: 'Chat', href: 'https://ais.openledger.xyz/chat', external: true },
       { label: 'Models', href: '/models' },
       { label: 'Consensus Mode', href: '#consensus-mode' },
+      { label: 'Universal Memory', href: '/memory' },
+      { label: 'Private AI', href: '/private' },
+      { label: 'Token', href: '/token' },
+      { label: 'Pricing', href: '#pricing' },
       { label: 'iOS app', href: '#' },
       { label: 'Android app', href: '#' },
-      { label: 'Pricing', href: '#pricing' },
     ],
   },
   {
@@ -54,8 +59,21 @@ const FOOTER_COLUMNS = [
       { label: 'API reference', href: '#api' },
       { label: 'Quickstart', href: '#api' },
       { label: 'Model IDs', href: '/models' },
-      { label: 'Status', href: '#' },
       { label: 'Documentation', href: '#' },
+      { label: 'Guides', href: '#' },
+      { label: 'Changelog', href: '#' },
+      { label: 'Status', href: '#' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Privacy Policy', href: '#' },
+      { label: 'Terms of Service', href: '#' },
+      { label: 'Cookie Policy', href: '#' },
+      { label: 'Acceptable Use', href: '#' },
+      { label: 'Data Processing', href: '#' },
+      { label: 'Security', href: '#' },
     ],
   },
 ];
@@ -65,6 +83,8 @@ const COMPANY_LINKS = [
   { label: '$OPEN token', href: '#' },
   { label: 'Blog', href: '#' },
   { label: 'Careers', href: '#' },
+  { label: 'Investors', href: '#' },
+  { label: 'Press', href: '#' },
   { label: 'Contact', href: '#' },
 ];
 
@@ -316,7 +336,8 @@ export default function Footer({ showCta = false }) {
             gridTemplateColumns: {
               xs: '1fr',
               sm: '1fr 1fr',
-              md: '1.4fr 0.9fr 0.9fr 1.6fr',
+              md: '1.3fr 0.85fr 0.85fr 0.85fr',
+              lg: '1.4fr 0.8fr 0.8fr 0.8fr 1.3fr',
             },
             gap: { xs: 5, sm: 6, md: 5, lg: 6 },
             pt: 2,
@@ -401,85 +422,50 @@ export default function Footer({ showCta = false }) {
             </Box>
           </Box>
 
-          {/* COLUMN 2: Product Links */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              sx={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                mb: 2.5,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Product
-            </Typography>
-            <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 1.8 }}>
-              {FOOTER_COLUMNS[0].links.map((link) => (
-                <Box component="li" key={link.label}>
-                  <Box
-                    component="a"
-                    href={link.href}
-                    target={link.external ? '_blank' : undefined}
-                    rel={link.external ? 'noopener noreferrer' : undefined}
-                    sx={{
-                      fontSize: '0.92rem',
-                      color: 'var(--text-secondary)',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease, transform 0.2s ease',
-                      display: 'inline-block',
-                      '&:hover': {
-                        color: isDark ? '#FFFFFF' : '#0F172A',
-                        transform: 'translateX(2px)',
-                      },
-                    }}
-                  >
-                    {link.label}
+          {/* COLUMNS 2 TO 4: Product, Developers, Legal. Rendered from the
+              data rather than by index, so a new column is a new entry. */}
+          {FOOTER_COLUMNS.map((col) => (
+            <Box key={col.title} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography
+                sx={{
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  mb: 2.5,
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                {col.title}
+              </Typography>
+              <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 1.8 }}>
+                {col.links.map((link) => (
+                  <Box component="li" key={link.label}>
+                    <Box
+                      component="a"
+                      href={link.href}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noopener noreferrer' : undefined}
+                      sx={{
+                        fontSize: '0.92rem',
+                        color: 'var(--text-secondary)',
+                        textDecoration: 'none',
+                        transition: 'color 0.2s ease, transform 0.2s ease',
+                        display: 'inline-block',
+                        '&:hover': {
+                          color: isDark ? '#FFFFFF' : '#0F172A',
+                          transform: 'translateX(2px)',
+                        },
+                      }}
+                    >
+                      {link.label}
+                    </Box>
                   </Box>
-                </Box>
-              ))}
+                ))}
+              </Box>
             </Box>
-          </Box>
+          ))}
 
-          {/* COLUMN 3: Developers Links */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              sx={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                mb: 2.5,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Developers
-            </Typography>
-            <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 1.8 }}>
-              {FOOTER_COLUMNS[1].links.map((link) => (
-                <Box component="li" key={link.label}>
-                  <Box
-                    component="a"
-                    href={link.href}
-                    sx={{
-                      fontSize: '0.92rem',
-                      color: 'var(--text-secondary)',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease, transform 0.2s ease',
-                      display: 'inline-block',
-                      '&:hover': {
-                        color: isDark ? '#FFFFFF' : '#0F172A',
-                        transform: 'translateX(2px)',
-                      },
-                    }}
-                  >
-                    {link.label}
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          </Box>
-
-          {/* COLUMN 4: Company Info & Newsletter Subscription (Image 1 style) */}
+          {/* COLUMN 5: Company Info & Newsletter Subscription (Image 1 style) */}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography
               sx={{
