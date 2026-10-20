@@ -313,9 +313,10 @@ export default function Footer({ showCta = false }) {
               xs: '1fr',
               sm: '1fr 1fr',
               md: 'repeat(2, 1fr)',
-              lg: '1.7fr 1fr 1fr',
+              lg: '1.35fr 1fr 1fr 1.25fr',
             },
-            gap: { xs: 5, sm: 6, md: 5, lg: 6 },
+            columnGap: { sm: 5, md: 5, lg: 7 },
+            rowGap: { xs: 5, sm: 7 },
             pt: 2,
             pb: { xs: 6, md: 8 },
           }}
@@ -355,8 +356,8 @@ export default function Footer({ showCta = false }) {
                 fontSize: '0.92rem',
                 lineHeight: 1.65,
                 color: 'var(--text-secondary)',
-                maxWidth: '320px',
-                mb: 3.5,
+                maxWidth: '34ch',
+                mb: 3,
               }}
             >
               One private layer for every model. Chat anywhere, keep your memory, leave no trace.
@@ -397,82 +398,6 @@ export default function Footer({ showCta = false }) {
               })}
             </Box>
 
-          {/* Sign up sits with the brand now. It was the only thing
-              making the company column a different shape to the rest. */}
-          <Box
-            component="form"
-            onSubmit={handleSubscribe}
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
-              borderRadius: '9999px',
-              p: '5px',
-              pl: 2.2,
-              border: '1px solid',
-              borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(0, 0, 0, 0.12)',
-              boxShadow: isDark
-                ? 'inset 0 1px 2px rgba(0, 0, 0, 0.4)'
-                : '0 2px 8px rgba(0, 0, 0, 0.05)',
-              transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-              '&:focus-within': {
-                borderColor: '#FF6600',
-                boxShadow: '0 0 0 3px rgba(255, 102, 0, 0.18)',
-              },
-            }}
-          >
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email address"
-              required
-              disabled={subscribed}
-              style={{
-                width: '100%',
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                fontSize: '0.9rem',
-                fontFamily: 'inherit',
-                color: isDark ? '#FFFFFF' : '#0F172A',
-              }}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={subscribed}
-              endIcon={
-                subscribed ? (
-                  <CheckCircleRoundedIcon sx={{ fontSize: '1rem !important' }} />
-                ) : (
-                  <ArrowForwardRoundedIcon sx={{ fontSize: '1rem !important' }} />
-                )
-              }
-              sx={{
-                backgroundColor: subscribed ? '#10B981' : isDark ? '#FFFFFF' : '#0F172A',
-                color: subscribed ? '#FFFFFF' : isDark ? '#0A0C10' : '#FFFFFF',
-                borderRadius: '9999px',
-                px: 2.8,
-                py: 1,
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                whiteSpace: 'nowrap',
-                textTransform: 'none',
-                letterSpacing: '0.01em',
-                boxShadow: 'none',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  backgroundColor: subscribed ? '#10B981' : '#FF6600',
-                  color: '#FFFFFF',
-                  transform: 'none',
-                },
-              }}
-            >
-              {subscribed ? 'Joined' : 'Subscribe'}
-            </Button>
-          </Box>
           </Box>
 
           {/* THE LINK COLUMNS: Product, Developers, Legal. Rendered from the
@@ -517,6 +442,107 @@ export default function Footer({ showCta = false }) {
               </Box>
             </Box>
           ))}
+
+          {/* Its own column rather than wedged under the social row, where it
+              had no air above it and ran wider than everything near it. */}
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography
+              sx={{
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                mb: 2.5,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              Keep up
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: '0.9rem',
+                lineHeight: 1.6,
+                color: 'var(--text-secondary)',
+                mb: 2.5,
+                textWrap: 'pretty',
+              }}
+            >
+              New models as they land, and what changes when they do.
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubscribe}
+              sx={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
+                borderRadius: '9999px',
+                p: '5px',
+                pl: 2.2,
+                border: '1px solid',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(0, 0, 0, 0.12)',
+                boxShadow: isDark
+                  ? 'inset 0 1px 2px rgba(0, 0, 0, 0.4)'
+                  : '0 2px 8px rgba(0, 0, 0, 0.05)',
+                transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                '&:focus-within': {
+                  borderColor: '#FF6600',
+                  boxShadow: '0 0 0 3px rgba(255, 102, 0, 0.18)',
+                },
+              }}
+            >
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
+                required
+                disabled={subscribed}
+                style={{
+                  width: '100%',
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: '0.9rem',
+                  fontFamily: 'inherit',
+                  color: isDark ? '#FFFFFF' : '#0F172A',
+                }}
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={subscribed}
+                endIcon={
+                  subscribed ? (
+                    <CheckCircleRoundedIcon sx={{ fontSize: '1rem !important' }} />
+                  ) : (
+                    <ArrowForwardRoundedIcon sx={{ fontSize: '1rem !important' }} />
+                  )
+                }
+                sx={{
+                  backgroundColor: subscribed ? '#10B981' : isDark ? '#FFFFFF' : '#0F172A',
+                  color: subscribed ? '#FFFFFF' : isDark ? '#0A0C10' : '#FFFFFF',
+                  borderRadius: '9999px',
+                  px: 2.8,
+                  py: 1,
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  whiteSpace: 'nowrap',
+                  textTransform: 'none',
+                  letterSpacing: '0.01em',
+                  boxShadow: 'none',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    backgroundColor: subscribed ? '#10B981' : '#FF6600',
+                    color: '#FFFFFF',
+                    transform: 'none',
+                  },
+                }}
+              >
+                {subscribed ? 'Joined' : 'Subscribe'}
+              </Button>
+            </Box>
+          </Box>
 
         </Box>
 
