@@ -66,6 +66,18 @@ const FOOTER_COLUMNS = [
     ],
   },
   {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '#' },
+      { label: 'Blog', href: '#' },
+      { label: 'Careers', href: '#' },
+      { label: 'Investors', href: '#' },
+      { label: 'Press', href: '#' },
+      { label: 'Contact', href: '#' },
+      { label: '$OPEN token', href: '/token' },
+    ],
+  },
+  {
     title: 'Legal',
     links: [
       { label: 'Privacy Policy', href: '#' },
@@ -78,15 +90,7 @@ const FOOTER_COLUMNS = [
   },
 ];
 
-const COMPANY_LINKS = [
-  { label: 'About', href: '#' },
-  { label: '$OPEN token', href: '#' },
-  { label: 'Blog', href: '#' },
-  { label: 'Careers', href: '#' },
-  { label: 'Investors', href: '#' },
-  { label: 'Press', href: '#' },
-  { label: 'Contact', href: '#' },
-];
+
 
 const SOCIAL_PLATFORMS = [
   { name: 'X', icon: SocialIcons.X, href: 'https://x.com/openledger' },
@@ -336,8 +340,8 @@ export default function Footer({ showCta = false }) {
             gridTemplateColumns: {
               xs: '1fr',
               sm: '1fr 1fr',
-              md: '1.3fr 0.85fr 0.85fr 0.85fr',
-              lg: '1.4fr 0.8fr 0.8fr 0.8fr 1.3fr',
+              md: 'repeat(2, 1fr)',
+              lg: '1.5fr repeat(4, 1fr)',
             },
             gap: { xs: 5, sm: 6, md: 5, lg: 6 },
             pt: 2,
@@ -420,9 +424,86 @@ export default function Footer({ showCta = false }) {
                 );
               })}
             </Box>
+
+          {/* Sign up sits with the brand now. It was the only thing
+              making the company column a different shape to the rest. */}
+          <Box
+            component="form"
+            onSubmit={handleSubscribe}
+            sx={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
+              borderRadius: '9999px',
+              p: '5px',
+              pl: 2.2,
+              border: '1px solid',
+              borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(0, 0, 0, 0.12)',
+              boxShadow: isDark
+                ? 'inset 0 1px 2px rgba(0, 0, 0, 0.4)'
+                : '0 2px 8px rgba(0, 0, 0, 0.05)',
+              transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+              '&:focus-within': {
+                borderColor: '#FF6600',
+                boxShadow: '0 0 0 3px rgba(255, 102, 0, 0.18)',
+              },
+            }}
+          >
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email address"
+              required
+              disabled={subscribed}
+              style={{
+                width: '100%',
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                fontSize: '0.9rem',
+                fontFamily: 'inherit',
+                color: isDark ? '#FFFFFF' : '#0F172A',
+              }}
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={subscribed}
+              endIcon={
+                subscribed ? (
+                  <CheckCircleRoundedIcon sx={{ fontSize: '1rem !important' }} />
+                ) : (
+                  <ArrowForwardRoundedIcon sx={{ fontSize: '1rem !important' }} />
+                )
+              }
+              sx={{
+                backgroundColor: subscribed ? '#10B981' : isDark ? '#FFFFFF' : '#0F172A',
+                color: subscribed ? '#FFFFFF' : isDark ? '#0A0C10' : '#FFFFFF',
+                borderRadius: '9999px',
+                px: 2.8,
+                py: 1,
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                whiteSpace: 'nowrap',
+                textTransform: 'none',
+                letterSpacing: '0.01em',
+                boxShadow: 'none',
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  backgroundColor: subscribed ? '#10B981' : '#FF6600',
+                  color: '#FFFFFF',
+                  transform: 'none',
+                },
+              }}
+            >
+              {subscribed ? 'Joined' : 'Subscribe'}
+            </Button>
+          </Box>
           </Box>
 
-          {/* COLUMNS 2 TO 4: Product, Developers, Legal. Rendered from the
+          {/* COLUMNS 2 TO 5: Product, Developers, Legal. Rendered from the
               data rather than by index, so a new column is a new entry. */}
           {FOOTER_COLUMNS.map((col) => (
             <Box key={col.title} sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -465,129 +546,6 @@ export default function Footer({ showCta = false }) {
             </Box>
           ))}
 
-          {/* COLUMN 5: Company Info & Newsletter Subscription (Image 1 style) */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              sx={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                mb: 2,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Company
-            </Typography>
-
-            <Typography
-              sx={{
-                fontSize: '0.92rem',
-                lineHeight: 1.65,
-                color: 'var(--text-secondary)',
-                mb: 2,
-              }}
-            >
-              Helping teams and developers orchestrate multiple frontier models with total privacy and zero retention.
-            </Typography>
-
-            {/* Quick company links */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px 16px', mb: 3 }}>
-              {COMPANY_LINKS.map((item) => (
-                <Box
-                  component="a"
-                  key={item.label}
-                  href={item.href}
-                  sx={{
-                    fontSize: '0.85rem',
-                    color: 'var(--text-muted)',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s ease',
-                    '&:hover': {
-                      color: '#FF6600',
-                    },
-                  }}
-                >
-                  {item.label}
-                </Box>
-              ))}
-            </Box>
-
-            {/* Newsletter Pill Input Bar matching Image 1 */}
-            <Box
-              component="form"
-              onSubmit={handleSubscribe}
-              sx={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
-                borderRadius: '9999px',
-                p: '5px',
-                pl: 2.2,
-                border: '1px solid',
-                borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(0, 0, 0, 0.12)',
-                boxShadow: isDark
-                  ? 'inset 0 1px 2px rgba(0, 0, 0, 0.4)'
-                  : '0 2px 8px rgba(0, 0, 0, 0.05)',
-                transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                '&:focus-within': {
-                  borderColor: '#FF6600',
-                  boxShadow: '0 0 0 3px rgba(255, 102, 0, 0.18)',
-                },
-              }}
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address"
-                required
-                disabled={subscribed}
-                style={{
-                  width: '100%',
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: '0.9rem',
-                  fontFamily: 'inherit',
-                  color: isDark ? '#FFFFFF' : '#0F172A',
-                }}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={subscribed}
-                endIcon={
-                  subscribed ? (
-                    <CheckCircleRoundedIcon sx={{ fontSize: '1rem !important' }} />
-                  ) : (
-                    <ArrowForwardRoundedIcon sx={{ fontSize: '1rem !important' }} />
-                  )
-                }
-                sx={{
-                  backgroundColor: subscribed ? '#10B981' : isDark ? '#FFFFFF' : '#0F172A',
-                  color: subscribed ? '#FFFFFF' : isDark ? '#0A0C10' : '#FFFFFF',
-                  borderRadius: '9999px',
-                  px: 2.8,
-                  py: 1,
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
-                  whiteSpace: 'nowrap',
-                  textTransform: 'none',
-                  letterSpacing: '0.01em',
-                  boxShadow: 'none',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: subscribed ? '#10B981' : '#FF6600',
-                    color: '#FFFFFF',
-                    transform: 'none',
-                  },
-                }}
-              >
-                {subscribed ? 'Joined' : 'Subscribe'}
-              </Button>
-            </Box>
-          </Box>
         </Box>
 
         {/* ==============================================================
@@ -619,104 +577,6 @@ export default function Footer({ showCta = false }) {
             © {new Date().getFullYear()} Hey Open. All rights reserved.
           </Typography>
 
-          {/* System routing status dot */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1.2,
-              color: 'var(--text-secondary)',
-              fontSize: '0.85rem',
-              fontWeight: 500,
-            }}
-          >
-            <Box
-              sx={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 10,
-                height: 10,
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%',
-                  backgroundColor: '#10B981',
-                  opacity: 0.75,
-                  animation: 'footerPulse 2s cubic-bezier(0, 0, 0.2, 1) infinite',
-                  '@keyframes footerPulse': {
-                    '0%': { transform: 'scale(0.9)', opacity: 0.8 },
-                    '70%': { transform: 'scale(2.4)', opacity: 0 },
-                    '100%': { transform: 'scale(2.4)', opacity: 0 },
-                  },
-                }}
-              />
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  backgroundColor: '#10B981',
-                }}
-              />
-            </Box>
-            <span>All systems routing</span>
-          </Box>
-
-          {/* Legal Links */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              fontSize: '0.85rem',
-              color: 'var(--text-muted)',
-            }}
-          >
-            <Box
-              component="a"
-              href="#"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease',
-                '&:hover': { color: 'var(--text-primary)' },
-              }}
-            >
-              Data Policy
-            </Box>
-            <Box sx={{ opacity: 0.4 }}>|</Box>
-            <Box
-              component="a"
-              href="#"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease',
-                '&:hover': { color: 'var(--text-primary)' },
-              }}
-            >
-              Terms
-            </Box>
-            <Box sx={{ opacity: 0.4 }}>|</Box>
-            <Box
-              component="a"
-              href="#"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease',
-                '&:hover': { color: 'var(--text-primary)' },
-              }}
-            >
-              Privacy Notice
-            </Box>
-          </Box>
         </Box>
       </Container>
     </Box>
