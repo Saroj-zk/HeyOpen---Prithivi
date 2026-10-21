@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Head from 'next/head';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
@@ -12,117 +11,216 @@ import useInView from '@/utils/useInView';
 /**
  * What Hey Open is for.
  *
- * Three audiences, one page: someone making something, someone building on the
- * API, and someone who cannot put their documents into a consumer chatbot.
- * Each gets a short block and a real artifact, deliberately not an essay.
+ * Styled from a reference supplied for this page only, so the tokens below are
+ * local rather than taken from globals.css. The idiom is editorial: sections
+ * divided by a hairline instead of alternating fills, a two column header with
+ * the headline left and the lede bottom aligned beside it, monospace eyebrows,
+ * very tight tracking on display sizes, 10px radii, one accent used sparingly.
+ * The reference's yellow is replaced with our orange; nothing else about our
+ * palette is imported, which is why these are page scoped constants.
  *
- * The positioning underneath all three is the one the rest of the site leads
- * with and earlier drafts of this page buried: private by default, uncensored
- * when the work needs it.
- *
- * Checked against the running app and the published API shape on 21 Oct 2026.
+ * Content is unchanged in substance: three audiences, the comparison, the
+ * position, the picker. Checked against the running app on 21 Oct 2026.
  */
 
 const APP = 'https://ais.openledger.xyz/chat';
-const ORANGE = '#FF6600';
-const MONO = '"SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace';
-const INK = '#0E1116';
+
+/* ---- page scoped tokens ------------------------------------------ */
+const T = {
+  bg: '#FFFFFF',
+  surface: '#FAFAFA',
+  surface2: '#F4F4F5',
+  fg: '#0C0C0E',
+  fg2: '#4E4E55',
+  fg3: '#8A8A92',
+  line: 'rgba(12, 12, 14, 0.08)',
+  line2: 'rgba(12, 12, 14, 0.15)',
+  brand: '#FF6600',
+  brandSoft: 'rgba(255, 102, 0, 0.10)',
+  brandLine: 'rgba(255, 102, 0, 0.32)',
+  ink: '#0C0C0E',
+  r: '10px',
+  shadow: '0 1px 2px rgba(12,12,14,.04), 0 12px 32px -12px rgba(12,12,14,.12)',
+  mono: '"Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace',
+  maxw: 1200,
+  gut: { xs: '20px', sm: '24px' },
+};
 
 const CHAPTERS = [
   { id: 'uses', label: 'What it is for' },
-  { id: 'why', label: 'Why not four tools' },
+  { id: 'why', label: 'The comparison' },
   { id: 'private', label: 'Private, uncensored' },
-  { id: 'models', label: 'Pick a model' },
+  { id: 'models', label: 'The picker' },
 ];
 
 /* ------------------------------------------------------------------ */
 
-const H2 = {
-  fontSize: { xs: '2.1rem', md: '3rem' },
-  fontWeight: 800,
-  lineHeight: 1.08,
-  letterSpacing: '-0.035em',
-  color: 'var(--text-heading)',
-  mb: 2.4,
-  textWrap: 'balance',
-};
-
-const LEAD = {
-  fontSize: { xs: '1.1rem', md: '1.25rem' },
-  lineHeight: 1.65,
-  color: 'var(--text-secondary)',
-  maxWidth: 660,
-  textWrap: 'pretty',
-};
-
-const BODY = {
-  fontSize: { xs: '1.02rem', md: '1.1rem' },
-  lineHeight: 1.7,
-  color: 'var(--text-secondary)',
-  textWrap: 'pretty',
-};
-
-function Pill({ children }) {
+function Wrap({ children, sx }) {
   return (
-    <Box
-      sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 1.2,
-        color: ORANGE,
-        mb: 3,
-        px: 1.8,
-        py: 0.7,
-        borderRadius: '9999px',
-        backgroundColor: 'rgba(255, 102, 0, 0.08)',
-        border: '1px solid rgba(255, 102, 0, 0.28)',
-        fontSize: '0.78rem',
-        fontWeight: 700,
-        textTransform: 'uppercase',
-        letterSpacing: '0.08em',
-      }}
-    >
-      <Box sx={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: ORANGE, boxShadow: `0 0 10px ${ORANGE}` }} />
+    <Box sx={{ maxWidth: T.maxw, mx: 'auto', px: T.gut, ...sx }}>
       {children}
     </Box>
   );
 }
 
-function Band({ id, alt, children }) {
+/* Sections are divided by a hairline, never by a change of background. */
+function Section({ id, children, sx }) {
   return (
     <Box
       component="section"
       id={id}
       sx={{
-        scrollMarginTop: '100px',
-        py: { xs: 9, md: 15 },
-        backgroundColor: alt ? 'var(--bg-section-alt)' : 'var(--bg-page)',
         position: 'relative',
-        zIndex: 1,
+        borderTop: `1px solid ${T.line}`,
+        py: { xs: 7, md: 12 },
+        scrollMarginTop: '90px',
+        ...sx,
       }}
     >
-      <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 } }}>
-        {children}
-      </Container>
+      <Wrap>{children}</Wrap>
     </Box>
   );
 }
 
-function Intro({ pill, title, lead, center }) {
+function Eyebrow({ children, accent }) {
+  return (
+    <Box
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '10px',
+        fontFamily: T.mono,
+        fontSize: '11.5px',
+        letterSpacing: '0.14em',
+        textTransform: 'uppercase',
+        color: accent ? T.brand : T.fg3,
+      }}
+    >
+      <Box
+        aria-hidden="true"
+        sx={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: accent ? T.brand : T.fg3 }}
+      />
+      {children}
+    </Box>
+  );
+}
+
+/* Headline left, lede bottom aligned to its right. The motif the whole
+   reference is built on. */
+function Header({ eyebrow, title, lede }) {
   return (
     <Reveal>
-      <Box sx={{ mb: { xs: 5, md: 8 }, textAlign: center ? 'center' : 'left' }}>
-        <Pill>{pill}</Pill>
-        <Typography component="h2" sx={{ ...H2, maxWidth: 860, mx: center ? 'auto' : 0 }}>
-          {title}
-        </Typography>
-        {lead && <Typography sx={{ ...LEAD, mx: center ? 'auto' : 0 }}>{lead}</Typography>}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1.25fr 1fr' },
+          gap: { xs: '14px', md: '40px' },
+          alignItems: 'end',
+          mb: { xs: '28px', md: '40px' },
+        }}
+      >
+        <Box>
+          <Eyebrow>{eyebrow}</Eyebrow>
+          <Typography
+            component="h2"
+            sx={{
+              fontSize: 'clamp(32px, 4.8vw, 58px)',
+              lineHeight: 1.02,
+              letterSpacing: '-0.038em',
+              fontWeight: 600,
+              color: T.fg,
+              mt: '16px',
+              textWrap: 'balance',
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
+        {lede && (
+          <Typography
+            sx={{
+              color: T.fg2,
+              fontSize: '17px',
+              lineHeight: 1.55,
+              maxWidth: '56ch',
+              textWrap: 'pretty',
+            }}
+          >
+            {lede}
+          </Typography>
+        )}
       </Box>
     </Reveal>
   );
 }
 
-/* Megabytes each, so nothing is fetched until the block is close. */
+function Card({ children, sx, pad = true }) {
+  return (
+    <Box
+      sx={{
+        border: `1px solid ${T.line}`,
+        borderRadius: T.r,
+        backgroundColor: T.bg,
+        overflow: 'hidden',
+        ...(pad ? { p: { xs: '18px', md: '22px' } } : null),
+        ...sx,
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+function Button({ children, href, primary }) {
+  return (
+    <Box
+      component="a"
+      href={href}
+      target={href.startsWith('http') ? '_blank' : undefined}
+      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        px: '20px',
+        py: '12px',
+        borderRadius: '8px',
+        fontSize: '14px',
+        fontWeight: 600,
+        letterSpacing: '-0.005em',
+        textDecoration: 'none',
+        transition: 'all .18s cubic-bezier(.32,.72,0,1)',
+        ...(primary
+          ? {
+              backgroundColor: T.fg,
+              color: '#FFFFFF',
+              border: `1px solid ${T.fg}`,
+              '&:hover': { backgroundColor: '#25252B', borderColor: '#25252B' },
+            }
+          : {
+              backgroundColor: T.bg,
+              color: T.fg,
+              border: `1px solid ${T.line2}`,
+              '&:hover': { backgroundColor: T.surface2 },
+            }),
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+function Mono({ children, sx }) {
+  return (
+    <Typography
+      component="span"
+      sx={{ fontFamily: T.mono, fontSize: '11px', letterSpacing: '0.06em', textTransform: 'uppercase', color: T.fg3, ...sx }}
+    >
+      {children}
+    </Typography>
+  );
+}
+
 function Clip({ src }) {
   const [ref, inView] = useInView('300px');
   const videoRef = React.useRef(null);
@@ -155,84 +253,16 @@ function Clip({ src }) {
   );
 }
 
-function Code({ children, caption }) {
-  return (
-    <Box sx={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', backgroundColor: INK }}>
-      {caption && (
-        <Box
-          sx={{
-            px: 2.4,
-            py: 1.4,
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            fontSize: '0.72rem',
-            fontWeight: 700,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.45)',
-            fontFamily: MONO,
-          }}
-        >
-          {caption}
-        </Box>
-      )}
-      <Box
-        component="pre"
-        sx={{
-          m: 0,
-          p: { xs: 2.4, md: 3 },
-          overflowX: 'auto',
-          fontFamily: MONO,
-          fontSize: { xs: '0.82rem', md: '0.88rem' },
-          lineHeight: 1.8,
-          color: 'rgba(255,255,255,0.88)',
-        }}
-      >
-        {children}
-      </Box>
-    </Box>
-  );
-}
-
-function CTA({ children, href, solid }) {
-  return (
-    <Box
-      component="a"
-      href={href}
-      target={href.startsWith('http') ? '_blank' : undefined}
-      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-      sx={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 1,
-        px: 3.6,
-        py: 1.7,
-        borderRadius: '12px',
-        fontSize: '1rem',
-        fontWeight: 700,
-        textDecoration: 'none',
-        transition: 'all 0.2s ease',
-        ...(solid
-          ? {
-              backgroundColor: ORANGE,
-              color: '#FFFFFF',
-              boxShadow: '0 8px 24px rgba(255, 102, 0, 0.28)',
-              '&:hover': { backgroundColor: '#E65C00' },
-            }
-          : {
-              border: '1px solid var(--border-normal)',
-              color: 'var(--text-heading)',
-              '&:hover': { borderColor: 'var(--border-strong)', backgroundColor: 'var(--bg-card)' },
-            }),
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
-
 /* ------------------------------------------------------------------ */
 /* Content                                                             */
 /* ------------------------------------------------------------------ */
+
+const STATS = [
+  ['200+', 'Models'],
+  ['4', 'Modalities'],
+  ['$20', 'A month'],
+  ['0', 'Prompts kept'],
+];
 
 const FRAMES = [
   { src: '/images/scenery_cliffs.jpg', alt: 'Generated still, cliffs at dusk' },
@@ -244,7 +274,7 @@ const API_SNIPPET = `curl https://api.openledger.xyz/v1/chat/completions \\
   -H "Authorization: Bearer $OPENLEDGER_API_KEY" \\
   -d '{ "model": "auto", "messages": [...] }'`;
 
-const GUARANTEES = ['No account to start', 'Prompts not retained', 'Memory stays in your browser', 'TEE models available'];
+const GUARANTEES = ['No account to start', 'Prompts not retained', 'Memory stays local', 'TEE models available'];
 
 const COMPARE = [
   ['Models you can reach', 'One family per tool', '200+ in one picker'],
@@ -280,41 +310,46 @@ function Rail({ active }) {
       aria-label="On this page"
       sx={{
         position: 'fixed',
-        left: 26,
+        left: 24,
         top: '50%',
         transform: 'translateY(-50%)',
         zIndex: 20,
         display: { xs: 'none', xl: 'flex' },
         flexDirection: 'column',
-        gap: 2,
+        gap: '14px',
       }}
     >
-      {CHAPTERS.map((c) => {
+      {CHAPTERS.map((c, i) => {
         const on = active === c.id;
         return (
           <Box
             key={c.id}
             component="a"
             href={`#${c.id}`}
-            sx={{ display: 'flex', alignItems: 'center', gap: 1.4, textDecoration: 'none', '&:hover .lbl': { opacity: 1 } }}
+            sx={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', '&:hover .lbl': { opacity: 1 } }}
           >
             <Box
               sx={{
-                width: on ? 24 : 14,
-                height: 2,
-                flexShrink: 0,
-                backgroundColor: on ? ORANGE : 'var(--border-strong)',
-                transition: 'all 0.25s ease',
+                fontFamily: T.mono,
+                fontSize: '10px',
+                letterSpacing: '0.08em',
+                color: on ? T.brand : T.fg3,
+                transition: 'color .2s ease',
               }}
-            />
+            >
+              {String(i + 1).padStart(2, '0')}
+            </Box>
+            <Box sx={{ width: on ? 18 : 8, height: 1, backgroundColor: on ? T.brand : T.line2, transition: 'all .2s ease' }} />
             <Typography
               className="lbl"
               sx={{
-                fontSize: '0.82rem',
-                fontWeight: on ? 700 : 500,
-                color: on ? 'var(--text-heading)' : 'var(--text-muted)',
+                fontFamily: T.mono,
+                fontSize: '10.5px',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: on ? T.fg : T.fg3,
                 opacity: on ? 1 : 0,
-                transition: 'opacity 0.25s ease',
+                transition: 'opacity .2s ease',
                 whiteSpace: 'nowrap',
               }}
             >
@@ -327,48 +362,45 @@ function Rail({ active }) {
   );
 }
 
-/* One audience: a short claim on one side, a real artifact on the other. */
-function UseCase({ tag, title, body, flip, children }) {
+/* A numbered audience row: label column, claim, artifact. */
+function Use({ n, tag, title, body, children }) {
   return (
     <Reveal>
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '0.85fr 1.15fr' },
-          gap: { xs: 3.5, md: 7 },
-          alignItems: 'center',
+          gridTemplateColumns: { xs: '1fr', md: '0.82fr 1.18fr' },
+          gap: { xs: '22px', md: '48px' },
+          py: { xs: '32px', md: '46px' },
+          borderTop: `1px solid ${T.line}`,
+          alignItems: 'start',
         }}
       >
-        <Box sx={{ order: { xs: 2, md: flip ? 2 : 1 } }}>
-          <Typography
-            sx={{
-              fontSize: '0.74rem',
-              fontWeight: 800,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: ORANGE,
-              mb: 1.6,
-            }}
-          >
-            {tag}
-          </Typography>
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', mb: '18px' }}>
+            <Mono sx={{ color: T.brand, fontSize: '11.5px' }}>{n}</Mono>
+            <Box sx={{ width: 14, height: 1, backgroundColor: T.line2 }} />
+            <Mono>{tag}</Mono>
+          </Box>
           <Typography
             component="h3"
             sx={{
-              fontSize: { xs: '1.6rem', md: '2.1rem' },
-              fontWeight: 780,
-              letterSpacing: '-0.032em',
-              lineHeight: 1.12,
-              color: 'var(--text-heading)',
-              mb: 1.8,
+              fontSize: 'clamp(22px, 2.4vw, 30px)',
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+              fontWeight: 600,
+              color: T.fg,
+              mb: '14px',
               textWrap: 'balance',
             }}
           >
             {title}
           </Typography>
-          <Typography sx={{ ...BODY, maxWidth: 440 }}>{body}</Typography>
+          <Typography sx={{ fontSize: '15px', lineHeight: 1.6, color: T.fg2, maxWidth: '46ch', textWrap: 'pretty' }}>
+            {body}
+          </Typography>
         </Box>
-        <Box sx={{ order: { xs: 1, md: flip ? 1 : 2 }, minWidth: 0 }}>{children}</Box>
+        <Box sx={{ minWidth: 0 }}>{children}</Box>
       </Box>
     </Reveal>
   );
@@ -406,206 +438,252 @@ export default function DocsPage() {
   }, []);
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: T.bg, position: 'relative', overflowX: 'hidden' }}>
       <Head>
         <title>What You Can Do With Hey Open | Hey Open</title>
         <meta
           name="description"
-          content="Make a film in one thread, build on one API key across 200+ models, or put sensitive documents through AI that keeps nothing. Private by default, uncensored when needed."
+          content="Make a film in one thread, build on one API key across 200+ models, or put sensitive documents through AI that keeps nothing."
         />
       </Head>
 
       <PageHeader />
       <Rail active={active} />
 
-      <Box
-        data-ambient-blur
-        aria-hidden="true"
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: 1400,
-          height: 760,
-          background:
-            'radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255, 102, 0, 0.18) 0%, rgba(255, 60, 0, 0.06) 55%, transparent 80%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
       {/* ================= HERO ================= */}
-      <Box sx={{ position: 'relative', zIndex: 1, pt: { xs: 8, md: 13 }, pb: { xs: 6, md: 9 } }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 } }}>
+      <Box sx={{ pt: { xs: '48px', md: '84px' }, pb: { xs: '44px', md: '68px' } }}>
+        <Wrap>
           <Reveal>
-            <Box sx={{ maxWidth: 900 }}>
-              <Pill>Private and uncensored</Pill>
-              <Typography
-                component="h1"
-                sx={{
-                  fontSize: { xs: '2.6rem', sm: '3.5rem', md: '4.4rem' },
-                  fontWeight: 800,
-                  lineHeight: 1.02,
-                  letterSpacing: '-0.042em',
-                  color: 'var(--text-heading)',
-                  mb: 3,
-                  textWrap: 'balance',
-                }}
-              >
-                The whole job in one thread.{' '}
-                <Box component="span" sx={{ color: ORANGE }}>
-                  Nothing kept afterwards.
-                </Box>
-              </Typography>
-              <Typography sx={{ ...LEAD, fontSize: { xs: '1.15rem', md: '1.3rem' }, maxWidth: 720, mb: 4 }}>
-                200+ models behind one chat and one API key. Make a film, ship an application, or
-                put a contract through it, without an account and without your work being stored.
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.6 }}>
-                <CTA href={APP} solid>
-                  Open the chat
-                  <Box component="span" aria-hidden="true">→</Box>
-                </CTA>
-                <CTA href="#uses">See what people do with it</CTA>
-              </Box>
-            </Box>
-          </Reveal>
-        </Container>
-      </Box>
-
-      {/* ================= USE CASES ================= */}
-      <Band id="uses" alt>
-        <Intro pill="What it is for" title="Three jobs, one subscription." />
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 8, md: 14 } }}>
-          {/* ---- Creators ---- */}
-          <UseCase
-            tag="Making something"
-            title="Script, stills, motion and score. One thread."
-            body="Write it, storyboard it, animate the closing shot and score it without opening a second tool. Each step still has the one before it, so nothing gets re-described."
-          >
-            <Box>
-              <Box
-                sx={{
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  border: '1px solid var(--border-subtle)',
-                  backgroundColor: INK,
-                  aspectRatio: '16 / 10',
-                  mb: 1.6,
-                }}
-              >
-                <Clip src="/Videos/AI ecosystem/Video Gen.webm" />
-              </Box>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1.6 }}>
-                {FRAMES.map((f) => (
-                  <Box
-                    key={f.src}
-                    sx={{
-                      position: 'relative',
-                      aspectRatio: '3 / 2',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      border: '1px solid var(--border-subtle)',
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={f.src}
-                      alt={f.alt}
-                      loading="lazy"
-                      sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          </UseCase>
-
-          {/* ---- Developers ---- */}
-          <UseCase
-            flip
-            tag="Building on it"
-            title="One key. Every model. No rewrite."
-            body="An OpenAI-compatible endpoint, so you change a base URL and keep your code. Set the model to auto and cheap requests stop going to expensive models."
-          >
-            <Code caption="chat/completions">{API_SNIPPET}</Code>
-          </UseCase>
-
-          {/* ---- Sensitive work ---- */}
-          <UseCase
-            tag="Work you cannot paste elsewhere"
-            title="Contracts in. Nothing left behind."
-            body="Due diligence, case files, patient records and board papers. No account to create, prompts not retained, and models that run inside a hardware enclave for the parts that need it."
-          >
-            <Box
+            <Eyebrow accent>Private and uncensored</Eyebrow>
+            <Typography
+              component="h1"
               sx={{
-                borderRadius: '18px',
-                border: '1px solid rgba(255,255,255,0.08)',
-                backgroundColor: INK,
-                p: { xs: 3, md: 3.6 },
+                fontSize: 'clamp(40px, 7vw, 92px)',
+                lineHeight: 0.98,
+                letterSpacing: '-0.05em',
+                fontWeight: 600,
+                color: T.fg,
+                mt: '22px',
+                mb: '26px',
+                maxWidth: '16ch',
+                textWrap: 'balance',
               }}
             >
-              <Typography
-                sx={{
-                  fontFamily: MONO,
-                  fontSize: { xs: '0.86rem', md: '0.92rem' },
-                  lineHeight: 1.8,
-                  color: 'rgba(255,255,255,0.88)',
-                  mb: 3,
-                }}
-              >
-                {'> Review the attached master services agreement.\n  Flag every clause that shifts liability to us,\n  quote it, and rank by exposure.'}
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {GUARANTEES.map((g) => (
-                  <Box
-                    key={g}
+              The whole job in one thread.
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: '17px', md: '19px' },
+                lineHeight: 1.5,
+                color: T.fg2,
+                maxWidth: '58ch',
+                mb: '32px',
+                textWrap: 'pretty',
+              }}
+            >
+              200+ models behind one chat and one API key. Make a film, ship an application, or put
+              a contract through it, without an account and without your work being stored.
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+              <Button href={APP} primary>
+                Open the chat
+                <Box component="span" aria-hidden="true">→</Box>
+              </Button>
+              <Button href="#uses">What people do with it</Button>
+            </Box>
+          </Reveal>
+
+          {/* Stat row */}
+          <Reveal delay={120}>
+            <Box
+              sx={{
+                mt: { xs: '44px', md: '68px' },
+                display: 'grid',
+                gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                borderTop: `1px solid ${T.line}`,
+              }}
+            >
+              {STATS.map(([v, k], i) => (
+                <Box
+                  key={k}
+                  sx={{
+                    py: { xs: '20px', md: '26px' },
+                    pl: { md: i === 0 ? 0 : '26px' },
+                    borderLeft: { xs: 'none', md: i === 0 ? 'none' : `1px solid ${T.line}` },
+                    borderTop: { xs: i > 1 ? `1px solid ${T.line}` : 'none', md: 'none' },
+                  }}
+                >
+                  <Typography
                     sx={{
-                      px: 1.4,
-                      py: 0.6,
-                      borderRadius: '7px',
-                      backgroundColor: 'rgba(255, 102, 0, 0.14)',
-                      border: '1px solid rgba(255, 102, 0, 0.3)',
-                      color: ORANGE,
-                      fontSize: '0.74rem',
-                      fontWeight: 700,
+                      fontSize: { xs: '30px', md: '38px' },
+                      lineHeight: 1,
+                      letterSpacing: '-0.045em',
+                      fontWeight: 600,
+                      color: T.fg,
+                      fontVariantNumeric: 'tabular-nums',
+                      mb: '8px',
                     }}
                   >
-                    {g}
-                  </Box>
-                ))}
-              </Box>
+                    {v}
+                  </Typography>
+                  <Mono>{k}</Mono>
+                </Box>
+              ))}
             </Box>
-          </UseCase>
-        </Box>
-      </Band>
+          </Reveal>
+        </Wrap>
+      </Box>
 
-      {/* ================= WHY ================= */}
-      <Band id="why">
-        <Intro pill="Why not four tools" title="The same work, counted honestly." />
+      {/* ================= USES ================= */}
+      <Section id="uses">
+        <Header
+          eyebrow="What it is for"
+          title="Three jobs, one subscription."
+          lede="The same account covers someone making something, someone building on the API, and someone whose documents cannot go into a consumer chatbot."
+        />
+
+        <Use
+          n="01"
+          tag="Making something"
+          title="Script, stills, motion and score. One thread."
+          body="Write it, storyboard it, animate the closing shot and score it without opening a second tool. Each step still has the one before it, so nothing gets re-described."
+        >
+          <Box
+            sx={{
+              borderRadius: T.r,
+              overflow: 'hidden',
+              border: `1px solid ${T.line}`,
+              backgroundColor: T.ink,
+              aspectRatio: '16 / 10',
+              mb: '10px',
+            }}
+          >
+            <Clip src="/Videos/AI ecosystem/Video Gen.webm" />
+          </Box>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+            {FRAMES.map((f) => (
+              <Box
+                key={f.src}
+                sx={{ position: 'relative', aspectRatio: '3 / 2', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${T.line}` }}
+              >
+                <Box
+                  component="img"
+                  src={f.src}
+                  alt={f.alt}
+                  loading="lazy"
+                  sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </Box>
+            ))}
+          </Box>
+        </Use>
+
+        <Use
+          n="02"
+          tag="Building on it"
+          title="One key. Every model. No rewrite."
+          body="An OpenAI-compatible endpoint, so you change a base URL and keep your code. Set the model to auto and cheap requests stop going to expensive models."
+        >
+          <Box sx={{ borderRadius: T.r, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: T.ink }}>
+            <Box
+              sx={{
+                px: '16px',
+                py: '11px',
+                borderBottom: '1px solid rgba(255,255,255,0.1)',
+                fontFamily: T.mono,
+                fontSize: '10.5px',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.42)',
+              }}
+            >
+              chat/completions
+            </Box>
+            <Box
+              component="pre"
+              sx={{
+                m: 0,
+                p: { xs: '18px', md: '22px' },
+                overflowX: 'auto',
+                fontFamily: T.mono,
+                fontSize: { xs: '12px', md: '13px' },
+                lineHeight: 1.8,
+                color: 'rgba(255,255,255,0.88)',
+              }}
+            >
+              {API_SNIPPET}
+            </Box>
+          </Box>
+        </Use>
+
+        <Use
+          n="03"
+          tag="Work you cannot paste elsewhere"
+          title="Contracts in. Nothing left behind."
+          body="Due diligence, case files, patient records and board papers. No account to create, prompts not retained, and models that run inside a hardware enclave for the parts that need it."
+        >
+          <Box sx={{ borderRadius: T.r, border: '1px solid rgba(255,255,255,0.1)', backgroundColor: T.ink, p: { xs: '20px', md: '26px' } }}>
+            <Typography
+              sx={{
+                fontFamily: T.mono,
+                fontSize: { xs: '12px', md: '13px' },
+                lineHeight: 1.85,
+                color: 'rgba(255,255,255,0.88)',
+                mb: '22px',
+                whiteSpace: 'pre-wrap',
+              }}
+            >
+              {'> Review the attached master services agreement.\n  Flag every clause that shifts liability to us,\n  quote it, and rank by exposure.'}
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
+              {GUARANTEES.map((g) => (
+                <Box
+                  key={g}
+                  sx={{
+                    px: '10px',
+                    py: '5px',
+                    borderRadius: '6px',
+                    border: `1px solid ${T.brandLine}`,
+                    color: T.brand,
+                    fontFamily: T.mono,
+                    fontSize: '10.5px',
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {g}
+                </Box>
+              ))}
+            </Box>
+          </Box>
+        </Use>
+      </Section>
+
+      {/* ================= COMPARISON ================= */}
+      <Section id="why" sx={{ backgroundColor: T.surface }}>
+        <Header eyebrow="The comparison" title="The same work, counted honestly." />
 
         <Reveal>
-          <Box sx={{ borderRadius: '18px', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-card)', overflow: 'hidden' }}>
+          <Card pad={false} sx={{ backgroundColor: T.bg }}>
             <Box sx={{ overflowX: 'auto' }}>
-              <Box component="table" sx={{ width: '100%', minWidth: 660, borderCollapse: 'collapse' }}>
+              <Box component="table" sx={{ width: '100%', minWidth: 640, borderCollapse: 'collapse' }}>
                 <Box component="thead">
-                  <Box component="tr" sx={{ backgroundColor: 'var(--bg-section-alt)' }}>
+                  <Box component="tr">
                     {['', 'Four separate tools', 'Hey Open'].map((h, i) => (
                       <Box
                         key={i}
                         component="th"
                         sx={{
                           textAlign: 'left',
-                          px: { xs: 2.4, md: 3 },
-                          py: 2.2,
-                          fontSize: '0.72rem',
-                          fontWeight: 800,
+                          px: { xs: '16px', md: '22px' },
+                          py: '14px',
+                          borderBottom: `1px solid ${T.line}`,
+                          fontFamily: T.mono,
+                          fontSize: '10.5px',
+                          fontWeight: 400,
                           letterSpacing: '0.1em',
                           textTransform: 'uppercase',
-                          color: i === 2 ? ORANGE : 'var(--text-muted)',
+                          color: i === 2 ? T.brand : T.fg3,
                           width: i === 0 ? '34%' : '33%',
                         }}
                       >
@@ -615,23 +693,23 @@ export default function DocsPage() {
                   </Box>
                 </Box>
                 <Box component="tbody">
-                  {COMPARE.map(([label, them, us]) => (
-                    <Box key={label} component="tr" sx={{ borderTop: '1px solid var(--border-subtle)' }}>
+                  {COMPARE.map(([label, them, us], i) => (
+                    <Box key={label} component="tr" sx={{ borderTop: i === 0 ? 'none' : `1px solid ${T.line}` }}>
                       <Box
                         component="td"
-                        sx={{ px: { xs: 2.4, md: 3 }, py: { xs: 2.2, md: 2.6 }, fontSize: { xs: '0.96rem', md: '1.02rem' }, fontWeight: 700, color: 'var(--text-heading)' }}
+                        sx={{ px: { xs: '16px', md: '22px' }, py: '16px', fontSize: '14.5px', fontWeight: 500, color: T.fg }}
                       >
                         {label}
                       </Box>
                       <Box
                         component="td"
-                        sx={{ px: { xs: 2.4, md: 3 }, py: { xs: 2.2, md: 2.6 }, fontSize: { xs: '0.94rem', md: '1rem' }, color: 'var(--text-muted)' }}
+                        sx={{ px: { xs: '16px', md: '22px' }, py: '16px', fontSize: '14px', color: T.fg3, fontVariantNumeric: 'tabular-nums' }}
                       >
                         {them}
                       </Box>
                       <Box
                         component="td"
-                        sx={{ px: { xs: 2.4, md: 3 }, py: { xs: 2.2, md: 2.6 }, fontSize: { xs: '0.94rem', md: '1rem' }, fontWeight: 650, color: 'var(--text-heading)' }}
+                        sx={{ px: { xs: '16px', md: '22px' }, py: '16px', fontSize: '14px', color: T.fg, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}
                       >
                         {us}
                       </Box>
@@ -640,30 +718,32 @@ export default function DocsPage() {
                 </Box>
               </Box>
             </Box>
-          </Box>
+          </Card>
         </Reveal>
-      </Band>
+      </Section>
 
       {/* ================= PRIVATE ================= */}
-      <Band id="private" alt>
-        <Intro
-          pill="Private and uncensored"
+      <Section id="private">
+        <Header
+          eyebrow="Private and uncensored"
           title="The two things we will not trade away."
+          lede="Most of this industry treats both as features to switch on later. They are the reason this exists."
         />
 
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 4, md: 6 } }}>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: '28px', md: '48px' } }}>
           <Reveal>
             <Box>
               {PRIVACY.map(([t, d], i) => (
-                <Box key={t} sx={{ display: 'flex', gap: 2.4, py: 2.6, borderTop: i === 0 ? 'none' : '1px solid var(--border-subtle)' }}>
-                  <Typography aria-hidden="true" sx={{ fontSize: '0.78rem', fontWeight: 800, color: ORANGE, pt: 0.5, minWidth: 24 }}>
-                    {String(i + 1).padStart(2, '0')}
-                  </Typography>
+                <Box
+                  key={t}
+                  sx={{ display: 'flex', gap: '18px', py: '20px', borderTop: i === 0 ? 'none' : `1px solid ${T.line}` }}
+                >
+                  <Mono sx={{ color: T.brand, pt: '3px', minWidth: 20 }}>{String(i + 1).padStart(2, '0')}</Mono>
                   <Box>
-                    <Typography sx={{ fontSize: { xs: '1.08rem', md: '1.15rem' }, fontWeight: 700, color: 'var(--text-heading)', mb: 0.6 }}>
+                    <Typography sx={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg, mb: '6px' }}>
                       {t}
                     </Typography>
-                    <Typography sx={{ ...BODY, fontSize: '1rem' }}>{d}</Typography>
+                    <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg2, textWrap: 'pretty' }}>{d}</Typography>
                   </Box>
                 </Box>
               ))}
@@ -671,62 +751,71 @@ export default function DocsPage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <Box sx={{ p: { xs: 3, md: 4 }, borderRadius: '20px', backgroundColor: INK, border: '1px solid rgba(255,255,255,0.08)', height: 'fit-content' }}>
-              <Typography
-                sx={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: ORANGE, mb: 2.4 }}
-              >
-                On uncensored
-              </Typography>
-              <Typography sx={{ fontSize: { xs: '1.05rem', md: '1.15rem' }, lineHeight: 1.7, color: 'rgba(255,255,255,0.88)', mb: 2.4, textWrap: 'pretty' }}>
+            <Box
+              sx={{
+                borderRadius: T.r,
+                backgroundColor: T.ink,
+                border: '1px solid rgba(255,255,255,0.1)',
+                p: { xs: '22px', md: '30px' },
+                height: 'fit-content',
+              }}
+            >
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: '10px', mb: '20px' }}>
+                <Box aria-hidden="true" sx={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: T.brand }} />
+                <Box
+                  component="span"
+                  sx={{ fontFamily: T.mono, fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: T.brand }}
+                >
+                  On uncensored
+                </Box>
+              </Box>
+              <Typography sx={{ fontSize: { xs: '16px', md: '17px' }, lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', mb: '18px', textWrap: 'pretty' }}>
                 A screenplay about addiction. A security write up with working exploit code. A
                 medical question you would rather not have attached to your name. Mainstream
                 assistants refuse all three, and none of them are unreasonable to ask.
               </Typography>
-              <Typography sx={{ fontSize: { xs: '0.96rem', md: '1rem' }, lineHeight: 1.7, color: 'rgba(255,255,255,0.6)', textWrap: 'pretty' }}>
+              <Typography sx={{ fontSize: '14px', lineHeight: 1.65, color: 'rgba(255,255,255,0.55)', textWrap: 'pretty' }}>
                 Models marked Uncensored refuse less. That describes the model, not permission: the
                 acceptable use terms apply on every model here, and what is illegal stays illegal.
               </Typography>
             </Box>
           </Reveal>
         </Box>
-      </Band>
+      </Section>
 
-      {/* ================= MODELS ================= */}
-      <Band id="models">
-        <Intro
-          pill="Pick a model"
-          title="One picker. Everything behind it."
-          lead="Click the model name under the message box. Switching never leaves your conversation."
+      {/* ================= PICKER ================= */}
+      <Section id="models" sx={{ backgroundColor: T.surface }}>
+        <Header
+          eyebrow="The picker"
+          title="One control. Everything behind it."
+          lede="Click the model name under the message box. Switching never leaves your conversation."
         />
 
         <Reveal>
-          <Box sx={{ mb: { xs: 5, md: 8 } }}>
+          <Box sx={{ mb: { xs: '28px', md: '44px' }, borderRadius: T.r, overflow: 'hidden', boxShadow: T.shadow }}>
             <ProductWindow />
           </Box>
         </Reveal>
 
         <Reveal delay={80}>
           <Box sx={{ overflowX: 'auto' }}>
-            <Box component="table" sx={{ width: '100%', minWidth: 620, borderCollapse: 'collapse' }}>
+            <Box component="table" sx={{ width: '100%', minWidth: 600, borderCollapse: 'collapse' }}>
               <Box component="tbody">
-                {PICK.map(([iff, pick, why]) => (
-                  <Box key={iff} component="tr" sx={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                {PICK.map(([iff, pick, why], i) => (
+                  <Box key={iff} component="tr" sx={{ borderTop: `1px solid ${T.line}` }}>
                     <Box
                       component="td"
-                      sx={{ py: { xs: 2.4, md: 2.8 }, pr: 3, fontSize: { xs: '1rem', md: '1.04rem' }, fontWeight: 700, color: 'var(--text-heading)', verticalAlign: 'top', width: '26%' }}
+                      sx={{ py: '18px', pr: '22px', fontSize: '14.5px', fontWeight: 500, color: T.fg, verticalAlign: 'top', width: '26%' }}
                     >
                       {iff}
                     </Box>
                     <Box
                       component="td"
-                      sx={{ py: { xs: 2.4, md: 2.8 }, pr: 3, fontSize: { xs: '1rem', md: '1.04rem' }, fontWeight: 700, color: ORANGE, verticalAlign: 'top', width: '26%' }}
+                      sx={{ py: '18px', pr: '22px', fontSize: '14.5px', fontWeight: 500, color: T.brand, verticalAlign: 'top', width: '26%' }}
                     >
                       {pick}
                     </Box>
-                    <Box
-                      component="td"
-                      sx={{ py: { xs: 2.4, md: 2.8 }, fontSize: { xs: '0.96rem', md: '1rem' }, lineHeight: 1.65, color: 'var(--text-secondary)' }}
-                    >
+                    <Box component="td" sx={{ py: '18px', fontSize: '14px', lineHeight: 1.6, color: T.fg2 }}>
                       {why}
                     </Box>
                   </Box>
@@ -735,44 +824,37 @@ export default function DocsPage() {
             </Box>
           </Box>
         </Reveal>
-      </Band>
+      </Section>
 
       {/* ================= CLOSE ================= */}
-      <Box sx={{ position: 'relative', overflow: 'hidden', backgroundColor: 'var(--bg-section-alt)' }}>
-        <Box
-          aria-hidden="true"
-          sx={{
-            position: 'absolute',
-            bottom: -220,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 900,
-            height: 520,
-            background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255, 102, 0, 0.14) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 }, py: { xs: 10, md: 16 }, position: 'relative' }}>
-          <Reveal>
-            <Box sx={{ maxWidth: 700, mx: 'auto', textAlign: 'center' }}>
-              <Typography
-                component="h2"
-                sx={{ fontSize: { xs: '2rem', md: '2.9rem' }, fontWeight: 800, letterSpacing: '-0.035em', color: 'var(--text-heading)', mb: 2.4, textWrap: 'balance' }}
-              >
-                Bring the thing you gave up on.
-              </Typography>
-              <Typography sx={{ ...LEAD, mx: 'auto', mb: 4 }}>
-                The project that needed four subscriptions, or the document you could not paste
-                anywhere else.
-              </Typography>
-              <CTA href={APP} solid>
-                Open the chat
-                <Box component="span" aria-hidden="true">→</Box>
-              </CTA>
-            </Box>
-          </Reveal>
-        </Container>
-      </Box>
+      <Section>
+        <Reveal>
+          <Box sx={{ py: { xs: '20px', md: '40px' }, maxWidth: '20ch' }}>
+            <Typography
+              component="h2"
+              sx={{
+                fontSize: 'clamp(32px, 5vw, 62px)',
+                lineHeight: 1.02,
+                letterSpacing: '-0.045em',
+                fontWeight: 600,
+                color: T.fg,
+                mb: '20px',
+                textWrap: 'balance',
+              }}
+            >
+              Bring the thing you gave up on.
+            </Typography>
+            <Typography sx={{ fontSize: '17px', lineHeight: 1.55, color: T.fg2, maxWidth: '48ch', mb: '28px', textWrap: 'pretty' }}>
+              The project that needed four subscriptions, or the document you could not paste
+              anywhere else.
+            </Typography>
+            <Button href={APP} primary>
+              Open the chat
+              <Box component="span" aria-hidden="true">→</Box>
+            </Button>
+          </Box>
+        </Reveal>
+      </Section>
 
       <Footer />
     </Box>
