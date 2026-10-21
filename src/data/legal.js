@@ -11,6 +11,13 @@
    brackets verbatim, which is deliberate so an unfinished document
    cannot go out looking finished.
 
+   Structure checked against Venice AI's published Privacy Policy and
+   Terms of Service (venice.ai/legal), read 21 Oct 2026. Venice is the
+   closest comparable: privacy-first, multi-model, uncensored, no-account
+   start, wallet sign-in, its own token. Wording here is ours; what was
+   taken is which clauses a service of this shape needs. Their documents
+   change, so diff against the live versions before publishing.
+
    Three claims here are repeated from the marketing pages and have not
    been verified against the implementation. If any is not true in
    production it must be cut from BOTH places before launch, because in a
@@ -31,7 +38,7 @@ export const PRIVACY_SECTIONS = [
     body: [
       'Hey Open is a multi-model AI service operated by [LEGAL ENTITY NAME], a company registered in [JURISDICTION] with registered address [REGISTERED ADDRESS] ("we", "us", "our").',
       'For the purposes of the UK and EU General Data Protection Regulation, we are the data controller for the personal data described in this policy. You can reach us about anything in this document at [PRIVACY CONTACT EMAIL].',
-      'This policy covers the Hey Open website, the chat application, and our API. It does not cover the third-party model providers your requests may be routed to, who handle data under their own terms. Section 5 explains that relationship.',
+      'This policy covers the Hey Open website, the chat application, and our API. It does not cover the third-party model providers your requests may be routed to, who handle data under their own terms. Section 7 explains that relationship.',
     ],
   },
   {
@@ -42,19 +49,33 @@ export const PRIVACY_SECTIONS = [
     ],
   },
   {
-    heading: '3. What we collect',
+    heading: '3. What we collect, by how you use it',
     body: [
-      'Prompts, files and responses. What you type, any file you upload, and what the model sends back. These are processed to answer your request. See section 6 for how long they are kept.',
-      'Memory. Facts the assistant keeps about you to use in later conversations. Memory is stored in your browser, not on our servers. See section 7.',
-      'Account and billing data. If you subscribe, we collect your email address and the billing details needed to take payment. Card details are handled by our payment processor, [PAYMENT PROCESSOR], and are not stored by us.',
-      'Wallet data. If you connect a wallet, we process your public wallet address. We never ask for, receive or store a private key or seed phrase, and no part of Hey Open will ever ask you for one.',
-      'Newsletter. If you subscribe to updates, we keep the email address you give us until you unsubscribe.',
-      'Technical data. IP address, browser and device type, and basic request logs, which we use to keep the service running and to detect abuse.',
-      'Cookies and local storage. See section 9.',
+      'Without an account. Basic technical data only: IP address, browser and device type, time zone, and request timing. We use it to keep the service running and to stop automated abuse. We do not build a profile from it.',
+      'With a wallet. Your public wallet address, which identifies your account for sign-in and for anything involving the token. We never ask for, receive or store a private key or seed phrase, and no part of Hey Open will ever ask you for one.',
+      'With a paid plan. Your email address, and the billing details needed to take payment. Card details go directly to our payment processor, [PAYMENT PROCESSOR], and are not stored by us. If you pay in crypto we record the paying address.',
+      'When you write to us. Your name, email and whatever you put in the message, kept so we can answer and so we have a record of the exchange.',
+      'If you apply for a job. Whatever you choose to send us, used only to consider your application.',
+      'From everyone. Usage events such as opening a chat, selecting a model, or deleting a conversation. These record that something happened, not what was in it.',
     ],
   },
   {
-    heading: '4. Why we process it, and on what legal basis',
+    heading: '4. Prompts, outputs and files',
+    body: [
+      'What you type, the files you attach and what the model sends back are processed to answer your request and are not retained by us afterwards. We record that a request happened; we do not keep what was in it.',
+      '[CARVE-OUTS GO HERE. If anything is held even briefly for technical reasons, say so and say for how long. Generated images and video are the usual case, since a file has to exist somewhere until the user downloads it. An absolute no-retention claim with an undisclosed exception is worse than a disclosed exception.]',
+      'Section 7 covers what happens to the same content once it reaches the model provider, which is a separate question.',
+    ],
+  },
+  {
+    heading: '5. Images and likenesses',
+    body: [
+      '[REQUIRED IF IMAGE OR VIDEO GENERATION ACCEPTS UPLOADED PHOTOS OF PEOPLE. A photograph of a face can be biometric data, which is a special category under GDPR Article 9 and separately regulated under Illinois BIPA and Texas CUBI. Processing it generally needs explicit consent, collected at the point of upload, not buried in this policy.]',
+      '[State: that the person uploading confirms the image is of themselves or that they have the depicted person\u2019s permission; which provider processes it; that it is not used for anything other than the generation requested; and how long it exists. Venice names its processor and the purpose limit explicitly, which is the standard to meet.]',
+    ],
+  },
+  {
+    heading: '6. Why we process it, and on what legal basis',
     body: [
       'To provide the service you asked for, including routing your request to a model and returning the answer. Legal basis: performance of a contract.',
       'To take payment and maintain your subscription. Legal basis: performance of a contract, and compliance with tax and accounting law.',
@@ -65,16 +86,24 @@ export const PRIVACY_SECTIONS = [
     ],
   },
   {
-    heading: '5. Model providers, and what leaves our service',
+    heading: '7. Model providers, and what leaves our service',
     body: [
-      'Hey Open does not train or host the frontier models it offers. When you send a request, the content of that request is forwarded to the provider of the model you selected, or to the provider the router selects for you. Those providers include OpenAI, Anthropic, Google and OpenRouter, among others.',
-      'This means the text of your prompt, and any file you attach, leaves our infrastructure and is processed by that provider under their own privacy terms and retention periods. We cannot extend our retention commitments to them, and you should read the terms of any provider you care about.',
-      'Memory is treated differently and more cautiously. It is not sent to models routed to outside providers unless you switch on "Share memory with external models" in settings, which is off by default.',
-      'We also use service providers who process data on our behalf under contract: [HOSTING PROVIDER] for hosting, [PAYMENT PROCESSOR] for payments, and [ANALYTICS PROVIDER, IF ANY] for analytics. A current list is available on request.',
+      'Hey Open does not build or host the frontier models it offers. When you send a request, its contents are passed to the provider of the model you chose, or to the provider the router chose for you. Those providers include OpenAI, Anthropic, Google and OpenRouter among others.',
+      '[THE CENTRAL QUESTION FOR THIS SERVICE. Either we hold the providers to zero retention by contract, in which case say so plainly, because it is the strongest privacy statement available to a router and Venice makes it; or we do not, in which case this must say that prompts are handled under each provider\u2019s own retention terms. Do not leave it vague. Confirm what every provider agreement actually says before choosing the wording.]',
+      'Memory is handled more cautiously than prompts. It is not included in requests to outside providers unless you switch on "Share memory with external models", which is off by default.',
+      'We also use companies that process data on our behalf under contract: [HOSTING PROVIDER] for hosting, [PAYMENT PROCESSOR] for payments, and [ANALYTICS PROVIDER, IF ANY] for analytics. A current list is available on request.',
     ],
   },
   {
-    heading: '6. How long we keep things',
+    heading: '8. Other disclosures',
+    body: [
+      'We may disclose personal data where the law requires it: to answer a court order, subpoena or lawful request from law enforcement, to protect the rights, property or safety of you, us or others, to defend against legal claims, or to investigate fraud or unlawful activity.',
+      'If we are acquired, merged, or sell part of the business, personal data may be transferred as part of that transaction or while it is being negotiated. We will tell you if that happens and what it means for your data.',
+      'We may disclose data to our affiliates for the purposes described in this policy, and to anyone else with your permission.',
+    ],
+  },
+  {
+    heading: '9. How long we keep things',
     body: [
       'Prompts and responses are not retained after your request has been processed and the answer returned to you.',
       'Account and billing records are kept for as long as you have an account and afterwards for the period we are required to keep financial records, which is [RETENTION PERIOD, e.g. seven years] in [JURISDICTION].',
@@ -84,7 +113,7 @@ export const PRIVACY_SECTIONS = [
     ],
   },
   {
-    heading: '7. Memory',
+    heading: '10. Memory',
     body: [
       'Memory is stored only in the browser you are using. It does not sync between your devices, we do not hold a copy, and clearing your site data removes it permanently. We cannot restore it for you.',
       'You can see every stored entry in Settings, add entries by hand, and delete any of them individually. You can switch off "Generate memory from chats" so nothing new is written, and switch off "Use memory" so nothing stored is read.',
@@ -92,21 +121,21 @@ export const PRIVACY_SECTIONS = [
     ],
   },
   {
-    heading: '8. Training',
+    heading: '11. Training',
     body: [
       'We do not use your conversations, files or memory to train models, and we do not sell or licence them to anyone for that purpose.',
       'We cannot make that promise on behalf of the third-party providers your requests are routed to. Whether a given provider trains on API traffic is governed by their terms, and it differs between them and between tiers of their service.',
     ],
   },
   {
-    heading: '9. Cookies and local storage',
+    heading: '12. Cookies and local storage',
     body: [
       'We use browser storage to keep the service working: your theme preference, your session, and your memory entries. These are necessary for the features you are using and are not used for advertising.',
       '[IF ANALYTICS OR NON-ESSENTIAL COOKIES ARE ADDED, DESCRIBE THEM HERE AND IMPLEMENT A CONSENT BANNER. Non-essential cookies require prior consent in the EU and UK.]',
     ],
   },
   {
-    heading: '10. Your rights',
+    heading: '13. Your rights',
     body: [
       'If you are in the UK, the EU or another jurisdiction with equivalent law, you have the right to access the personal data we hold about you, to have it corrected or erased, to restrict or object to how we use it, to receive it in a portable form, and to withdraw consent where we relied on it.',
       'If you are a California resident, you have the right to know what personal information we collect and why, to request deletion or correction, and to opt out of sale or sharing. We do not sell or share personal information as those terms are defined by the CCPA, and we will not discriminate against you for exercising any right.',
@@ -116,13 +145,13 @@ export const PRIVACY_SECTIONS = [
     ],
   },
   {
-    heading: '11. International transfers',
+    heading: '14. International transfers',
     body: [
       'Our service providers and the model providers we route to operate in [LIST OF COUNTRIES/REGIONS, including the United States]. Where personal data leaves the UK or the European Economic Area we rely on [TRANSFER MECHANISM: UK IDTA, EU Standard Contractual Clauses, or an adequacy decision], and you can request a copy of the safeguards we use.',
     ],
   },
   {
-    heading: '12. Security',
+    heading: '15. Security',
     body: [
       'We use encryption in transit, access controls on our systems, and the operational practices described at [SECURITY PAGE URL, IF ANY].',
       'No service can promise perfect security. If a breach occurs that is likely to present a risk to you, we will notify you and the relevant regulator within the timeframes the law sets.',
@@ -130,19 +159,19 @@ export const PRIVACY_SECTIONS = [
     ],
   },
   {
-    heading: '13. Children',
+    heading: '16. Children',
     body: [
       'Hey Open is not intended for children. You must be at least [MINIMUM AGE, typically 13, 16 in parts of the EU, or 18] to use it. We do not knowingly collect personal data from anyone below that age, and if we learn that we have, we will delete it.',
     ],
   },
   {
-    heading: '14. Changes to this policy',
+    heading: '17. Changes to this policy',
     body: [
       'We will update this page when our practices change, and the date at the top will tell you when it last changed. If a change materially affects your rights we will give you notice before it takes effect.',
     ],
   },
   {
-    heading: '15. Contact',
+    heading: '18. Contact',
     body: [
       'Write to [PRIVACY CONTACT EMAIL], or to [LEGAL ENTITY NAME] at [REGISTERED ADDRESS].',
       '[IF A DATA PROTECTION OFFICER OR AN EU/UK REPRESENTATIVE UNDER GDPR ARTICLE 27 IS REQUIRED, NAME THEM HERE.]',
@@ -154,15 +183,19 @@ export const TERMS_SECTIONS = [
   {
     heading: '1. These terms',
     body: [
-      'These terms are an agreement between you and [LEGAL ENTITY NAME], a company registered in [JURISDICTION] ("we", "us", "our"), covering your use of the Hey Open website, chat application and API.',
-      'By using Hey Open you accept these terms. If you do not accept them, do not use the service.',
+      'These terms are a binding agreement between you and [LEGAL ENTITY NAME], a company registered in [JURISDICTION] ("we", "us", "our"), covering your use of the Hey Open website, chat application and API.',
+      'By accessing or using Hey Open you confirm that you have read and understood these terms and agree to be bound by them, together with our Privacy Policy. If you do not agree, you do not have permission to use the service.',
+      '[DECIDE ON ARBITRATION BEFORE PUBLISHING. If binding individual arbitration and a class action waiver are intended for users in the United States, that has to be drafted properly and flagged conspicuously at the very top of this page, not buried. Venice puts its arbitration notice above section 1 in capitals. If arbitration is not intended, delete this note and rely on section 17.]',
     ],
   },
   {
     heading: '2. Who may use it',
     body: [
-      'You must be at least [MINIMUM AGE] years old. If you are using Hey Open for an organisation, you confirm you are authorised to accept these terms on its behalf.',
-      'You may not use the service if you are subject to sanctions, or located in a country subject to an embargo, that would make it unlawful for us to provide it to you.',
+      'You must be at least [MINIMUM AGE] years old. If you are under 18 you need a parent or guardian\u2019s permission.',
+      '[IF ANY MODEL IS OFFERED WITHOUT CONTENT FILTERING, ADD THE UNDERTAKING HERE: that a user under 18 will not disable, block or work around the content filter. Venice makes this a condition of eligibility rather than an acceptable-use clause, which puts the obligation on the user at the point they agree. For a platform advertising uncensored models this is the single most important paragraph in the document.]',
+      'You confirm you have not previously been removed from the service, and that your use of it complies with the law where you are.',
+      'If you are accepting on behalf of an organisation, you confirm you are authorised to bind it.',
+      'You may not use the service if you are subject to sanctions, or in a country under an embargo that would make providing it to you unlawful.',
     ],
   },
   {
@@ -269,6 +302,7 @@ export const TERMS_SECTIONS = [
     body: [
       'You may stop using the service at any time and cancel any subscription as described above.',
       'We may suspend or terminate your access if you breach these terms, if we are required to by law, or if continuing would expose us or other users to risk. Where it is reasonable to do so we will tell you why and give you a chance to put it right.',
+      'We may suspend access to paid features on an account with an amount overdue, and may recover the costs of collecting it.',
       'Sections that by their nature should survive termination will do so, including content ownership, disclaimers, liability and governing law.',
     ],
   },
