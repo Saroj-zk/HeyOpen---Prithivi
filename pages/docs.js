@@ -294,18 +294,6 @@ const STATS = [
   ['0', 'Prompts kept'],
 ];
 
-const FRAMES = [
-  { src: '/images/scenery_cliffs.jpg', alt: 'Generated still, cliffs at dusk' },
-  { src: '/images/scenery_alpine.jpg', alt: 'Generated still, ridge at dawn' },
-  { src: '/images/scenery_dunes.jpg', alt: 'Generated still, dunes' },
-];
-
-const API_SNIPPET = `curl https://api.openledger.xyz/v1/chat/completions \\
-  -H "Authorization: Bearer $OPENLEDGER_API_KEY" \\
-  -d '{ "model": "auto", "messages": [...] }'`;
-
-const GUARANTEES = ['No account to start', 'Prompts not retained', 'Memory stays local', 'TEE models available'];
-
 const COMPARE = [
   ['Models you can reach', 'One family per tool', '200+ in one picker'],
   ['Text, images, video, voice', 'Four tools, four tabs', 'One conversation'],
@@ -332,6 +320,258 @@ const PICK = [
 ];
 
 /* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Flows                                                               */
+/* ------------------------------------------------------------------ */
+
+/* A step's media panel. Each flow uses a different register so the three
+   sequences do not read as one block repeated three times. */
+function Media({ step }) {
+  const base = {
+    position: 'relative',
+    aspectRatio: '16 / 11',
+    borderBottom: `1px solid ${T.line}`,
+    overflow: 'hidden',
+  };
+
+  if (step.img) {
+    return (
+      <Box sx={base}>
+        <Box
+          component="img"
+          src={step.img}
+          alt=""
+          loading="lazy"
+          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </Box>
+    );
+  }
+
+  if (step.video) {
+    return (
+      <Box sx={{ ...base, backgroundColor: T.ink }}>
+        <Clip src={step.video} />
+      </Box>
+    );
+  }
+
+  /* Everything else is drawn: a few lines of monospace on the right
+     surface, which keeps the card honest about being a diagram. */
+  return (
+    <Box
+      sx={{
+        ...base,
+        backgroundColor: step.dark ? T.ink : T.surface2,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: '6px',
+        px: '16px',
+      }}
+    >
+      {step.lines.map((l, i) => (
+        <Typography
+          key={i}
+          sx={{
+            fontFamily: T.mono,
+            fontSize: '11.5px',
+            lineHeight: 1.5,
+            color: l.hot ? T.brand : step.dark ? 'rgba(255,255,255,.72)' : T.fg2,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          {l.t}
+        </Typography>
+      ))}
+    </Box>
+  );
+}
+
+function Flow({ flow }) {
+  return (
+    <Reveal>
+      <Box sx={{ pt: { xs: '40px', md: '58px' } }}>
+        {/* Heading row */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr auto' },
+            gap: '16px',
+            alignItems: 'end',
+            mb: '26px',
+          }}
+        >
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', mb: '14px' }}>
+              <Mono sx={{ color: T.brand, fontSize: '11.5px' }}>{flow.n}</Mono>
+              <Box sx={{ width: 14, height: 1, backgroundColor: T.line2 }} />
+              <Mono>{flow.tag}</Mono>
+            </Box>
+            <Typography
+              component="h3"
+              sx={{
+                fontSize: 'clamp(22px, 2.6vw, 32px)',
+                lineHeight: 1.08,
+                letterSpacing: '-0.032em',
+                fontWeight: 600,
+                color: T.fg,
+                textWrap: 'balance',
+              }}
+            >
+              {flow.title}
+            </Typography>
+          </Box>
+          <Typography sx={{ fontSize: '14.5px', lineHeight: 1.55, color: T.fg2, maxWidth: '38ch' }}>
+            {flow.body}
+          </Typography>
+        </Box>
+
+        {/* The sequence */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
+            gap: { xs: '16px', lg: '14px' },
+            position: 'relative',
+          }}
+        >
+          {flow.steps.map((step, i) => (
+            <Box key={step.t} sx={{ position: 'relative' }}>
+              {/* Connector into the next card, drawn only where cards sit
+                  side by side. */}
+              {i < flow.steps.length - 1 && (
+                <Box
+                  aria-hidden="true"
+                  sx={{
+                    display: { xs: 'none', lg: 'block' },
+                    position: 'absolute',
+                    top: '50%',
+                    right: -14,
+                    width: 14,
+                    height: 1,
+                    backgroundColor: T.line2,
+                    zIndex: 1,
+                  }}
+                />
+              )}
+              <Box
+                sx={{
+                  border: `1px solid ${T.line}`,
+                  borderRadius: T.r,
+                  overflow: 'hidden',
+                  backgroundColor: T.bg,
+                  height: '100%',
+                  transition: 'box-shadow .2s ease, border-color .2s ease',
+                  '&:hover': { borderColor: T.line2, boxShadow: T.shadow },
+                }}
+              >
+                <Media step={step} />
+                <Box sx={{ p: '16px' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: '10px', mb: '7px' }}>
+                    <Mono sx={{ fontSize: '10px', color: T.brand }}>{String(i + 1).padStart(2, '0')}</Mono>
+                    <Typography sx={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg }}>
+                      {step.t}
+                    </Typography>
+                  </Box>
+                  <Typography sx={{ fontSize: '13.5px', lineHeight: 1.55, color: T.fg3 }}>{step.d}</Typography>
+                </Box>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+
+        {/* The outcome */}
+        <Box
+          sx={{
+            mt: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px',
+            flexWrap: 'wrap',
+            px: '16px',
+            py: '14px',
+            borderRadius: T.r,
+            border: `1px solid ${T.brandLine}`,
+            backgroundColor: T.brandSoft,
+          }}
+        >
+          <Mono sx={{ color: T.brand, fontSize: '10.5px' }}>Result</Mono>
+          <Typography sx={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg }}>
+            {flow.result}
+          </Typography>
+          <Typography sx={{ fontSize: '14px', color: T.fg2 }}>{flow.resultNote}</Typography>
+        </Box>
+      </Box>
+    </Reveal>
+  );
+}
+
+const FLOWS = [
+  {
+    n: '01',
+    tag: 'Making something',
+    title: 'A short film, start to finish.',
+    body: 'Four messages in one conversation. Each step still has the one before it, so nothing is re-described.',
+    steps: [
+      {
+        t: 'Write the script',
+        d: 'Ask a text model for the scenes and the shot list.',
+        dark: true,
+        lines: [
+          { t: 'SCENE 4 - THE ORCHARD' },
+          { t: 'She holds the photograph' },
+          { t: 'up until the hill behind' },
+          { t: 'it lines up.' },
+        ],
+      },
+      { t: 'Generate the stills', d: 'Switch to an image model. It already knows the script.', img: '/images/scenery_cliffs.jpg' },
+      { t: 'Animate the shot', d: 'Switch to a video model and move the frame you picked.', video: '/Videos/AI ecosystem/Video Gen.webm' },
+      {
+        t: 'Score and voice it',
+        d: 'Music, effects and the closing line, matched to the cut.',
+        lines: [
+          { t: 'strings.wav      00:42' },
+          { t: 'wind_bed.wav     00:42' },
+          { t: 'maren_vo.wav     00:06', hot: true },
+        ],
+      },
+    ],
+    result: 'A finished two minute film.',
+    resultNote: 'One subscription, one thread, no re-uploading between tools.',
+  },
+  {
+    n: '02',
+    tag: 'Building on it',
+    title: 'An app on every model at once.',
+    body: 'An OpenAI-compatible endpoint, so the integration you already wrote keeps working.',
+    steps: [
+      { t: 'Create a key', d: 'One key reaches the whole catalogue.', dark: true, lines: [{ t: '$ openledger keys create' }, { t: 'sk-ol-7f2c...9a41', hot: true }] },
+      { t: 'Point your client', d: 'Change the base URL. Leave the rest of your code alone.', dark: true, lines: [{ t: 'new OpenAI({' }, { t: '  baseURL: ".../v1"', hot: true }, { t: '})' }] },
+      { t: 'Let it route', d: 'Set auto and cheap requests stop hitting expensive models.', dark: true, lines: [{ t: 'model: "auto"', hot: true }, { t: 'messages: [...]' }] },
+      { t: 'Ship it', d: 'Swap or add a model later without another integration.', dark: true, lines: [{ t: '200 OK', hot: true }, { t: 'served_by: claude-opus-4' }, { t: 'cost: $0.0021' }] },
+    ],
+    result: 'One integration, every model.',
+    resultNote: 'Adding a model later is a string change, not a sprint.',
+  },
+  {
+    n: '03',
+    tag: 'Work you cannot paste elsewhere',
+    title: 'Sensitive documents, nothing left behind.',
+    body: 'Due diligence, case files, patient records and board papers, without creating an account first.',
+    steps: [
+      { t: 'Pick a TEE model', d: 'It runs in an enclave, so the host cannot read the request.', lines: [{ t: '[ TEE ]  enclave', hot: true }, { t: '[ WEB ]  off' }, { t: '[ CTX ]  200K' }] },
+      { t: 'Paste the document', d: 'No upload quota and no account to create first.', lines: [{ t: 'MSA_2026_final.pdf' }, { t: '84 pages' }, { t: 'attached' }] },
+      { t: 'Ask in plain English', d: 'Clause level answers, quoted back with the text.', lines: [{ t: '> flag every clause' }, { t: '  shifting liability' }, { t: '  to us' }] },
+      { t: 'Close the tab', d: 'The prompt was never retained and memory stayed local.', lines: [{ t: 'retained:   0 bytes', hot: true }, { t: 'account:    none' }, { t: 'memory:     local only' }] },
+    ],
+    result: 'An answer, and no copy anywhere.',
+    resultNote: 'The strongest guarantee is not holding it in the first place.',
+  },
+];
 
 function Rail({ active }) {
   return (
@@ -392,49 +632,6 @@ function Rail({ active }) {
   );
 }
 
-/* A numbered audience row: label column, claim, artifact. */
-function Use({ n, tag, title, body, children }) {
-  return (
-    <Reveal>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '0.82fr 1.18fr' },
-          gap: { xs: '22px', md: '48px' },
-          py: { xs: '32px', md: '46px' },
-          borderTop: `1px solid ${T.line}`,
-          alignItems: 'start',
-        }}
-      >
-        <Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', mb: '18px' }}>
-            <Mono sx={{ color: T.brand, fontSize: '11.5px' }}>{n}</Mono>
-            <Box sx={{ width: 14, height: 1, backgroundColor: T.line2 }} />
-            <Mono>{tag}</Mono>
-          </Box>
-          <Typography
-            component="h3"
-            sx={{
-              fontSize: 'clamp(22px, 2.4vw, 30px)',
-              lineHeight: 1.1,
-              letterSpacing: '-0.03em',
-              fontWeight: 600,
-              color: T.fg,
-              mb: '14px',
-              textWrap: 'balance',
-            }}
-          >
-            {title}
-          </Typography>
-          <Typography sx={{ fontSize: '15px', lineHeight: 1.6, color: T.fg2, maxWidth: '46ch', textWrap: 'pretty' }}>
-            {body}
-          </Typography>
-        </Box>
-        <Box sx={{ minWidth: 0 }}>{children}</Box>
-      </Box>
-    </Reveal>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 
@@ -584,124 +781,12 @@ export default function DocsPage() {
         <Header
           eyebrow="What it is for"
           title="Three jobs, one subscription."
-          lede="The same account covers someone making something, someone building on the API, and someone whose documents cannot go into a consumer chatbot."
+          lede="Each of these is a sequence, not a feature. The point is that every step stays in the same conversation."
         />
 
-        <Use
-          n="01"
-          tag="Making something"
-          title="Script, stills, motion and score. One thread."
-          body="Write it, storyboard it, animate the closing shot and score it without opening a second tool. Each step still has the one before it, so nothing gets re-described."
-        >
-          <Box
-            sx={{
-              ...TRAY,
-              overflow: 'hidden',
-              backgroundColor: T.ink,
-              aspectRatio: '16 / 10',
-              mx: '9px',
-              mb: '28px',
-            }}
-          >
-            <Clip src="/Videos/AI ecosystem/Video Gen.webm" />
-          </Box>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-            {FRAMES.map((f) => (
-              <Box
-                key={f.src}
-                sx={{ position: 'relative', aspectRatio: '3 / 2', borderRadius: '8px', overflow: 'hidden', border: `1px solid ${T.line}` }}
-              >
-                <Box
-                  component="img"
-                  src={f.src}
-                  alt={f.alt}
-                  loading="lazy"
-                  sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              </Box>
-            ))}
-          </Box>
-        </Use>
-
-        <Use
-          n="02"
-          tag="Building on it"
-          title="One key. Every model. No rewrite."
-          body="An OpenAI-compatible endpoint, so you change a base URL and keep your code. Set the model to auto and cheap requests stop going to expensive models."
-        >
-          <Box sx={{ ...TRAY, overflow: 'hidden', backgroundColor: T.ink, mx: '9px' }}>
-            <Box
-              sx={{
-                px: '16px',
-                py: '11px',
-                borderBottom: '1px solid rgba(255,255,255,0.1)',
-                fontFamily: T.mono,
-                fontSize: '10.5px',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.42)',
-              }}
-            >
-              chat/completions
-            </Box>
-            <Box
-              component="pre"
-              sx={{
-                m: 0,
-                p: { xs: '18px', md: '22px' },
-                overflowX: 'auto',
-                fontFamily: T.mono,
-                fontSize: { xs: '12px', md: '13px' },
-                lineHeight: 1.8,
-                color: 'rgba(255,255,255,0.88)',
-              }}
-            >
-              {API_SNIPPET}
-            </Box>
-          </Box>
-        </Use>
-
-        <Use
-          n="03"
-          tag="Work you cannot paste elsewhere"
-          title="Contracts in. Nothing left behind."
-          body="Due diligence, case files, patient records and board papers. No account to create, prompts not retained, and models that run inside a hardware enclave for the parts that need it."
-        >
-          <Box sx={{ ...TRAY, backgroundColor: T.ink, mx: '9px', p: { xs: '20px', md: '26px' } }}>
-            <Typography
-              sx={{
-                fontFamily: T.mono,
-                fontSize: { xs: '12px', md: '13px' },
-                lineHeight: 1.85,
-                color: 'rgba(255,255,255,0.88)',
-                mb: '22px',
-                whiteSpace: 'pre-wrap',
-              }}
-            >
-              {'> Review the attached master services agreement.\n  Flag every clause that shifts liability to us,\n  quote it, and rank by exposure.'}
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
-              {GUARANTEES.map((g) => (
-                <Box
-                  key={g}
-                  sx={{
-                    px: '10px',
-                    py: '5px',
-                    borderRadius: '6px',
-                    border: `1px solid ${T.brandLine}`,
-                    color: T.brand,
-                    fontFamily: T.mono,
-                    fontSize: '10.5px',
-                    letterSpacing: '0.04em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {g}
-                </Box>
-              ))}
-            </Box>
-          </Box>
-        </Use>
+        {FLOWS.map((f) => (
+          <Flow key={f.n} flow={f} />
+        ))}
       </Section>
 
       {/* ================= COMPARISON ================= */}
@@ -872,50 +957,80 @@ export default function DocsPage() {
       </Section>
 
       {/* ================= CLOSE ================= */}
-      <Section sx={{ overflow: 'hidden' }}>
-        {/* Outlined, enormous, and purely graphic. The reference uses one to
-            close the page out; it carries no information. */}
+      <Section sx={{ overflow: 'hidden', position: 'relative' }}>
+        {/* Outlined, enormous, purely graphic. Sits behind the closing copy
+            rather than above it, which stops the section being a tall column
+            of text against an empty right half. */}
         <Typography
           aria-hidden="true"
           sx={{
-            fontSize: 'clamp(96px, 22vw, 300px)',
+            position: 'absolute',
+            left: '50%',
+            bottom: { xs: '-6%', md: '-14%' },
+            transform: 'translateX(-50%)',
+            fontSize: 'clamp(110px, 20vw, 290px)',
             lineHeight: 0.8,
             letterSpacing: '-0.07em',
             fontWeight: 600,
             color: 'transparent',
             WebkitTextStroke: `1px ${T.line2}`,
-            textAlign: 'center',
             userSelect: 'none',
-            mb: { xs: '24px', md: '40px' },
             whiteSpace: 'nowrap',
+            pointerEvents: 'none',
           }}
         >
           HEY OPEN
         </Typography>
+
         <Reveal>
-          <Box sx={{ py: { xs: '20px', md: '40px' }, maxWidth: '20ch' }}>
-            <Typography
-              component="h2"
-              sx={{
-                fontSize: 'clamp(32px, 5vw, 62px)',
-                lineHeight: 1.02,
-                letterSpacing: '-0.045em',
-                fontWeight: 600,
-                color: T.fg,
-                mb: '20px',
-                textWrap: 'balance',
-              }}
-            >
-              Bring the thing you gave up on.
-            </Typography>
-            <Typography sx={{ fontSize: '17px', lineHeight: 1.55, color: T.fg2, maxWidth: '48ch', mb: '28px', textWrap: 'pretty' }}>
-              The project that needed four subscriptions, or the document you could not paste
-              anywhere else.
-            </Typography>
-            <Button href={APP} primary>
-              Open the chat
-              <Box component="span" aria-hidden="true">→</Box>
-            </Button>
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1.1fr 1fr' },
+              gap: { xs: '28px', md: '56px' },
+              alignItems: 'end',
+              py: { xs: '12px', md: '28px' },
+            }}
+          >
+            <Box>
+              <Typography
+                component="h2"
+                sx={{
+                  fontSize: 'clamp(32px, 4.6vw, 58px)',
+                  lineHeight: 1.02,
+                  letterSpacing: '-0.045em',
+                  fontWeight: 600,
+                  color: T.fg,
+                  mb: '20px',
+                  maxWidth: '14ch',
+                  textWrap: 'balance',
+                }}
+              >
+                Bring the thing you gave up on.
+              </Typography>
+              <Button href={APP} primary>
+                Open the chat
+                <Box component="span" aria-hidden="true">→</Box>
+              </Button>
+            </Box>
+
+            <Box sx={{ pb: '6px' }}>
+              <Typography sx={{ fontSize: '17px', lineHeight: 1.55, color: T.fg2, mb: '22px', textWrap: 'pretty' }}>
+                The project that needed four subscriptions, or the document you could not paste
+                anywhere else.
+              </Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', borderTop: `1px solid ${T.line}` }}>
+                {[['No account', 'to start'], ['Nothing', 'retained']].map(([a1, a2], i) => (
+                  <Box key={a1} sx={{ py: '14px', pl: i === 0 ? 0 : '18px', borderLeft: i === 0 ? 'none' : `1px solid ${T.line}` }}>
+                    <Typography sx={{ fontSize: '19px', fontWeight: 600, letterSpacing: '-0.03em', color: T.fg, lineHeight: 1.1 }}>
+                      {a1}
+                    </Typography>
+                    <Mono sx={{ fontSize: '10.5px' }}>{a2}</Mono>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
           </Box>
         </Reveal>
       </Section>
