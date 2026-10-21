@@ -34,6 +34,7 @@ const FOOTER_COLUMNS = [
     title: 'Product',
     links: [
       { label: 'Chat', href: 'https://ais.openledger.xyz/chat', external: true },
+      { label: 'Product guide', href: '/docs' },
       { label: 'Models', href: '/models' },
       { label: 'Consensus Mode', href: '/#consensus-mode' },
       { label: 'Universal Memory', href: '/memory' },
