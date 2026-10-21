@@ -46,6 +46,36 @@ const T = {
   gut: { xs: '20px', sm: '24px' },
 };
 
+/* The reference's three signature devices, which the token list alone does not
+   carry. Without these it reads as plain typesetting, which is what the first
+   pass at this restyle was. */
+
+/* 1. A mock sits in a tray: hairline, then a ring of surface, then a second
+      hairline, over a deep soft drop. This is the thing that makes the
+      product look placed rather than pasted. Leave room for the 9px ring. */
+const TRAY = {
+  borderRadius: '22px',
+  boxShadow: [
+    'inset 0 1px 0 rgba(255,255,255,.9)',
+    '0 0 0 1px rgba(12,12,14,.07)',
+    '0 0 0 8px #F4F4F5',
+    '0 0 0 9px rgba(12,12,14,.06)',
+    '0 36px 70px -34px rgba(12,12,14,.2)',
+  ].join(','),
+};
+
+/* 2. A ruled grid behind the hero, faded out downward. */
+const GRID = {
+  position: 'absolute',
+  inset: 0,
+  pointerEvents: 'none',
+  backgroundImage:
+    'linear-gradient(90deg, rgba(12,12,14,.08) 1px, transparent 1px), linear-gradient(rgba(12,12,14,.08) 1px, transparent 1px)',
+  backgroundSize: '64px 64px, 64px 64px',
+  maskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.35) 55%, transparent 100%)',
+  WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.35) 55%, transparent 100%)',
+};
+
 const CHAPTERS = [
   { id: 'uses', label: 'What it is for' },
   { id: 'why', label: 'The comparison' },
@@ -451,8 +481,23 @@ export default function DocsPage() {
       <Rail active={active} />
 
       {/* ================= HERO ================= */}
-      <Box sx={{ pt: { xs: '48px', md: '84px' }, pb: { xs: '44px', md: '68px' } }}>
-        <Wrap>
+      <Box sx={{ position: 'relative', pt: { xs: '48px', md: '84px' }, pb: { xs: '44px', md: '68px' } }}>
+        <Box aria-hidden="true" sx={GRID} />
+        <Box
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            left: '50%',
+            top: -60,
+            width: '70%',
+            height: 300,
+            transform: 'translateX(-50%)',
+            background: 'radial-gradient(closest-side, rgba(255,102,0,.16), transparent)',
+            filter: 'blur(10px)',
+            pointerEvents: 'none',
+          }}
+        />
+        <Wrap sx={{ position: 'relative' }}>
           <Reveal>
             <Eyebrow accent>Private and uncensored</Eyebrow>
             <Typography
@@ -550,12 +595,12 @@ export default function DocsPage() {
         >
           <Box
             sx={{
-              borderRadius: T.r,
+              ...TRAY,
               overflow: 'hidden',
-              border: `1px solid ${T.line}`,
               backgroundColor: T.ink,
               aspectRatio: '16 / 10',
-              mb: '10px',
+              mx: '9px',
+              mb: '28px',
             }}
           >
             <Clip src="/Videos/AI ecosystem/Video Gen.webm" />
@@ -584,7 +629,7 @@ export default function DocsPage() {
           title="One key. Every model. No rewrite."
           body="An OpenAI-compatible endpoint, so you change a base URL and keep your code. Set the model to auto and cheap requests stop going to expensive models."
         >
-          <Box sx={{ borderRadius: T.r, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: T.ink }}>
+          <Box sx={{ ...TRAY, overflow: 'hidden', backgroundColor: T.ink, mx: '9px' }}>
             <Box
               sx={{
                 px: '16px',
@@ -622,7 +667,7 @@ export default function DocsPage() {
           title="Contracts in. Nothing left behind."
           body="Due diligence, case files, patient records and board papers. No account to create, prompts not retained, and models that run inside a hardware enclave for the parts that need it."
         >
-          <Box sx={{ borderRadius: T.r, border: '1px solid rgba(255,255,255,0.1)', backgroundColor: T.ink, p: { xs: '20px', md: '26px' } }}>
+          <Box sx={{ ...TRAY, backgroundColor: T.ink, mx: '9px', p: { xs: '20px', md: '26px' } }}>
             <Typography
               sx={{
                 fontFamily: T.mono,
@@ -792,7 +837,7 @@ export default function DocsPage() {
         />
 
         <Reveal>
-          <Box sx={{ mb: { xs: '28px', md: '44px' }, borderRadius: T.r, overflow: 'hidden', boxShadow: T.shadow }}>
+          <Box sx={{ ...TRAY, overflow: 'hidden', mx: '9px', mb: { xs: '44px', md: '60px' } }}>
             <ProductWindow />
           </Box>
         </Reveal>
@@ -827,7 +872,26 @@ export default function DocsPage() {
       </Section>
 
       {/* ================= CLOSE ================= */}
-      <Section>
+      <Section sx={{ overflow: 'hidden' }}>
+        {/* Outlined, enormous, and purely graphic. The reference uses one to
+            close the page out; it carries no information. */}
+        <Typography
+          aria-hidden="true"
+          sx={{
+            fontSize: 'clamp(96px, 22vw, 300px)',
+            lineHeight: 0.8,
+            letterSpacing: '-0.07em',
+            fontWeight: 600,
+            color: 'transparent',
+            WebkitTextStroke: `1px ${T.line2}`,
+            textAlign: 'center',
+            userSelect: 'none',
+            mb: { xs: '24px', md: '40px' },
+            whiteSpace: 'nowrap',
+          }}
+        >
+          HEY OPEN
+        </Typography>
         <Reveal>
           <Box sx={{ py: { xs: '20px', md: '40px' }, maxWidth: '20ch' }}>
             <Typography
