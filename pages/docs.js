@@ -5,19 +5,21 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
+import ProductDemo from '@/components/ProductDemo';
 import ProductWindow from '@/components/ProductWindow';
 import { Reveal } from '@/components/ui/LedgerUI';
 
 /**
- * How to use Hey Open.
+ * What you can make with Hey Open.
  *
- * Four things only: pick a model, write the request, make an image, steal a
- * prompt. Everything else was cut. A guide nobody finishes is worth less than
- * a short one somebody acts on, so the rule here is that anything which does
- * not change what the reader does next comes out.
+ * Earlier passes at this page explained the product in prose and looked
+ * nothing like the rest of the site. This one leads with the output: every
+ * claim is a real result with the exact prompt that produced it printed
+ * underneath, and the page uses the same vocabulary as the home and
+ * capabilities pages (ambient glow, pill eyebrow, framed product, alternating
+ * bands) so it reads as part of the same site.
  *
- * What is described was checked against the running app at ais.openledger.xyz
- * on 21 Oct 2026.
+ * Everything described was checked against the running app on 21 Oct 2026.
  */
 
 const APP = 'https://ais.openledger.xyz/chat';
@@ -25,49 +27,66 @@ const ORANGE = '#FF6600';
 const MONO = '"SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace';
 
 const CHAPTERS = [
-  { id: 'models', label: 'Pick a model' },
-  { id: 'prompt', label: 'Write the request' },
-  { id: 'images', label: 'Make images' },
-  { id: 'recipes', label: 'Steal a prompt' },
+  { id: 'make', label: 'What you can make' },
+  { id: 'models', label: 'Every model' },
+  { id: 'better', label: 'Better answers' },
+  { id: 'recipes', label: 'Prompts to steal' },
 ];
 
 /* ------------------------------------------------------------------ */
-/* Type. Everything a step larger than it was.                         */
+/* Type                                                                */
 /* ------------------------------------------------------------------ */
 
-const EYEBROW = {
-  fontSize: '0.78rem',
-  fontWeight: 700,
-  letterSpacing: '0.14em',
-  textTransform: 'uppercase',
-  color: 'var(--text-muted)',
-  mb: 2.4,
-};
-
 const H2 = {
-  fontSize: { xs: '2rem', md: '2.7rem' },
+  fontSize: { xs: '2.1rem', md: '3rem' },
   fontWeight: 800,
-  lineHeight: 1.12,
-  letterSpacing: '-0.03em',
+  lineHeight: 1.08,
+  letterSpacing: '-0.035em',
   color: 'var(--text-heading)',
   mb: 2.4,
   textWrap: 'balance',
 };
 
 const LEAD = {
-  fontSize: { xs: '1.12rem', md: '1.22rem' },
+  fontSize: { xs: '1.1rem', md: '1.25rem' },
   lineHeight: 1.65,
   color: 'var(--text-secondary)',
-  maxWidth: 660,
+  maxWidth: 640,
   textWrap: 'pretty',
 };
 
 const BODY = {
-  fontSize: { xs: '1.02rem', md: '1.06rem' },
+  fontSize: { xs: '1rem', md: '1.06rem' },
   lineHeight: 1.7,
   color: 'var(--text-secondary)',
   textWrap: 'pretty',
 };
+
+function Pill({ children }) {
+  return (
+    <Box
+      sx={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 1.2,
+        color: ORANGE,
+        mb: 3,
+        px: 1.8,
+        py: 0.7,
+        borderRadius: '9999px',
+        backgroundColor: 'rgba(255, 102, 0, 0.08)',
+        border: '1px solid rgba(255, 102, 0, 0.25)',
+        fontSize: '0.78rem',
+        fontWeight: 700,
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+      }}
+    >
+      <Box sx={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: ORANGE, boxShadow: `0 0 10px ${ORANGE}` }} />
+      {children}
+    </Box>
+  );
+}
 
 function Band({ id, alt, children }) {
   return (
@@ -76,28 +95,109 @@ function Band({ id, alt, children }) {
       id={id}
       sx={{
         scrollMarginTop: '100px',
-        py: { xs: 10, md: 17 },
+        py: { xs: 9, md: 15 },
         backgroundColor: alt ? 'var(--bg-section-alt)' : 'var(--bg-page)',
+        position: 'relative',
+        zIndex: 1,
       }}
     >
-      <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 5 } }}>
+      <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 } }}>
         {children}
       </Container>
     </Box>
   );
 }
 
-function Intro({ eyebrow, title, lead }) {
+function Intro({ pill, title, lead, center }) {
   return (
     <Reveal>
-      <Box sx={{ mb: { xs: 6, md: 9 } }}>
-        <Typography sx={EYEBROW}>{eyebrow}</Typography>
-        <Typography component="h2" sx={{ ...H2, maxWidth: 740 }}>
+      <Box sx={{ mb: { xs: 5, md: 8 }, textAlign: center ? 'center' : 'left' }}>
+        <Pill>{pill}</Pill>
+        <Typography component="h2" sx={{ ...H2, maxWidth: 820, mx: center ? 'auto' : 0 }}>
           {title}
         </Typography>
-        {lead && <Typography sx={LEAD}>{lead}</Typography>}
+        {lead && <Typography sx={{ ...LEAD, mx: center ? 'auto' : 0 }}>{lead}</Typography>}
       </Box>
     </Reveal>
+  );
+}
+
+/* A result, with the request that produced it printed underneath. The pairing
+   is the whole point: a gallery alone shows that it can draw, and a prompt
+   alone shows nothing at all. */
+function Result({ item }) {
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border-subtle)',
+        boxShadow: 'var(--shadow-card)',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease',
+        '&:hover': { transform: 'translateY(-4px)', boxShadow: 'var(--shadow-popup)' },
+      }}
+    >
+      {/* The source images are 4:3. Much below this and the crop starts
+          cutting the subject rather than the margins. */}
+      <Box sx={{ position: 'relative', flex: 1, minHeight: item.tall ? 420 : 300 }}>
+        <Box
+          component="img"
+          src={item.src}
+          alt={item.alt}
+          loading="lazy"
+          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 14,
+            left: 14,
+            px: 1.4,
+            py: 0.5,
+            borderRadius: '8px',
+            backgroundColor: 'rgba(12, 14, 20, 0.62)',
+            backdropFilter: 'blur(10px)',
+            color: '#FFFFFF',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+          }}
+        >
+          {item.tag}
+        </Box>
+      </Box>
+
+      <Box sx={{ p: { xs: 2.2, md: 2.6 }, borderTop: '1px solid var(--border-subtle)' }}>
+        <Typography
+          sx={{
+            fontSize: '0.68rem',
+            fontWeight: 800,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--text-muted)',
+            mb: 1,
+          }}
+        >
+          What was typed
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: MONO,
+            fontSize: { xs: '0.82rem', md: '0.85rem' },
+            lineHeight: 1.65,
+            color: 'var(--text-secondary)',
+          }}
+        >
+          {item.prompt}
+        </Typography>
+      </Box>
+    </Box>
   );
 }
 
@@ -119,10 +219,10 @@ function Prompt({ children }) {
   return (
     <Box
       sx={{
-        borderRadius: '12px',
+        borderRadius: '16px',
         backgroundColor: 'var(--bg-card)',
         border: '1px solid var(--border-subtle)',
-        p: { xs: 2.6, md: 3 },
+        p: { xs: 2.4, md: 3 },
       }}
     >
       <Typography
@@ -130,8 +230,8 @@ function Prompt({ children }) {
         sx={{
           display: 'block',
           fontFamily: MONO,
-          fontSize: { xs: '0.92rem', md: '0.95rem' },
-          lineHeight: 1.75,
+          fontSize: { xs: '0.9rem', md: '0.94rem' },
+          lineHeight: 1.78,
           color: 'var(--text-primary)',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
@@ -146,17 +246,18 @@ function Prompt({ children }) {
         aria-label="Copy this prompt"
         sx={{
           mt: 2.2,
-          px: 1.6,
-          py: 0.7,
-          borderRadius: '8px',
-          border: '1px solid var(--border-subtle)',
+          px: 1.8,
+          py: 0.8,
+          borderRadius: '9px',
+          border: '1px solid',
+          borderColor: copied ? 'rgba(255, 102, 0, 0.4)' : 'var(--border-subtle)',
           backgroundColor: 'transparent',
           color: copied ? ORANGE : 'var(--text-muted)',
           font: 'inherit',
           fontSize: '0.82rem',
           fontWeight: 700,
           cursor: 'pointer',
-          transition: 'color 0.2s ease, border-color 0.2s ease',
+          transition: 'all 0.2s ease',
           '&:hover': { color: 'var(--text-heading)', borderColor: 'var(--border-normal)' },
         }}
       >
@@ -177,15 +278,20 @@ function CTA({ children, href, solid }) {
         display: 'inline-flex',
         alignItems: 'center',
         gap: 1,
-        px: 3.4,
-        py: 1.6,
-        borderRadius: '11px',
+        px: 3.6,
+        py: 1.7,
+        borderRadius: '12px',
         fontSize: '1rem',
         fontWeight: 700,
         textDecoration: 'none',
         transition: 'all 0.2s ease',
         ...(solid
-          ? { backgroundColor: ORANGE, color: '#FFFFFF', '&:hover': { backgroundColor: '#E65C00' } }
+          ? {
+              backgroundColor: ORANGE,
+              color: '#FFFFFF',
+              boxShadow: '0 8px 24px rgba(255, 102, 0, 0.28)',
+              '&:hover': { backgroundColor: '#E65C00', boxShadow: '0 10px 30px rgba(255, 102, 0, 0.36)' },
+            }
           : {
               border: '1px solid var(--border-normal)',
               color: 'var(--text-heading)',
@@ -202,6 +308,31 @@ function CTA({ children, href, solid }) {
 /* Content                                                             */
 /* ------------------------------------------------------------------ */
 
+const RESULTS = [
+  {
+    tag: 'Portrait',
+    tall: true,
+    src: '/images/imagine_portrait.jpg',
+    alt: 'Photoreal portrait at golden hour, generated from a written prompt',
+    prompt:
+      '"Portrait of a woman on a Santorini terrace at golden hour, white linen shirt, sea and whitewashed houses behind her, 85mm, shallow depth of field"',
+  },
+  {
+    tag: 'Editorial',
+    src: '/images/imagine_magazine.jpg',
+    alt: 'Magazine spread mockup with legible type, generated from a written prompt',
+    prompt:
+      '"Open perfume magazine held over a coastal table at dusk, full spread, legible headline LA BELLE VIE, warm evening light"',
+  },
+  {
+    tag: 'Product',
+    src: '/images/imagine_sneaker.jpg',
+    alt: 'Studio product photograph generated from a written prompt',
+    prompt:
+      '"Studio shot of a white running shoe held in two hands, hard directional light, deep black background, catalogue style"',
+  },
+];
+
 const PICK = [
   ['You are not sure', 'Leave it alone', 'The default is set to be reasonable at most things.'],
   ['It has to be current', 'Anything labelled Web', 'Without web access a model only knows what it was trained on.'],
@@ -217,23 +348,6 @@ const STRONG = `You are writing for developers who have used ChatGPT but never a
 Write a 150 word launch note for Hey Open, a single chat that runs 200+ AI models.
 
 Lead with the problem of juggling four subscriptions. Plain English, no exclamation marks, no "revolutionary". End with one line telling them where to start.`;
-
-const LAYERS = [
-  ['Subject', 'A ceramic coffee cup'],
-  ['Setting', 'on a weathered oak table beside a window'],
-  ['Light', 'soft morning light from the left, long shadows'],
-  ['Lens', 'shot on 50mm, shallow depth of field'],
-  ['Mood', 'muted, warm, slightly desaturated'],
-];
-
-const GALLERY = [
-  { src: '/images/imagine_portrait.jpg', tall: true, alt: 'Portrait generated from a written prompt' },
-  { src: '/images/imagine_sneaker.jpg', alt: 'Product photograph generated from a written prompt' },
-  { src: '/images/scenery_alpine.jpg', alt: 'Mountain landscape generated from a written prompt' },
-];
-
-const SAMPLE_PROMPT =
-  'Portrait of a woman on a Santorini terrace at golden hour, white linen shirt, sea and whitewashed houses behind her, 85mm, shallow depth of field, warm natural light';
 
 const RECIPES = [
   {
@@ -301,11 +415,11 @@ function Rail({ active }) {
           >
             <Box
               sx={{
-                width: 20,
+                width: on ? 24 : 14,
                 height: 2,
                 flexShrink: 0,
                 backgroundColor: on ? ORANGE : 'var(--border-strong)',
-                transition: 'background-color 0.25s ease',
+                transition: 'all 0.25s ease',
               }}
             />
             <Typography
@@ -360,63 +474,173 @@ export default function DocsPage() {
   }, []);
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)' }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
       <Head>
-        <title>How to Use Hey Open | Hey Open</title>
+        <title>What You Can Make With Hey Open | Hey Open</title>
         <meta
           name="description"
-          content="Which model to pick, how to phrase a request, how to build an image prompt, and four prompts you can copy and run today."
+          content="Real results with the exact prompts that produced them, how to choose between 200+ models, and four prompts you can copy and run today."
         />
       </Head>
 
       <PageHeader />
       <Rail active={active} />
 
+      {/* Ambient glow, same treatment as the capabilities page */}
+      <Box
+        data-ambient-blur
+        aria-hidden="true"
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: 1400,
+          height: 760,
+          background:
+            'radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255, 102, 0, 0.18) 0%, rgba(255, 60, 0, 0.06) 55%, transparent 80%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+      <Box
+        data-ambient-blur
+        aria-hidden="true"
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: '50%',
+          transform: 'translateX(-50%) translateX(-320px)',
+          width: 620,
+          height: 420,
+          background: 'radial-gradient(ellipse 60% 60% at 50% 0%, rgba(100, 120, 255, 0.09) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
       {/* ================= HERO ================= */}
-      <Box sx={{ pt: { xs: 8, md: 14 }, pb: { xs: 4, md: 6 } }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 5 } }}>
-          <Reveal>
-            <Box sx={{ maxWidth: 780 }}>
-              <Typography sx={EYEBROW}>Guide</Typography>
-              <Typography
-                component="h1"
+      <Box sx={{ position: 'relative', zIndex: 1, pt: { xs: 7, md: 11 }, pb: { xs: 7, md: 10 } }}>
+        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 } }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
+              gap: { xs: 5, md: 7 },
+              alignItems: 'center',
+            }}
+          >
+            <Reveal>
+              <Box>
+                <Pill>The guide</Pill>
+                <Typography
+                  component="h1"
+                  sx={{
+                    fontSize: { xs: '2.6rem', sm: '3.3rem', md: '4rem' },
+                    fontWeight: 800,
+                    lineHeight: 1.04,
+                    letterSpacing: '-0.04em',
+                    color: 'var(--text-heading)',
+                    mb: 3,
+                    textWrap: 'balance',
+                  }}
+                >
+                  Type a sentence.{' '}
+                  <Box component="span" sx={{ color: ORANGE }}>
+                    Get any of this.
+                  </Box>
+                </Typography>
+                <Typography sx={{ ...LEAD, fontSize: { xs: '1.15rem', md: '1.28rem' }, mb: 4 }}>
+                  Writing, code, research, photographs, audio and video come out of the same
+                  message box. Here is what that looks like in practice, and how to ask for it.
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.6 }}>
+                  <CTA href={APP} solid>
+                    Open the chat
+                    <Box component="span" aria-hidden="true">→</Box>
+                  </CTA>
+                  <CTA href="#make">See what it makes</CTA>
+                </Box>
+              </Box>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <Box
                 sx={{
-                  fontSize: { xs: '2.6rem', sm: '3.4rem', md: '4.2rem' },
-                  fontWeight: 800,
-                  lineHeight: 1.03,
-                  letterSpacing: '-0.04em',
-                  color: 'var(--text-heading)',
-                  mb: 3.2,
-                  textWrap: 'balance',
+                  height: { xs: 380, sm: 440, md: 500 },
+                  borderRadius: '22px',
+                  overflow: 'hidden',
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-subtle)',
+                  boxShadow: 'var(--shadow-popup)',
                 }}
               >
-                How to actually use{' '}
-                <Box component="span" sx={{ color: ORANGE }}>
-                  Hey Open.
-                </Box>
-              </Typography>
-              <Typography sx={{ ...LEAD, fontSize: { xs: '1.2rem', md: '1.35rem' }, maxWidth: 620, mb: 4.5 }}>
-                Four things that change the quality of what you get back. About five minutes.
-              </Typography>
-              <CTA href={APP} solid>
-                Open the chat
-                <Box component="span" aria-hidden="true">→</Box>
-              </CTA>
-            </Box>
-          </Reveal>
+                <ProductDemo flow="multimodel" active />
+              </Box>
+            </Reveal>
+          </Box>
         </Container>
       </Box>
 
-      {/* ================= 1. PICK A MODEL ================= */}
-      <Band id="models" alt>
+      {/* ================= WHAT YOU CAN MAKE ================= */}
+      <Band id="make" alt>
         <Intro
-          eyebrow="One"
-          title="Pick a model."
+          center
+          pill="What you can make"
+          title="Every one of these started as one sentence."
+          lead="The request that produced each result is printed underneath it. Nothing here was retouched, and nothing needed a second tool."
+        />
+
+        <Reveal>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+              gridTemplateRows: { md: 'auto auto' },
+              gap: { xs: 3, md: 3.5 },
+            }}
+          >
+            <Box sx={{ gridRow: { md: 'span 2' } }}>
+              <Result item={RESULTS[0]} />
+            </Box>
+            <Result item={RESULTS[1]} />
+            <Result item={RESULTS[2]} />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={120}>
+          <Box
+            sx={{
+              mt: { xs: 4, md: 6 },
+              p: { xs: 3, md: 4 },
+              borderRadius: '18px',
+              border: '1px solid var(--border-subtle)',
+              backgroundColor: 'var(--bg-card)',
+            }}
+          >
+            <Typography sx={{ ...BODY, fontSize: { xs: '1.02rem', md: '1.1rem' }, maxWidth: 760 }}>
+              Describe it the way a photographer would and the result stops looking generic.{' '}
+              <Box component="span" sx={{ color: 'var(--text-heading)', fontWeight: 700 }}>
+                Subject, setting, light, lens, mood.
+              </Box>{' '}
+              Leave any of those out and the model picks for you, which is how everyone ends up
+              with the same soft, over-lit image.
+            </Typography>
+          </Box>
+        </Reveal>
+      </Band>
+
+      {/* ================= MODELS ================= */}
+      <Band id="models">
+        <Intro
+          pill="Every model"
+          title="One picker. Everything behind it."
           lead="Click the model name under the message box. Most people never open it, and it is where most of the difference sits."
         />
 
         <Reveal>
-          <Box sx={{ mb: { xs: 7, md: 10 } }}>
+          <Box sx={{ mb: { xs: 5, md: 8 } }}>
             <ProductWindow />
           </Box>
         </Reveal>
@@ -430,9 +654,9 @@ export default function DocsPage() {
                     <Box
                       component="td"
                       sx={{
-                        py: { xs: 2.6, md: 3.2 },
+                        py: { xs: 2.4, md: 3 },
                         pr: 3,
-                        fontSize: { xs: '1rem', md: '1.08rem' },
+                        fontSize: { xs: '1rem', md: '1.06rem' },
                         fontWeight: 700,
                         color: 'var(--text-heading)',
                         verticalAlign: 'top',
@@ -444,9 +668,9 @@ export default function DocsPage() {
                     <Box
                       component="td"
                       sx={{
-                        py: { xs: 2.6, md: 3.2 },
+                        py: { xs: 2.4, md: 3 },
                         pr: 3,
-                        fontSize: { xs: '1rem', md: '1.08rem' },
+                        fontSize: { xs: '1rem', md: '1.06rem' },
                         fontWeight: 700,
                         color: ORANGE,
                         verticalAlign: 'top',
@@ -458,8 +682,8 @@ export default function DocsPage() {
                     <Box
                       component="td"
                       sx={{
-                        py: { xs: 2.6, md: 3.2 },
-                        fontSize: { xs: '0.98rem', md: '1.04rem' },
+                        py: { xs: 2.4, md: 3 },
+                        fontSize: { xs: '0.96rem', md: '1.02rem' },
                         lineHeight: 1.65,
                         color: 'var(--text-secondary)',
                       }}
@@ -474,48 +698,76 @@ export default function DocsPage() {
         </Reveal>
       </Band>
 
-      {/* ================= 2. WRITE THE REQUEST ================= */}
-      <Band id="prompt">
+      {/* ================= BETTER ANSWERS ================= */}
+      <Band id="better" alt>
         <Intro
-          eyebrow="Two"
-          title="Write the request properly."
-          lead="The model is rarely the problem. Nearly every disappointing answer traces back to a request that left the important decisions to the machine."
+          pill="Better answers"
+          title="The model is rarely the problem."
+          lead="Nearly every disappointing answer traces back to a request that left the important decisions to the machine."
         />
 
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1.25fr' },
-            gap: { xs: 5, md: 7 },
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1.3fr' },
+            gap: { xs: 4, md: 6 },
             alignItems: 'start',
           }}
         >
           <Reveal>
-            <Box>
-              <Typography sx={{ ...EYEBROW, mb: 2 }}>What most people send</Typography>
+            <Box
+              sx={{
+                p: { xs: 3, md: 3.5 },
+                borderRadius: '18px',
+                border: '1px dashed var(--border-normal)',
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'var(--text-muted)',
+                  mb: 2,
+                }}
+              >
+                What most people send
+              </Typography>
               <Typography
                 sx={{
                   fontFamily: MONO,
                   fontSize: { xs: '0.95rem', md: '1rem' },
                   color: 'var(--text-muted)',
-                  mb: 3,
+                  mb: 2.6,
                 }}
               >
                 {WEAK}
               </Typography>
-              <Typography sx={BODY}>
+              <Typography sx={{ ...BODY, fontSize: '0.98rem' }}>
                 Nothing says who reads it, how long it should be, or what tone to take. The model
-                guesses all three, and it guesses the average of everything it has ever seen. That
-                is why the answer sounds like nobody wrote it.
+                guesses all three, and it guesses the average of everything it has ever seen.
               </Typography>
             </Box>
           </Reveal>
 
           <Reveal delay={100}>
             <Box>
-              <Typography sx={{ ...EYEBROW, color: ORANGE, mb: 2 }}>Send this instead</Typography>
+              <Typography
+                sx={{
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: ORANGE,
+                  mb: 2,
+                }}
+              >
+                Send this instead
+              </Typography>
               <Prompt>{STRONG}</Prompt>
-              <Typography sx={{ ...BODY, mt: 3 }}>
+              <Typography sx={{ ...BODY, mt: 3, fontSize: '0.98rem' }}>
                 Same request, with the reader, the length, the tone and the ban list decided by you.
                 Twenty seconds longer to write, three rounds of correction saved.
               </Typography>
@@ -524,113 +776,21 @@ export default function DocsPage() {
         </Box>
       </Band>
 
-      {/* ================= 3. MAKE IMAGES ================= */}
-      <Band id="images" alt>
-        <Intro
-          eyebrow="Three"
-          title="Make images."
-          lead="Switch the picker to Image first. Then describe it the way a photographer would, one decision at a time, rather than piling on adjectives."
-        />
-
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-            gap: { xs: 5, md: 8 },
-            alignItems: 'center',
-          }}
-        >
-          <Reveal>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: '1.15fr 1fr',
-                gridTemplateRows: 'repeat(2, 1fr)',
-                gap: 2,
-                height: { xs: 360, sm: 440, md: 500 },
-              }}
-            >
-              {GALLERY.map((g) => (
-                <Box
-                  key={g.src}
-                  sx={{
-                    gridRow: g.tall ? 'span 2' : 'auto',
-                    borderRadius: '14px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={g.src}
-                    alt={g.alt}
-                    loading="lazy"
-                    sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
-                </Box>
-              ))}
-            </Box>
-          </Reveal>
-
-          <Reveal delay={100}>
-            <Box>
-              {LAYERS.map(([t, example], i) => (
-                <Box
-                  key={t}
-                  sx={{
-                    display: 'flex',
-                    gap: 3,
-                    py: 2,
-                    borderTop: i === 0 ? 'none' : '1px solid var(--border-subtle)',
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: { xs: '1rem', md: '1.04rem' },
-                      fontWeight: 700,
-                      color: 'var(--text-heading)',
-                      minWidth: 90,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {t}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontFamily: MONO,
-                      fontSize: { xs: '0.9rem', md: '0.94rem' },
-                      lineHeight: 1.6,
-                      color: 'var(--text-secondary)',
-                    }}
-                  >
-                    {example}
-                  </Typography>
-                </Box>
-              ))}
-
-              <Box sx={{ mt: 4 }}>
-                <Typography sx={{ ...EYEBROW, mb: 2 }}>The prompt behind the portrait</Typography>
-                <Prompt>{SAMPLE_PROMPT}</Prompt>
-              </Box>
-            </Box>
-          </Reveal>
-        </Box>
-      </Band>
-
-      {/* ================= 4. RECIPES ================= */}
+      {/* ================= RECIPES ================= */}
       <Band id="recipes">
         <Intro
-          eyebrow="Four"
-          title="Steal a prompt."
-          lead="Replace what is in brackets and send it. Each one is built around a single trick that reliably changes the reply."
+          pill="Prompts to steal"
+          title="Four that work on anything."
+          lead="Replace what is in brackets and send it. Each is built around a single trick that reliably changes the reply."
         />
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 6, md: 9 } }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 5, md: 7 } }}>
           {RECIPES.map((r, i) => (
             <Reveal key={r.title} delay={i * 60}>
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '1fr 1.3fr' },
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1.35fr' },
                   gap: { xs: 2.5, md: 6 },
                   alignItems: 'start',
                 }}
@@ -639,9 +799,9 @@ export default function DocsPage() {
                   <Typography
                     component="h3"
                     sx={{
-                      fontSize: { xs: '1.3rem', md: '1.5rem' },
+                      fontSize: { xs: '1.3rem', md: '1.55rem' },
                       fontWeight: 750,
-                      letterSpacing: '-0.02em',
+                      letterSpacing: '-0.025em',
                       color: 'var(--text-heading)',
                       mb: 1.4,
                       textWrap: 'balance',
@@ -649,9 +809,7 @@ export default function DocsPage() {
                   >
                     {r.title}
                   </Typography>
-                  <Typography sx={{ ...BODY, fontSize: { xs: '1rem', md: '1.04rem' } }}>
-                    {r.why}
-                  </Typography>
+                  <Typography sx={{ ...BODY, fontSize: '1rem' }}>{r.why}</Typography>
                 </Box>
                 <Prompt>{r.prompt}</Prompt>
               </Box>
@@ -661,25 +819,38 @@ export default function DocsPage() {
       </Band>
 
       {/* ================= CLOSE ================= */}
-      <Box sx={{ py: { xs: 10, md: 16 }, backgroundColor: 'var(--bg-section-alt)' }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 5 } }}>
+      <Box sx={{ position: 'relative', overflow: 'hidden', backgroundColor: 'var(--bg-section-alt)' }}>
+        <Box
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            bottom: -200,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 900,
+            height: 500,
+            background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255, 102, 0, 0.14) 0%, transparent 70%)',
+            pointerEvents: 'none',
+          }}
+        />
+        <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 }, py: { xs: 10, md: 16 }, position: 'relative' }}>
           <Reveal>
-            <Box sx={{ maxWidth: 620 }}>
+            <Box sx={{ maxWidth: 680, mx: 'auto', textAlign: 'center' }}>
               <Typography
                 component="h2"
                 sx={{
-                  fontSize: { xs: '1.9rem', md: '2.5rem' },
+                  fontSize: { xs: '2rem', md: '2.8rem' },
                   fontWeight: 800,
-                  letterSpacing: '-0.03em',
+                  letterSpacing: '-0.035em',
                   color: 'var(--text-heading)',
                   mb: 2.4,
                   textWrap: 'balance',
                 }}
               >
-                Reading about prompting does very little.
+                Pick one prompt and run it.
               </Typography>
-              <Typography sx={{ ...LEAD, mb: 4 }}>
-                Ten minutes with the review prompt will teach you more than the rest of this page.
+              <Typography sx={{ ...LEAD, mx: 'auto', mb: 4 }}>
+                Ten minutes in the chat will teach you more than the rest of this page.
               </Typography>
               <CTA href={APP} solid>
                 Open the chat
