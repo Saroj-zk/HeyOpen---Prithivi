@@ -5,36 +5,36 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
-import ProductDemo from '@/components/ProductDemo';
 import ProductWindow from '@/components/ProductWindow';
 import { Reveal } from '@/components/ui/LedgerUI';
+import useInView from '@/utils/useInView';
 
 /**
- * What you can make with Hey Open.
+ * What Hey Open is for.
  *
- * Earlier passes at this page explained the product in prose and looked
- * nothing like the rest of the site. This one leads with the output: every
- * claim is a real result with the exact prompt that produced it printed
- * underneath, and the page uses the same vocabulary as the home and
- * capabilities pages (ambient glow, pill eyebrow, framed product, alternating
- * bands) so it reads as part of the same site.
+ * Three audiences, one page: someone making something, someone building on the
+ * API, and someone who cannot put their documents into a consumer chatbot.
+ * Each gets a short block and a real artifact, deliberately not an essay.
  *
- * Everything described was checked against the running app on 21 Oct 2026.
+ * The positioning underneath all three is the one the rest of the site leads
+ * with and earlier drafts of this page buried: private by default, uncensored
+ * when the work needs it.
+ *
+ * Checked against the running app and the published API shape on 21 Oct 2026.
  */
 
 const APP = 'https://ais.openledger.xyz/chat';
 const ORANGE = '#FF6600';
 const MONO = '"SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace';
+const INK = '#0E1116';
 
 const CHAPTERS = [
-  { id: 'make', label: 'What you can make' },
-  { id: 'models', label: 'Every model' },
-  { id: 'better', label: 'Better answers' },
-  { id: 'recipes', label: 'Prompts to steal' },
+  { id: 'uses', label: 'What it is for' },
+  { id: 'why', label: 'Why not four tools' },
+  { id: 'private', label: 'Private, uncensored' },
+  { id: 'models', label: 'Pick a model' },
 ];
 
-/* ------------------------------------------------------------------ */
-/* Type                                                                */
 /* ------------------------------------------------------------------ */
 
 const H2 = {
@@ -51,12 +51,12 @@ const LEAD = {
   fontSize: { xs: '1.1rem', md: '1.25rem' },
   lineHeight: 1.65,
   color: 'var(--text-secondary)',
-  maxWidth: 640,
+  maxWidth: 660,
   textWrap: 'pretty',
 };
 
 const BODY = {
-  fontSize: { xs: '1rem', md: '1.06rem' },
+  fontSize: { xs: '1.02rem', md: '1.1rem' },
   lineHeight: 1.7,
   color: 'var(--text-secondary)',
   textWrap: 'pretty',
@@ -75,7 +75,7 @@ function Pill({ children }) {
         py: 0.7,
         borderRadius: '9999px',
         backgroundColor: 'rgba(255, 102, 0, 0.08)',
-        border: '1px solid rgba(255, 102, 0, 0.25)',
+        border: '1px solid rgba(255, 102, 0, 0.28)',
         fontSize: '0.78rem',
         fontWeight: 700,
         textTransform: 'uppercase',
@@ -113,7 +113,7 @@ function Intro({ pill, title, lead, center }) {
     <Reveal>
       <Box sx={{ mb: { xs: 5, md: 8 }, textAlign: center ? 'center' : 'left' }}>
         <Pill>{pill}</Pill>
-        <Typography component="h2" sx={{ ...H2, maxWidth: 820, mx: center ? 'auto' : 0 }}>
+        <Typography component="h2" sx={{ ...H2, maxWidth: 860, mx: center ? 'auto' : 0 }}>
           {title}
         </Typography>
         {lead && <Typography sx={{ ...LEAD, mx: center ? 'auto' : 0 }}>{lead}</Typography>}
@@ -122,146 +122,72 @@ function Intro({ pill, title, lead, center }) {
   );
 }
 
-/* A result, with the request that produced it printed underneath. The pairing
-   is the whole point: a gallery alone shows that it can draw, and a prompt
-   alone shows nothing at all. */
-function Result({ item }) {
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        backgroundColor: 'var(--bg-card)',
-        border: '1px solid var(--border-subtle)',
-        boxShadow: 'var(--shadow-card)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease',
-        '&:hover': { transform: 'translateY(-4px)', boxShadow: 'var(--shadow-popup)' },
-      }}
-    >
-      {/* The source images are 4:3. Much below this and the crop starts
-          cutting the subject rather than the margins. */}
-      <Box sx={{ position: 'relative', flex: 1, minHeight: item.tall ? 420 : 300 }}>
-        <Box
-          component="img"
-          src={item.src}
-          alt={item.alt}
-          loading="lazy"
-          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 14,
-            left: 14,
-            px: 1.4,
-            py: 0.5,
-            borderRadius: '8px',
-            backgroundColor: 'rgba(12, 14, 20, 0.62)',
-            backdropFilter: 'blur(10px)',
-            color: '#FFFFFF',
-            fontSize: '0.72rem',
-            fontWeight: 700,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-          }}
-        >
-          {item.tag}
-        </Box>
-      </Box>
+/* Megabytes each, so nothing is fetched until the block is close. */
+function Clip({ src }) {
+  const [ref, inView] = useInView('300px');
+  const videoRef = React.useRef(null);
+  const [primed, setPrimed] = React.useState(false);
 
-      <Box sx={{ p: { xs: 2.2, md: 2.6 }, borderTop: '1px solid var(--border-subtle)' }}>
-        <Typography
-          sx={{
-            fontSize: '0.68rem',
-            fontWeight: 800,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: 'var(--text-muted)',
-            mb: 1,
-          }}
-        >
-          What was typed
-        </Typography>
-        <Typography
-          sx={{
-            fontFamily: MONO,
-            fontSize: { xs: '0.82rem', md: '0.85rem' },
-            lineHeight: 1.65,
-            color: 'var(--text-secondary)',
-          }}
-        >
-          {item.prompt}
-        </Typography>
-      </Box>
+  React.useEffect(() => {
+    if (inView) setPrimed(true);
+  }, [inView]);
+
+  React.useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !primed) return;
+    if (inView) v.play().catch(() => {});
+    else v.pause();
+  }, [inView, primed]);
+
+  return (
+    <Box ref={ref} sx={{ width: '100%', height: '100%' }}>
+      <Box
+        component="video"
+        ref={videoRef}
+        src={primed ? src : undefined}
+        loop
+        muted
+        playsInline
+        preload="none"
+        sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+      />
     </Box>
   );
 }
 
-function Prompt({ children }) {
-  const [copied, setCopied] = React.useState(false);
-  const text = String(children);
-
-  const copy = () => {
-    if (typeof navigator === 'undefined' || !navigator.clipboard) return;
-    navigator.clipboard.writeText(text).then(
-      () => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1600);
-      },
-      () => {}
-    );
-  };
-
+function Code({ children, caption }) {
   return (
-    <Box
-      sx={{
-        borderRadius: '16px',
-        backgroundColor: 'var(--bg-card)',
-        border: '1px solid var(--border-subtle)',
-        p: { xs: 2.4, md: 3 },
-      }}
-    >
-      <Typography
-        component="code"
+    <Box sx={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', backgroundColor: INK }}>
+      {caption && (
+        <Box
+          sx={{
+            px: 2.4,
+            py: 1.4,
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.45)',
+            fontFamily: MONO,
+          }}
+        >
+          {caption}
+        </Box>
+      )}
+      <Box
+        component="pre"
         sx={{
-          display: 'block',
+          m: 0,
+          p: { xs: 2.4, md: 3 },
+          overflowX: 'auto',
           fontFamily: MONO,
-          fontSize: { xs: '0.9rem', md: '0.94rem' },
-          lineHeight: 1.78,
-          color: 'var(--text-primary)',
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
+          fontSize: { xs: '0.82rem', md: '0.88rem' },
+          lineHeight: 1.8,
+          color: 'rgba(255,255,255,0.88)',
         }}
       >
         {children}
-      </Typography>
-      <Box
-        component="button"
-        type="button"
-        onClick={copy}
-        aria-label="Copy this prompt"
-        sx={{
-          mt: 2.2,
-          px: 1.8,
-          py: 0.8,
-          borderRadius: '9px',
-          border: '1px solid',
-          borderColor: copied ? 'rgba(255, 102, 0, 0.4)' : 'var(--border-subtle)',
-          backgroundColor: 'transparent',
-          color: copied ? ORANGE : 'var(--text-muted)',
-          font: 'inherit',
-          fontSize: '0.82rem',
-          fontWeight: 700,
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
-          '&:hover': { color: 'var(--text-heading)', borderColor: 'var(--border-normal)' },
-        }}
-      >
-        {copied ? 'Copied' : 'Copy prompt'}
       </Box>
     </Box>
   );
@@ -290,7 +216,7 @@ function CTA({ children, href, solid }) {
               backgroundColor: ORANGE,
               color: '#FFFFFF',
               boxShadow: '0 8px 24px rgba(255, 102, 0, 0.28)',
-              '&:hover': { backgroundColor: '#E65C00', boxShadow: '0 10px 30px rgba(255, 102, 0, 0.36)' },
+              '&:hover': { backgroundColor: '#E65C00' },
             }
           : {
               border: '1px solid var(--border-normal)',
@@ -308,76 +234,41 @@ function CTA({ children, href, solid }) {
 /* Content                                                             */
 /* ------------------------------------------------------------------ */
 
-const RESULTS = [
-  {
-    tag: 'Portrait',
-    tall: true,
-    src: '/images/imagine_portrait.jpg',
-    alt: 'Photoreal portrait at golden hour, generated from a written prompt',
-    prompt:
-      '"Portrait of a woman on a Santorini terrace at golden hour, white linen shirt, sea and whitewashed houses behind her, 85mm, shallow depth of field"',
-  },
-  {
-    tag: 'Editorial',
-    src: '/images/imagine_magazine.jpg',
-    alt: 'Magazine spread mockup with legible type, generated from a written prompt',
-    prompt:
-      '"Open perfume magazine held over a coastal table at dusk, full spread, legible headline LA BELLE VIE, warm evening light"',
-  },
-  {
-    tag: 'Product',
-    src: '/images/imagine_sneaker.jpg',
-    alt: 'Studio product photograph generated from a written prompt',
-    prompt:
-      '"Studio shot of a white running shoe held in two hands, hard directional light, deep black background, catalogue style"',
-  },
+const FRAMES = [
+  { src: '/images/scenery_cliffs.jpg', alt: 'Generated still, cliffs at dusk' },
+  { src: '/images/scenery_alpine.jpg', alt: 'Generated still, ridge at dawn' },
+  { src: '/images/scenery_dunes.jpg', alt: 'Generated still, dunes' },
+];
+
+const API_SNIPPET = `curl https://api.openledger.xyz/v1/chat/completions \\
+  -H "Authorization: Bearer $OPENLEDGER_API_KEY" \\
+  -d '{ "model": "auto", "messages": [...] }'`;
+
+const GUARANTEES = ['No account to start', 'Prompts not retained', 'Memory stays in your browser', 'TEE models available'];
+
+const COMPARE = [
+  ['Models you can reach', 'One family per tool', '200+ in one picker'],
+  ['Text, images, video, voice', 'Four tools, four tabs', 'One conversation'],
+  ['Context between steps', 'Re-explained every time', 'Carried the whole way'],
+  ['Content limits', 'Fixed by whoever built it', 'Pick an uncensored model'],
+  ['Your prompts afterwards', 'Kept, tied to your account', 'Not retained'],
+  ['Account to start', 'Required', 'Not needed'],
+  ['Every month', '$165', '$20'],
+];
+
+const PRIVACY = [
+  ['Start with no account', 'No email, no name, nothing connecting the session to you.'],
+  ['Prompts are not kept', 'We record that a request happened so we can bill and stop abuse. Not what was in it.'],
+  ['Memory never leaves your browser', 'No server copy to leak, subpoena or restore.'],
+  ['Hardware isolation where it matters', 'Models marked TEE run in an enclave. The picker shows which.'],
 ];
 
 const PICK = [
   ['You are not sure', 'Leave it alone', 'The default is set to be reasonable at most things.'],
   ['It has to be current', 'Anything labelled Web', 'Without web access a model only knows what it was trained on.'],
-  ['A long document', 'A large context window', 'Hover any model to see its figure. 200K and above holds most of them.'],
+  ['A long document', 'A large context window', 'Hover any model to see its figure.'],
   ['You want a picture', 'The Image tab', 'Text models describe a picture rather than draw one.'],
-  ['The subject is sensitive', 'A model labelled TEE', 'It runs inside a hardware enclave, so the host cannot read the request.'],
-];
-
-const WEAK = 'Write about our new product.';
-
-const STRONG = `You are writing for developers who have used ChatGPT but never a multi-model tool.
-
-Write a 150 word launch note for Hey Open, a single chat that runs 200+ AI models.
-
-Lead with the problem of juggling four subscriptions. Plain English, no exclamation marks, no "revolutionary". End with one line telling them where to start.`;
-
-const RECIPES = [
-  {
-    title: 'Get through a long document',
-    why: 'Ask for the shape before the detail, so you know which part to actually read.',
-    prompt: `Here is a [contract / report / spec]. Before summarising, list the sections and what each one is for.
-
-Then tell me the three things that would cost me most if I missed them. Quote the exact line for each.`,
-  },
-  {
-    title: 'Review code you did not write',
-    why: 'Ask for risk, not praise. Requiring a severity stops it listing style opinions as bugs.',
-    prompt: `Review this code as if you are on call for it tonight.
-
-For each problem: the file and line, what breaks, the input that triggers it, and a severity of high, medium or low. Order by severity. Ignore formatting and naming.`,
-  },
-  {
-    title: 'Pressure test a decision',
-    why: 'Asking for the strongest case against you beats asking for a recommendation.',
-    prompt: `I am planning to [decision]. My reasoning is [reasoning].
-
-Give me the strongest argument against it, as someone who thinks it is a mistake would put it. Then tell me what would have to be true for their case to beat mine.`,
-  },
-  {
-    title: 'Write in a voice that is not generic',
-    why: 'Describing a tone rarely works. Showing it two samples of your own writing almost always does.',
-    prompt: `Here are two things I have written: [paste them]. Study the sentence length, how formal it is, and the words I avoid.
-
-Now write [the thing you want] in that voice. Never use: delve, leverage, seamless, robust.`,
-  },
+  ['The subject is sensitive', 'A model labelled TEE', 'It runs inside a hardware enclave.'],
 ];
 
 /* ------------------------------------------------------------------ */
@@ -405,13 +296,7 @@ function Rail({ active }) {
             key={c.id}
             component="a"
             href={`#${c.id}`}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1.4,
-              textDecoration: 'none',
-              '&:hover .lbl': { opacity: 1 },
-            }}
+            sx={{ display: 'flex', alignItems: 'center', gap: 1.4, textDecoration: 'none', '&:hover .lbl': { opacity: 1 } }}
           >
             <Box
               sx={{
@@ -439,6 +324,53 @@ function Rail({ active }) {
         );
       })}
     </Box>
+  );
+}
+
+/* One audience: a short claim on one side, a real artifact on the other. */
+function UseCase({ tag, title, body, flip, children }) {
+  return (
+    <Reveal>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '0.85fr 1.15fr' },
+          gap: { xs: 3.5, md: 7 },
+          alignItems: 'center',
+        }}
+      >
+        <Box sx={{ order: { xs: 2, md: flip ? 2 : 1 } }}>
+          <Typography
+            sx={{
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: ORANGE,
+              mb: 1.6,
+            }}
+          >
+            {tag}
+          </Typography>
+          <Typography
+            component="h3"
+            sx={{
+              fontSize: { xs: '1.6rem', md: '2.1rem' },
+              fontWeight: 780,
+              letterSpacing: '-0.032em',
+              lineHeight: 1.12,
+              color: 'var(--text-heading)',
+              mb: 1.8,
+              textWrap: 'balance',
+            }}
+          >
+            {title}
+          </Typography>
+          <Typography sx={{ ...BODY, maxWidth: 440 }}>{body}</Typography>
+        </Box>
+        <Box sx={{ order: { xs: 1, md: flip ? 1 : 2 }, minWidth: 0 }}>{children}</Box>
+      </Box>
+    </Reveal>
   );
 }
 
@@ -476,17 +408,16 @@ export default function DocsPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
       <Head>
-        <title>What You Can Make With Hey Open | Hey Open</title>
+        <title>What You Can Do With Hey Open | Hey Open</title>
         <meta
           name="description"
-          content="Real results with the exact prompts that produced them, how to choose between 200+ models, and four prompts you can copy and run today."
+          content="Make a film in one thread, build on one API key across 200+ models, or put sensitive documents through AI that keeps nothing. Private by default, uncensored when needed."
         />
       </Head>
 
       <PageHeader />
       <Rail active={active} />
 
-      {/* Ambient glow, same treatment as the capabilities page */}
       <Box
         data-ambient-blur
         aria-hidden="true"
@@ -504,139 +435,268 @@ export default function DocsPage() {
           zIndex: 0,
         }}
       />
-      <Box
-        data-ambient-blur
-        aria-hidden="true"
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%) translateX(-320px)',
-          width: 620,
-          height: 420,
-          background: 'radial-gradient(ellipse 60% 60% at 50% 0%, rgba(100, 120, 255, 0.09) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
 
       {/* ================= HERO ================= */}
-      <Box sx={{ position: 'relative', zIndex: 1, pt: { xs: 7, md: 11 }, pb: { xs: 7, md: 10 } }}>
+      <Box sx={{ position: 'relative', zIndex: 1, pt: { xs: 8, md: 13 }, pb: { xs: 6, md: 9 } }}>
         <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 } }}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
-              gap: { xs: 5, md: 7 },
-              alignItems: 'center',
-            }}
-          >
-            <Reveal>
-              <Box>
-                <Pill>The guide</Pill>
-                <Typography
-                  component="h1"
-                  sx={{
-                    fontSize: { xs: '2.6rem', sm: '3.3rem', md: '4rem' },
-                    fontWeight: 800,
-                    lineHeight: 1.04,
-                    letterSpacing: '-0.04em',
-                    color: 'var(--text-heading)',
-                    mb: 3,
-                    textWrap: 'balance',
-                  }}
-                >
-                  Type a sentence.{' '}
-                  <Box component="span" sx={{ color: ORANGE }}>
-                    Get any of this.
-                  </Box>
-                </Typography>
-                <Typography sx={{ ...LEAD, fontSize: { xs: '1.15rem', md: '1.28rem' }, mb: 4 }}>
-                  Writing, code, research, photographs, audio and video come out of the same
-                  message box. Here is what that looks like in practice, and how to ask for it.
-                </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.6 }}>
-                  <CTA href={APP} solid>
-                    Open the chat
-                    <Box component="span" aria-hidden="true">→</Box>
-                  </CTA>
-                  <CTA href="#make">See what it makes</CTA>
-                </Box>
-              </Box>
-            </Reveal>
-
-            <Reveal delay={120}>
-              <Box
+          <Reveal>
+            <Box sx={{ maxWidth: 900 }}>
+              <Pill>Private and uncensored</Pill>
+              <Typography
+                component="h1"
                 sx={{
-                  height: { xs: 380, sm: 440, md: 500 },
-                  borderRadius: '22px',
-                  overflow: 'hidden',
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-subtle)',
-                  boxShadow: 'var(--shadow-popup)',
+                  fontSize: { xs: '2.6rem', sm: '3.5rem', md: '4.4rem' },
+                  fontWeight: 800,
+                  lineHeight: 1.02,
+                  letterSpacing: '-0.042em',
+                  color: 'var(--text-heading)',
+                  mb: 3,
+                  textWrap: 'balance',
                 }}
               >
-                <ProductDemo flow="multimodel" active />
+                The whole job in one thread.{' '}
+                <Box component="span" sx={{ color: ORANGE }}>
+                  Nothing kept afterwards.
+                </Box>
+              </Typography>
+              <Typography sx={{ ...LEAD, fontSize: { xs: '1.15rem', md: '1.3rem' }, maxWidth: 720, mb: 4 }}>
+                200+ models behind one chat and one API key. Make a film, ship an application, or
+                put a contract through it, without an account and without your work being stored.
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.6 }}>
+                <CTA href={APP} solid>
+                  Open the chat
+                  <Box component="span" aria-hidden="true">→</Box>
+                </CTA>
+                <CTA href="#uses">See what people do with it</CTA>
               </Box>
-            </Reveal>
-          </Box>
+            </Box>
+          </Reveal>
         </Container>
       </Box>
 
-      {/* ================= WHAT YOU CAN MAKE ================= */}
-      <Band id="make" alt>
-        <Intro
-          center
-          pill="What you can make"
-          title="Every one of these started as one sentence."
-          lead="The request that produced each result is printed underneath it. Nothing here was retouched, and nothing needed a second tool."
-        />
+      {/* ================= USE CASES ================= */}
+      <Band id="uses" alt>
+        <Intro pill="What it is for" title="Three jobs, one subscription." />
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 8, md: 14 } }}>
+          {/* ---- Creators ---- */}
+          <UseCase
+            tag="Making something"
+            title="Script, stills, motion and score. One thread."
+            body="Write it, storyboard it, animate the closing shot and score it without opening a second tool. Each step still has the one before it, so nothing gets re-described."
+          >
+            <Box>
+              <Box
+                sx={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  border: '1px solid var(--border-subtle)',
+                  backgroundColor: INK,
+                  aspectRatio: '16 / 10',
+                  mb: 1.6,
+                }}
+              >
+                <Clip src="/Videos/AI ecosystem/Video Gen.webm" />
+              </Box>
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1.6 }}>
+                {FRAMES.map((f) => (
+                  <Box
+                    key={f.src}
+                    sx={{
+                      position: 'relative',
+                      aspectRatio: '3 / 2',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      border: '1px solid var(--border-subtle)',
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={f.src}
+                      alt={f.alt}
+                      loading="lazy"
+                      sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </UseCase>
+
+          {/* ---- Developers ---- */}
+          <UseCase
+            flip
+            tag="Building on it"
+            title="One key. Every model. No rewrite."
+            body="An OpenAI-compatible endpoint, so you change a base URL and keep your code. Set the model to auto and cheap requests stop going to expensive models."
+          >
+            <Code caption="chat/completions">{API_SNIPPET}</Code>
+          </UseCase>
+
+          {/* ---- Sensitive work ---- */}
+          <UseCase
+            tag="Work you cannot paste elsewhere"
+            title="Contracts in. Nothing left behind."
+            body="Due diligence, case files, patient records and board papers. No account to create, prompts not retained, and models that run inside a hardware enclave for the parts that need it."
+          >
+            <Box
+              sx={{
+                borderRadius: '18px',
+                border: '1px solid rgba(255,255,255,0.08)',
+                backgroundColor: INK,
+                p: { xs: 3, md: 3.6 },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: MONO,
+                  fontSize: { xs: '0.86rem', md: '0.92rem' },
+                  lineHeight: 1.8,
+                  color: 'rgba(255,255,255,0.88)',
+                  mb: 3,
+                }}
+              >
+                {'> Review the attached master services agreement.\n  Flag every clause that shifts liability to us,\n  quote it, and rank by exposure.'}
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {GUARANTEES.map((g) => (
+                  <Box
+                    key={g}
+                    sx={{
+                      px: 1.4,
+                      py: 0.6,
+                      borderRadius: '7px',
+                      backgroundColor: 'rgba(255, 102, 0, 0.14)',
+                      border: '1px solid rgba(255, 102, 0, 0.3)',
+                      color: ORANGE,
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {g}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </UseCase>
+        </Box>
+      </Band>
+
+      {/* ================= WHY ================= */}
+      <Band id="why">
+        <Intro pill="Why not four tools" title="The same work, counted honestly." />
 
         <Reveal>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-              gridTemplateRows: { md: 'auto auto' },
-              gap: { xs: 3, md: 3.5 },
-            }}
-          >
-            <Box sx={{ gridRow: { md: 'span 2' } }}>
-              <Result item={RESULTS[0]} />
+          <Box sx={{ borderRadius: '18px', border: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-card)', overflow: 'hidden' }}>
+            <Box sx={{ overflowX: 'auto' }}>
+              <Box component="table" sx={{ width: '100%', minWidth: 660, borderCollapse: 'collapse' }}>
+                <Box component="thead">
+                  <Box component="tr" sx={{ backgroundColor: 'var(--bg-section-alt)' }}>
+                    {['', 'Four separate tools', 'Hey Open'].map((h, i) => (
+                      <Box
+                        key={i}
+                        component="th"
+                        sx={{
+                          textAlign: 'left',
+                          px: { xs: 2.4, md: 3 },
+                          py: 2.2,
+                          fontSize: '0.72rem',
+                          fontWeight: 800,
+                          letterSpacing: '0.1em',
+                          textTransform: 'uppercase',
+                          color: i === 2 ? ORANGE : 'var(--text-muted)',
+                          width: i === 0 ? '34%' : '33%',
+                        }}
+                      >
+                        {h}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+                <Box component="tbody">
+                  {COMPARE.map(([label, them, us]) => (
+                    <Box key={label} component="tr" sx={{ borderTop: '1px solid var(--border-subtle)' }}>
+                      <Box
+                        component="td"
+                        sx={{ px: { xs: 2.4, md: 3 }, py: { xs: 2.2, md: 2.6 }, fontSize: { xs: '0.96rem', md: '1.02rem' }, fontWeight: 700, color: 'var(--text-heading)' }}
+                      >
+                        {label}
+                      </Box>
+                      <Box
+                        component="td"
+                        sx={{ px: { xs: 2.4, md: 3 }, py: { xs: 2.2, md: 2.6 }, fontSize: { xs: '0.94rem', md: '1rem' }, color: 'var(--text-muted)' }}
+                      >
+                        {them}
+                      </Box>
+                      <Box
+                        component="td"
+                        sx={{ px: { xs: 2.4, md: 3 }, py: { xs: 2.2, md: 2.6 }, fontSize: { xs: '0.94rem', md: '1rem' }, fontWeight: 650, color: 'var(--text-heading)' }}
+                      >
+                        {us}
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
             </Box>
-            <Result item={RESULTS[1]} />
-            <Result item={RESULTS[2]} />
           </Box>
         </Reveal>
+      </Band>
 
-        <Reveal delay={120}>
-          <Box
-            sx={{
-              mt: { xs: 4, md: 6 },
-              p: { xs: 3, md: 4 },
-              borderRadius: '18px',
-              border: '1px solid var(--border-subtle)',
-              backgroundColor: 'var(--bg-card)',
-            }}
-          >
-            <Typography sx={{ ...BODY, fontSize: { xs: '1.02rem', md: '1.1rem' }, maxWidth: 760 }}>
-              Describe it the way a photographer would and the result stops looking generic.{' '}
-              <Box component="span" sx={{ color: 'var(--text-heading)', fontWeight: 700 }}>
-                Subject, setting, light, lens, mood.
-              </Box>{' '}
-              Leave any of those out and the model picks for you, which is how everyone ends up
-              with the same soft, over-lit image.
-            </Typography>
-          </Box>
-        </Reveal>
+      {/* ================= PRIVATE ================= */}
+      <Band id="private" alt>
+        <Intro
+          pill="Private and uncensored"
+          title="The two things we will not trade away."
+        />
+
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 4, md: 6 } }}>
+          <Reveal>
+            <Box>
+              {PRIVACY.map(([t, d], i) => (
+                <Box key={t} sx={{ display: 'flex', gap: 2.4, py: 2.6, borderTop: i === 0 ? 'none' : '1px solid var(--border-subtle)' }}>
+                  <Typography aria-hidden="true" sx={{ fontSize: '0.78rem', fontWeight: 800, color: ORANGE, pt: 0.5, minWidth: 24 }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </Typography>
+                  <Box>
+                    <Typography sx={{ fontSize: { xs: '1.08rem', md: '1.15rem' }, fontWeight: 700, color: 'var(--text-heading)', mb: 0.6 }}>
+                      {t}
+                    </Typography>
+                    <Typography sx={{ ...BODY, fontSize: '1rem' }}>{d}</Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <Box sx={{ p: { xs: 3, md: 4 }, borderRadius: '20px', backgroundColor: INK, border: '1px solid rgba(255,255,255,0.08)', height: 'fit-content' }}>
+              <Typography
+                sx={{ fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', color: ORANGE, mb: 2.4 }}
+              >
+                On uncensored
+              </Typography>
+              <Typography sx={{ fontSize: { xs: '1.05rem', md: '1.15rem' }, lineHeight: 1.7, color: 'rgba(255,255,255,0.88)', mb: 2.4, textWrap: 'pretty' }}>
+                A screenplay about addiction. A security write up with working exploit code. A
+                medical question you would rather not have attached to your name. Mainstream
+                assistants refuse all three, and none of them are unreasonable to ask.
+              </Typography>
+              <Typography sx={{ fontSize: { xs: '0.96rem', md: '1rem' }, lineHeight: 1.7, color: 'rgba(255,255,255,0.6)', textWrap: 'pretty' }}>
+                Models marked Uncensored refuse less. That describes the model, not permission: the
+                acceptable use terms apply on every model here, and what is illegal stays illegal.
+              </Typography>
+            </Box>
+          </Reveal>
+        </Box>
       </Band>
 
       {/* ================= MODELS ================= */}
       <Band id="models">
         <Intro
-          pill="Every model"
+          pill="Pick a model"
           title="One picker. Everything behind it."
-          lead="Click the model name under the message box. Most people never open it, and it is where most of the difference sits."
+          lead="Click the model name under the message box. Switching never leaves your conversation."
         />
 
         <Reveal>
@@ -653,40 +713,19 @@ export default function DocsPage() {
                   <Box key={iff} component="tr" sx={{ borderBottom: '1px solid var(--border-subtle)' }}>
                     <Box
                       component="td"
-                      sx={{
-                        py: { xs: 2.4, md: 3 },
-                        pr: 3,
-                        fontSize: { xs: '1rem', md: '1.06rem' },
-                        fontWeight: 700,
-                        color: 'var(--text-heading)',
-                        verticalAlign: 'top',
-                        width: '26%',
-                      }}
+                      sx={{ py: { xs: 2.4, md: 2.8 }, pr: 3, fontSize: { xs: '1rem', md: '1.04rem' }, fontWeight: 700, color: 'var(--text-heading)', verticalAlign: 'top', width: '26%' }}
                     >
                       {iff}
                     </Box>
                     <Box
                       component="td"
-                      sx={{
-                        py: { xs: 2.4, md: 3 },
-                        pr: 3,
-                        fontSize: { xs: '1rem', md: '1.06rem' },
-                        fontWeight: 700,
-                        color: ORANGE,
-                        verticalAlign: 'top',
-                        width: '26%',
-                      }}
+                      sx={{ py: { xs: 2.4, md: 2.8 }, pr: 3, fontSize: { xs: '1rem', md: '1.04rem' }, fontWeight: 700, color: ORANGE, verticalAlign: 'top', width: '26%' }}
                     >
                       {pick}
                     </Box>
                     <Box
                       component="td"
-                      sx={{
-                        py: { xs: 2.4, md: 3 },
-                        fontSize: { xs: '0.96rem', md: '1.02rem' },
-                        lineHeight: 1.65,
-                        color: 'var(--text-secondary)',
-                      }}
+                      sx={{ py: { xs: 2.4, md: 2.8 }, fontSize: { xs: '0.96rem', md: '1rem' }, lineHeight: 1.65, color: 'var(--text-secondary)' }}
                     >
                       {why}
                     </Box>
@@ -698,159 +737,33 @@ export default function DocsPage() {
         </Reveal>
       </Band>
 
-      {/* ================= BETTER ANSWERS ================= */}
-      <Band id="better" alt>
-        <Intro
-          pill="Better answers"
-          title="The model is rarely the problem."
-          lead="Nearly every disappointing answer traces back to a request that left the important decisions to the machine."
-        />
-
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1.3fr' },
-            gap: { xs: 4, md: 6 },
-            alignItems: 'start',
-          }}
-        >
-          <Reveal>
-            <Box
-              sx={{
-                p: { xs: 3, md: 3.5 },
-                borderRadius: '18px',
-                border: '1px dashed var(--border-normal)',
-                backgroundColor: 'transparent',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '0.7rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  color: 'var(--text-muted)',
-                  mb: 2,
-                }}
-              >
-                What most people send
-              </Typography>
-              <Typography
-                sx={{
-                  fontFamily: MONO,
-                  fontSize: { xs: '0.95rem', md: '1rem' },
-                  color: 'var(--text-muted)',
-                  mb: 2.6,
-                }}
-              >
-                {WEAK}
-              </Typography>
-              <Typography sx={{ ...BODY, fontSize: '0.98rem' }}>
-                Nothing says who reads it, how long it should be, or what tone to take. The model
-                guesses all three, and it guesses the average of everything it has ever seen.
-              </Typography>
-            </Box>
-          </Reveal>
-
-          <Reveal delay={100}>
-            <Box>
-              <Typography
-                sx={{
-                  fontSize: '0.7rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  color: ORANGE,
-                  mb: 2,
-                }}
-              >
-                Send this instead
-              </Typography>
-              <Prompt>{STRONG}</Prompt>
-              <Typography sx={{ ...BODY, mt: 3, fontSize: '0.98rem' }}>
-                Same request, with the reader, the length, the tone and the ban list decided by you.
-                Twenty seconds longer to write, three rounds of correction saved.
-              </Typography>
-            </Box>
-          </Reveal>
-        </Box>
-      </Band>
-
-      {/* ================= RECIPES ================= */}
-      <Band id="recipes">
-        <Intro
-          pill="Prompts to steal"
-          title="Four that work on anything."
-          lead="Replace what is in brackets and send it. Each is built around a single trick that reliably changes the reply."
-        />
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 5, md: 7 } }}>
-          {RECIPES.map((r, i) => (
-            <Reveal key={r.title} delay={i * 60}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '1fr 1.35fr' },
-                  gap: { xs: 2.5, md: 6 },
-                  alignItems: 'start',
-                }}
-              >
-                <Box>
-                  <Typography
-                    component="h3"
-                    sx={{
-                      fontSize: { xs: '1.3rem', md: '1.55rem' },
-                      fontWeight: 750,
-                      letterSpacing: '-0.025em',
-                      color: 'var(--text-heading)',
-                      mb: 1.4,
-                      textWrap: 'balance',
-                    }}
-                  >
-                    {r.title}
-                  </Typography>
-                  <Typography sx={{ ...BODY, fontSize: '1rem' }}>{r.why}</Typography>
-                </Box>
-                <Prompt>{r.prompt}</Prompt>
-              </Box>
-            </Reveal>
-          ))}
-        </Box>
-      </Band>
-
       {/* ================= CLOSE ================= */}
       <Box sx={{ position: 'relative', overflow: 'hidden', backgroundColor: 'var(--bg-section-alt)' }}>
         <Box
           aria-hidden="true"
           sx={{
             position: 'absolute',
-            bottom: -200,
+            bottom: -220,
             left: '50%',
             transform: 'translateX(-50%)',
             width: 900,
-            height: 500,
+            height: 520,
             background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255, 102, 0, 0.14) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
         <Container maxWidth="lg" sx={{ px: { xs: 3, sm: 4, md: 6 }, py: { xs: 10, md: 16 }, position: 'relative' }}>
           <Reveal>
-            <Box sx={{ maxWidth: 680, mx: 'auto', textAlign: 'center' }}>
+            <Box sx={{ maxWidth: 700, mx: 'auto', textAlign: 'center' }}>
               <Typography
                 component="h2"
-                sx={{
-                  fontSize: { xs: '2rem', md: '2.8rem' },
-                  fontWeight: 800,
-                  letterSpacing: '-0.035em',
-                  color: 'var(--text-heading)',
-                  mb: 2.4,
-                  textWrap: 'balance',
-                }}
+                sx={{ fontSize: { xs: '2rem', md: '2.9rem' }, fontWeight: 800, letterSpacing: '-0.035em', color: 'var(--text-heading)', mb: 2.4, textWrap: 'balance' }}
               >
-                Pick one prompt and run it.
+                Bring the thing you gave up on.
               </Typography>
               <Typography sx={{ ...LEAD, mx: 'auto', mb: 4 }}>
-                Ten minutes in the chat will teach you more than the rest of this page.
+                The project that needed four subscriptions, or the document you could not paste
+                anywhere else.
               </Typography>
               <CTA href={APP} solid>
                 Open the chat
