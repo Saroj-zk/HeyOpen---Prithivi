@@ -1,15 +1,14 @@
 import * as React from 'react';
 import LegalPage from '@/components/LegalPage';
+import { PRIVACY_SECTIONS, LEGAL_UPDATED } from '@/data/legal';
 
-/* Drop the real text in as `sections`, each { heading, body: [paragraph, ...] },
-   and set `updated`. Until then the page states that it is coming rather than
-   carrying wording nobody at the company has agreed to. */
 export default function PrivacyPolicyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      description="How Hey Open handles your data."
-      sections={[]}
+      description="What Hey Open collects, what leaves our service, and what you can delete."
+      updated={LEGAL_UPDATED}
+      sections={PRIVACY_SECTIONS}
     />
   );
 }
