@@ -408,7 +408,7 @@ function Flow({ flow }) {
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', mb: '14px' }}>
               <Mono sx={{ color: T.brand, fontSize: '11.5px' }}>{flow.n}</Mono>
-              <Box sx={{ width: 14, height: 1, backgroundColor: T.line2 }} />
+              <Box sx={{ width: '14px', height: '1px', backgroundColor: T.line2 }} />
               <Mono>{flow.tag}</Mono>
             </Box>
             <Typography
@@ -450,9 +450,9 @@ function Flow({ flow }) {
                     display: { xs: 'none', lg: 'block' },
                     position: 'absolute',
                     top: '50%',
-                    right: -14,
-                    width: 14,
-                    height: 1,
+                    right: '-14px',
+                    width: '14px',
+                    height: '1px',
                     backgroundColor: T.line2,
                     zIndex: 1,
                   }}
@@ -580,7 +580,7 @@ function Rail({ active }) {
       aria-label="On this page"
       sx={{
         position: 'fixed',
-        left: 24,
+        left: '24px',
         top: '50%',
         transform: 'translateY(-50%)',
         zIndex: 20,
@@ -609,7 +609,7 @@ function Rail({ active }) {
             >
               {String(i + 1).padStart(2, '0')}
             </Box>
-            <Box sx={{ width: on ? 18 : 8, height: 1, backgroundColor: on ? T.brand : T.line2, transition: 'all .2s ease' }} />
+            <Box sx={{ width: on ? '18px' : '8px', height: '1px', backgroundColor: on ? T.brand : T.line2, transition: 'all .2s ease' }} />
             <Typography
               className="lbl"
               sx={{
@@ -685,7 +685,7 @@ export default function DocsPage() {
           sx={{
             position: 'absolute',
             left: '50%',
-            top: -60,
+            top: '-60px',
             width: '70%',
             height: 300,
             transform: 'translateX(-50%)',
