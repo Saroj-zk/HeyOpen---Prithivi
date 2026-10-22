@@ -123,7 +123,7 @@ const MARKERS = [
 
 
 /* A square node. Label top left, glyph bottom right, as in the reference. */
-function Tile({ tile }) {
+function Tile({ tile, stacked }) {
   const brand = tile.kind === 'brand';
   const ink = tile.kind === 'ink';
   const onDark = brand || ink;
@@ -133,8 +133,11 @@ function Tile({ tile }) {
       sx={{
         position: 'relative',
         zIndex: 1,
-        width: { xs: 132, sm: 150, md: 162 },
-        height: { xs: 132, sm: 150, md: 162 },
+        /* Square in the row, a wide band when stacked: a 162px square in
+           a 375px column leaves most of the width empty. */
+        width: stacked ? '100%' : { xs: 132, sm: 150, md: 162 },
+        height: stacked ? 'auto' : { xs: 132, sm: 150, md: 162 },
+        minHeight: stacked ? 88 : 'auto',
         borderRadius: '20px',
         p: { xs: 1.6, md: 1.9 },
         display: 'flex',
@@ -265,6 +268,36 @@ function Marker({ marker }) {
   );
 }
 
+/* One step, between two stacked tiles: a short rule, the numbered marker,
+   then the verb. Vertical, so the sequence still reads downward. */
+function Step({ marker }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.4, py: 1.4, pl: 1.4 }}>
+      <Box sx={{ width: '1.5px', height: 22, backgroundColor: DASH_C, flexShrink: 0 }} />
+      <Box
+        sx={{
+          width: 30,
+          height: 30,
+          borderRadius: '10px',
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '0.74rem',
+          fontWeight: 800,
+          color: ORANGE,
+          ...CLEAR,
+        }}
+      >
+        <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>{marker.n}</Box>
+      </Box>
+      <Typography sx={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+        {marker.t}
+      </Typography>
+    </Box>
+  );
+}
+
 export default function TokenFlowSection() {
   const [headRef, headShown] = useReveal();
   const [figRef, figShown] = useReveal();
@@ -315,21 +348,22 @@ export default function TokenFlowSection() {
             px: { xs: 2, md: 5 },
             pt: { xs: 3, md: 4 },
             pb: { xs: 3, md: 4 },
-            overflowX: { xs: 'auto', lg: 'hidden' },
-            overflowY: 'hidden',
+            overflow: 'hidden',
             ...revealSx(figShown, 120),
           }}
         >
-          <Box sx={{ position: 'relative', minWidth: { xs: 760, lg: 'auto' } }}>
+          <Box sx={{ position: 'relative' }}>
             <Typography sx={{ ...LABEL, color: 'var(--text-muted)', mb: { xs: 2.5, md: 3 } }}>
               The stake-once route
             </Typography>
 
             <Box
               sx={{
-                display: 'grid',
+                /* The row needs about 1100px: four fixed 162px tiles plus
+                   three step labels that do not wrap. */
+                display: { xs: 'none', lg: 'grid' },
                 gridTemplateColumns: 'repeat(7, auto)',
-                justifyContent: { xs: 'start', lg: 'center' },
+                justifyContent: 'center',
                 alignItems: 'start',
                 rowGap: 0,
               }}
@@ -415,6 +449,59 @@ export default function TokenFlowSection() {
                 }}
               >
                 Burn the OIU to unlock it
+              </Typography>
+            </Box>
+
+            {/* Below lg: the same sequence down the page. The locked pair get
+                a dashed wrapper of their own, and the return path becomes a
+                line of text, because a route doubling back inside a single
+                column is noise rather than information. */}
+            <Box sx={{ display: { xs: 'flex', lg: 'none' }, flexDirection: 'column' }}>
+              <Tile tile={TILES[0]} stacked />
+              <Step marker={MARKERS[0]} />
+
+              <Box
+                sx={{
+                  position: 'relative',
+                  borderRadius: '18px',
+                  border: `1.5px dashed ${DASH_C}`,
+                  p: { xs: 1.6, sm: 2 },
+                  pt: { xs: 2.4, sm: 2.6 },
+                }}
+              >
+                <Typography
+                  sx={{
+                    ...LABEL,
+                    position: 'absolute',
+                    top: -8,
+                    left: 16,
+                    px: 1,
+                    backgroundColor: 'var(--bg-section-alt)',
+                    color: 'var(--text-secondary)',
+                    fontSize: '0.56rem',
+                  }}
+                >
+                  Locked while it backs the OIU
+                </Typography>
+                <Tile tile={TILES[1]} stacked />
+                <Step marker={MARKERS[1]} />
+                <Tile tile={TILES[2]} stacked />
+              </Box>
+
+              <Step marker={MARKERS[2]} />
+              <Tile tile={TILES[3]} stacked />
+
+              <Typography
+                sx={{
+                  mt: 2.5,
+                  pt: 2.5,
+                  borderTop: '1px solid var(--border-normal)',
+                  fontSize: '0.86rem',
+                  color: 'var(--text-secondary)',
+                  textWrap: 'pretty',
+                }}
+              >
+                Burn the OIU to unlock the collateral at any time.
               </Typography>
             </Box>
           </Box>
