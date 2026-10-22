@@ -7,15 +7,18 @@ import { useReveal, revealSx } from '@/utils/reveal';
 /**
  * The second way to pay for inference.
  *
- * Drawn as a flowchart canvas, per the supplied reference: ruled paper, square
- * tiles rather than wide cards, small marker tiles carrying the step between
- * them, dashed routing, and a dashed group enclosing the part of the flow that
- * is locked.
+ * Sits directly below pricing and answers it. That section sells the monthly
+ * plan; this one is the alternative, which is why the copy opens on "the
+ * other way to pay" rather than making the comparison itself.
  *
- * The tiles are glass. That needs something behind it or it reads as grey, so
- * the canvas is a warm ruled ground with the brand's own glass render bled off
- * the right edge. The grid lines refracting through the tiles are most of what
- * sells it.
+ * Drawn as a flowchart, per the supplied reference: square tiles rather than
+ * wide cards, small marker tiles carrying the step between them, dashed
+ * routing, and a dashed group enclosing the part of the flow that is locked.
+ *
+ * Every tile is glass, from one recipe with three tints. The bevel is what
+ * reads as glass, not the transparency: a gradient rim, a specular sweep, an
+ * inner shadow for thickness. The bodies are nearly opaque on purpose, since
+ * a see-through orange over a light panel just looks washed out.
  *
  * Layout is one grid: tiles on odd columns, markers on even ones. The dashed
  * group is a grid item spanning the locked columns with a negative margin, so

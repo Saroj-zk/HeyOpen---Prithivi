@@ -34,8 +34,8 @@ export default function Home() {
         <SupportedModelsSection />
         <WhyAskMultipleModelsSection />
         <ProductMatrixSection />
-        <TokenFlowSection />
         <PricingSection />
+        <TokenFlowSection />
         <TokenOptimizationSection />
         <ApiSection />
         <EnterpriseSection />
