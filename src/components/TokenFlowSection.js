@@ -7,45 +7,29 @@ import { useReveal, revealSx } from '@/utils/reveal';
 /**
  * How $OPEN turns into inference credits.
  *
- * A full bleed dark band on an otherwise light page, styled from the
- * Tokenomics Studio concept: deep ink base, teal and violet ambient light,
- * and panels made of glass rather than filled rectangles.
+ * Light, like the rest of the page. The glass here is the treatment the site
+ * already uses on its frosted controls (see ApiSection): translucent white,
+ * a white rather than grey border, an inset white highlight along the top
+ * edge, and a soft drop. A warm wash sits behind the panels so the frost has
+ * something to pick up, otherwise translucency on a flat background is just
+ * a lighter grey.
  *
- * The glass is four things together, and it falls apart if any one is left
- * out: a near transparent vertical gradient so the panel has a top and a
- * bottom, a hairline border at low alpha, an inset highlight along the top
- * edge that reads as the lit rim, and a long soft drop so it floats. Blur
- * behind it is what makes the ambient light bleed through.
- *
- * Numbered arrows run between the nodes and two dashed brackets double back,
- * as in the supplied workflow. Everything sits on one seven column grid,
- * nodes on the odd columns and arrows on the even ones, so each bracket is a
- * grid item spanning exact column lines rather than a percentage guess.
- *
- * ACCENT: the concept uses mint against violet, so that is what this band
- * uses. It is the one constant below; switching the section back to brand
- * orange is a one line change.
+ * Laid out as the supplied workflow: nodes left to right, numbered arrows
+ * between them, and two dashed brackets doubling back. Everything sits on one
+ * seven column grid, nodes on the odd columns and arrows on the even ones, so
+ * each bracket is a grid item spanning exact column lines rather than a
+ * percentage guess.
  */
 
-const A = {
-  ink: '#070A12',
-  mint: '#4FE3B0',
-  mint2: '#7DF0CE',
-  violet: '#8B5CF6',
-  text: 'rgba(255,255,255,0.94)',
-  text2: 'rgba(255,255,255,0.60)',
-  text3: 'rgba(255,255,255,0.40)',
-  line: 'rgba(255,255,255,0.10)',
-  line2: 'rgba(255,255,255,0.22)',
-};
+const ORANGE = '#ff6600';
 
-/* The panel treatment, in one place so every surface in the band matches. */
+/* The site's own frosted panel, in one place so every surface matches. */
 const GLASS = {
-  background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.025) 100%)',
-  border: `1px solid ${A.line}`,
-  backdropFilter: 'blur(22px) saturate(150%)',
-  WebkitBackdropFilter: 'blur(22px) saturate(150%)',
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14), 0 24px 60px -28px rgba(0,0,0,0.9)',
+  backgroundColor: 'rgba(255, 255, 255, 0.62)',
+  backdropFilter: 'blur(14px) saturate(180%)',
+  WebkitBackdropFilter: 'blur(14px) saturate(180%)',
+  border: '1px solid rgba(255, 255, 255, 0.78)',
+  boxShadow: '0 8px 24px rgba(15, 23, 42, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95)',
 };
 
 const STEPS = [
@@ -67,38 +51,36 @@ const NOTES = [
   ['Earlier costs less', 'The mint rate climbs as OIU supply grows, so each new one is backed by more than the last.'],
 ];
 
-const DASH = `1px dashed ${A.line2}`;
+const DASH = '1px dashed var(--border-strong)';
 
 function Node({ step }) {
   return (
     <Box
       sx={{
-        position: 'relative',
         borderRadius: '16px',
         px: { xs: 2.2, md: 2.6 },
         py: { xs: 2.2, md: 2.8 },
         textAlign: 'center',
-        minHeight: { md: 112 },
+        minHeight: { md: 110 },
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        overflow: 'hidden',
         ...(step.fill
           ? {
-              background: `linear-gradient(145deg, ${A.mint} 0%, ${A.mint2} 100%)`,
-              border: '1px solid rgba(255,255,255,0.45)',
-              boxShadow: `inset 0 1px 0 rgba(255,255,255,0.6), 0 20px 46px -18px ${A.mint}80`,
+              backgroundColor: ORANGE,
+              border: '1px solid rgba(255, 255, 255, 0.4)',
+              boxShadow: '0 14px 32px -14px rgba(255, 102, 0, 0.7), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.4)',
             }
           : GLASS),
       }}
     >
       <Typography
         sx={{
-          fontSize: { xs: '1.05rem', md: '1.22rem' },
+          fontSize: { xs: '1.05rem', md: '1.2rem' },
           fontWeight: 700,
           letterSpacing: '-0.025em',
           lineHeight: 1.15,
-          color: step.fill ? '#04221A' : A.text,
+          color: step.fill ? '#FFFFFF' : 'var(--text-heading)',
           mb: 0.6,
         }}
       >
@@ -108,7 +90,7 @@ function Node({ step }) {
         sx={{
           fontSize: { xs: '0.8rem', md: '0.85rem' },
           lineHeight: 1.4,
-          color: step.fill ? 'rgba(4,34,26,0.72)' : A.text3,
+          color: step.fill ? 'rgba(255, 255, 255, 0.88)' : 'var(--text-muted)',
         }}
       >
         {step.s}
@@ -125,24 +107,24 @@ function Arrow({ arrow }) {
           width: '26px',
           height: '26px',
           borderRadius: '50%',
-          background: `linear-gradient(145deg, ${A.mint}, ${A.mint2})`,
-          color: '#04221A',
+          backgroundColor: ORANGE,
+          color: '#FFFFFF',
           fontSize: '0.74rem',
           fontWeight: 800,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           mb: 1,
-          boxShadow: `0 0 0 4px rgba(79,227,176,0.12), 0 6px 16px -6px ${A.mint}`,
+          boxShadow: '0 0 0 4px rgba(255, 102, 0, 0.12)',
         }}
       >
         {arrow.n}
       </Box>
       <Typography
         sx={{
-          fontSize: { xs: '0.78rem', md: '0.82rem' },
-          fontWeight: 500,
-          color: A.text2,
+          fontSize: { xs: '0.78rem', md: '0.84rem' },
+          fontWeight: 600,
+          color: 'var(--text-secondary)',
           whiteSpace: 'nowrap',
           mb: 1.2,
         }}
@@ -155,7 +137,8 @@ function Arrow({ arrow }) {
             flex: 1,
             height: '1px',
             minWidth: { xs: '28px', md: '42px' },
-            background: `linear-gradient(90deg, ${A.line2}, ${A.mint})`,
+            backgroundColor: 'var(--text-primary)',
+            opacity: 0.55,
           }}
         />
         <Box
@@ -164,7 +147,8 @@ function Arrow({ arrow }) {
             height: 0,
             borderTop: '4px solid transparent',
             borderBottom: '4px solid transparent',
-            borderLeft: `6px solid ${A.mint}`,
+            borderLeft: '6px solid var(--text-primary)',
+            opacity: 0.55,
           }}
         />
       </Box>
@@ -177,135 +161,96 @@ export default function TokenFlowSection() {
   const [figRef, figShown] = useReveal();
 
   return (
-    <Box
-      id="token-flow"
-      sx={{
-        position: 'relative',
-        backgroundColor: A.ink,
-        overflow: 'hidden',
-        py: { xs: 8, md: 14 },
-        scrollMarginTop: '96px',
-        /* The band is full bleed, so it needs its own rounding at the seams
-           rather than inheriting the page's. */
-        borderRadius: { xs: '28px', md: '36px' },
-        mx: { xs: 1.5, md: 3 },
-      }}
-    >
-      {/* Ambient light. Two pools, teal left and violet right, plus a faint
-          dot field so the glass has something to refract. */}
-      <Box
-        aria-hidden="true"
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          background: `radial-gradient(ellipse 55% 65% at 12% 0%, rgba(79,227,176,0.20) 0%, transparent 68%),
-                       radial-gradient(ellipse 55% 70% at 88% 8%, rgba(139,92,246,0.24) 0%, transparent 70%),
-                       radial-gradient(ellipse 70% 50% at 50% 100%, rgba(79,227,176,0.07) 0%, transparent 70%)`,
-        }}
-      />
-      <Box
-        aria-hidden="true"
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px)',
-          backgroundSize: '26px 26px',
-          maskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.5) 60%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.5) 60%, transparent 100%)',
-        }}
-      />
-
-      <Container maxWidth="xl" sx={{ position: 'relative', px: { xs: 2.5, md: 6 } }}>
-        <Box sx={{ maxWidth: 1340, mx: 'auto' }}>
-          {/* ---- heading ---- */}
-          <Box ref={headRef} sx={{ maxWidth: 780, mb: { xs: 5, md: 7 }, ...revealSx(headShown) }}>
-            <Box
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 1.2,
-                px: 1.8,
-                py: 0.7,
-                mb: 3,
-                borderRadius: '9999px',
-                ...GLASS,
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18)',
-              }}
-            >
-              <Box sx={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: A.mint, boxShadow: `0 0 10px ${A.mint}` }} />
-              <Typography
-                sx={{
-                  fontSize: '0.72rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  color: A.mint,
-                }}
-              >
-                Dual token AI economy
-              </Typography>
-            </Box>
-
-            <Typography
-              variant="h3"
-              sx={{
-                fontSize: { xs: '2.2rem', md: '3.4rem' },
-                fontWeight: 700,
-                lineHeight: 1.04,
-                letterSpacing: '-0.035em',
-                color: A.text,
-                mb: 2.4,
-                textWrap: 'balance',
-              }}
-            >
-              Stake for capacity.{' '}
-              <Box
-                component="span"
-                sx={{
-                  background: `linear-gradient(100deg, ${A.mint} 0%, ${A.mint2} 55%, ${A.violet} 120%)`,
-                  WebkitBackgroundClip: 'text',
-                  backgroundClip: 'text',
-                  color: 'transparent',
-                }}
-              >
-                Draw credits daily.
-              </Box>
-            </Typography>
-
-            <Typography sx={{ fontSize: { xs: '1rem', md: '1.08rem' }, lineHeight: 1.65, color: A.text2, textWrap: 'pretty' }}>
-              Stake $OPEN, mint OIU against the stake, then stake the OIU. Credits arrive every day
-              after that without you touching it again, and the collateral is still yours.
-            </Typography>
-          </Box>
-
-          {/* ---- diagram ---- */}
-          <Box
-            ref={figRef}
+    <Container id="token-flow" maxWidth="xl" sx={{ py: { xs: 6, md: 10 }, scrollMarginTop: '96px' }}>
+      <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
+        {/* ---- heading ---- */}
+        <Box ref={headRef} sx={{ maxWidth: 780, mb: { xs: 4, md: 6 }, ...revealSx(headShown) }}>
+          <Typography
             sx={{
-              position: 'relative',
-              borderRadius: '24px',
-              ...GLASS,
-              px: { xs: 2.5, md: 6 },
-              py: { xs: 4, md: 6 },
-              ...revealSx(figShown, 120),
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              letterSpacing: '0.1em',
+              color: ORANGE,
+              textTransform: 'uppercase',
+              mb: 2,
             }}
           >
+            How $OPEN pays for inference
+          </Typography>
+          <Typography
+            variant="h3"
+            sx={{
+              fontSize: { xs: '2.1rem', md: '3rem' },
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+              mb: 2,
+              letterSpacing: '-0.03em',
+              lineHeight: 1.1,
+              textWrap: 'balance',
+            }}
+          >
+            Three steps,{' '}
+            <Box component="span" sx={{ color: ORANGE }}>done once.</Box>
+          </Typography>
+          <Typography sx={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.65, textWrap: 'pretty' }}>
+            Stake $OPEN, mint OIU against the stake, then stake the OIU. Credits arrive every day
+            after that without you touching it again, and the collateral is still yours.
+          </Typography>
+        </Box>
+
+        {/* ---- diagram ---- */}
+        <Box
+          ref={figRef}
+          sx={{
+            position: 'relative',
+            borderRadius: '24px',
+            backgroundColor: 'var(--bg-section-alt)',
+            border: '1px solid var(--border-subtle)',
+            px: { xs: 2.5, md: 6 },
+            py: { xs: 4, md: 6 },
+            overflow: 'hidden',
+            ...revealSx(figShown, 120),
+          }}
+        >
+          {/* Warm wash and dot field, so the frosted panels have something to
+              pick up rather than sitting on a flat fill. */}
+          <Box
+            aria-hidden="true"
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              background: `radial-gradient(ellipse 50% 60% at 12% 0%, rgba(255, 102, 0, 0.11) 0%, transparent 68%),
+                           radial-gradient(ellipse 55% 65% at 88% 10%, rgba(99, 132, 255, 0.10) 0%, transparent 70%)`,
+            }}
+          />
+          <Box
+            aria-hidden="true"
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              backgroundImage: 'radial-gradient(rgba(15, 23, 42, 0.09) 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+              maskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.45) 65%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.45) 65%, transparent 100%)',
+            }}
+          />
+
+          <Box sx={{ position: 'relative' }}>
             <Typography
               sx={{
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: A.text3,
+                fontSize: { xs: '1rem', md: '1.1rem' },
+                fontWeight: 800,
+                letterSpacing: '-0.02em',
+                color: 'var(--text-heading)',
                 mb: { xs: 3.5, md: 5 },
               }}
             >
               Three steps, done once
             </Typography>
 
-            {/* Desktop grid: nodes on odd columns, arrows on even ones. */}
+            {/* Desktop: nodes on odd columns, arrows on even ones. */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'grid' },
@@ -315,7 +260,7 @@ export default function TokenFlowSection() {
               }}
             >
               <Typography
-                sx={{ gridColumn: '3 / 8', gridRow: 1, textAlign: 'center', fontSize: '0.84rem', color: A.text3, pb: 1 }}
+                sx={{ gridColumn: '3 / 8', gridRow: 1, textAlign: 'center', fontSize: '0.86rem', color: 'var(--text-muted)', pb: 1 }}
               >
                 Your sOPEN stays locked as collateral for as long as the OIU exists.
               </Typography>
@@ -368,13 +313,13 @@ export default function TokenFlowSection() {
                     height: 0,
                     borderLeft: '4px solid transparent',
                     borderRight: '4px solid transparent',
-                    borderBottom: `6px solid ${A.line2}`,
+                    borderBottom: '6px solid var(--border-strong)',
                   },
                 }}
               />
 
               <Typography
-                sx={{ gridColumn: '3 / 6', gridRow: 5, textAlign: 'center', fontSize: '0.84rem', color: A.text3, pt: 1 }}
+                sx={{ gridColumn: '3 / 6', gridRow: 5, textAlign: 'center', fontSize: '0.86rem', color: 'var(--text-muted)', pt: 1 }}
               >
                 Burn OIU to release the collateral.
               </Typography>
@@ -392,8 +337,8 @@ export default function TokenFlowSection() {
                           width: '24px',
                           height: '24px',
                           borderRadius: '50%',
-                          background: `linear-gradient(145deg, ${A.mint}, ${A.mint2})`,
-                          color: '#04221A',
+                          backgroundColor: ORANGE,
+                          color: '#FFFFFF',
                           fontSize: '0.72rem',
                           fontWeight: 800,
                           display: 'flex',
@@ -404,44 +349,56 @@ export default function TokenFlowSection() {
                       >
                         {ARROWS[i].n}
                       </Box>
-                      <Typography sx={{ fontSize: '0.86rem', fontWeight: 500, color: A.text2 }}>
+                      <Typography sx={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
                         {ARROWS[i].t}
                       </Typography>
                     </Box>
                   )}
                 </React.Fragment>
               ))}
-              <Box sx={{ mt: 3, pt: 3, borderTop: `1px solid ${A.line}` }}>
-                <Typography sx={{ fontSize: '0.86rem', color: A.text3, mb: 1.2, textWrap: 'pretty' }}>
+              <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid var(--border-normal)' }}>
+                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)', mb: 1.2, textWrap: 'pretty' }}>
                   Your sOPEN stays locked as collateral for as long as the OIU exists.
                 </Typography>
-                <Typography sx={{ fontSize: '0.86rem', color: A.text3, textWrap: 'pretty' }}>
+                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)', textWrap: 'pretty' }}>
                   Burn OIU to release the collateral.
                 </Typography>
               </Box>
             </Box>
           </Box>
-
-          {/* ---- notes ---- */}
-          <Box
-            sx={{
-              mt: { xs: 2.5, md: 3 },
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 2, md: 3 },
-            }}
-          >
-            {NOTES.map(([t, d]) => (
-              <Box key={t} sx={{ borderRadius: '18px', ...GLASS, px: { xs: 2.4, md: 3 }, py: { xs: 2.4, md: 3 } }}>
-                <Typography sx={{ fontSize: '0.98rem', fontWeight: 700, color: A.text, mb: 1 }}>{t}</Typography>
-                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.6, color: A.text2, textWrap: 'pretty' }}>
-                  {d}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
         </Box>
-      </Container>
-    </Box>
+
+        {/* ---- notes ---- */}
+        <Box
+          sx={{
+            mt: { xs: 2.5, md: 3 },
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+            gap: { xs: 2, md: 3 },
+          }}
+        >
+          {NOTES.map(([t, d]) => (
+            <Box
+              key={t}
+              sx={{
+                borderRadius: '18px',
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-subtle)',
+                boxShadow: 'var(--shadow-card)',
+                px: { xs: 2.4, md: 3 },
+                py: { xs: 2.4, md: 3 },
+              }}
+            >
+              <Typography sx={{ fontSize: '0.98rem', fontWeight: 700, color: 'var(--text-heading)', mb: 1 }}>
+                {t}
+              </Typography>
+              <Typography sx={{ fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--text-secondary)', textWrap: 'pretty' }}>
+                {d}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    </Container>
   );
 }
