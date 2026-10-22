@@ -30,6 +30,54 @@ const ORANGE = '#ff6600';
 const INK = 'rgba(15, 23, 42, 0.72)';
 const DASH = '1px dashed rgba(15, 23, 42, 0.28)';
 
+/* Real glass, not a translucent rectangle. Five things together:
+     1. a body that is a gradient, lighter where light enters
+     2. heavy blur with saturation and a little brightness, so colour
+        from the backdrop blooms through instead of going grey
+     3. a specular rim: a gradient border, brightest top left, done with
+        the two layer mask trick because a border cannot hold a gradient
+     4. an inset highlight on the top edge, a weaker bounce on the bottom
+     5. two shadows, a tight contact one and a long ambient one
+   None of it reads without a backdrop worth refracting, which is what
+   the panel behind it is for. */
+const GLASS = {
+  position: 'relative',
+  background:
+    'linear-gradient(150deg, rgba(255,255,255,0.70) 0%, rgba(255,255,255,0.38) 48%, rgba(255,255,255,0.54) 100%)',
+  backdropFilter: 'blur(26px) saturate(200%) brightness(1.06)',
+  WebkitBackdropFilter: 'blur(26px) saturate(200%) brightness(1.06)',
+  boxShadow: [
+    'inset 0 1px 0 rgba(255,255,255,0.95)',
+    'inset 0 -1px 0 rgba(255,255,255,0.45)',
+    'inset 0 8px 24px -12px rgba(255,255,255,0.9)',
+    '0 1px 2px rgba(15,23,42,0.07)',
+    '0 22px 44px -18px rgba(15,23,42,0.28)',
+  ].join(','),
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    borderRadius: 'inherit',
+    padding: '1px',
+    background:
+      'linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.26) 42%, rgba(255,255,255,0.20) 62%, rgba(255,255,255,0.88) 100%)',
+    WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+    WebkitMaskComposite: 'xor',
+    mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+    maskComposite: 'exclude',
+    pointerEvents: 'none',
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    borderRadius: 'inherit',
+    background:
+      'radial-gradient(120% 90% at 8% -12%, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0) 55%)',
+    pointerEvents: 'none',
+  },
+};
+
 const LABEL = {
   fontSize: '0.64rem',
   fontWeight: 800,
@@ -86,15 +134,25 @@ function Node({ step }) {
         justifyContent: 'center',
         ...(step.fill
           ? {
-              backgroundColor: ORANGE,
-              border: `1px solid ${ORANGE}`,
-              boxShadow: '0 12px 28px -14px rgba(255,102,0,0.75)',
+              position: 'relative',
+              background: `linear-gradient(150deg, #FF9150 0%, ${ORANGE} 55%, #E35A00 100%)`,
+              boxShadow: [
+                'inset 0 1px 0 rgba(255,255,255,0.55)',
+                'inset 0 -1px 0 rgba(0,0,0,0.14)',
+                '0 1px 2px rgba(170,58,0,0.28)',
+                '0 22px 44px -18px rgba(255,102,0,0.62)',
+              ].join(','),
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                borderRadius: 'inherit',
+                background:
+                  'radial-gradient(120% 90% at 10% -12%, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0) 55%)',
+                pointerEvents: 'none',
+              },
             }
-          : {
-              backgroundColor: '#FFFFFF',
-              border: '1px solid var(--border-normal)',
-              boxShadow: '0 1px 2px rgba(15,23,42,0.05), 0 8px 20px -14px rgba(15,23,42,0.28)',
-            }),
+          : GLASS),
       }}
     >
       <Typography
@@ -212,8 +270,12 @@ export default function TokenFlowSection() {
           sx={{
             position: 'relative',
             borderRadius: '24px',
-            backgroundColor: 'var(--bg-page)',
-            border: '1px solid var(--border-normal)',
+            background:
+              'radial-gradient(62% 80% at 10% 12%, rgba(255,138,46,0.26) 0%, transparent 62%),' +
+              'radial-gradient(58% 76% at 90% 88%, rgba(96,132,255,0.24) 0%, transparent 66%),' +
+              'radial-gradient(46% 62% at 62% 38%, rgba(255,205,160,0.22) 0%, transparent 70%),' +
+              'linear-gradient(145deg, #FAFCFF 0%, #EDF1F8 100%)',
+            border: '1px solid rgba(255,255,255,0.9)',
             px: { xs: 2.5, md: 5 },
             pt: { xs: 3, md: 3.5 },
             pb: { xs: 3.5, md: 4 },
@@ -221,17 +283,38 @@ export default function TokenFlowSection() {
             ...revealSx(figShown, 120),
           }}
         >
-          {/* Dot field only. A coloured wash at this size reads as a smudge. */}
+          {/* The brand's own glass render, oversized and bled off the
+              right edge. This is the thing the cards refract. Without it
+              the frost has nothing to pick up and reads as grey. */}
+          <Box
+            aria-hidden="true"
+            component="img"
+            src="/images/liquid_glass_light.jpg"
+            alt=""
+            loading="lazy"
+            sx={{
+              position: 'absolute',
+              right: '-7%',
+              top: '50%',
+              transform: 'translateY(-50%) rotate(-12deg)',
+              width: { xs: '150%', md: '58%' },
+              maxWidth: 720,
+              opacity: 0.6,
+              mixBlendMode: 'multiply',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          />
           <Box
             aria-hidden="true"
             sx={{
               position: 'absolute',
               inset: 0,
               pointerEvents: 'none',
-              backgroundImage: 'radial-gradient(rgba(15, 23, 42, 0.10) 1px, transparent 1px)',
+              backgroundImage: 'radial-gradient(rgba(15, 23, 42, 0.09) 1px, transparent 1px)',
               backgroundSize: '22px 22px',
-              maskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, #000 20%, transparent 85%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, #000 20%, transparent 85%)',
+              maskImage: 'radial-gradient(ellipse 85% 75% at 42% 45%, #000 15%, transparent 82%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 85% 75% at 42% 45%, #000 15%, transparent 82%)',
             }}
           />
 
