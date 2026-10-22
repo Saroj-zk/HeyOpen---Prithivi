@@ -789,7 +789,7 @@ export default function SupportedModelsSection() {
             sx={{
               display: 'grid',
               gridTemplateColumns: {
-                xs: '1.8fr 1.3fr 0.9fr 44px',
+                xs: '1fr auto 44px',
                 md: '2fr 1.4fr 1fr 2.4fr 48px',
               },
               alignItems: 'center',
@@ -801,7 +801,7 @@ export default function SupportedModelsSection() {
             <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
               Model
             </Typography>
-            <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+            <Typography sx={{ display: { xs: 'none', md: 'block' }, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
               Provider
             </Typography>
             <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
@@ -825,7 +825,7 @@ export default function SupportedModelsSection() {
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: {
-                      xs: '1.8fr 1.3fr 0.9fr 44px',
+                      xs: '1fr auto 44px',
                       md: '2fr 1.4fr 1fr 2.4fr 48px',
                     },
                     alignItems: 'center',
@@ -862,8 +862,10 @@ export default function SupportedModelsSection() {
                     </Typography>
                   </Box>
 
-                  {/* Provider Column: Frosted Brand Pill */}
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  {/* Provider Column: Frosted Brand Pill. Hidden on phones,
+                      where the logo in the model cell already says who made
+                      it and the pill crowded out the context value. */}
+                  <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
                     <Box
                       sx={{
                         display: 'inline-flex',

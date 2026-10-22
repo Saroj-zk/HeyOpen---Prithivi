@@ -306,20 +306,21 @@ export default function Footer({ showCta = false }) {
           sx={{
             display: 'grid',
             gridTemplateColumns: {
-              xs: '1fr',
+              xs: '1fr 1fr',
               sm: '1fr 1fr',
-              md: 'repeat(2, 1fr)',
               md: 'repeat(3, 1fr)',
               lg: '1.5fr 0.9fr 0.9fr 1fr 1.2fr',
             },
-            columnGap: { sm: 4, md: 4, lg: 5 },
-            rowGap: { xs: 5, sm: 7 },
+            columnGap: { xs: 3, sm: 4, md: 4, lg: 5 },
+            rowGap: { xs: 4.5, sm: 7 },
             pt: 2,
             pb: { xs: 6, md: 8 },
           }}
         >
-          {/* COLUMN 1: Brand, Description, & Social Icon Boxes */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          {/* COLUMN 1: Brand, Description, & Social Icon Boxes.
+              Spans both phone columns; the tagline and the social row need
+              the width, and the link groups sit two up underneath. */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gridColumn: { xs: '1 / -1', sm: 'auto' } }}>
             {/* Logo */}
             <Box
               component="a"
@@ -399,8 +400,18 @@ export default function Footer({ showCta = false }) {
 
           {/* THE LINK COLUMNS: Product, Developers, Legal. Rendered from the
               data rather than by index, so a new column is a new entry. */}
-          {FOOTER_COLUMNS.map((col) => (
-            <Box key={col.title} sx={{ display: 'flex', flexDirection: 'column' }}>
+          {FOOTER_COLUMNS.map((col, i) => (
+            <Box
+              key={col.title}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                /* Two up on phones. The first group is the long one, so
+                   anything after the second rides up into column two rather
+                   than starting a row with an empty half beside it. */
+                gridColumn: { xs: i >= 2 ? 2 : 'auto', sm: 'auto' },
+              }}
+            >
               <Typography
                 sx={{
                   fontSize: '0.95rem',
@@ -441,8 +452,9 @@ export default function Footer({ showCta = false }) {
           ))}
 
           {/* Its own column rather than wedged under the social row, where it
-              had no air above it and ran wider than everything near it. */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              had no air above it and ran wider than everything near it. Full
+              width on phones, because the email field needs it. */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gridColumn: { xs: '1 / -1', sm: 'auto' } }}>
             <Typography
               sx={{
                 fontSize: '0.95rem',
