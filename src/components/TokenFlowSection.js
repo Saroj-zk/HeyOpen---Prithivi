@@ -7,51 +7,47 @@ import { useReveal, revealSx } from '@/utils/reveal';
 /**
  * The second way to pay for inference.
  *
- * Sits directly above pricing and sets it up: that section sells a monthly
- * plan, this one explains the alternative, so the two read as a pair.
+ * Drawn as a flowchart canvas, per the supplied reference: ruled paper, square
+ * tiles rather than wide cards, small marker tiles carrying the step between
+ * them, dashed routing, and a dashed group enclosing the part of the flow that
+ * is locked.
  *
- * Diagram notes, because the first two attempts got these wrong:
+ * The tiles are glass. That needs something behind it or it reads as grey, so
+ * the canvas is a warm ruled ground with the brand's own glass render bled off
+ * the right edge. The grid lines refracting through the tiles are most of what
+ * sells it.
  *
- *  - Route captions sit OUTSIDE their bracket, above the top one and below
- *    the bottom one. Putting a chip on the line looked neat in isolation and
- *    collided with the cards either side of it.
- *  - The node row is fenced off from both brackets by its own grid rows, so
- *    nothing can drift into it as the copy changes.
- *  - Cards are solid white with a real border. Frosted translucency on a
- *    light panel just reads as washed out at this size.
- *  - The badge sits above its arrow and the verb below it, which is the
- *    arrangement in the supplied workflow and leaves the shaft unbroken.
+ * Layout is one grid: tiles on odd columns, markers on even ones. The dashed
+ * group is a grid item spanning the locked columns with a negative margin, so
+ * it wraps the tiles instead of being positioned by eye.
  *
  * No figures appear here. Supply, mint ratio and credit rate are not settled
  * anywhere in the repo, and a number on this page would read as a commitment.
  */
 
 const ORANGE = '#ff6600';
-const INK = 'rgba(15, 23, 42, 0.72)';
-const DASH = '1px dashed rgba(15, 23, 42, 0.28)';
+const INK = '#14161B';
+const RULE = 'rgba(146, 136, 104, 0.22)';
+const DASH_C = 'rgba(20, 22, 27, 0.30)';
 
-/* Real glass, not a translucent rectangle. Five things together:
-     1. a body that is a gradient, lighter where light enters
-     2. heavy blur with saturation and a little brightness, so colour
-        from the backdrop blooms through instead of going grey
-     3. a specular rim: a gradient border, brightest top left, done with
-        the two layer mask trick because a border cannot hold a gradient
-     4. an inset highlight on the top edge, a weaker bounce on the bottom
-     5. two shadows, a tight contact one and a long ambient one
-   None of it reads without a backdrop worth refracting, which is what
-   the panel behind it is for. */
+const LABEL = {
+  fontSize: '0.6rem',
+  fontWeight: 800,
+  letterSpacing: '0.13em',
+  textTransform: 'uppercase',
+};
+
+/* Glass, built to refract the ruled ground behind it. */
 const GLASS = {
-  position: 'relative',
   background:
-    'linear-gradient(150deg, rgba(255,255,255,0.70) 0%, rgba(255,255,255,0.38) 48%, rgba(255,255,255,0.54) 100%)',
-  backdropFilter: 'blur(26px) saturate(200%) brightness(1.06)',
-  WebkitBackdropFilter: 'blur(26px) saturate(200%) brightness(1.06)',
+    'linear-gradient(150deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.34) 50%, rgba(255,255,255,0.58) 100%)',
+  backdropFilter: 'blur(14px) saturate(190%) brightness(1.05)',
+  WebkitBackdropFilter: 'blur(14px) saturate(190%) brightness(1.05)',
   boxShadow: [
     'inset 0 1px 0 rgba(255,255,255,0.95)',
-    'inset 0 -1px 0 rgba(255,255,255,0.45)',
-    'inset 0 8px 24px -12px rgba(255,255,255,0.9)',
-    '0 1px 2px rgba(15,23,42,0.07)',
-    '0 22px 44px -18px rgba(15,23,42,0.28)',
+    'inset 0 -1px 0 rgba(255,255,255,0.5)',
+    '0 1px 2px rgba(20,22,27,0.06)',
+    '0 18px 36px -16px rgba(20,22,27,0.26)',
   ].join(','),
   '&::before': {
     content: '""',
@@ -60,7 +56,7 @@ const GLASS = {
     borderRadius: 'inherit',
     padding: '1px',
     background:
-      'linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.26) 42%, rgba(255,255,255,0.20) 62%, rgba(255,255,255,0.88) 100%)',
+      'linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.25) 42%, rgba(255,255,255,0.2) 62%, rgba(255,255,255,0.9) 100%)',
     WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
     WebkitMaskComposite: 'xor',
     mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
@@ -72,27 +68,19 @@ const GLASS = {
     position: 'absolute',
     inset: 0,
     borderRadius: 'inherit',
-    background:
-      'radial-gradient(120% 90% at 8% -12%, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0) 55%)',
+    background: 'radial-gradient(130% 95% at 6% -14%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 58%)',
     pointerEvents: 'none',
   },
 };
 
-const LABEL = {
-  fontSize: '0.64rem',
-  fontWeight: 800,
-  letterSpacing: '0.12em',
-  textTransform: 'uppercase',
-};
-
-const STEPS = [
-  { tag: 'You hold', k: '$OPEN', s: 'in your wallet' },
-  { tag: 'Staked', k: 'sOPEN', s: 'earns as collateral' },
-  { tag: 'Minted', k: 'OIU', s: 'backed by your sOPEN' },
-  { tag: 'You receive', k: 'Inference credits', s: 'every day, automatically', fill: true },
+const TILES = [
+  { tag: 'You hold', k: '$OPEN', s: 'in your wallet', kind: 'brand', glyph: '◆' },
+  { tag: 'Staked', k: 'sOPEN', s: 'collateral', kind: 'glass', glyph: '▤' },
+  { tag: 'Minted', k: 'OIU', s: 'against sOPEN', kind: 'glass', glyph: '◇' },
+  { tag: 'You receive', k: 'Credits', s: 'every day', kind: 'ink', glyph: '✦' },
 ];
 
-const ARROWS = [
+const MARKERS = [
   { n: '1', t: 'stake' },
   { n: '2', t: 'mint against it' },
   { n: '3', t: 'stake the OIU' },
@@ -120,111 +108,146 @@ const COMPARE = [
   },
 ];
 
-function Node({ step }) {
+/* A square node. Label top left, glyph bottom right, as in the reference. */
+function Tile({ tile }) {
+  const brand = tile.kind === 'brand';
+  const ink = tile.kind === 'ink';
+  const onDark = brand || ink;
+
   return (
     <Box
       sx={{
-        borderRadius: '14px',
-        px: { xs: 2, md: 2.2 },
-        py: { xs: 2.2, md: 2.4 },
-        textAlign: 'center',
-        minHeight: { md: 96 },
+        position: 'relative',
+        zIndex: 1,
+        width: { xs: 132, sm: 150, md: 162 },
+        height: { xs: 132, sm: 150, md: 162 },
+        borderRadius: '20px',
+        p: { xs: 1.6, md: 1.9 },
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        ...(step.fill
+        justifyContent: 'space-between',
+        overflow: 'hidden',
+        ...(brand
           ? {
-              position: 'relative',
               background: `linear-gradient(150deg, #FF9150 0%, ${ORANGE} 55%, #E35A00 100%)`,
-              boxShadow: [
-                'inset 0 1px 0 rgba(255,255,255,0.55)',
-                'inset 0 -1px 0 rgba(0,0,0,0.14)',
-                '0 1px 2px rgba(170,58,0,0.28)',
-                '0 22px 44px -18px rgba(255,102,0,0.62)',
-              ].join(','),
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-                borderRadius: 'inherit',
-                background:
-                  'radial-gradient(120% 90% at 10% -12%, rgba(255,255,255,0.48) 0%, rgba(255,255,255,0) 55%)',
-                pointerEvents: 'none',
-              },
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 18px 36px -16px rgba(255,102,0,0.6)',
+            }
+          : ink
+          ? {
+              background: `linear-gradient(150deg, #2A2E37 0%, ${INK} 60%, #0B0D11 100%)`,
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14), 0 18px 36px -16px rgba(20,22,27,0.6)',
             }
           : GLASS),
       }}
     >
       <Typography
         sx={{
-          fontSize: { xs: '1.02rem', md: '1.16rem' },
-          fontWeight: 700,
-          letterSpacing: '-0.025em',
-          lineHeight: 1.15,
-          color: step.fill ? '#FFFFFF' : 'var(--text-heading)',
-          mb: 0.5,
+          ...LABEL,
+          position: 'relative',
+          zIndex: 1,
+          color: onDark ? 'rgba(255,255,255,0.72)' : 'var(--text-muted)',
         }}
       >
-        {step.k}
+        {tile.tag}
       </Typography>
-      <Typography
-        sx={{
-          fontSize: { xs: '0.78rem', md: '0.81rem' },
-          lineHeight: 1.4,
-          color: step.fill ? 'rgba(255,255,255,0.9)' : 'var(--text-muted)',
-        }}
-      >
-        {step.s}
-      </Typography>
+
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 1 }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography
+              sx={{
+                fontSize: { xs: '1.02rem', md: '1.14rem' },
+                fontWeight: 750,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.1,
+                color: onDark ? '#FFFFFF' : 'var(--text-heading)',
+              }}
+            >
+              {tile.k}
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: '0.72rem', md: '0.76rem' },
+                lineHeight: 1.35,
+                mt: 0.4,
+                color: onDark ? 'rgba(255,255,255,0.68)' : 'var(--text-muted)',
+              }}
+            >
+              {tile.s}
+            </Typography>
+          </Box>
+          <Box
+            aria-hidden="true"
+            sx={{
+              fontSize: '1.05rem',
+              lineHeight: 1,
+              flexShrink: 0,
+              opacity: onDark ? 0.85 : 0.5,
+              color: onDark ? '#FFFFFF' : 'var(--text-heading)',
+            }}
+          >
+            {tile.glyph}
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 }
 
-/* Badge above, verb beneath it, then an unbroken shaft. */
-function Arrow({ arrow }) {
+/* The small marker tile that carries the step, with dashed line either side. */
+function Marker({ marker }) {
+  const line = {
+    flex: 1,
+    height: 0,
+    borderTop: `1.5px dashed ${DASH_C}`,
+    minWidth: { xs: 10, md: 18 },
+  };
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', px: { md: 1.2 } }}>
-      <Box
-        sx={{
-          width: '24px',
-          height: '24px',
-          borderRadius: '50%',
-          backgroundColor: ORANGE,
-          color: '#FFFFFF',
-          fontSize: '0.72rem',
-          fontWeight: 800,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          mb: 0.9,
-        }}
-      >
-        {arrow.n}
-      </Box>
-      <Typography
-        sx={{
-          fontSize: { xs: '0.78rem', md: '0.83rem' },
-          fontWeight: 600,
-          color: 'var(--text-secondary)',
-          whiteSpace: 'nowrap',
-          mb: 1.1,
-        }}
-      >
-        {arrow.t}
-      </Typography>
+    <Box sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', px: { xs: 0.5, md: 1 } }}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-        <Box sx={{ flex: 1, height: '1.5px', minWidth: { xs: '34px', md: '52px' }, backgroundColor: INK }} />
+        <Box sx={line} />
         <Box
+          sx={{
+            position: 'relative',
+            width: { xs: 34, md: 40 },
+            height: { xs: 34, md: 40 },
+            borderRadius: '11px',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '0.78rem',
+            fontWeight: 800,
+            color: ORANGE,
+            ...GLASS,
+          }}
+        >
+          <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>{marker.n}</Box>
+        </Box>
+        <Box sx={line} />
+        <Box
+          aria-hidden="true"
           sx={{
             width: 0,
             height: 0,
-            borderTop: '5px solid transparent',
-            borderBottom: '5px solid transparent',
-            borderLeft: `7px solid ${INK}`,
             flexShrink: 0,
+            borderTop: '4.5px solid transparent',
+            borderBottom: '4.5px solid transparent',
+            borderLeft: `6.5px solid ${DASH_C}`,
           }}
         />
       </Box>
+      <Typography
+        sx={{
+          mt: 1.2,
+          fontSize: { xs: '0.7rem', md: '0.78rem' },
+          fontWeight: 600,
+          color: 'var(--text-secondary)',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {marker.t}
+      </Typography>
     </Box>
   );
 }
@@ -264,189 +287,145 @@ export default function TokenFlowSection() {
           </Typography>
         </Box>
 
-        {/* ---- diagram ---- */}
+        {/* ---- the canvas ---- */}
         <Box
           ref={figRef}
           sx={{
             position: 'relative',
             borderRadius: '24px',
-            background:
-              'radial-gradient(62% 80% at 10% 12%, rgba(255,138,46,0.26) 0%, transparent 62%),' +
-              'radial-gradient(58% 76% at 90% 88%, rgba(96,132,255,0.24) 0%, transparent 66%),' +
-              'radial-gradient(46% 62% at 62% 38%, rgba(255,205,160,0.22) 0%, transparent 70%),' +
-              'linear-gradient(145deg, #FAFCFF 0%, #EDF1F8 100%)',
-            border: '1px solid rgba(255,255,255,0.9)',
-            px: { xs: 2.5, md: 5 },
-            pt: { xs: 3, md: 3.5 },
-            pb: { xs: 3.5, md: 4 },
-            overflow: 'hidden',
+            border: '1px solid rgba(146, 136, 104, 0.26)',
+            backgroundColor: '#FCFBF6',
+            backgroundImage: `linear-gradient(${RULE} 1px, transparent 1px), linear-gradient(90deg, ${RULE} 1px, transparent 1px)`,
+            backgroundSize: '28px 28px, 28px 28px',
+            px: { xs: 2, md: 5 },
+            pt: { xs: 3, md: 4 },
+            pb: { xs: 3, md: 4 },
+            overflowX: { xs: 'auto', lg: 'hidden' },
+            overflowY: 'hidden',
             ...revealSx(figShown, 120),
           }}
         >
-          {/* The brand's own glass render, oversized and bled off the
-              right edge. This is the thing the cards refract. Without it
-              the frost has nothing to pick up and reads as grey. */}
+          {/* The brand's glass render, for the tiles to refract. Kept in a
+              clipped layer: an absolutely positioned child still counts
+              toward scrollWidth, and this one bleeds past the right edge. */}
           <Box
             aria-hidden="true"
-            component="img"
-            src="/images/liquid_glass_light.jpg"
-            alt=""
-            loading="lazy"
-            sx={{
-              position: 'absolute',
-              right: '-7%',
-              top: '50%',
-              transform: 'translateY(-50%) rotate(-12deg)',
-              width: { xs: '150%', md: '58%' },
-              maxWidth: 720,
-              opacity: 0.6,
-              mixBlendMode: 'multiply',
-              pointerEvents: 'none',
-              userSelect: 'none',
-            }}
-          />
-          <Box
-            aria-hidden="true"
-            sx={{
-              position: 'absolute',
-              inset: 0,
-              pointerEvents: 'none',
-              backgroundImage: 'radial-gradient(rgba(15, 23, 42, 0.09) 1px, transparent 1px)',
-              backgroundSize: '22px 22px',
-              maskImage: 'radial-gradient(ellipse 85% 75% at 42% 45%, #000 15%, transparent 82%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 85% 75% at 42% 45%, #000 15%, transparent 82%)',
-            }}
-          />
+            sx={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}
+          >
+            <Box
+              component="img"
+              src="/images/liquid_glass_light.jpg"
+              alt=""
+              loading="lazy"
+              sx={{
+                position: 'absolute',
+                right: '-8%',
+                top: '50%',
+                transform: 'translateY(-50%) rotate(-14deg)',
+                width: { xs: 460, md: 560 },
+                opacity: 0.5,
+                mixBlendMode: 'multiply',
+              }}
+            />
+          </Box>
 
-          <Box sx={{ position: 'relative' }}>
+          <Box sx={{ position: 'relative', minWidth: { xs: 760, lg: 'auto' } }}>
             <Typography sx={{ ...LABEL, color: 'var(--text-muted)', mb: { xs: 2.5, md: 3 } }}>
               The stake-once route
             </Typography>
 
-            {/* Desktop. Rows fence the node row off from both brackets, so a
-                caption can never drift into a card. */}
             <Box
               sx={{
-                display: { xs: 'none', md: 'grid' },
-                gridTemplateColumns:
-                  'minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.08fr)',
-                gridTemplateRows: 'auto 26px 14px auto 14px 26px auto',
-                alignItems: 'center',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(7, auto)',
+                justifyContent: { xs: 'start', lg: 'center' },
+                alignItems: 'start',
+                rowGap: 0,
               }}
             >
-              {/* caption, then bracket, then a gap, then the row */}
-              <Typography
-                sx={{ gridColumn: '3 / 8', gridRow: 1, textAlign: 'center', fontSize: '0.86rem', color: 'var(--text-secondary)', pb: 1 }}
-              >
-                Your collateral stays locked the whole time
-              </Typography>
+              {/* the dashed group, wrapping the locked part of the flow */}
               <Box
                 aria-hidden="true"
                 sx={{
-                  gridColumn: '3 / 8',
-                  gridRow: 2,
-                  alignSelf: 'stretch',
-                  borderTop: DASH,
-                  borderLeft: DASH,
-                  borderRight: DASH,
-                  borderTopLeftRadius: '10px',
-                  borderTopRightRadius: '10px',
+                  gridColumn: '3 / 6',
+                  gridRow: 1,
+                  zIndex: 0,
+                  m: '-18px',
+                  mt: '-26px',
+                  borderRadius: '26px',
+                  border: `1.5px dashed ${DASH_C}`,
                 }}
               />
+              <Typography
+                sx={{
+                  gridColumn: '3 / 6',
+                  gridRow: 1,
+                  zIndex: 1,
+                  justifySelf: 'center',
+                  alignSelf: 'start',
+                  mt: '-40px',
+                  px: 1.2,
+                  backgroundColor: '#FCFBF6',
+                  ...LABEL,
+                  color: 'var(--text-secondary)',
+                }}
+              >
+                Locked while it backs the OIU
+              </Typography>
 
-              {/* node labels sit with their node, inside row 4 */}
-              {STEPS.map((step, i) => (
-                <React.Fragment key={step.k}>
-                  <Box sx={{ gridColumn: i * 2 + 1, gridRow: 4 }}>
-                    <Typography
-                      sx={{ ...LABEL, color: step.fill ? ORANGE : 'var(--text-muted)', mb: 1, textAlign: 'center' }}
-                    >
-                      {step.tag}
-                    </Typography>
-                    <Node step={step} />
+              {TILES.map((tile, i) => (
+                <React.Fragment key={tile.k}>
+                  <Box sx={{ gridColumn: i * 2 + 1, gridRow: 1, display: 'flex', justifyContent: 'center' }}>
+                    <Tile tile={tile} />
                   </Box>
-                  {ARROWS[i] && (
-                    <Box sx={{ gridColumn: i * 2 + 2, gridRow: 4, alignSelf: 'center', pt: 2.2 }}>
-                      <Arrow arrow={ARROWS[i]} />
+                  {MARKERS[i] && (
+                    <Box sx={{ gridColumn: i * 2 + 2, gridRow: 1, alignSelf: 'center', pb: 3 }}>
+                      <Marker marker={MARKERS[i]} />
                     </Box>
                   )}
                 </React.Fragment>
               ))}
 
+              {/* the return route, under the locked group */}
               <Box
                 aria-hidden="true"
                 sx={{
                   gridColumn: '3 / 6',
-                  gridRow: 6,
-                  alignSelf: 'stretch',
+                  gridRow: 2,
+                  mt: '18px',
+                  mx: '-18px',
+                  height: 30,
                   position: 'relative',
-                  borderBottom: DASH,
-                  borderLeft: DASH,
-                  borderRight: DASH,
-                  borderBottomLeftRadius: '10px',
-                  borderBottomRightRadius: '10px',
+                  borderBottom: `1.5px dashed ${DASH_C}`,
+                  borderLeft: `1.5px dashed ${DASH_C}`,
+                  borderRight: `1.5px dashed ${DASH_C}`,
+                  borderBottomLeftRadius: '12px',
+                  borderBottomRightRadius: '12px',
                   '&::before': {
                     content: '""',
                     position: 'absolute',
-                    top: '-1px',
+                    top: '-2px',
                     left: '-5px',
                     width: 0,
                     height: 0,
                     borderLeft: '5px solid transparent',
                     borderRight: '5px solid transparent',
-                    borderBottom: '7px solid rgba(15,23,42,0.4)',
+                    borderBottom: `7px solid ${DASH_C}`,
                   },
                 }}
               />
               <Typography
-                sx={{ gridColumn: '3 / 6', gridRow: 7, textAlign: 'center', fontSize: '0.86rem', color: 'var(--text-secondary)', pt: 1 }}
+                sx={{
+                  gridColumn: '3 / 6',
+                  gridRow: 3,
+                  textAlign: 'center',
+                  mt: 1.2,
+                  fontSize: { xs: '0.74rem', md: '0.8rem' },
+                  color: 'var(--text-secondary)',
+                }}
               >
                 Burn the OIU to unlock it
               </Typography>
-            </Box>
-
-            {/* Mobile: stacked, routes said in words. */}
-            <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column' }}>
-              {STEPS.map((step, i) => (
-                <React.Fragment key={step.k}>
-                  <Typography sx={{ ...LABEL, color: step.fill ? ORANGE : 'var(--text-muted)', mb: 1 }}>
-                    {step.tag}
-                  </Typography>
-                  <Node step={step} />
-                  {ARROWS[i] && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.4, py: 1.8, pl: 1 }}>
-                      <Box
-                        sx={{
-                          width: '24px',
-                          height: '24px',
-                          borderRadius: '50%',
-                          backgroundColor: ORANGE,
-                          color: '#FFFFFF',
-                          fontSize: '0.72rem',
-                          fontWeight: 800,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          flexShrink: 0,
-                        }}
-                      >
-                        {ARROWS[i].n}
-                      </Box>
-                      <Typography sx={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                        {ARROWS[i].t}
-                      </Typography>
-                    </Box>
-                  )}
-                </React.Fragment>
-              ))}
-              <Box sx={{ mt: 2.5, pt: 2.5, borderTop: '1px solid var(--border-normal)' }}>
-                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-secondary)', mb: 1, textWrap: 'pretty' }}>
-                  Your collateral stays locked the whole time.
-                </Typography>
-                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-secondary)', textWrap: 'pretty' }}>
-                  Burn the OIU to unlock it.
-                </Typography>
-              </Box>
             </Box>
           </Box>
         </Box>
@@ -499,7 +478,7 @@ export default function TokenFlowSection() {
                     borderTop: i === 0 ? 'none' : '1px solid var(--border-subtle)',
                   }}
                 >
-                  <Typography sx={{ ...LABEL, color: 'var(--text-muted)', pt: '3px' }}>{k}</Typography>
+                  <Typography sx={{ ...LABEL, fontSize: '0.64rem', color: 'var(--text-muted)', pt: '3px' }}>{k}</Typography>
                   <Typography sx={{ fontSize: '0.95rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
                     {v}
                   </Typography>
