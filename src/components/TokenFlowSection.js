@@ -83,8 +83,8 @@ const CLEAR = glass({
   mid: 'rgba(255,255,255,0.72)',
   lo: 'rgba(255,255,255,0.86)',
   rim: 'rgba(255,255,255,0.95)',
-  inner: 'rgba(90,110,160,0.38)',
-  drop: 'rgba(40,55,90,0.30)',
+  inner: 'rgba(15,23,42,0.30)',
+  drop: 'rgba(15,23,42,0.26)',
 });
 
 const AMBER = glass({
@@ -226,9 +226,9 @@ function Marker({ marker }) {
             boxShadow: [
               'inset 0 1px 0 rgba(255,255,255,1)',
               'inset 0 0 0 0.5px rgba(255,255,255,0.6)',
-              'inset 0 -6px 12px -8px rgba(90,110,160,0.4)',
+              'inset 0 -6px 12px -8px rgba(15,23,42,0.32)',
               '0 2px 4px rgba(20,22,27,0.06)',
-              '0 10px 20px -10px rgba(40,55,90,0.35)',
+              '0 10px 20px -10px rgba(15,23,42,0.3)',
             ].join(','),
           }}
         >
@@ -302,10 +302,13 @@ export default function TokenFlowSection() {
           sx={{
             position: 'relative',
             borderRadius: '24px',
-            border: '1px solid rgba(255,255,255,0.85)',
-            background:
-              'radial-gradient(60% 80% at 18% 12%, rgba(255,150,80,0.10) 0%, transparent 62%),' +
-              'linear-gradient(145deg, #F2F5FA 0%, #FAFBFE 48%, #EEF1F7 100%)',
+            border: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--bg-section-alt)',
+            /* One warm pool only, so the clear tiles have something to pick
+               up. The fill underneath is the site's own panel colour; a
+               bespoke gradient here read as a different section. */
+            backgroundImage:
+              'radial-gradient(62% 82% at 16% 10%, rgba(255,150,80,0.16) 0%, transparent 62%)',
             px: { xs: 2, md: 5 },
             pt: { xs: 3, md: 4 },
             pb: { xs: 3, md: 4 },
