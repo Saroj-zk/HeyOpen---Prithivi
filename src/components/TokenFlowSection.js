@@ -118,27 +118,6 @@ const MARKERS = [
   { n: '3', t: 'stake the OIU' },
 ];
 
-const COMPARE = [
-  {
-    h: 'Subscribe',
-    sub: 'Pay every month',
-    rows: [
-      ['You pay', 'A fixed amount, monthly'],
-      ['You stop', 'Cancel whenever you like'],
-      ['Afterwards', 'Nothing to reclaim'],
-    ],
-  },
-  {
-    h: 'Stake once',
-    sub: 'Pay with collateral',
-    accent: true,
-    rows: [
-      ['You lock', '$OPEN, which stays yours'],
-      ['You receive', 'Credits daily, indefinitely'],
-      ['Afterwards', 'Burn the OIU, unlock the stake'],
-    ],
-  },
-];
 
 /* A square node. Label top left, glyph bottom right, as in the reference. */
 function Tile({ tile }) {
@@ -286,7 +265,6 @@ function Marker({ marker }) {
 export default function TokenFlowSection() {
   const [headRef, headShown] = useReveal();
   const [figRef, figShown] = useReveal();
-  const [cmpRef, cmpShown] = useReveal();
 
   return (
     <Container id="token-flow" maxWidth="xl" sx={{ py: { xs: 6, md: 10 }, scrollMarginTop: '96px' }}>
@@ -294,7 +272,7 @@ export default function TokenFlowSection() {
         {/* ---- heading ---- */}
         <Box ref={headRef} sx={{ maxWidth: 820, mb: { xs: 4, md: 6 }, ...revealSx(headShown) }}>
           <Typography sx={{ ...LABEL, fontSize: '0.75rem', letterSpacing: '0.1em', color: ORANGE, mb: 2 }}>
-            Two ways to pay for inference
+            The other way to pay
           </Typography>
           <Typography
             variant="h3"
@@ -308,13 +286,13 @@ export default function TokenFlowSection() {
               textWrap: 'balance',
             }}
           >
-            Rent it monthly, or{' '}
-            <Box component="span" sx={{ color: ORANGE }}>stake once and keep it.</Box>
+            Stake once.{' '}
+            <Box component="span" sx={{ color: ORANGE }}>Credits arrive daily.</Box>
           </Typography>
           <Typography sx={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.65, textWrap: 'pretty' }}>
-            A subscription is the simple route and it is the one most people want. The other route
-            spends nothing: you lock $OPEN as collateral, mint against it, and credits arrive every
-            day until you decide to unlock.
+            This route spends nothing. You lock $OPEN as collateral, mint OIU against it, and
+            credits arrive every day until you decide to unlock. The stake stays yours the whole
+            time.
           </Typography>
         </Box>
 
@@ -436,63 +414,6 @@ export default function TokenFlowSection() {
           </Box>
         </Box>
 
-        {/* ---- the two routes, side by side ---- */}
-        <Box
-          ref={cmpRef}
-          sx={{
-            mt: { xs: 2.5, md: 3 },
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-            gap: { xs: 2, md: 3 },
-            ...revealSx(cmpShown, 100),
-          }}
-        >
-          {COMPARE.map((c) => (
-            <Box
-              key={c.h}
-              sx={{
-                borderRadius: '20px',
-                backgroundColor: 'var(--bg-card)',
-                border: '1px solid',
-                borderColor: c.accent ? 'rgba(255,102,0,0.35)' : 'var(--border-subtle)',
-                boxShadow: 'var(--shadow-card)',
-                px: { xs: 2.6, md: 3.4 },
-                py: { xs: 2.6, md: 3.2 },
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.4, mb: 2.4 }}>
-                <Typography
-                  sx={{
-                    fontSize: { xs: '1.15rem', md: '1.3rem' },
-                    fontWeight: 750,
-                    letterSpacing: '-0.02em',
-                    color: c.accent ? ORANGE : 'var(--text-heading)',
-                  }}
-                >
-                  {c.h}
-                </Typography>
-                <Typography sx={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>{c.sub}</Typography>
-              </Box>
-              {c.rows.map(([k, v], i) => (
-                <Box
-                  key={k}
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '112px 1fr',
-                    gap: 2,
-                    py: 1.5,
-                    borderTop: i === 0 ? 'none' : '1px solid var(--border-subtle)',
-                  }}
-                >
-                  <Typography sx={{ ...LABEL, fontSize: '0.64rem', color: 'var(--text-muted)', pt: '3px' }}>{k}</Typography>
-                  <Typography sx={{ fontSize: '0.95rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
-                    {v}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-          ))}
-        </Box>
       </Box>
     </Container>
   );
