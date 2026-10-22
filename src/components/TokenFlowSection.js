@@ -7,32 +7,28 @@ import { useReveal, revealSx } from '@/utils/reveal';
 /**
  * The second way to pay for inference.
  *
- * Sits directly above pricing and sets it up: the section below sells a
- * monthly plan, this one explains the alternative, so the two read as a pair
- * rather than competing. That framing is the reason it does not say
- * subscriptions are bad, which would undercut the section it introduces.
+ * Sits directly above pricing and sets it up: that section sells a monthly
+ * plan, this one explains the alternative, so the two read as a pair.
  *
- * The diagram is the supplied workflow. Nodes on the odd columns of a seven
- * column grid, arrows on the even ones, so the two dashed return paths can be
- * grid items spanning exact column lines. Each return path carries its label
- * on the line in a chip that breaks it, which is what stops the dashes
- * reading as a box drawn around the nodes.
+ * Diagram notes, because the first two attempts got these wrong:
  *
- * No figures appear here. The supply, the mint ratio and the credit rate are
- * not settled anywhere in the repo, and a number on this page would read as a
- * commitment.
+ *  - Route captions sit OUTSIDE their bracket, above the top one and below
+ *    the bottom one. Putting a chip on the line looked neat in isolation and
+ *    collided with the cards either side of it.
+ *  - The node row is fenced off from both brackets by its own grid rows, so
+ *    nothing can drift into it as the copy changes.
+ *  - Cards are solid white with a real border. Frosted translucency on a
+ *    light panel just reads as washed out at this size.
+ *  - The badge sits above its arrow and the verb below it, which is the
+ *    arrangement in the supplied workflow and leaves the shaft unbroken.
+ *
+ * No figures appear here. Supply, mint ratio and credit rate are not settled
+ * anywhere in the repo, and a number on this page would read as a commitment.
  */
 
 const ORANGE = '#ff6600';
-
-/* The frosted panel the site already uses on its controls in ApiSection. */
-const GLASS = {
-  backgroundColor: 'rgba(255, 255, 255, 0.72)',
-  backdropFilter: 'blur(14px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(14px) saturate(180%)',
-  border: '1px solid rgba(255, 255, 255, 0.9)',
-  boxShadow: '0 10px 28px rgba(15, 23, 42, 0.07), inset 0 1.5px 1.5px rgba(255, 255, 255, 1)',
-};
+const INK = 'rgba(15, 23, 42, 0.72)';
+const DASH = '1px dashed rgba(15, 23, 42, 0.28)';
 
 const LABEL = {
   fontSize: '0.64rem',
@@ -76,127 +72,101 @@ const COMPARE = [
   },
 ];
 
-const DASH = '1px dashed rgba(15, 23, 42, 0.22)';
-
-/* Sits on a dashed line and breaks it, so the line reads as a route with a
-   name on it rather than a rectangle drawn around the nodes. */
-function OnLine({ children, top }) {
+function Node({ step }) {
   return (
     <Box
       sx={{
-        position: 'absolute',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        [top ? 'top' : 'bottom']: top ? 0 : '-1px',
-        px: 1.6,
-        py: 0.4,
-        borderRadius: '8px',
-        backgroundColor: 'var(--bg-section-alt)',
-        whiteSpace: 'nowrap',
+        borderRadius: '14px',
+        px: { xs: 2, md: 2.2 },
+        py: { xs: 2.2, md: 2.4 },
+        textAlign: 'center',
+        minHeight: { md: 96 },
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        ...(step.fill
+          ? {
+              backgroundColor: ORANGE,
+              border: `1px solid ${ORANGE}`,
+              boxShadow: '0 12px 28px -14px rgba(255,102,0,0.75)',
+            }
+          : {
+              backgroundColor: '#FFFFFF',
+              border: '1px solid var(--border-normal)',
+              boxShadow: '0 1px 2px rgba(15,23,42,0.05), 0 8px 20px -14px rgba(15,23,42,0.28)',
+            }),
       }}
     >
-      <Typography sx={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{children}</Typography>
-    </Box>
-  );
-}
-
-function Node({ step }) {
-  return (
-    <Box>
-      <Typography sx={{ ...LABEL, color: step.fill ? ORANGE : 'var(--text-muted)', mb: 1, textAlign: 'center' }}>
-        {step.tag}
-      </Typography>
-      <Box
+      <Typography
         sx={{
-          borderRadius: '16px',
-          px: { xs: 2, md: 2.4 },
-          py: { xs: 2.2, md: 2.6 },
-          textAlign: 'center',
-          minHeight: { md: 104 },
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          ...(step.fill
-            ? {
-                backgroundColor: ORANGE,
-                border: '1px solid rgba(255,255,255,0.35)',
-                boxShadow: '0 16px 34px -16px rgba(255,102,0,0.65), inset 0 1.5px 1.5px rgba(255,255,255,0.4)',
-              }
-            : GLASS),
+          fontSize: { xs: '1.02rem', md: '1.16rem' },
+          fontWeight: 700,
+          letterSpacing: '-0.025em',
+          lineHeight: 1.15,
+          color: step.fill ? '#FFFFFF' : 'var(--text-heading)',
+          mb: 0.5,
         }}
       >
-        <Typography
-          sx={{
-            fontSize: { xs: '1.05rem', md: '1.22rem' },
-            fontWeight: 700,
-            letterSpacing: '-0.025em',
-            lineHeight: 1.15,
-            color: step.fill ? '#FFFFFF' : 'var(--text-heading)',
-            mb: 0.5,
-          }}
-        >
-          {step.k}
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: { xs: '0.78rem', md: '0.82rem' },
-            lineHeight: 1.4,
-            color: step.fill ? 'rgba(255,255,255,0.9)' : 'var(--text-muted)',
-          }}
-        >
-          {step.s}
-        </Typography>
-      </Box>
+        {step.k}
+      </Typography>
+      <Typography
+        sx={{
+          fontSize: { xs: '0.78rem', md: '0.81rem' },
+          lineHeight: 1.4,
+          color: step.fill ? 'rgba(255,255,255,0.9)' : 'var(--text-muted)',
+        }}
+      >
+        {step.s}
+      </Typography>
     </Box>
   );
 }
 
+/* Badge above, verb beneath it, then an unbroken shaft. */
 function Arrow({ arrow }) {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', px: { md: 1 }, pt: 3 }}>
-      {/* badge sits on the line */}
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 1 }}>
-        <Box sx={{ flex: 1, height: '2px', minWidth: { xs: '14px', md: '20px' }, backgroundColor: 'rgba(15,23,42,0.18)' }} />
-        <Box
-          sx={{
-            width: '26px',
-            height: '26px',
-            borderRadius: '50%',
-            backgroundColor: ORANGE,
-            color: '#FFFFFF',
-            fontSize: '0.74rem',
-            fontWeight: 800,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            boxShadow: '0 4px 10px -2px rgba(255,102,0,0.5)',
-          }}
-        >
-          {arrow.n}
-        </Box>
-        <Box sx={{ flex: 1, height: '2px', minWidth: { xs: '14px', md: '20px' }, backgroundColor: 'rgba(15,23,42,0.18)' }} />
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', px: { md: 1.2 } }}>
+      <Box
+        sx={{
+          width: '24px',
+          height: '24px',
+          borderRadius: '50%',
+          backgroundColor: ORANGE,
+          color: '#FFFFFF',
+          fontSize: '0.72rem',
+          fontWeight: 800,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mb: 0.9,
+        }}
+      >
+        {arrow.n}
+      </Box>
+      <Typography
+        sx={{
+          fontSize: { xs: '0.78rem', md: '0.83rem' },
+          fontWeight: 600,
+          color: 'var(--text-secondary)',
+          whiteSpace: 'nowrap',
+          mb: 1.1,
+        }}
+      >
+        {arrow.t}
+      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+        <Box sx={{ flex: 1, height: '1.5px', minWidth: { xs: '34px', md: '52px' }, backgroundColor: INK }} />
         <Box
           sx={{
             width: 0,
             height: 0,
             borderTop: '5px solid transparent',
             borderBottom: '5px solid transparent',
-            borderLeft: '7px solid rgba(15,23,42,0.32)',
+            borderLeft: `7px solid ${INK}`,
             flexShrink: 0,
           }}
         />
       </Box>
-      <Typography
-        sx={{
-          fontSize: { xs: '0.78rem', md: '0.84rem' },
-          fontWeight: 600,
-          color: 'var(--text-secondary)',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {arrow.t}
-      </Typography>
     </Box>
   );
 }
@@ -242,80 +212,91 @@ export default function TokenFlowSection() {
           sx={{
             position: 'relative',
             borderRadius: '24px',
-            backgroundColor: 'var(--bg-section-alt)',
-            border: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--bg-page)',
+            border: '1px solid var(--border-normal)',
             px: { xs: 2.5, md: 5 },
-            pt: { xs: 3, md: 4 },
-            pb: { xs: 3.5, md: 4.5 },
+            pt: { xs: 3, md: 3.5 },
+            pb: { xs: 3.5, md: 4 },
             overflow: 'hidden',
             ...revealSx(figShown, 120),
           }}
         >
+          {/* Dot field only. A coloured wash at this size reads as a smudge. */}
           <Box
             aria-hidden="true"
             sx={{
               position: 'absolute',
               inset: 0,
               pointerEvents: 'none',
-              background: `radial-gradient(ellipse 45% 70% at 10% 0%, rgba(255,102,0,0.10) 0%, transparent 65%),
-                           radial-gradient(ellipse 45% 70% at 92% 100%, rgba(99,132,255,0.10) 0%, transparent 68%)`,
+              backgroundImage: 'radial-gradient(rgba(15, 23, 42, 0.10) 1px, transparent 1px)',
+              backgroundSize: '22px 22px',
+              maskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, #000 20%, transparent 85%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, #000 20%, transparent 85%)',
             }}
           />
 
           <Box sx={{ position: 'relative' }}>
-            <Typography sx={{ ...LABEL, color: 'var(--text-muted)', mb: { xs: 3, md: 3.5 } }}>
+            <Typography sx={{ ...LABEL, color: 'var(--text-muted)', mb: { xs: 2.5, md: 3 } }}>
               The stake-once route
             </Typography>
 
-            {/* Desktop grid: nodes odd, arrows even. */}
+            {/* Desktop. Rows fence the node row off from both brackets, so a
+                caption can never drift into a card. */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'grid' },
-                gridTemplateColumns: 'minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.1fr)',
-                gridTemplateRows: 'auto 30px auto 30px',
+                gridTemplateColumns:
+                  'minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.08fr)',
+                gridTemplateRows: 'auto 26px 14px auto 14px 26px auto',
                 alignItems: 'center',
               }}
             >
-              {/* return path over the row, labelled on the line */}
+              {/* caption, then bracket, then a gap, then the row */}
+              <Typography
+                sx={{ gridColumn: '3 / 8', gridRow: 1, textAlign: 'center', fontSize: '0.86rem', color: 'var(--text-secondary)', pb: 1 }}
+              >
+                Your collateral stays locked the whole time
+              </Typography>
               <Box
-                aria-hidden="false"
+                aria-hidden="true"
                 sx={{
                   gridColumn: '3 / 8',
-                  gridRow: 1,
+                  gridRow: 2,
                   alignSelf: 'stretch',
-                  position: 'relative',
                   borderTop: DASH,
                   borderLeft: DASH,
                   borderRight: DASH,
                   borderTopLeftRadius: '10px',
                   borderTopRightRadius: '10px',
-                  mb: 1,
                 }}
-              >
-                <OnLine top>Your collateral stays locked the whole time</OnLine>
-              </Box>
+              />
 
+              {/* node labels sit with their node, inside row 4 */}
               {STEPS.map((step, i) => (
                 <React.Fragment key={step.k}>
-                  <Box sx={{ gridColumn: i * 2 + 1, gridRow: 3 }}>
+                  <Box sx={{ gridColumn: i * 2 + 1, gridRow: 4 }}>
+                    <Typography
+                      sx={{ ...LABEL, color: step.fill ? ORANGE : 'var(--text-muted)', mb: 1, textAlign: 'center' }}
+                    >
+                      {step.tag}
+                    </Typography>
                     <Node step={step} />
                   </Box>
                   {ARROWS[i] && (
-                    <Box sx={{ gridColumn: i * 2 + 2, gridRow: 3, alignSelf: 'center' }}>
+                    <Box sx={{ gridColumn: i * 2 + 2, gridRow: 4, alignSelf: 'center', pt: 2.2 }}>
                       <Arrow arrow={ARROWS[i]} />
                     </Box>
                   )}
                 </React.Fragment>
               ))}
 
-              {/* return path back from OIU into sOPEN */}
               <Box
+                aria-hidden="true"
                 sx={{
                   gridColumn: '3 / 6',
-                  gridRow: 4,
+                  gridRow: 6,
                   alignSelf: 'stretch',
                   position: 'relative',
-                  mt: 1,
                   borderBottom: DASH,
                   borderLeft: DASH,
                   borderRight: DASH,
@@ -330,21 +311,27 @@ export default function TokenFlowSection() {
                     height: 0,
                     borderLeft: '5px solid transparent',
                     borderRight: '5px solid transparent',
-                    borderBottom: '7px solid rgba(15,23,42,0.32)',
+                    borderBottom: '7px solid rgba(15,23,42,0.4)',
                   },
                 }}
+              />
+              <Typography
+                sx={{ gridColumn: '3 / 6', gridRow: 7, textAlign: 'center', fontSize: '0.86rem', color: 'var(--text-secondary)', pt: 1 }}
               >
-                <OnLine>Burn the OIU to unlock it</OnLine>
-              </Box>
+                Burn the OIU to unlock it
+              </Typography>
             </Box>
 
             {/* Mobile: stacked, routes said in words. */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column' }}>
               {STEPS.map((step, i) => (
                 <React.Fragment key={step.k}>
+                  <Typography sx={{ ...LABEL, color: step.fill ? ORANGE : 'var(--text-muted)', mb: 1 }}>
+                    {step.tag}
+                  </Typography>
                   <Node step={step} />
                   {ARROWS[i] && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.4, py: 1.6, pl: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.4, py: 1.8, pl: 1 }}>
                       <Box
                         sx={{
                           width: '24px',
@@ -370,10 +357,10 @@ export default function TokenFlowSection() {
                 </React.Fragment>
               ))}
               <Box sx={{ mt: 2.5, pt: 2.5, borderTop: '1px solid var(--border-normal)' }}>
-                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)', mb: 1, textWrap: 'pretty' }}>
+                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-secondary)', mb: 1, textWrap: 'pretty' }}>
                   Your collateral stays locked the whole time.
                 </Typography>
-                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)', textWrap: 'pretty' }}>
+                <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-secondary)', textWrap: 'pretty' }}>
                   Burn the OIU to unlock it.
                 </Typography>
               </Box>
