@@ -529,7 +529,7 @@ const FLOWS = [
         ],
       },
       { t: 'Generate the stills', d: 'Switch to an image model. It already knows the script.', img: '/images/scenery_cliffs.jpg' },
-      { t: 'Animate the shot', d: 'Switch to a video model and move the frame you picked.', video: '/Videos/AI ecosystem/Video Gen.mp4' },
+      { t: 'Animate the shot', d: 'Switch to a video model and move the frame you picked.', video: '/Videos/AI ecosystem/video gen new.mp4' },
       {
         t: 'Score and voice it',
         d: 'Music, effects and the closing line, matched to the cut.',
