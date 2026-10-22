@@ -27,7 +27,6 @@ import { useReveal, revealSx } from '@/utils/reveal';
 
 const ORANGE = '#ff6600';
 const INK = '#14161B';
-const RULE = 'rgba(146, 136, 104, 0.22)';
 const DASH_C = 'rgba(20, 22, 27, 0.30)';
 
 const LABEL = {
@@ -40,14 +39,16 @@ const LABEL = {
 /* Glass, built to refract the ruled ground behind it. */
 const GLASS = {
   background:
-    'linear-gradient(150deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.34) 50%, rgba(255,255,255,0.58) 100%)',
-  backdropFilter: 'blur(14px) saturate(190%) brightness(1.05)',
-  WebkitBackdropFilter: 'blur(14px) saturate(190%) brightness(1.05)',
+    'linear-gradient(150deg, rgba(255,255,255,0.58) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.44) 100%)',
+  backdropFilter: 'blur(20px) saturate(220%) brightness(1.08)',
+  WebkitBackdropFilter: 'blur(20px) saturate(220%) brightness(1.08)',
   boxShadow: [
-    'inset 0 1px 0 rgba(255,255,255,0.95)',
-    'inset 0 -1px 0 rgba(255,255,255,0.5)',
-    '0 1px 2px rgba(20,22,27,0.06)',
-    '0 18px 36px -16px rgba(20,22,27,0.26)',
+    'inset 0 1px 0 rgba(255,255,255,1)',
+    'inset 0 -1px 0 rgba(255,255,255,0.55)',
+    'inset 0 0 0 0.5px rgba(255,255,255,0.4)',
+    'inset 0 -14px 26px -18px rgba(90,110,160,0.35)',
+    '0 1px 2px rgba(20,22,27,0.05)',
+    '0 20px 40px -18px rgba(40,55,90,0.3)',
   ].join(','),
   '&::before': {
     content: '""',
@@ -211,15 +212,24 @@ function Marker({ marker }) {
             position: 'relative',
             width: { xs: 34, md: 40 },
             height: { xs: 34, md: 40 },
-            borderRadius: '11px',
+            borderRadius: '13px',
             flexShrink: 0,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '0.78rem',
+            fontSize: '0.8rem',
             fontWeight: 800,
             color: ORANGE,
             ...GLASS,
+            /* A 40px tile needs a tighter, brighter rim than a 162px one
+               or the bevel disappears at this size. */
+            boxShadow: [
+              'inset 0 1px 0 rgba(255,255,255,1)',
+              'inset 0 0 0 0.5px rgba(255,255,255,0.6)',
+              'inset 0 -6px 12px -8px rgba(90,110,160,0.4)',
+              '0 2px 4px rgba(20,22,27,0.06)',
+              '0 10px 20px -10px rgba(40,55,90,0.35)',
+            ].join(','),
           }}
         >
           <Box component="span" sx={{ position: 'relative', zIndex: 1 }}>{marker.n}</Box>
@@ -293,10 +303,13 @@ export default function TokenFlowSection() {
           sx={{
             position: 'relative',
             borderRadius: '24px',
-            border: '1px solid rgba(146, 136, 104, 0.26)',
-            backgroundColor: '#FCFBF6',
-            backgroundImage: `linear-gradient(${RULE} 1px, transparent 1px), linear-gradient(90deg, ${RULE} 1px, transparent 1px)`,
-            backgroundSize: '28px 28px, 28px 28px',
+            border: '1px solid rgba(255,255,255,0.85)',
+            background:
+              'radial-gradient(68% 92% at 6% 8%, rgba(255,138,46,0.34) 0%, transparent 58%),' +
+              'radial-gradient(58% 84% at 94% 88%, rgba(84,122,255,0.30) 0%, transparent 60%),' +
+              'radial-gradient(52% 70% at 72% 10%, rgba(168,118,255,0.24) 0%, transparent 62%),' +
+              'radial-gradient(48% 66% at 32% 96%, rgba(255,186,110,0.28) 0%, transparent 62%),' +
+              'linear-gradient(135deg, #F7F9FD 0%, #EEF1F8 100%)',
             px: { xs: 2, md: 5 },
             pt: { xs: 3, md: 4 },
             pb: { xs: 3, md: 4 },
@@ -305,30 +318,6 @@ export default function TokenFlowSection() {
             ...revealSx(figShown, 120),
           }}
         >
-          {/* The brand's glass render, for the tiles to refract. Kept in a
-              clipped layer: an absolutely positioned child still counts
-              toward scrollWidth, and this one bleeds past the right edge. */}
-          <Box
-            aria-hidden="true"
-            sx={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', borderRadius: 'inherit' }}
-          >
-            <Box
-              component="img"
-              src="/images/liquid_glass_light.jpg"
-              alt=""
-              loading="lazy"
-              sx={{
-                position: 'absolute',
-                right: '-8%',
-                top: '50%',
-                transform: 'translateY(-50%) rotate(-14deg)',
-                width: { xs: 460, md: 560 },
-                opacity: 0.5,
-                mixBlendMode: 'multiply',
-              }}
-            />
-          </Box>
-
           <Box sx={{ position: 'relative', minWidth: { xs: 760, lg: 'auto' } }}>
             <Typography sx={{ ...LABEL, color: 'var(--text-muted)', mb: { xs: 2.5, md: 3 } }}>
               The stake-once route
@@ -365,7 +354,6 @@ export default function TokenFlowSection() {
                   alignSelf: 'start',
                   mt: '-40px',
                   px: 1.2,
-                  backgroundColor: '#FCFBF6',
                   ...LABEL,
                   color: 'var(--text-secondary)',
                 }}
