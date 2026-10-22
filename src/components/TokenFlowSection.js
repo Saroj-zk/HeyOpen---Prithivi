@@ -27,7 +27,7 @@ import { useReveal, revealSx } from '@/utils/reveal';
 
 const ORANGE = '#ff6600';
 const INK = '#14161B';
-const DASH_C = 'rgba(20, 22, 27, 0.30)';
+const DASH_C = 'rgba(20, 22, 27, 0.42)';
 
 const LABEL = {
   fontSize: '0.6rem',
@@ -79,28 +79,28 @@ function glass({ hi, mid, lo, rim, inner, drop }) {
 }
 
 const CLEAR = glass({
-  hi: 'rgba(255,255,255,0.62)',
-  mid: 'rgba(255,255,255,0.24)',
-  lo: 'rgba(255,255,255,0.46)',
+  hi: 'rgba(255,255,255,0.92)',
+  mid: 'rgba(255,255,255,0.72)',
+  lo: 'rgba(255,255,255,0.86)',
   rim: 'rgba(255,255,255,0.95)',
   inner: 'rgba(90,110,160,0.38)',
   drop: 'rgba(40,55,90,0.30)',
 });
 
 const AMBER = glass({
-  hi: 'rgba(255,146,70,0.80)',
-  mid: 'rgba(255,102,0,0.52)',
-  lo: 'rgba(222,84,0,0.72)',
-  rim: 'rgba(255,255,255,0.70)',
+  hi: 'rgba(255,151,78,0.98)',
+  mid: 'rgba(255,102,0,0.96)',
+  lo: 'rgba(217,80,0,0.98)',
+  rim: 'rgba(255,255,255,0.80)',
   inner: 'rgba(150,52,0,0.55)',
   drop: 'rgba(214,86,0,0.42)',
 });
 
 const SMOKE = glass({
-  hi: 'rgba(58,63,76,0.82)',
-  mid: 'rgba(20,22,27,0.60)',
-  lo: 'rgba(10,12,16,0.80)',
-  rim: 'rgba(255,255,255,0.34)',
+  hi: 'rgba(48,53,65,0.98)',
+  mid: 'rgba(17,19,24,0.97)',
+  lo: 'rgba(7,9,13,0.99)',
+  rim: 'rgba(255,255,255,0.42)',
   inner: 'rgba(0,0,0,0.6)',
   drop: 'rgba(14,16,22,0.5)',
 });
@@ -167,7 +167,7 @@ function Tile({ tile }) {
           ...LABEL,
           position: 'relative',
           zIndex: 1,
-          color: onDark ? 'rgba(255,255,255,0.72)' : 'var(--text-muted)',
+          color: onDark ? 'rgba(255,255,255,0.88)' : 'var(--text-muted)',
         }}
       >
         {tile.tag}
@@ -192,7 +192,7 @@ function Tile({ tile }) {
                 fontSize: { xs: '0.72rem', md: '0.76rem' },
                 lineHeight: 1.35,
                 mt: 0.4,
-                color: onDark ? 'rgba(255,255,255,0.68)' : 'var(--text-muted)',
+                color: onDark ? 'rgba(255,255,255,0.82)' : 'var(--text-muted)',
               }}
             >
               {tile.s}
