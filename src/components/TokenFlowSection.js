@@ -36,43 +36,74 @@ const LABEL = {
   textTransform: 'uppercase',
 };
 
-/* Glass, built to refract the ruled ground behind it. */
-const GLASS = {
-  background:
-    'linear-gradient(150deg, rgba(255,255,255,0.58) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.44) 100%)',
-  backdropFilter: 'blur(20px) saturate(220%) brightness(1.08)',
-  WebkitBackdropFilter: 'blur(20px) saturate(220%) brightness(1.08)',
-  boxShadow: [
-    'inset 0 1px 0 rgba(255,255,255,1)',
-    'inset 0 -1px 0 rgba(255,255,255,0.55)',
-    'inset 0 0 0 0.5px rgba(255,255,255,0.4)',
-    'inset 0 -14px 26px -18px rgba(90,110,160,0.35)',
-    '0 1px 2px rgba(20,22,27,0.05)',
-    '0 20px 40px -18px rgba(40,55,90,0.3)',
-  ].join(','),
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    inset: 0,
-    borderRadius: 'inherit',
-    padding: '1px',
-    background:
-      'linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.25) 42%, rgba(255,255,255,0.2) 62%, rgba(255,255,255,0.9) 100%)',
-    WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
-    WebkitMaskComposite: 'xor',
-    mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
-    maskComposite: 'exclude',
-    pointerEvents: 'none',
-  },
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    inset: 0,
-    borderRadius: 'inherit',
-    background: 'radial-gradient(130% 95% at 6% -14%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 58%)',
-    pointerEvents: 'none',
-  },
-};
+/* One glass recipe, three tints. The bevel is what makes it read as glass,
+   so every tile gets the same construction and only the body colour changes:
+   a gradient body, a blurred and saturated backdrop, a gradient rim brightest
+   at the top left, an inner shadow along the bottom for thickness, and a
+   specular sweep where the light lands. */
+function glass({ hi, mid, lo, rim, inner, drop }) {
+  return {
+    position: 'relative',
+    background: `linear-gradient(150deg, ${hi} 0%, ${mid} 52%, ${lo} 100%)`,
+    backdropFilter: 'blur(20px) saturate(200%)',
+    WebkitBackdropFilter: 'blur(20px) saturate(200%)',
+    boxShadow: [
+      `inset 0 1px 0 ${rim}`,
+      `inset 0 0 0 0.5px ${rim}`,
+      `inset 0 -16px 28px -20px ${inner}`,
+      '0 1px 2px rgba(20,22,27,0.05)',
+      `0 20px 40px -18px ${drop}`,
+    ].join(','),
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 'inherit',
+      padding: '1px',
+      background: `linear-gradient(145deg, ${rim} 0%, rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.06) 62%, ${rim} 100%)`,
+      WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+      WebkitMaskComposite: 'xor',
+      mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+      maskComposite: 'exclude',
+      pointerEvents: 'none',
+    },
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 'inherit',
+      background: 'radial-gradient(130% 95% at 6% -14%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 56%)',
+      pointerEvents: 'none',
+    },
+  };
+}
+
+const CLEAR = glass({
+  hi: 'rgba(255,255,255,0.62)',
+  mid: 'rgba(255,255,255,0.24)',
+  lo: 'rgba(255,255,255,0.46)',
+  rim: 'rgba(255,255,255,0.95)',
+  inner: 'rgba(90,110,160,0.38)',
+  drop: 'rgba(40,55,90,0.30)',
+});
+
+const AMBER = glass({
+  hi: 'rgba(255,146,70,0.80)',
+  mid: 'rgba(255,102,0,0.52)',
+  lo: 'rgba(222,84,0,0.72)',
+  rim: 'rgba(255,255,255,0.70)',
+  inner: 'rgba(150,52,0,0.55)',
+  drop: 'rgba(214,86,0,0.42)',
+});
+
+const SMOKE = glass({
+  hi: 'rgba(58,63,76,0.82)',
+  mid: 'rgba(20,22,27,0.60)',
+  lo: 'rgba(10,12,16,0.80)',
+  rim: 'rgba(255,255,255,0.34)',
+  inner: 'rgba(0,0,0,0.6)',
+  drop: 'rgba(14,16,22,0.5)',
+});
 
 const TILES = [
   { tag: 'You hold', k: '$OPEN', s: 'in your wallet', kind: 'brand', glyph: '◆' },
@@ -128,17 +159,7 @@ function Tile({ tile }) {
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflow: 'hidden',
-        ...(brand
-          ? {
-              background: `linear-gradient(150deg, #FF9150 0%, ${ORANGE} 55%, #E35A00 100%)`,
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 18px 36px -16px rgba(255,102,0,0.6)',
-            }
-          : ink
-          ? {
-              background: `linear-gradient(150deg, #2A2E37 0%, ${INK} 60%, #0B0D11 100%)`,
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14), 0 18px 36px -16px rgba(20,22,27,0.6)',
-            }
-          : GLASS),
+        ...(brand ? AMBER : ink ? SMOKE : CLEAR),
       }}
     >
       <Typography
@@ -220,7 +241,7 @@ function Marker({ marker }) {
             fontSize: '0.8rem',
             fontWeight: 800,
             color: ORANGE,
-            ...GLASS,
+            ...CLEAR,
             /* A 40px tile needs a tighter, brighter rim than a 162px one
                or the bevel disappears at this size. */
             boxShadow: [
@@ -305,11 +326,8 @@ export default function TokenFlowSection() {
             borderRadius: '24px',
             border: '1px solid rgba(255,255,255,0.85)',
             background:
-              'radial-gradient(68% 92% at 6% 8%, rgba(255,138,46,0.34) 0%, transparent 58%),' +
-              'radial-gradient(58% 84% at 94% 88%, rgba(84,122,255,0.30) 0%, transparent 60%),' +
-              'radial-gradient(52% 70% at 72% 10%, rgba(168,118,255,0.24) 0%, transparent 62%),' +
-              'radial-gradient(48% 66% at 32% 96%, rgba(255,186,110,0.28) 0%, transparent 62%),' +
-              'linear-gradient(135deg, #F7F9FD 0%, #EEF1F8 100%)',
+              'radial-gradient(60% 80% at 18% 12%, rgba(255,150,80,0.10) 0%, transparent 62%),' +
+              'linear-gradient(145deg, #F2F5FA 0%, #FAFBFE 48%, #EEF1F7 100%)',
             px: { xs: 2, md: 5 },
             pt: { xs: 3, md: 4 },
             pb: { xs: 3, md: 4 },
