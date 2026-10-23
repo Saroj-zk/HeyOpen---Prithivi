@@ -203,14 +203,17 @@ function Tile({ tile, stacked }) {
 
 /* The small marker tile that carries the step, with dashed line either side. */
 function Marker({ marker }) {
+  /* The segments carry the whole gap between two tiles. Padding here
+     would hold the dashes off one tile and the arrowhead off the other,
+     which is what made the route look detached. */
   const line = {
     flex: 1,
     height: 0,
     borderTop: `1.5px dashed ${DASH_C}`,
-    minWidth: { xs: 10, md: 18 },
+    minWidth: { xs: 13, md: 25 },
   };
   return (
-    <Box sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', px: { xs: 0.5, md: 1 } }}>
+    <Box sx={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
         <Box sx={line} />
         <Box
@@ -247,9 +250,9 @@ function Marker({ marker }) {
             width: 0,
             height: 0,
             flexShrink: 0,
-            borderTop: '4.5px solid transparent',
-            borderBottom: '4.5px solid transparent',
-            borderLeft: `6.5px solid ${DASH_C}`,
+            borderTop: '5px solid transparent',
+            borderBottom: '5px solid transparent',
+            borderLeft: `7.5px solid ${DASH_C}`,
           }}
         />
       </Box>
@@ -417,7 +420,10 @@ export default function TokenFlowSection() {
                   gridColumn: '3 / 6',
                   gridRow: 2,
                   mt: '18px',
-                  mx: '-18px',
+                  /* Half the 162px tile, so the line drops from under the
+                     centre of OIU and rises into the centre of sOPEN
+                     rather than into the gaps beside them. */
+                  mx: '81px',
                   height: 30,
                   position: 'relative',
                   borderBottom: `1.5px dashed ${DASH_C}`,
