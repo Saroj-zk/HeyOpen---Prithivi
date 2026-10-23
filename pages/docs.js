@@ -447,6 +447,15 @@ const THREADS = [
 /* The thread                                                          */
 /* ------------------------------------------------------------------ */
 
+/* How far apart the turns sit, and how tall the stacked answer is. The gap
+   between two panels in the stack is one minus the other, so both have to be
+   known here rather than left to the content.
+
+   The step is how much scrolling each answer gets before the next one takes
+   the frame. */
+const STEP = '64vh';
+const PANEL = { md: 300, lg: 344 };
+
 /* Inline under its ask, the panel sets its own height. In the stack it
    fills the frame it is laid into. */
 const art = (fill) => ({
@@ -740,37 +749,29 @@ function Artifact({ turn, fill }) {
   );
 }
 
-/* One turn: the ask, and the answer pinned beside it.
- *
- * The answer is sticky inside its own turn rather than one shared frame
- * swapped by script. Scrolling a turn holds its answer in the middle of the
- * screen; reaching the next turn carries that answer up and out and brings
- * the next one in behind it. Same walk through the thread, except the
- * browser does it.
- *
- * It got here the other way round, with a frame per chapter and an observer
- * choosing which answer belonged in it. That needs a trigger, and every
- * trigger available is conditional: observers and animation frames stop in a
- * background tab, timers are throttled there, and a programmatic scroll does
- * not always emit a scroll event at all. Any one of those missing leaves the
- * panel showing the wrong answer with no way to notice. Sticky positioning
- * has no trigger to miss.
- *
- * A narrow screen has no second column to pin, so the answer sits under its
- * ask and the thread runs straight down the page.
- */
-function Turn({ turn, index, total, last }) {
+/* One ask on the thread. The answer is not here on a wide screen: it is in
+   the frame beside it, which stays put and changes. On a narrow screen there
+   is no second column to pin, so the answer sits under its ask. */
+function Ask({ turn, index, last, setRef }) {
+  /* Stable, deliberately. An inline arrow is a new function every render, so
+     React would detach the node and attach it again each time, and anything
+     measuring in that gap finds nothing to measure. */
+  const attach = React.useCallback((el) => setRef(index, el), [setRef, index]);
+
   return (
     <Box
+      ref={attach}
       sx={{
         position: 'relative',
-        display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
-        gap: { xs: 0, md: '56px' },
-        alignItems: 'start',
+        pl: { xs: '22px', md: '38px' },
+        minHeight: { md: STEP },
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        pt: { xs: index === 0 ? 0 : '30px', md: 0 },
       }}
     >
-      {/* The spine. Each turn draws a full height run so the segments meet:
+      {/* The spine. Each ask draws a full height run so the segments meet:
           the thread does not break between turns. The last stops at its node
           rather than trailing off the end. */}
       <Box
@@ -784,95 +785,90 @@ function Turn({ turn, index, total, last }) {
           ...(last ? { height: { xs: '36px', md: '50%' } } : { bottom: 0 }),
         }}
       />
-
       <Box
+        aria-hidden="true"
         sx={{
-          position: 'relative',
-          pl: { xs: '22px', md: '38px' },
-          /* Taller than the answer beside it, which is what gives the
-             answer something to stay still against. At 52vh the panel held
-             for about 150px and the hold barely registered. */
-          minHeight: { md: '64vh' },
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          pt: { xs: index === 0 ? 0 : '30px', md: 0 },
+          position: 'absolute',
+          left: '-3px',
+          top: { xs: '36px', md: '50%' },
+          mt: '-3px',
+          width: '7px',
+          height: '7px',
+          borderRadius: '50%',
+          border: `1px solid ${T.line2}`,
+          backgroundColor: T.bg,
+        }}
+      />
+
+      <Mono sx={{ color: T.brand, letterSpacing: '0.12em' }}>{turn.mode}</Mono>
+      <Typography
+        sx={{
+          mt: '12px',
+          mb: '12px',
+          fontSize: { xs: '18px', md: '22px' },
+          lineHeight: 1.35,
+          letterSpacing: '-0.025em',
+          fontWeight: 500,
+          color: T.fg,
+          maxWidth: '26ch',
+          textWrap: 'pretty',
         }}
       >
-        <Box
-          aria-hidden="true"
-          sx={{
-            position: 'absolute',
-            left: { xs: '-25px', md: '-41px' },
-            top: { xs: '36px', md: '50%' },
-            mt: '-3px',
-            width: '7px',
-            height: '7px',
-            borderRadius: '50%',
-            border: `1px solid ${T.line2}`,
-            backgroundColor: T.bg,
-          }}
-        />
-
-        <Mono sx={{ color: T.brand, letterSpacing: '0.12em' }}>{turn.mode}</Mono>
-        <Typography
-          sx={{
-            mt: '12px',
-            mb: '12px',
-            fontSize: { xs: '18px', md: '22px' },
-            lineHeight: 1.35,
-            letterSpacing: '-0.025em',
-            fontWeight: 500,
-            color: T.fg,
-            maxWidth: '26ch',
-            textWrap: 'pretty',
-          }}
-        >
-          {turn.ask}
-        </Typography>
-        <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg3, maxWidth: '40ch' }}>
-          {turn.note}
-        </Typography>
-      </Box>
-
-      {/* The answer, pinned while its ask is being read. */}
-      <Box
-        sx={{
-          display: { xs: 'none', md: 'block' },
-          position: 'sticky',
-          top: 'calc(50vh - 180px)',
-          alignSelf: 'start',
-        }}
-      >
-        <Box sx={{ boxShadow: T.shadow, borderRadius: T.r }}>
-          <Artifact turn={turn} />
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: '14px' }}>
-          <Mono sx={{ fontSize: '9.5px', color: T.brand }}>
-            {String(index + 1).padStart(2, '0')}
-          </Mono>
-          <Box sx={{ flex: 1, height: '1px', backgroundColor: T.line }}>
-            <Box
-              sx={{
-                width: `${((index + 1) / total) * 100}%`,
-                height: '100%',
-                backgroundColor: T.brand,
-              }}
-            />
-          </Box>
-          <Mono sx={{ fontSize: '9.5px' }}>{String(total).padStart(2, '0')}</Mono>
-        </Box>
-      </Box>
-
-      {/* the answer, inline, narrow screens only */}
-      <Box sx={{ display: { md: 'none' }, pl: '22px', pt: '18px', pb: '8px' }}>
-        <Artifact turn={turn} />
-      </Box>
+        {turn.ask}
+      </Typography>
+      <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg3, maxWidth: '40ch' }}>
+        {turn.note}
+      </Typography>
     </Box>
   );
 }
 
 function Thread({ thread }) {
+  const [active, setActive] = React.useState(0);
+  const askEls = React.useRef([]);
+  const setRef = React.useCallback((i, el) => {
+    askEls.current[i] = el;
+  }, []);
+
+  /* Which answer the frame is showing.
+   *
+   * Whichever ask is nearest the middle of the screen. Asked outright rather
+   * than waiting to be told: this was four IntersectionObservers watching a
+   * band about 30px tall, and a band that thin, over a page that scrolls
+   * under Lenis, misses crossings often enough to leave the wrong answer up.
+   *
+   * The interval is a safety net rather than the mechanism. Scrolling drives
+   * this, but the position can also change with no scroll event to hear: an
+   * anchor jump, a position restored on reload, or the page reflowing as
+   * images and video load and shift everything below them. Four rect reads,
+   * five times a second, costs nothing. */
+  React.useEffect(() => {
+    const measure = () => {
+      const middle = window.innerHeight / 2;
+      let best = 0;
+      let bestDistance = Infinity;
+      askEls.current.forEach((el, i) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.top + r.height / 2 - middle);
+        if (d < bestDistance) {
+          bestDistance = d;
+          best = i;
+        }
+      });
+      setActive((current) => (current === best ? current : best));
+    };
+    measure();
+    const tick = window.setInterval(measure, 200);
+    window.addEventListener('scroll', measure, { passive: true });
+    window.addEventListener('resize', measure);
+    return () => {
+      window.clearInterval(tick);
+      window.removeEventListener('scroll', measure);
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
+
   return (
     <Box sx={{ pt: { xs: '46px', md: '90px' } }}>
       <Reveal>
@@ -908,15 +904,88 @@ function Thread({ thread }) {
         </Box>
       </Reveal>
 
-      {thread.turns.map((turn, i) => (
-        <Turn
-          key={turn.ask}
-          turn={turn}
-          index={i}
-          total={thread.turns.length}
-          last={i === thread.turns.length - 1}
-        />
-      ))}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
+          gap: { xs: 0, md: '56px' },
+          alignItems: 'start',
+        }}
+      >
+        <Box>
+          {thread.turns.map((turn, i) => (
+            <React.Fragment key={turn.ask}>
+              <Ask turn={turn} index={i} last={i === thread.turns.length - 1} setRef={setRef} />
+              {/* the answer, inline, narrow screens only */}
+              <Box sx={{ display: { md: 'none' }, pl: '22px', pt: '18px', pb: '8px' }}>
+                <Artifact turn={turn} />
+              </Box>
+            </React.Fragment>
+          ))}
+        </Box>
+
+        {/* One frame, held in the middle of the screen, with the answers laid
+            over each other inside it and only the current one up. The frame
+            never moves: what changes is what is in it. */}
+        <Box
+          aria-hidden="true"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            position: 'sticky',
+            top: { md: `calc(50vh - ${PANEL.md / 2}px)`, lg: `calc(50vh - ${PANEL.lg / 2}px)` },
+            alignSelf: 'start',
+          }}
+        >
+          <Box
+            sx={{
+              position: 'relative',
+              height: { md: `${PANEL.md}px`, lg: `${PANEL.lg}px` },
+            }}
+          >
+            {thread.turns.map((turn, i) => {
+              const on = i === active;
+              return (
+                <Box
+                  key={turn.ask}
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: T.r,
+                    overflow: 'hidden',
+                    backgroundColor: T.bg,
+                    opacity: on ? 1 : 0,
+                    transform: on ? 'none' : 'translateY(10px) scale(0.99)',
+                    boxShadow: on
+                      ? '0 1px 2px rgba(12,12,14,.06), 0 24px 48px -20px rgba(12,12,14,.22)'
+                      : 'none',
+                    transition:
+                      'opacity .45s cubic-bezier(.32,.72,0,1), transform .45s cubic-bezier(.32,.72,0,1)',
+                    '@media (prefers-reduced-motion: reduce)': { transition: 'opacity .01ms' },
+                  }}
+                >
+                  <Artifact turn={turn} fill />
+                </Box>
+              );
+            })}
+          </Box>
+
+          {/* Where you are in the thread. */}
+          <Box sx={{ display: 'flex', gap: '6px', mt: '18px' }}>
+            {thread.turns.map((turn, i) => (
+              <Box
+                key={turn.ask}
+                sx={{
+                  height: '2px',
+                  flex: 1,
+                  borderRadius: '1px',
+                  backgroundColor: i === active ? T.brand : T.line2,
+                  transition: 'background-color .4s ease',
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Box>
 
       {/* What the thread was for. The one other place orange appears. */}
       <Box
