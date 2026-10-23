@@ -246,6 +246,7 @@ export default function WhyAskMultipleModelsSection() {
                 <Typography
                   sx={{
                     fontFamily: '"Fraunces", Georgia, serif',
+                    fontStyle: 'italic',
                     fontWeight: 600,
                     fontSize: { xs: '1.6rem', sm: '2rem', md: '2.25rem' },
                     lineHeight: 1.2,
