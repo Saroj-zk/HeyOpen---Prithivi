@@ -11,16 +11,23 @@ import useInView from '@/utils/useInView';
 /**
  * What Hey Open is for.
  *
- * Styled from a reference supplied for this page only, so the tokens below are
- * local rather than taken from globals.css. The idiom is editorial: sections
- * divided by a hairline instead of alternating fills, a two column header with
- * the headline left and the lede bottom aligned beside it, monospace eyebrows,
- * very tight tracking on display sizes, 10px radii, one accent used sparingly.
- * The reference's yellow is replaced with our orange; nothing else about our
- * palette is imported, which is why these are page scoped constants.
+ * The page has one job: someone lands here and understands what they could
+ * build. The earlier pass answered that with three rows of four cards, and
+ * since every card was a dark panel of small monospace, the whole answer read
+ * as twelve identical rectangles. You could not tell the film from the API.
  *
- * Content is unchanged in substance: three audiences, the comparison, the
- * position, the picker. Checked against the running app on 21 Oct 2026.
+ * So the structure is now the product's own claim. Hey Open is one
+ * conversation in which the model changes underneath you, and that is exactly
+ * what the page is: a single thread, three chapters hanging off it, the
+ * modality chip changing down the right hand side. A transcript is the most
+ * legible way to show what you get, because everyone can already read one.
+ *
+ * The three chapters are told apart by material rather than by colour. The
+ * film chapter is a screenplay, a photograph, footage and an audio timeline.
+ * The developer chapter is a terminal. The confidential chapter is paper.
+ * Orange appears twice only: the live chip, and the outcome marker.
+ *
+ * Tokens are page scoped, from a reference supplied for this page alone.
  */
 
 const APP = 'https://ais.openledger.xyz/chat';
@@ -46,13 +53,9 @@ const T = {
   gut: { xs: '20px', sm: '24px' },
 };
 
-/* The reference's three signature devices, which the token list alone does not
-   carry. Without these it reads as plain typesetting, which is what the first
-   pass at this restyle was. */
-
-/* 1. A mock sits in a tray: hairline, then a ring of surface, then a second
-      hairline, over a deep soft drop. This is the thing that makes the
-      product look placed rather than pasted. Leave room for the 9px ring. */
+/* A mock sits in a tray: hairline, a ring of surface, a second hairline, over
+   a deep soft drop. It is what makes the product look placed rather than
+   pasted. Leave room for the 9px ring. */
 const TRAY = {
   borderRadius: '22px',
   boxShadow: [
@@ -64,33 +67,19 @@ const TRAY = {
   ].join(','),
 };
 
-/* 2. A ruled grid behind the hero, faded out downward. */
-const GRID = {
-  position: 'absolute',
-  inset: 0,
-  pointerEvents: 'none',
-  backgroundImage:
-    'linear-gradient(90deg, rgba(12,12,14,.08) 1px, transparent 1px), linear-gradient(rgba(12,12,14,.08) 1px, transparent 1px)',
-  backgroundSize: '64px 64px, 64px 64px',
-  maskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.35) 55%, transparent 100%)',
-  WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, rgba(0,0,0,.35) 55%, transparent 100%)',
-};
-
 const CHAPTERS = [
-  { id: 'uses', label: 'What it is for' },
+  { id: 'uses', label: 'What you can build' },
   { id: 'why', label: 'The comparison' },
   { id: 'private', label: 'Private, uncensored' },
   { id: 'models', label: 'The picker' },
 ];
 
 /* ------------------------------------------------------------------ */
+/* Primitives                                                          */
+/* ------------------------------------------------------------------ */
 
 function Wrap({ children, sx }) {
-  return (
-    <Box sx={{ maxWidth: T.maxw, mx: 'auto', px: T.gut, ...sx }}>
-      {children}
-    </Box>
-  );
+  return <Box sx={{ maxWidth: T.maxw, mx: 'auto', px: T.gut, ...sx }}>{children}</Box>;
 }
 
 /* Sections are divided by a hairline, never by a change of background. */
@@ -128,15 +117,13 @@ function Eyebrow({ children, accent }) {
     >
       <Box
         aria-hidden="true"
-        sx={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: accent ? T.brand : T.fg3 }}
+        sx={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: accent ? T.brand : T.fg3 }}
       />
       {children}
     </Box>
   );
 }
 
-/* Headline left, lede bottom aligned to its right. The motif the whole
-   reference is built on. */
 function Header({ eyebrow, title, lede }) {
   return (
     <Reveal>
@@ -167,15 +154,7 @@ function Header({ eyebrow, title, lede }) {
           </Typography>
         </Box>
         {lede && (
-          <Typography
-            sx={{
-              color: T.fg2,
-              fontSize: '17px',
-              lineHeight: 1.55,
-              maxWidth: '56ch',
-              textWrap: 'pretty',
-            }}
-          >
+          <Typography sx={{ color: T.fg2, fontSize: '17px', lineHeight: 1.55, maxWidth: '56ch', textWrap: 'pretty' }}>
             {lede}
           </Typography>
         )}
@@ -184,30 +163,14 @@ function Header({ eyebrow, title, lede }) {
   );
 }
 
-function Card({ children, sx, pad = true }) {
-  return (
-    <Box
-      sx={{
-        border: `1px solid ${T.line}`,
-        borderRadius: T.r,
-        backgroundColor: T.bg,
-        overflow: 'hidden',
-        ...(pad ? { p: { xs: '18px', md: '22px' } } : null),
-        ...sx,
-      }}
-    >
-      {children}
-    </Box>
-  );
-}
-
 function Button({ children, href, primary }) {
+  const external = href.startsWith('http');
   return (
     <Box
       component="a"
       href={href}
-      target={href.startsWith('http') ? '_blank' : undefined}
-      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+      target={external ? '_blank' : undefined}
+      rel={external ? 'noopener noreferrer' : undefined}
       sx={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -244,14 +207,25 @@ function Mono({ children, sx }) {
   return (
     <Typography
       component="span"
-      sx={{ fontFamily: T.mono, fontSize: '11px', letterSpacing: '0.06em', textTransform: 'uppercase', color: T.fg3, ...sx }}
+      sx={{
+        fontFamily: T.mono,
+        fontSize: '11px',
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        color: T.fg3,
+        ...sx,
+      }}
     >
       {children}
     </Typography>
   );
 }
 
-function Clip({ src }) {
+/* `from` skips a lead-in. The generation clip opens on about three seconds
+   of flat grey while its own UI animates, so starting at zero shows an empty
+   panel every time the loop comes round. Looping is done by hand for the
+   same reason. */
+function Clip({ src, from = 0 }) {
   const [ref, inView] = useInView('300px');
   const videoRef = React.useRef(null);
   const [primed, setPrimed] = React.useState(false);
@@ -267,16 +241,29 @@ function Clip({ src }) {
     else v.pause();
   }, [inView, primed]);
 
+  const seek = React.useCallback(() => {
+    const v = videoRef.current;
+    if (v && from > 0 && v.currentTime < from) v.currentTime = from;
+  }, [from]);
+
+  const again = React.useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = from;
+    v.play().catch(() => {});
+  }, [from]);
+
   return (
     <Box ref={ref} sx={{ width: '100%', height: '100%' }}>
       <Box
         component="video"
         ref={videoRef}
         src={primed ? src : undefined}
-        loop
         muted
         playsInline
         preload="none"
+        onLoadedMetadata={seek}
+        onEnded={again}
         sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />
     </Box>
@@ -287,12 +274,7 @@ function Clip({ src }) {
 /* Content                                                             */
 /* ------------------------------------------------------------------ */
 
-const STATS = [
-  ['200+', 'Models'],
-  ['4', 'Modalities'],
-  ['$20', 'A month'],
-  ['0', 'Prompts kept'],
-];
+const MODES = ['Text', 'Image', 'Video', 'Audio'];
 
 const COMPARE = [
   ['Models you can reach', 'One family per tool', '200+ in one picker'],
@@ -319,240 +301,102 @@ const PICK = [
   ['The subject is sensitive', 'A model labelled TEE', 'It runs inside a hardware enclave.'],
 ];
 
-/* ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ */
-/* Flows                                                               */
-/* ------------------------------------------------------------------ */
-
-/* A step's media panel. Each flow uses a different register so the three
-   sequences do not read as one block repeated three times. */
-function Media({ step }) {
-  const base = {
-    position: 'relative',
-    aspectRatio: '16 / 11',
-    borderBottom: `1px solid ${T.line}`,
-    overflow: 'hidden',
-  };
-
-  if (step.img) {
-    return (
-      <Box sx={base}>
-        <Box
-          component="img"
-          src={step.img}
-          alt=""
-          loading="lazy"
-          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-      </Box>
-    );
-  }
-
-  if (step.video) {
-    return (
-      <Box sx={{ ...base, backgroundColor: T.ink }}>
-        <Clip src={step.video} />
-      </Box>
-    );
-  }
-
-  /* Everything else is drawn: a few lines of monospace on the right
-     surface, which keeps the card honest about being a diagram. */
-  return (
-    <Box
-      sx={{
-        ...base,
-        backgroundColor: step.dark ? T.ink : T.surface2,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        gap: '6px',
-        px: '16px',
-      }}
-    >
-      {step.lines.map((l, i) => (
-        <Typography
-          key={i}
-          sx={{
-            fontFamily: T.mono,
-            fontSize: '11.5px',
-            lineHeight: 1.5,
-            color: l.hot ? T.brand : step.dark ? 'rgba(255,255,255,.72)' : T.fg2,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {l.t}
-        </Typography>
-      ))}
-    </Box>
-  );
-}
-
-function Flow({ flow }) {
-  return (
-    <Reveal>
-      <Box sx={{ pt: { xs: '40px', md: '58px' } }}>
-        {/* Heading row */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr auto' },
-            gap: '16px',
-            alignItems: 'end',
-            mb: '26px',
-          }}
-        >
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', mb: '14px' }}>
-              <Mono sx={{ color: T.brand, fontSize: '11.5px' }}>{flow.n}</Mono>
-              <Box sx={{ width: '14px', height: '1px', backgroundColor: T.line2 }} />
-              <Mono>{flow.tag}</Mono>
-            </Box>
-            <Typography
-              component="h3"
-              sx={{
-                fontSize: 'clamp(22px, 2.6vw, 32px)',
-                lineHeight: 1.08,
-                letterSpacing: '-0.032em',
-                fontWeight: 600,
-                color: T.fg,
-                textWrap: 'balance',
-              }}
-            >
-              {flow.title}
-            </Typography>
-          </Box>
-          <Typography sx={{ fontSize: '14.5px', lineHeight: 1.55, color: T.fg2, maxWidth: '38ch' }}>
-            {flow.body}
-          </Typography>
-        </Box>
-
-        {/* The sequence */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
-            gap: { xs: '16px', lg: '14px' },
-            position: 'relative',
-          }}
-        >
-          {flow.steps.map((step, i) => (
-            <Box key={step.t} sx={{ position: 'relative' }}>
-              {/* Connector into the next card, drawn only where cards sit
-                  side by side. */}
-              {i < flow.steps.length - 1 && (
-                <Box
-                  aria-hidden="true"
-                  sx={{
-                    display: { xs: 'none', lg: 'block' },
-                    position: 'absolute',
-                    top: '50%',
-                    right: '-14px',
-                    width: '14px',
-                    height: '1px',
-                    backgroundColor: T.line2,
-                    zIndex: 1,
-                  }}
-                />
-              )}
-              <Box
-                sx={{
-                  border: `1px solid ${T.line}`,
-                  borderRadius: T.r,
-                  overflow: 'hidden',
-                  backgroundColor: T.bg,
-                  height: '100%',
-                  transition: 'box-shadow .2s ease, border-color .2s ease',
-                  '&:hover': { borderColor: T.line2, boxShadow: T.shadow },
-                }}
-              >
-                <Media step={step} />
-                <Box sx={{ p: '16px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: '10px', mb: '7px' }}>
-                    <Mono sx={{ fontSize: '10px', color: T.brand }}>{String(i + 1).padStart(2, '0')}</Mono>
-                    <Typography sx={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg }}>
-                      {step.t}
-                    </Typography>
-                  </Box>
-                  <Typography sx={{ fontSize: '13.5px', lineHeight: 1.55, color: T.fg3 }}>{step.d}</Typography>
-                </Box>
-              </Box>
-            </Box>
-          ))}
-        </Box>
-
-        {/* The outcome */}
-        <Box
-          sx={{
-            mt: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px',
-            flexWrap: 'wrap',
-            px: '16px',
-            py: '14px',
-            borderRadius: T.r,
-            border: `1px solid ${T.brandLine}`,
-            backgroundColor: T.brandSoft,
-          }}
-        >
-          <Mono sx={{ color: T.brand, fontSize: '10.5px' }}>Result</Mono>
-          <Typography sx={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg }}>
-            {flow.result}
-          </Typography>
-          <Typography sx={{ fontSize: '14px', color: T.fg2 }}>{flow.resultNote}</Typography>
-        </Box>
-      </Box>
-    </Reveal>
-  );
-}
-
-const FLOWS = [
+/* The three threads.
+ *
+ * Every artifact below is the real asset it claims to be, and the asks are
+ * written to the assets rather than the other way round. The ridge still and
+ * the battle footage are two shots of one scene, which is what the script
+ * describes, so nothing here promises a shot the page cannot show. */
+const THREADS = [
   {
     n: '01',
     tag: 'Making something',
-    title: 'A short film, start to finish.',
-    body: 'Four messages in one conversation. Each step still has the one before it, so nothing is re-described.',
-    steps: [
+    title: 'A film, start to finish.',
+    body:
+      'Four turns, one conversation. The image model has already read the script, and the video model has already seen the frame, so nothing is described twice.',
+    turns: [
       {
-        t: 'Write the script',
-        d: 'Ask a text model for the scenes and the shot list.',
-        dark: true,
+        mode: 'Text',
+        ask: 'Write scene nine. Maren reaches the ridge at dawn and sees the field below.',
+        note: 'A text model gives you the scene and the shot list.',
+        kind: 'script',
         lines: [
-          { t: 'SCENE 4 - THE ORCHARD' },
-          { t: 'She holds the photograph' },
-          { t: 'up until the hill behind' },
-          { t: 'it lines up.' },
+          'SCENE 9 - THE RIDGE, DAWN',
+          '',
+          'Maren reaches the spine of the',
+          'ridge. Below the cloud line the',
+          'field is already moving.',
         ],
       },
-      { t: 'Generate the stills', d: 'Switch to an image model. It already knows the script.', img: '/images/scenery_cliffs.jpg' },
-      { t: 'Animate the shot', d: 'Switch to a video model and move the frame you picked.', video: '/Videos/AI ecosystem/video gen new.mp4' },
       {
-        t: 'Score and voice it',
-        d: 'Music, effects and the closing line, matched to the cut.',
-        lines: [
-          { t: 'strings.wav      00:42' },
-          { t: 'wind_bed.wav     00:42' },
-          { t: 'maren_vo.wav     00:06', hot: true },
+        mode: 'Image',
+        ask: 'Make the establishing shot. Her, small, above the cloud.',
+        note: 'Switch to an image model. It does not need the scene explained again.',
+        kind: 'image',
+        img: '/images/scenery_alpine.jpg',
+      },
+      {
+        mode: 'Video',
+        ask: 'Now the field below, in motion.',
+        note: 'Switch to a video model and the still becomes a shot.',
+        kind: 'video',
+        video: '/Videos/AI ecosystem/video gen new.mp4',
+        from: 4,
+      },
+      {
+        mode: 'Audio',
+        ask: 'Score it, and read her last line over the cut.',
+        note: 'Music, atmosphere and voice, matched to the length of the cut.',
+        kind: 'audio',
+        tracks: [
+          ['strings', '00:42', 0.82],
+          ['wind bed', '00:42', 0.46],
+          ['maren vo', '00:06', 0.2],
         ],
       },
     ],
     result: 'A finished two minute film.',
-    resultNote: 'One subscription, one thread, no re-uploading between tools.',
+    resultNote: 'One subscription, one thread, nothing re-uploaded between tools.',
   },
   {
     n: '02',
     tag: 'Building on it',
     title: 'An app on every model at once.',
-    body: 'An OpenAI-compatible endpoint, so the integration you already wrote keeps working.',
-    steps: [
-      { t: 'Create a key', d: 'One key reaches the whole catalogue.', dark: true, lines: [{ t: '$ openledger keys create' }, { t: 'sk-ol-7f2c...9a41', hot: true }] },
-      { t: 'Point your client', d: 'Change the base URL. Leave the rest of your code alone.', dark: true, lines: [{ t: 'new OpenAI({' }, { t: '  baseURL: ".../v1"', hot: true }, { t: '})' }] },
-      { t: 'Let it route', d: 'Set auto and cheap requests stop hitting expensive models.', dark: true, lines: [{ t: 'model: "auto"', hot: true }, { t: 'messages: [...]' }] },
-      { t: 'Ship it', d: 'Swap or add a model later without another integration.', dark: true, lines: [{ t: '200 OK', hot: true }, { t: 'served_by: claude-opus-4' }, { t: 'cost: $0.0021' }] },
+    body:
+      'An OpenAI compatible endpoint. Change the base URL and the integration you already wrote reaches the whole catalogue.',
+    turns: [
+      {
+        mode: 'Shell',
+        ask: 'Give me a key.',
+        note: 'One key reaches every model. There is no second integration later.',
+        kind: 'code',
+        lines: [{ t: '$ openledger keys create' }, { t: 'sk-ol-7f2c...9a41', hot: true }],
+      },
+      {
+        mode: 'Code',
+        ask: 'Point my client at it.',
+        note: 'One line changes. The rest of your code does not know anything happened.',
+        kind: 'code',
+        lines: [{ t: 'new OpenAI({' }, { t: '  baseURL: ".../v1"', hot: true }, { t: '})' }],
+      },
+      {
+        mode: 'Code',
+        ask: 'Stop cheap requests hitting expensive models.',
+        note: 'Set auto and each request is routed on what it actually needs.',
+        kind: 'code',
+        lines: [{ t: 'model: "auto"', hot: true }, { t: 'messages: [...]' }],
+      },
+      {
+        mode: 'Response',
+        ask: 'What did that cost?',
+        note: 'Every response says which model served it and what it came to.',
+        kind: 'code',
+        lines: [
+          { t: '200 OK', hot: true },
+          { t: 'served_by: claude-opus-5' },
+          { t: 'cost: $0.0021' },
+        ],
+      },
     ],
     result: 'One integration, every model.',
     resultNote: 'Adding a model later is a string change, not a sprint.',
@@ -561,17 +405,508 @@ const FLOWS = [
     n: '03',
     tag: 'Work you cannot paste elsewhere',
     title: 'Sensitive documents, nothing left behind.',
-    body: 'Due diligence, case files, patient records and board papers, without creating an account first.',
-    steps: [
-      { t: 'Pick a TEE model', d: 'It runs in an enclave, so the host cannot read the request.', lines: [{ t: '[ TEE ]  enclave', hot: true }, { t: '[ WEB ]  off' }, { t: '[ CTX ]  200K' }] },
-      { t: 'Paste the document', d: 'No upload quota and no account to create first.', lines: [{ t: 'MSA_2026_final.pdf' }, { t: '84 pages' }, { t: 'attached' }] },
-      { t: 'Ask in plain English', d: 'Clause level answers, quoted back with the text.', lines: [{ t: '> flag every clause' }, { t: '  shifting liability' }, { t: '  to us' }] },
-      { t: 'Close the tab', d: 'The prompt was never retained and memory stayed local.', lines: [{ t: 'retained:   0 bytes', hot: true }, { t: 'account:    none' }, { t: 'memory:     local only' }] },
+    body:
+      'Due diligence, case files, patient records and board papers. No account to create, and no copy of any of it afterwards.',
+    turns: [
+      {
+        mode: 'Picker',
+        ask: 'Use something the host cannot read.',
+        note: 'Models marked TEE run inside a hardware enclave.',
+        kind: 'picker',
+        rows: [['Enclave', 'TEE', true], ['Web access', 'Off', false], ['Context', '200K', false]],
+      },
+      {
+        mode: 'Document',
+        ask: 'Here is the agreement. Eighty four pages.',
+        note: 'Paste it. There is no upload quota and no account to create first.',
+        kind: 'paper',
+        meta: 'MSA_2026_final.pdf  ·  84 pages',
+      },
+      {
+        mode: 'Answer',
+        ask: 'Flag every clause that shifts liability to us.',
+        note: 'Clause level answers, quoted back against the text you gave it.',
+        kind: 'paper',
+        meta: '3 clauses flagged  ·  §4.2  §9.1  §11.6',
+        mark: true,
+      },
+      {
+        mode: 'Receipt',
+        ask: 'Now forget all of it.',
+        note: 'There is nothing to forget. It was never written down.',
+        kind: 'receipt',
+        rows: [['retained', '0 bytes', true], ['account', 'none', false], ['memory', 'local only', false]],
+      },
     ],
     result: 'An answer, and no copy anywhere.',
     resultNote: 'The strongest guarantee is not holding it in the first place.',
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/* The thread                                                          */
+/* ------------------------------------------------------------------ */
+
+const ART = {
+  position: 'relative',
+  borderRadius: T.r,
+  border: `1px solid ${T.line}`,
+  overflow: 'hidden',
+  aspectRatio: '16 / 9',
+  minHeight: '160px',
+};
+
+/* A row of ruled lines standing in for body text on a page. Widths are fixed
+   rather than random so the server and the client draw the same page. */
+const RULES = [96, 88, 92, 74, 90, 84, 60];
+
+function Artifact({ turn }) {
+  if (turn.kind === 'image') {
+    return (
+      <Box sx={{ ...ART, backgroundColor: T.surface2 }}>
+        <Box
+          component="img"
+          src={turn.img}
+          alt=""
+          loading="lazy"
+          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      </Box>
+    );
+  }
+
+  if (turn.kind === 'video') {
+    /* An ink fill underneath, so a clip still buffering reads as a frame that
+       has not arrived rather than as a hole in the thread. */
+    return (
+      <Box sx={{ ...ART, backgroundColor: T.ink }}>
+        <Clip src={turn.video} from={turn.from || 0} />
+      </Box>
+    );
+  }
+
+  if (turn.kind === 'script') {
+    return (
+      <Box
+        sx={{
+          ...ART,
+          backgroundColor: T.bg,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          px: { xs: '20px', md: '30px' },
+          py: '20px',
+        }}
+      >
+        {turn.lines.map((l, i) => (
+          <Typography
+            key={i}
+            sx={{
+              fontFamily: T.mono,
+              fontSize: { xs: '11px', md: '12px' },
+              lineHeight: 1.75,
+              color: i === 0 ? T.fg : T.fg2,
+              letterSpacing: i === 0 ? '0.08em' : 0,
+              minHeight: l === '' ? '10px' : 'auto',
+              whiteSpace: 'pre',
+            }}
+          >
+            {l}
+          </Typography>
+        ))}
+      </Box>
+    );
+  }
+
+  if (turn.kind === 'code') {
+    return (
+      <Box
+        sx={{
+          ...ART,
+          backgroundColor: T.ink,
+          borderColor: 'transparent',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: '8px',
+          px: { xs: '18px', md: '24px' },
+        }}
+      >
+        {turn.lines.map((l, i) => (
+          <Typography
+            key={i}
+            sx={{
+              fontFamily: T.mono,
+              fontSize: { xs: '11.5px', md: '12.5px' },
+              lineHeight: 1.5,
+              color: l.hot ? T.brand : 'rgba(255,255,255,.66)',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {l.t}
+          </Typography>
+        ))}
+      </Box>
+    );
+  }
+
+  if (turn.kind === 'audio') {
+    return (
+      <Box
+        sx={{
+          ...ART,
+          backgroundColor: T.surface2,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: '16px',
+          px: { xs: '18px', md: '26px' },
+        }}
+      >
+        {turn.tracks.map(([name, time, fill]) => (
+          <Box key={name}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: '7px' }}>
+              <Mono sx={{ fontSize: '10px', textTransform: 'none', letterSpacing: '0.04em' }}>{name}</Mono>
+              <Mono sx={{ fontSize: '10px', letterSpacing: '0.04em' }}>{time}</Mono>
+            </Box>
+            <Box sx={{ height: '4px', borderRadius: '2px', backgroundColor: 'rgba(12,12,14,.09)' }}>
+              <Box
+                sx={{
+                  width: `${Math.round(fill * 100)}%`,
+                  height: '100%',
+                  borderRadius: '2px',
+                  backgroundColor: T.fg2,
+                }}
+              />
+            </Box>
+          </Box>
+        ))}
+      </Box>
+    );
+  }
+
+  if (turn.kind === 'picker' || turn.kind === 'receipt') {
+    return (
+      <Box
+        sx={{
+          ...ART,
+          backgroundColor: turn.kind === 'receipt' ? T.ink : T.surface2,
+          borderColor: turn.kind === 'receipt' ? 'transparent' : T.line,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          gap: '14px',
+          px: { xs: '18px', md: '26px' },
+        }}
+      >
+        {turn.rows.map(([k, v, hot]) => (
+          <Box
+            key={k}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '14px',
+            }}
+          >
+            <Mono
+              sx={{
+                fontSize: '10.5px',
+                textTransform: 'none',
+                letterSpacing: '0.04em',
+                color: turn.kind === 'receipt' ? 'rgba(255,255,255,.42)' : T.fg3,
+              }}
+            >
+              {k}
+            </Mono>
+            <Typography
+              sx={{
+                fontFamily: T.mono,
+                fontSize: '12px',
+                fontWeight: hot ? 600 : 400,
+                color: hot ? T.brand : turn.kind === 'receipt' ? 'rgba(255,255,255,.74)' : T.fg,
+              }}
+            >
+              {v}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    );
+  }
+
+  /* paper: a page of ruled text, optionally with one clause picked out. */
+  return (
+    <Box
+      sx={{
+        ...ART,
+        backgroundColor: T.bg,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: '9px',
+        px: { xs: '20px', md: '28px' },
+        py: '22px',
+      }}
+    >
+      {RULES.map((w, i) => {
+        const marked = turn.mark && (i === 2 || i === 3);
+        return (
+          <Box
+            key={i}
+            sx={{
+              width: `${w}%`,
+              height: '6px',
+              borderRadius: '3px',
+              backgroundColor: marked ? T.brandSoft : 'rgba(12,12,14,.075)',
+              boxShadow: marked ? `inset 0 0 0 1px ${T.brandLine}` : 'none',
+            }}
+          />
+        );
+      })}
+      <Mono sx={{ mt: '8px', fontSize: '10px', textTransform: 'none', letterSpacing: '0.03em' }}>
+        {turn.meta}
+      </Mono>
+    </Box>
+  );
+}
+
+/* One turn: the ask and what came back, side by side, hung off the spine. */
+function Turn({ turn, last }) {
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        pl: { xs: '22px', md: '38px' },
+        pb: last ? 0 : { xs: '34px', md: '40px' },
+      }}
+    >
+      {/* The spine. Each turn draws its own full height run so the segments
+          meet, which is the whole point: the thread does not break between
+          turns. The last one stops at its node rather than trailing off. */}
+      <Box
+        aria-hidden="true"
+        sx={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '1px',
+          backgroundColor: T.line2,
+          ...(last
+            ? { height: { xs: '10px', md: 'calc(50% - 24px)' } }
+            : { bottom: 0 }),
+        }}
+      />
+      <Box
+        aria-hidden="true"
+        sx={{
+          position: 'absolute',
+          left: '-3px',
+          top: { xs: '6px', md: '50%' },
+          mt: { md: '-24px' },
+          width: '7px',
+          height: '7px',
+          borderRadius: '50%',
+          border: `1px solid ${T.line2}`,
+          backgroundColor: T.bg,
+        }}
+      />
+
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
+          gap: { xs: '16px', md: '36px' },
+          alignItems: { xs: 'start', md: 'center' },
+        }}
+      >
+        <Box>
+          <Mono sx={{ color: T.brand, letterSpacing: '0.12em' }}>{turn.mode}</Mono>
+          <Typography
+            sx={{
+              mt: '12px',
+              mb: '12px',
+              fontSize: { xs: '17px', md: '19px' },
+              lineHeight: 1.4,
+              letterSpacing: '-0.02em',
+              fontWeight: 500,
+              color: T.fg,
+              textWrap: 'pretty',
+            }}
+          >
+            {turn.ask}
+          </Typography>
+          <Typography sx={{ fontSize: '14px', lineHeight: 1.6, color: T.fg3, maxWidth: '44ch' }}>
+            {turn.note}
+          </Typography>
+        </Box>
+
+        <Artifact turn={turn} />
+      </Box>
+    </Box>
+  );
+}
+
+function Thread({ thread }) {
+  return (
+    <Reveal>
+      <Box sx={{ pt: { xs: '44px', md: '72px' } }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
+            gap: { xs: '14px', md: '36px' },
+            alignItems: 'end',
+            mb: { xs: '28px', md: '38px' },
+            pl: { xs: '22px', md: '38px' },
+          }}
+        >
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', mb: '14px' }}>
+              <Mono sx={{ color: T.brand, fontSize: '11.5px' }}>{thread.n}</Mono>
+              <Box sx={{ width: '14px', height: '1px', backgroundColor: T.line2 }} />
+              <Mono>{thread.tag}</Mono>
+            </Box>
+            <Typography
+              component="h3"
+              sx={{
+                fontSize: 'clamp(24px, 2.8vw, 36px)',
+                lineHeight: 1.06,
+                letterSpacing: '-0.034em',
+                fontWeight: 600,
+                color: T.fg,
+                textWrap: 'balance',
+              }}
+            >
+              {thread.title}
+            </Typography>
+          </Box>
+          <Typography sx={{ fontSize: '15px', lineHeight: 1.6, color: T.fg2, textWrap: 'pretty' }}>
+            {thread.body}
+          </Typography>
+        </Box>
+
+        {thread.turns.map((turn, i) => (
+          <Turn key={turn.ask} turn={turn} last={i === thread.turns.length - 1} />
+        ))}
+
+        {/* What the thread was for. The one other place orange appears. */}
+        <Box
+          sx={{
+            mt: { xs: '26px', md: '32px' },
+            ml: { xs: '22px', md: '38px' },
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: { xs: '10px', md: '16px' },
+            flexWrap: 'wrap',
+            pt: '20px',
+            borderTop: `1px solid ${T.line}`,
+          }}
+        >
+          <Box
+            aria-hidden="true"
+            sx={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: T.brand, alignSelf: 'center' }}
+          />
+          <Typography sx={{ fontSize: '17px', fontWeight: 600, letterSpacing: '-0.02em', color: T.fg }}>
+            {thread.result}
+          </Typography>
+          <Typography sx={{ fontSize: '14.5px', color: T.fg2 }}>{thread.resultNote}</Typography>
+        </Box>
+      </Box>
+    </Reveal>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* The hero's one moving part                                          */
+/* ------------------------------------------------------------------ */
+
+/* One prompt, and the modality under it changing by itself. The page's whole
+   argument in a single object, so the hero does not need a row of statistics
+   to say something. Holds still if the reader asked for less motion. */
+function ModeCycle() {
+  const [i, setI] = React.useState(0);
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const quiet = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (quiet.matches) return undefined;
+    const id = setInterval(() => setI((n) => (n + 1) % MODES.length), 1900);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <Box sx={{ ...TRAY, backgroundColor: T.bg, p: { xs: '18px', md: '24px' }, maxWidth: '620px' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          px: { xs: '14px', md: '18px' },
+          py: { xs: '13px', md: '15px' },
+          borderRadius: '12px',
+          border: `1px solid ${T.line}`,
+          backgroundColor: T.surface,
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: { xs: '14px', md: '15.5px' },
+            color: T.fg2,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          Keep going from the last answer
+        </Typography>
+        <Box
+          aria-hidden="true"
+          sx={{
+            ml: 'auto',
+            width: '2px',
+            height: '17px',
+            flexShrink: 0,
+            backgroundColor: T.brand,
+            '@media (prefers-reduced-motion: no-preference)': {
+              animation: 'docsCaret 1.1s steps(1) infinite',
+            },
+            '@keyframes docsCaret': { '0%, 50%': { opacity: 1 }, '50.01%, 100%': { opacity: 0 } },
+          }}
+        />
+      </Box>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: '14px', flexWrap: 'wrap' }}>
+        {MODES.map((m, n) => {
+          const on = n === i;
+          return (
+            <Box
+              key={m}
+              sx={{
+                px: '11px',
+                py: '6px',
+                borderRadius: '999px',
+                fontFamily: T.mono,
+                fontSize: '10.5px',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                transition: 'all .34s cubic-bezier(.32,.72,0,1)',
+                border: `1px solid ${on ? T.brandLine : T.line}`,
+                backgroundColor: on ? T.brandSoft : 'transparent',
+                color: on ? T.brand : T.fg3,
+              }}
+            >
+              {m}
+            </Box>
+          );
+        })}
+        <Typography sx={{ ml: '6px', fontSize: '13px', color: T.fg3 }}>one thread</Typography>
+      </Box>
+    </Box>
+  );
+}
 
 function Rail({ active }) {
   return (
@@ -596,7 +931,13 @@ function Rail({ active }) {
             key={c.id}
             component="a"
             href={`#${c.id}`}
-            sx={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', '&:hover .lbl': { opacity: 1 } }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              textDecoration: 'none',
+              '&:hover .lbl': { opacity: 1 },
+            }}
           >
             <Box
               sx={{
@@ -609,7 +950,14 @@ function Rail({ active }) {
             >
               {String(i + 1).padStart(2, '0')}
             </Box>
-            <Box sx={{ width: on ? '18px' : '8px', height: '1px', backgroundColor: on ? T.brand : T.line2, transition: 'all .2s ease' }} />
+            <Box
+              sx={{
+                width: on ? '18px' : '8px',
+                height: '1px',
+                backgroundColor: on ? T.brand : T.line2,
+                transition: 'all .2s ease',
+              }}
+            />
             <Typography
               className="lbl"
               sx={{
@@ -631,7 +979,6 @@ function Rail({ active }) {
     </Box>
   );
 }
-
 
 /* ------------------------------------------------------------------ */
 
@@ -667,7 +1014,7 @@ export default function DocsPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: T.bg, position: 'relative', overflowX: 'hidden' }}>
       <Head>
-        <title>What You Can Do With Hey Open | Hey Open</title>
+        <title>What You Can Build With Hey Open | Hey Open</title>
         <meta
           name="description"
           content="Make a film in one thread, build on one API key across 200+ models, or put sensitive documents through AI that keeps nothing."
@@ -678,8 +1025,7 @@ export default function DocsPage() {
       <Rail active={active} />
 
       {/* ================= HERO ================= */}
-      <Box sx={{ position: 'relative', pt: { xs: '48px', md: '84px' }, pb: { xs: '44px', md: '68px' } }}>
-        <Box aria-hidden="true" sx={GRID} />
+      <Box sx={{ position: 'relative', pt: { xs: '48px', md: '84px' }, pb: { xs: '44px', md: '72px' } }}>
         <Box
           aria-hidden="true"
           sx={{
@@ -687,168 +1033,144 @@ export default function DocsPage() {
             left: '50%',
             top: '-60px',
             width: '70%',
-            height: 300,
+            height: '300px',
             transform: 'translateX(-50%)',
-            background: 'radial-gradient(closest-side, rgba(255,102,0,.16), transparent)',
+            background: 'radial-gradient(closest-side, rgba(255,102,0,.14), transparent)',
             filter: 'blur(10px)',
             pointerEvents: 'none',
           }}
         />
         <Wrap sx={{ position: 'relative' }}>
-          <Reveal>
-            <Eyebrow accent>Private and uncensored</Eyebrow>
-            <Typography
-              component="h1"
-              sx={{
-                fontSize: 'clamp(40px, 7vw, 92px)',
-                lineHeight: 0.98,
-                letterSpacing: '-0.05em',
-                fontWeight: 600,
-                color: T.fg,
-                mt: '22px',
-                mb: '26px',
-                maxWidth: '16ch',
-                textWrap: 'balance',
-              }}
-            >
-              The whole job in one thread.
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: { xs: '17px', md: '19px' },
-                lineHeight: 1.5,
-                color: T.fg2,
-                maxWidth: '58ch',
-                mb: '32px',
-                textWrap: 'pretty',
-              }}
-            >
-              200+ models behind one chat and one API key. Make a film, ship an application, or put
-              a contract through it, without an account and without your work being stored.
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-              <Button href={APP} primary>
-                Open the chat
-                <Box component="span" aria-hidden="true">→</Box>
-              </Button>
-              <Button href="#uses">What people do with it</Button>
-            </Box>
-          </Reveal>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', lg: '1fr 0.95fr' },
+              gap: { xs: '40px', lg: '56px' },
+              alignItems: 'center',
+            }}
+          >
+            <Reveal>
+              <Eyebrow accent>Private and uncensored</Eyebrow>
+              <Typography
+                component="h1"
+                sx={{
+                  fontSize: 'clamp(40px, 6.2vw, 80px)',
+                  lineHeight: 0.98,
+                  letterSpacing: '-0.05em',
+                  fontWeight: 600,
+                  color: T.fg,
+                  mt: '22px',
+                  mb: '24px',
+                  maxWidth: '15ch',
+                  textWrap: 'balance',
+                }}
+              >
+                The model changes. The thread does not.
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: { xs: '17px', md: '19px' },
+                  lineHeight: 1.5,
+                  color: T.fg2,
+                  maxWidth: '50ch',
+                  mb: '30px',
+                  textWrap: 'pretty',
+                }}
+              >
+                Write a script, draw the shot, move it, score it, and ship the API behind it. Same
+                conversation, 200+ models, $20 a month, no account and nothing kept.
+              </Typography>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                <Button href={APP} primary>
+                  Open the chat
+                  <Box component="span" aria-hidden="true">→</Box>
+                </Button>
+                <Button href="#uses">See what people build</Button>
+              </Box>
+            </Reveal>
 
-          {/* Stat row */}
-          <Reveal delay={120}>
-            <Box
-              sx={{
-                mt: { xs: '44px', md: '68px' },
-                display: 'grid',
-                gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
-                borderTop: `1px solid ${T.line}`,
-              }}
-            >
-              {STATS.map(([v, k], i) => (
-                <Box
-                  key={k}
-                  sx={{
-                    py: { xs: '20px', md: '26px' },
-                    pl: { md: i === 0 ? 0 : '26px' },
-                    borderLeft: { xs: 'none', md: i === 0 ? 'none' : `1px solid ${T.line}` },
-                    borderTop: { xs: i > 1 ? `1px solid ${T.line}` : 'none', md: 'none' },
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: { xs: '30px', md: '38px' },
-                      lineHeight: 1,
-                      letterSpacing: '-0.045em',
-                      fontWeight: 600,
-                      color: T.fg,
-                      fontVariantNumeric: 'tabular-nums',
-                      mb: '8px',
-                    }}
-                  >
-                    {v}
-                  </Typography>
-                  <Mono>{k}</Mono>
-                </Box>
-              ))}
-            </Box>
-          </Reveal>
+            <Reveal delay={140}>
+              <ModeCycle />
+            </Reveal>
+          </Box>
         </Wrap>
       </Box>
 
-      {/* ================= USES ================= */}
+      {/* ================= THE THREADS ================= */}
       <Section id="uses">
         <Header
-          eyebrow="What it is for"
+          eyebrow="What you can build"
           title="Three jobs, one subscription."
-          lede="Each of these is a sequence, not a feature. The point is that every step stays in the same conversation."
+          lede="Each of these is one conversation read top to bottom. The chip on the left is the model answering that turn, and it is the only thing that changes."
         />
-
-        {FLOWS.map((f) => (
-          <Flow key={f.n} flow={f} />
+        {THREADS.map((thread) => (
+          <Thread key={thread.n} thread={thread} />
         ))}
       </Section>
 
       {/* ================= COMPARISON ================= */}
       <Section id="why" sx={{ backgroundColor: T.surface }}>
-        <Header eyebrow="The comparison" title="The same work, counted honestly." />
-
+        <Header
+          eyebrow="The comparison"
+          title="The same work, counted honestly."
+          lede="Against the four subscriptions it takes to do the film above anywhere else."
+        />
         <Reveal>
-          <Card pad={false} sx={{ backgroundColor: T.bg }}>
-            <Box sx={{ overflowX: 'auto' }}>
-              <Box component="table" sx={{ width: '100%', minWidth: 640, borderCollapse: 'collapse' }}>
-                <Box component="thead">
-                  <Box component="tr">
-                    {['', 'Four separate tools', 'Hey Open'].map((h, i) => (
-                      <Box
-                        key={i}
-                        component="th"
-                        sx={{
-                          textAlign: 'left',
-                          px: { xs: '16px', md: '22px' },
-                          py: '14px',
-                          borderBottom: `1px solid ${T.line}`,
-                          fontFamily: T.mono,
-                          fontSize: '10.5px',
-                          fontWeight: 400,
-                          letterSpacing: '0.1em',
-                          textTransform: 'uppercase',
-                          color: i === 2 ? T.brand : T.fg3,
-                          width: i === 0 ? '34%' : '33%',
-                        }}
-                      >
-                        {h}
-                      </Box>
-                    ))}
-                  </Box>
-                </Box>
-                <Box component="tbody">
-                  {COMPARE.map(([label, them, us], i) => (
-                    <Box key={label} component="tr" sx={{ borderTop: i === 0 ? 'none' : `1px solid ${T.line}` }}>
-                      <Box
-                        component="td"
-                        sx={{ px: { xs: '16px', md: '22px' }, py: '16px', fontSize: '14.5px', fontWeight: 500, color: T.fg }}
-                      >
-                        {label}
-                      </Box>
-                      <Box
-                        component="td"
-                        sx={{ px: { xs: '16px', md: '22px' }, py: '16px', fontSize: '14px', color: T.fg3, fontVariantNumeric: 'tabular-nums' }}
-                      >
-                        {them}
-                      </Box>
-                      <Box
-                        component="td"
-                        sx={{ px: { xs: '16px', md: '22px' }, py: '16px', fontSize: '14px', color: T.fg, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}
-                      >
-                        {us}
-                      </Box>
-                    </Box>
-                  ))}
-                </Box>
-              </Box>
+          <Box
+            sx={{
+              border: `1px solid ${T.line}`,
+              borderRadius: T.r,
+              overflow: 'hidden',
+              backgroundColor: T.bg,
+            }}
+          >
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1.1fr 1fr', md: '1.4fr 1fr 1fr' },
+                px: { xs: '16px', md: '24px' },
+                py: '14px',
+                borderBottom: `1px solid ${T.line}`,
+                backgroundColor: T.surface2,
+              }}
+            >
+              <Mono sx={{ display: { xs: 'none', md: 'block' } }}>{' '}</Mono>
+              <Mono>Four separate tools</Mono>
+              <Mono sx={{ color: T.brand }}>Hey Open</Mono>
             </Box>
-          </Card>
+            {COMPARE.map(([k, a, b], i) => (
+              <Box
+                key={k}
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1.1fr 1fr', md: '1.4fr 1fr 1fr' },
+                  gap: { xs: '4px', md: '16px' },
+                  px: { xs: '16px', md: '24px' },
+                  py: { xs: '14px', md: '16px' },
+                  borderTop: i === 0 ? 'none' : `1px solid ${T.line}`,
+                  alignItems: 'baseline',
+                }}
+              >
+                <Typography
+                  sx={{
+                    gridColumn: { xs: '1 / -1', md: 'auto' },
+                    fontSize: { xs: '13px', md: '14.5px' },
+                    fontWeight: { xs: 600, md: 500 },
+                    color: { xs: T.fg, md: T.fg2 },
+                    mb: { xs: '6px', md: 0 },
+                  }}
+                >
+                  {k}
+                </Typography>
+                <Typography sx={{ fontSize: { xs: '13.5px', md: '14.5px' }, color: T.fg3 }}>{a}</Typography>
+                <Typography
+                  sx={{ fontSize: { xs: '13.5px', md: '14.5px' }, fontWeight: 600, color: T.fg }}
+                >
+                  {b}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
         </Reveal>
       </Section>
 
@@ -859,138 +1181,127 @@ export default function DocsPage() {
           title="The two things we will not trade away."
           lede="Most of this industry treats both as features to switch on later. They are the reason this exists."
         />
-
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: '28px', md: '48px' } }}>
-          <Reveal>
+        <Reveal>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1.15fr 1fr' },
+              gap: { xs: '32px', md: '56px' },
+              alignItems: 'start',
+            }}
+          >
             <Box>
               {PRIVACY.map(([t, d], i) => (
                 <Box
                   key={t}
-                  sx={{ display: 'flex', gap: '18px', py: '20px', borderTop: i === 0 ? 'none' : `1px solid ${T.line}` }}
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'auto 1fr',
+                    gap: '16px',
+                    py: '18px',
+                    borderTop: i === 0 ? 'none' : `1px solid ${T.line}`,
+                  }}
                 >
-                  <Mono sx={{ color: T.brand, pt: '3px', minWidth: 20 }}>{String(i + 1).padStart(2, '0')}</Mono>
+                  <Mono sx={{ color: T.brand, pt: '3px' }}>{String(i + 1).padStart(2, '0')}</Mono>
                   <Box>
-                    <Typography sx={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg, mb: '6px' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '17px',
+                        fontWeight: 600,
+                        letterSpacing: '-0.02em',
+                        color: T.fg,
+                        mb: '6px',
+                      }}
+                    >
                       {t}
                     </Typography>
-                    <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg2, textWrap: 'pretty' }}>{d}</Typography>
+                    <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg2 }}>{d}</Typography>
                   </Box>
                 </Box>
               ))}
             </Box>
-          </Reveal>
 
-          <Reveal delay={100}>
             <Box
               sx={{
                 borderRadius: T.r,
                 backgroundColor: T.ink,
-                border: '1px solid rgba(255,255,255,0.1)',
-                p: { xs: '22px', md: '30px' },
-                height: 'fit-content',
+                p: { xs: '22px', md: '28px' },
               }}
             >
-              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: '10px', mb: '20px' }}>
-                <Box aria-hidden="true" sx={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: T.brand }} />
-                <Box
-                  component="span"
-                  sx={{ fontFamily: T.mono, fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', color: T.brand }}
-                >
-                  On uncensored
-                </Box>
-              </Box>
-              <Typography sx={{ fontSize: { xs: '16px', md: '17px' }, lineHeight: 1.6, color: 'rgba(255,255,255,0.9)', mb: '18px', textWrap: 'pretty' }}>
+              <Mono sx={{ color: 'rgba(255,255,255,.4)' }}>Uncensored means</Mono>
+              <Typography
+                sx={{
+                  mt: '16px',
+                  fontSize: { xs: '17px', md: '19px' },
+                  lineHeight: 1.5,
+                  color: '#FFFFFF',
+                  letterSpacing: '-0.02em',
+                  textWrap: 'pretty',
+                }}
+              >
                 A screenplay about addiction. A security write up with working exploit code. A
-                medical question you would rather not have attached to your name. Mainstream
-                assistants refuse all three, and none of them are unreasonable to ask.
+                medical question you would rather not have attached to your name.
               </Typography>
-              <Typography sx={{ fontSize: '14px', lineHeight: 1.65, color: 'rgba(255,255,255,0.55)', textWrap: 'pretty' }}>
-                Models marked Uncensored refuse less. That describes the model, not permission: the
+              <Typography
+                sx={{ mt: '16px', fontSize: '14.5px', lineHeight: 1.6, color: 'rgba(255,255,255,.58)' }}
+              >
+                Mainstream assistants refuse all three, and none of them are unreasonable to ask.
+                Models marked uncensored refuse less. That describes the model, not permission: the
                 acceptable use terms apply on every model here, and what is illegal stays illegal.
               </Typography>
             </Box>
-          </Reveal>
-        </Box>
+          </Box>
+        </Reveal>
       </Section>
 
-      {/* ================= PICKER ================= */}
+      {/* ================= THE PICKER ================= */}
       <Section id="models" sx={{ backgroundColor: T.surface }}>
         <Header
           eyebrow="The picker"
           title="One control. Everything behind it."
           lede="Click the model name under the message box. Switching never leaves your conversation."
         />
-
         <Reveal>
-          <Box sx={{ ...TRAY, overflow: 'hidden', mx: '9px', mb: { xs: '44px', md: '60px' } }}>
+          <Box sx={{ ...TRAY, overflow: 'hidden', mb: { xs: '36px', md: '52px' }, backgroundColor: T.bg }}>
             <ProductWindow />
           </Box>
         </Reveal>
 
-        <Reveal delay={80}>
-          <Box sx={{ overflowX: 'auto' }}>
-            <Box component="table" sx={{ width: '100%', minWidth: 600, borderCollapse: 'collapse' }}>
-              <Box component="tbody">
-                {PICK.map(([iff, pick, why], i) => (
-                  <Box key={iff} component="tr" sx={{ borderTop: `1px solid ${T.line}` }}>
-                    <Box
-                      component="td"
-                      sx={{ py: '18px', pr: '22px', fontSize: '14.5px', fontWeight: 500, color: T.fg, verticalAlign: 'top', width: '26%' }}
-                    >
-                      {iff}
-                    </Box>
-                    <Box
-                      component="td"
-                      sx={{ py: '18px', pr: '22px', fontSize: '14.5px', fontWeight: 500, color: T.brand, verticalAlign: 'top', width: '26%' }}
-                    >
-                      {pick}
-                    </Box>
-                    <Box component="td" sx={{ py: '18px', fontSize: '14px', lineHeight: 1.6, color: T.fg2 }}>
-                      {why}
-                    </Box>
-                  </Box>
-                ))}
+        <Reveal delay={100}>
+          <Box sx={{ border: `1px solid ${T.line}`, borderRadius: T.r, backgroundColor: T.bg, overflow: 'hidden' }}>
+            {PICK.map(([when, pick, why], i) => (
+              <Box
+                key={when}
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1.5fr' },
+                  gap: { xs: '4px', md: '20px' },
+                  px: { xs: '16px', md: '24px' },
+                  py: { xs: '16px', md: '18px' },
+                  borderTop: i === 0 ? 'none' : `1px solid ${T.line}`,
+                  alignItems: 'baseline',
+                }}
+              >
+                <Typography sx={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg }}>
+                  {when}
+                </Typography>
+                <Typography sx={{ fontSize: '14.5px', fontWeight: 600, color: T.brand }}>{pick}</Typography>
+                <Typography sx={{ fontSize: '14px', lineHeight: 1.55, color: T.fg2 }}>{why}</Typography>
               </Box>
-            </Box>
+            ))}
           </Box>
         </Reveal>
       </Section>
 
       {/* ================= CLOSE ================= */}
-      <Section sx={{ overflow: 'hidden', position: 'relative' }}>
-        {/* Outlined, enormous, purely graphic. Sits behind the closing copy
-            rather than above it, which stops the section being a tall column
-            of text against an empty right half. */}
-        <Typography
-          aria-hidden="true"
-          sx={{
-            position: 'absolute',
-            left: '50%',
-            bottom: { xs: '-6%', md: '-14%' },
-            transform: 'translateX(-50%)',
-            fontSize: 'clamp(110px, 20vw, 290px)',
-            lineHeight: 0.8,
-            letterSpacing: '-0.07em',
-            fontWeight: 600,
-            color: 'transparent',
-            WebkitTextStroke: `1px ${T.line2}`,
-            userSelect: 'none',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}
-        >
-          HEY OPEN
-        </Typography>
-
+      <Section>
         <Reveal>
           <Box
             sx={{
-              position: 'relative',
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', md: '1.1fr 1fr' },
               gap: { xs: '28px', md: '56px' },
               alignItems: 'end',
-              py: { xs: '12px', md: '28px' },
             }}
           >
             <Box>
@@ -1022,8 +1333,17 @@ export default function DocsPage() {
               </Typography>
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', borderTop: `1px solid ${T.line}` }}>
                 {[['No account', 'to start'], ['Nothing', 'retained']].map(([a1, a2], i) => (
-                  <Box key={a1} sx={{ py: '14px', pl: i === 0 ? 0 : '18px', borderLeft: i === 0 ? 'none' : `1px solid ${T.line}` }}>
-                    <Typography sx={{ fontSize: '19px', fontWeight: 600, letterSpacing: '-0.03em', color: T.fg, lineHeight: 1.1 }}>
+                  <Box
+                    key={a1}
+                    sx={{
+                      py: '14px',
+                      pl: i === 0 ? 0 : '18px',
+                      borderLeft: i === 0 ? 'none' : `1px solid ${T.line}`,
+                    }}
+                  >
+                    <Typography
+                      sx={{ fontSize: '19px', fontWeight: 600, letterSpacing: '-0.03em', color: T.fg, lineHeight: 1.1 }}
+                    >
                       {a1}
                     </Typography>
                     <Mono sx={{ fontSize: '10.5px' }}>{a2}</Mono>
