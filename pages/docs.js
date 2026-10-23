@@ -783,8 +783,8 @@ function Flow() {
         sx={{
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-          gap: { xs: '0px', md: '30px' },
-          mt: { xs: '8px', md: '18px' },
+          gap: { xs: '0px', md: '48px' },
+          mt: { xs: '34px', md: '60px' },
         }}
       >
         {FLOW.map((step, i) => (
@@ -793,9 +793,9 @@ function Flow() {
             sx={{
               position: 'relative',
               borderTop: `1px solid ${T.line}`,
-              pt: { xs: '20px', md: '24px' },
-              pb: { xs: '26px', md: 0 },
-              pr: { md: '18px' },
+              pt: { xs: '22px', md: '30px' },
+              pb: { xs: '34px', md: 0 },
+              
             }}
           >
             {/* the node, sitting on the rule, as everywhere else on this page */}
@@ -831,7 +831,7 @@ function Flow() {
               </Box>
             )}
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mb: '14px' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mb: '20px' }}>
               <Mono sx={{ color: T.brand }}>{step.n}</Mono>
               <Mono>{step.label}</Mono>
             </Box>
@@ -839,23 +839,23 @@ function Flow() {
             <Typography
               sx={{
                 fontSize: { xs: '18px', md: '20px' },
-                lineHeight: 1.3,
+                lineHeight: 1.35,
                 letterSpacing: '-0.022em',
                 fontWeight: 600,
                 color: T.fg,
-                mb: '10px',
-                maxWidth: '24ch',
+                mb: '14px',
+                maxWidth: '22ch',
                 textWrap: 'balance',
               }}
             >
               {step.title}
             </Typography>
-            <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg2, maxWidth: '36ch' }}>
+            <Typography sx={{ fontSize: '14.5px', lineHeight: 1.65, color: T.fg2, maxWidth: '32ch' }}>
               {step.body}
             </Typography>
 
             {step.chips && (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '6px', mt: '16px' }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '7px', mt: '24px' }}>
                 {step.chips.map((c) => (
                   <Box
                     key={c}
