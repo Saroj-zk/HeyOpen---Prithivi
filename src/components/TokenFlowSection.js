@@ -371,17 +371,28 @@ export default function TokenFlowSection() {
                 rowGap: 0,
               }}
             >
-              {/* the dashed group, wrapping the locked part of the flow */}
+              {/* The locked pair, bracketed from above: a run with a short
+                  drop at each end. As a closed rounded box it had no height
+                  to give it, so it collapsed into a rule that appeared to
+                  cross the canvas rather than to cover two tiles. */}
               <Box
                 aria-hidden="true"
                 sx={{
                   gridColumn: '3 / 6',
                   gridRow: 1,
                   zIndex: 0,
-                  m: '-18px',
-                  mt: '-26px',
-                  borderRadius: '26px',
-                  border: `1.5px dashed ${DASH_C}`,
+                  alignSelf: 'start',
+                  /* Half a tile in from each end, so the drops stand over the
+                     centres of sOPEN and HEY and line up with the risers of
+                     the return route below. */
+                  mx: '81px',
+                  mt: '-30px',
+                  height: '22px',
+                  borderTop: `1.5px dashed ${DASH_C}`,
+                  borderLeft: `1.5px dashed ${DASH_C}`,
+                  borderRight: `1.5px dashed ${DASH_C}`,
+                  borderTopLeftRadius: '10px',
+                  borderTopRightRadius: '10px',
                 }}
               />
               <Typography
@@ -391,7 +402,7 @@ export default function TokenFlowSection() {
                   zIndex: 1,
                   justifySelf: 'center',
                   alignSelf: 'start',
-                  mt: '-40px',
+                  mt: '-54px',
                   px: 1.2,
                   ...LABEL,
                   color: 'var(--text-secondary)',
