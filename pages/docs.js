@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
-import ProductWindow from '@/components/ProductWindow';
 import { Reveal } from '@/components/ui/LedgerUI';
 import useInView from '@/utils/useInView';
 
@@ -66,13 +65,6 @@ const TRAY = {
     '0 36px 70px -34px rgba(12,12,14,.2)',
   ].join(','),
 };
-
-const CHAPTERS = [
-  { id: 'uses', label: 'What you can build' },
-  { id: 'why', label: 'The comparison' },
-  { id: 'private', label: 'Private, uncensored' },
-  { id: 'models', label: 'The picker' },
-];
 
 /* ------------------------------------------------------------------ */
 /* Primitives                                                          */
@@ -293,15 +285,20 @@ const PRIVACY = [
   ['Hardware isolation where it matters', 'Models marked TEE run in an enclave. The picker shows which.'],
 ];
 
-const PICK = [
-  ['You are not sure', 'Leave it alone', 'The default is set to be reasonable at most things.'],
-  ['It has to be current', 'Anything labelled Web', 'Without web access a model only knows what it was trained on.'],
-  ['A long document', 'A large context window', 'Hover any model to see its figure.'],
-  ['You want a picture', 'The Image tab', 'Text models describe a picture rather than draw one.'],
-  ['The subject is sensitive', 'A model labelled TEE', 'It runs inside a hardware enclave.'],
+/* Other things the same message box handles. Deliberately mundane and
+   deliberately unalike, because the point is that there is no list. */
+const OTHERS = [
+  'Research memo',
+  'Lesson plan',
+  'Pitch deck copy',
+  'Messy spreadsheet',
+  'Legal translation',
+  'Code review',
+  'Podcast edit',
+  'Product photography',
 ];
 
-/* The three threads.
+/* Three worked examples.
  *
  * Every artifact below is the real asset it claims to be, and the asks are
  * written to the assets rather than the other way round. The ridge still and
@@ -309,7 +306,6 @@ const PICK = [
  * describes, so nothing here promises a shot the page cannot show. */
 const THREADS = [
   {
-    n: '01',
     tag: 'Making something',
     title: 'A film, start to finish.',
     body:
@@ -359,7 +355,6 @@ const THREADS = [
     resultNote: 'One subscription, one thread, nothing re-uploaded between tools.',
   },
   {
-    n: '02',
     tag: 'Building on it',
     title: 'An app on every model at once.',
     body:
@@ -402,7 +397,6 @@ const THREADS = [
     resultNote: 'Adding a model later is a string change, not a sprint.',
   },
   {
-    n: '03',
     tag: 'Work you cannot paste elsewhere',
     title: 'Sensitive documents, nothing left behind.',
     body:
@@ -447,23 +441,24 @@ const THREADS = [
 /* The thread                                                          */
 /* ------------------------------------------------------------------ */
 
-const ART = {
+/* Inline under its ask, the panel sets its own height. In the stack it
+   fills the frame it is laid into. */
+const art = (fill) => ({
   position: 'relative',
   borderRadius: T.r,
   border: `1px solid ${T.line}`,
   overflow: 'hidden',
-  aspectRatio: '16 / 9',
-  minHeight: '160px',
-};
+  ...(fill ? { height: '100%' } : { aspectRatio: '16 / 9', minHeight: '160px' }),
+});
 
 /* A row of ruled lines standing in for body text on a page. Widths are fixed
    rather than random so the server and the client draw the same page. */
 const RULES = [96, 88, 92, 74, 90, 84, 60];
 
-function Artifact({ turn }) {
+function Artifact({ turn, fill }) {
   if (turn.kind === 'image') {
     return (
-      <Box sx={{ ...ART, backgroundColor: T.surface2 }}>
+      <Box sx={{ ...art(fill), backgroundColor: T.surface2 }}>
         <Box
           component="img"
           src={turn.img}
@@ -479,7 +474,7 @@ function Artifact({ turn }) {
     /* An ink fill underneath, so a clip still buffering reads as a frame that
        has not arrived rather than as a hole in the thread. */
     return (
-      <Box sx={{ ...ART, backgroundColor: T.ink }}>
+      <Box sx={{ ...art(fill), backgroundColor: T.ink }}>
         <Clip src={turn.video} from={turn.from || 0} />
       </Box>
     );
@@ -489,7 +484,7 @@ function Artifact({ turn }) {
     return (
       <Box
         sx={{
-          ...ART,
+          ...art(fill),
           backgroundColor: T.bg,
           display: 'flex',
           flexDirection: 'column',
@@ -522,7 +517,7 @@ function Artifact({ turn }) {
     return (
       <Box
         sx={{
-          ...ART,
+          ...art(fill),
           backgroundColor: T.ink,
           borderColor: 'transparent',
           display: 'flex',
@@ -556,7 +551,7 @@ function Artifact({ turn }) {
     return (
       <Box
         sx={{
-          ...ART,
+          ...art(fill),
           backgroundColor: T.surface2,
           display: 'flex',
           flexDirection: 'column',
@@ -591,7 +586,7 @@ function Artifact({ turn }) {
     return (
       <Box
         sx={{
-          ...ART,
+          ...art(fill),
           backgroundColor: turn.kind === 'receipt' ? T.ink : T.surface2,
           borderColor: turn.kind === 'receipt' ? 'transparent' : T.line,
           display: 'flex',
@@ -641,7 +636,7 @@ function Artifact({ turn }) {
   return (
     <Box
       sx={{
-        ...ART,
+        ...art(fill),
         backgroundColor: T.bg,
         display: 'flex',
         flexDirection: 'column',
@@ -673,19 +668,51 @@ function Artifact({ turn }) {
   );
 }
 
-/* One turn: the ask and what came back, side by side, hung off the spine. */
-function Turn({ turn, last }) {
+/* One ask on the thread.
+ *
+ * On a wide screen the answer is not here. It is in the panel beside it,
+ * which stays put while these scroll past, so a single frame fills in with a
+ * script, then a photograph, then footage, then a mix. That is the point of
+ * the page: you are not stepping through four cards, you are watching one
+ * conversation go somewhere. Each ask holds about half a screen so the
+ * handover has room to breathe.
+ *
+ * A narrow screen has no second column to pin, so the answer sits under its
+ * ask and the thread simply runs down the page. */
+function Ask({ turn, index, last, onEnter }) {
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) onEnter(index);
+      },
+      /* Whichever ask is crossing the middle of the screen is the one the
+         panel answers. */
+      { rootMargin: '-48% 0px -48% 0px', threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [index, onEnter]);
+
   return (
     <Box
+      ref={ref}
       sx={{
         position: 'relative',
         pl: { xs: '22px', md: '38px' },
-        pb: last ? 0 : { xs: '34px', md: '40px' },
+        minHeight: { md: '46vh' },
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        pt: { xs: index === 0 ? 0 : '30px', md: 0 },
       }}
     >
-      {/* The spine. Each turn draws its own full height run so the segments
-          meet, which is the whole point: the thread does not break between
-          turns. The last one stops at its node rather than trailing off. */}
+      {/* The spine. Each ask draws a full height run so the segments meet:
+          the thread does not break between turns. The last stops at its node
+          rather than trailing off the end. */}
       <Box
         aria-hidden="true"
         sx={{
@@ -694,9 +721,7 @@ function Turn({ turn, last }) {
           top: 0,
           width: '1px',
           backgroundColor: T.line2,
-          ...(last
-            ? { height: { xs: '10px', md: 'calc(50% - 24px)' } }
-            : { bottom: 0 }),
+          ...(last ? { height: { xs: '36px', md: '50%' } } : { bottom: 0 }),
         }}
       />
       <Box
@@ -704,8 +729,8 @@ function Turn({ turn, last }) {
         sx={{
           position: 'absolute',
           left: '-3px',
-          top: { xs: '6px', md: '50%' },
-          mt: { md: '-24px' },
+          top: { xs: '36px', md: '50%' },
+          mt: '-3px',
           width: '7px',
           height: '7px',
           borderRadius: '50%',
@@ -714,61 +739,48 @@ function Turn({ turn, last }) {
         }}
       />
 
-      <Box
+      <Mono sx={{ color: T.brand, letterSpacing: '0.12em' }}>{turn.mode}</Mono>
+      <Typography
         sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
-          gap: { xs: '16px', md: '36px' },
-          alignItems: { xs: 'start', md: 'center' },
+          mt: '12px',
+          mb: '12px',
+          fontSize: { xs: '18px', md: '22px' },
+          lineHeight: 1.35,
+          letterSpacing: '-0.025em',
+          fontWeight: 500,
+          color: T.fg,
+          maxWidth: '26ch',
+          textWrap: 'pretty',
         }}
       >
-        <Box>
-          <Mono sx={{ color: T.brand, letterSpacing: '0.12em' }}>{turn.mode}</Mono>
-          <Typography
-            sx={{
-              mt: '12px',
-              mb: '12px',
-              fontSize: { xs: '17px', md: '19px' },
-              lineHeight: 1.4,
-              letterSpacing: '-0.02em',
-              fontWeight: 500,
-              color: T.fg,
-              textWrap: 'pretty',
-            }}
-          >
-            {turn.ask}
-          </Typography>
-          <Typography sx={{ fontSize: '14px', lineHeight: 1.6, color: T.fg3, maxWidth: '44ch' }}>
-            {turn.note}
-          </Typography>
-        </Box>
-
-        <Artifact turn={turn} />
-      </Box>
+        {turn.ask}
+      </Typography>
+      <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg3, maxWidth: '40ch' }}>
+        {turn.note}
+      </Typography>
     </Box>
   );
 }
 
 function Thread({ thread }) {
+  const [active, setActive] = React.useState(0);
+  const onEnter = React.useCallback((i) => setActive(i), []);
+
   return (
-    <Reveal>
-      <Box sx={{ pt: { xs: '44px', md: '72px' } }}>
+    <Box sx={{ pt: { xs: '46px', md: '90px' } }}>
+      <Reveal>
         <Box
           sx={{
             display: 'grid',
             gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
-            gap: { xs: '14px', md: '36px' },
+            gap: { xs: '14px', md: '56px' },
             alignItems: 'end',
-            mb: { xs: '28px', md: '38px' },
+            mb: { xs: '10px', md: '26px' },
             pl: { xs: '22px', md: '38px' },
           }}
         >
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', mb: '14px' }}>
-              <Mono sx={{ color: T.brand, fontSize: '11.5px' }}>{thread.n}</Mono>
-              <Box sx={{ width: '14px', height: '1px', backgroundColor: T.line2 }} />
-              <Mono>{thread.tag}</Mono>
-            </Box>
+            <Mono sx={{ display: 'block', mb: '14px' }}>{thread.tag}</Mono>
             <Typography
               component="h3"
               sx={{
@@ -787,35 +799,104 @@ function Thread({ thread }) {
             {thread.body}
           </Typography>
         </Box>
+      </Reveal>
 
-        {thread.turns.map((turn, i) => (
-          <Turn key={turn.ask} turn={turn} last={i === thread.turns.length - 1} />
-        ))}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
+          gap: { xs: 0, md: '56px' },
+          alignItems: 'start',
+        }}
+      >
+        <Box>
+          {thread.turns.map((turn, i) => (
+            <React.Fragment key={turn.ask}>
+              <Ask turn={turn} index={i} last={i === thread.turns.length - 1} onEnter={onEnter} />
+              {/* the answer, inline, narrow screens only */}
+              <Box sx={{ display: { md: 'none' }, pl: '22px', pt: '18px' }}>
+                <Artifact turn={turn} />
+              </Box>
+            </React.Fragment>
+          ))}
+        </Box>
 
-        {/* What the thread was for. The one other place orange appears. */}
+        {/* The stack. One frame, pinned near the middle of the screen, with
+            the answers laid over each other and only the current one up. */}
         <Box
+          aria-hidden="true"
           sx={{
-            mt: { xs: '26px', md: '32px' },
-            ml: { xs: '22px', md: '38px' },
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: { xs: '10px', md: '16px' },
-            flexWrap: 'wrap',
-            pt: '20px',
-            borderTop: `1px solid ${T.line}`,
+            display: { xs: 'none', md: 'block' },
+            position: 'sticky',
+            top: 'calc(50vh - 190px)',
+            alignSelf: 'start',
           }}
         >
-          <Box
-            aria-hidden="true"
-            sx={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: T.brand, alignSelf: 'center' }}
-          />
-          <Typography sx={{ fontSize: '17px', fontWeight: 600, letterSpacing: '-0.02em', color: T.fg }}>
-            {thread.result}
-          </Typography>
-          <Typography sx={{ fontSize: '14.5px', color: T.fg2 }}>{thread.resultNote}</Typography>
+          <Box sx={{ position: 'relative', aspectRatio: '16 / 9' }}>
+            {thread.turns.map((turn, i) => {
+              const on = i === active;
+              return (
+                <Box
+                  key={turn.ask}
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    opacity: on ? 1 : 0,
+                    transform: on ? 'none' : 'translateY(12px) scale(0.985)',
+                    boxShadow: on ? T.shadow : 'none',
+                    borderRadius: T.r,
+                    transition:
+                      'opacity .5s cubic-bezier(.32,.72,0,1), transform .5s cubic-bezier(.32,.72,0,1)',
+                    '@media (prefers-reduced-motion: reduce)': { transition: 'opacity .01ms' },
+                  }}
+                >
+                  <Artifact turn={turn} fill />
+                </Box>
+              );
+            })}
+          </Box>
+
+          {/* Where you are in the thread. */}
+          <Box sx={{ display: 'flex', gap: '6px', mt: '18px' }}>
+            {thread.turns.map((turn, i) => (
+              <Box
+                key={turn.ask}
+                sx={{
+                  height: '2px',
+                  flex: 1,
+                  borderRadius: '1px',
+                  backgroundColor: i === active ? T.brand : T.line2,
+                  transition: 'background-color .4s ease',
+                }}
+              />
+            ))}
+          </Box>
         </Box>
       </Box>
-    </Reveal>
+
+      {/* What the thread was for. The one other place orange appears. */}
+      <Box
+        sx={{
+          mt: { xs: '30px', md: '34px' },
+          ml: { xs: '22px', md: '38px' },
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: { xs: '10px', md: '16px' },
+          flexWrap: 'wrap',
+          pt: '20px',
+          borderTop: `1px solid ${T.line}`,
+        }}
+      >
+        <Box
+          aria-hidden="true"
+          sx={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: T.brand, alignSelf: 'center' }}
+        />
+        <Typography sx={{ fontSize: '17px', fontWeight: 600, letterSpacing: '-0.02em', color: T.fg }}>
+          {thread.result}
+        </Typography>
+        <Typography sx={{ fontSize: '14.5px', color: T.fg2 }}>{thread.resultNote}</Typography>
+      </Box>
+    </Box>
   );
 }
 
@@ -908,109 +989,9 @@ function ModeCycle() {
   );
 }
 
-function Rail({ active }) {
-  return (
-    <Box
-      component="nav"
-      aria-label="On this page"
-      sx={{
-        position: 'fixed',
-        left: '24px',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        zIndex: 20,
-        display: { xs: 'none', xl: 'flex' },
-        flexDirection: 'column',
-        gap: '14px',
-      }}
-    >
-      {CHAPTERS.map((c, i) => {
-        const on = active === c.id;
-        return (
-          <Box
-            key={c.id}
-            component="a"
-            href={`#${c.id}`}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              textDecoration: 'none',
-              '&:hover .lbl': { opacity: 1 },
-            }}
-          >
-            <Box
-              sx={{
-                fontFamily: T.mono,
-                fontSize: '10px',
-                letterSpacing: '0.08em',
-                color: on ? T.brand : T.fg3,
-                transition: 'color .2s ease',
-              }}
-            >
-              {String(i + 1).padStart(2, '0')}
-            </Box>
-            <Box
-              sx={{
-                width: on ? '18px' : '8px',
-                height: '1px',
-                backgroundColor: on ? T.brand : T.line2,
-                transition: 'all .2s ease',
-              }}
-            />
-            <Typography
-              className="lbl"
-              sx={{
-                fontFamily: T.mono,
-                fontSize: '10.5px',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                color: on ? T.fg : T.fg3,
-                opacity: on ? 1 : 0,
-                transition: 'opacity .2s ease',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {c.label}
-            </Typography>
-          </Box>
-        );
-      })}
-    </Box>
-  );
-}
-
 /* ------------------------------------------------------------------ */
 
 export default function DocsPage() {
-  const [active, setActive] = React.useState(CHAPTERS[0].id);
-
-  React.useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') return undefined;
-    const seen = new Map();
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => seen.set(e.target.id, e.intersectionRatio));
-        let best = null;
-        let ratio = 0;
-        CHAPTERS.forEach((c) => {
-          const r = seen.get(c.id) || 0;
-          if (r > ratio) {
-            ratio = r;
-            best = c.id;
-          }
-        });
-        if (best) setActive(best);
-      },
-      { rootMargin: '-80px 0px -50% 0px', threshold: [0, 0.15, 0.4, 0.8] }
-    );
-    CHAPTERS.forEach((c) => {
-      const el = document.getElementById(c.id);
-      if (el) io.observe(el);
-    });
-    return () => io.disconnect();
-  }, []);
-
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: T.bg, position: 'relative', overflowX: 'hidden' }}>
       <Head>
@@ -1022,7 +1003,6 @@ export default function DocsPage() {
       </Head>
 
       <PageHeader />
-      <Rail active={active} />
 
       {/* ================= HERO ================= */}
       <Box sx={{ position: 'relative', pt: { xs: '48px', md: '84px' }, pb: { xs: '44px', md: '72px' } }}>
@@ -1100,12 +1080,57 @@ export default function DocsPage() {
       <Section id="uses">
         <Header
           eyebrow="What you can build"
-          title="Three jobs, one subscription."
-          lede="Each of these is one conversation read top to bottom. The chip on the left is the model answering that turn, and it is the only thing that changes."
+          title="Start anywhere. Finish in the same thread."
+          lede="Scroll through any of these and watch one panel fill in. They are single conversations read top to bottom, and the only thing changing is which model answers."
         />
         {THREADS.map((thread) => (
-          <Thread key={thread.n} thread={thread} />
+          <Thread key={thread.tag} thread={thread} />
         ))}
+
+        {/* These are examples, not a menu. Saying so out loud, because three
+            worked examples in a row can read as the whole of what the thing
+            does. */}
+        <Reveal>
+          <Box sx={{ mt: { xs: '48px', md: '84px' }, pt: { xs: '28px', md: '36px' }, borderTop: `1px solid ${T.line}` }}>
+            <Typography
+              sx={{
+                fontSize: { xs: '19px', md: '24px' },
+                lineHeight: 1.45,
+                letterSpacing: '-0.025em',
+                fontWeight: 500,
+                color: T.fg,
+                maxWidth: '34ch',
+                mb: '22px',
+                textWrap: 'balance',
+              }}
+            >
+              None of that is a mode, a template or a plan you pick.
+            </Typography>
+            <Typography sx={{ fontSize: '15.5px', lineHeight: 1.6, color: T.fg2, maxWidth: '58ch', mb: '20px' }}>
+              It is one message box. The same thread takes a lesson plan, a quarterly memo, a
+              dataset nobody has cleaned, a contract in a language you do not read, a codebase you
+              did not write, or the thing you are actually here for.
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {OTHERS.map((o) => (
+                <Box
+                  key={o}
+                  sx={{
+                    px: '12px',
+                    py: '7px',
+                    borderRadius: '999px',
+                    border: `1px solid ${T.line}`,
+                    backgroundColor: T.bg,
+                    fontSize: '13.5px',
+                    color: T.fg2,
+                  }}
+                >
+                  {o}
+                </Box>
+              ))}
+            </Box>
+          </Box>
+        </Reveal>
       </Section>
 
       {/* ================= COMPARISON ================= */}
@@ -1250,45 +1275,6 @@ export default function DocsPage() {
                 acceptable use terms apply on every model here, and what is illegal stays illegal.
               </Typography>
             </Box>
-          </Box>
-        </Reveal>
-      </Section>
-
-      {/* ================= THE PICKER ================= */}
-      <Section id="models" sx={{ backgroundColor: T.surface }}>
-        <Header
-          eyebrow="The picker"
-          title="One control. Everything behind it."
-          lede="Click the model name under the message box. Switching never leaves your conversation."
-        />
-        <Reveal>
-          <Box sx={{ ...TRAY, overflow: 'hidden', mb: { xs: '36px', md: '52px' }, backgroundColor: T.bg }}>
-            <ProductWindow />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <Box sx={{ border: `1px solid ${T.line}`, borderRadius: T.r, backgroundColor: T.bg, overflow: 'hidden' }}>
-            {PICK.map(([when, pick, why], i) => (
-              <Box
-                key={when}
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1.5fr' },
-                  gap: { xs: '4px', md: '20px' },
-                  px: { xs: '16px', md: '24px' },
-                  py: { xs: '16px', md: '18px' },
-                  borderTop: i === 0 ? 'none' : `1px solid ${T.line}`,
-                  alignItems: 'baseline',
-                }}
-              >
-                <Typography sx={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.015em', color: T.fg }}>
-                  {when}
-                </Typography>
-                <Typography sx={{ fontSize: '14.5px', fontWeight: 600, color: T.brand }}>{pick}</Typography>
-                <Typography sx={{ fontSize: '14px', lineHeight: 1.55, color: T.fg2 }}>{why}</Typography>
-              </Box>
-            ))}
           </Box>
         </Reveal>
       </Section>
