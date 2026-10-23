@@ -751,133 +751,173 @@ function Artifact({ turn, fill }) {
 
 /* The shape every example below has in common, said once before any of them
    start. All three are the same three moves, and the middle one is the whole
-   product: the model changes and the conversation does not. The modalities
-   hang off the first move, because that is the moment they matter, when you
-   have not yet had to decide which tool this job belongs to. */
+   product: the model changes and the conversation does not.
+ *
+ * Drawn rather than written. The first pass gave each move a heading and a
+ * sentence and a set of chips, which is three paragraphs in a row with a
+ * rule over them, and reads as more to get through rather than as the shape
+ * of what follows. A flow is a line, some stations and a direction, so this
+ * is a line, three stations and two arrowheads, and each station is allowed
+ * one short line underneath it. If a step needs a paragraph it belongs in
+ * the examples, which is where the paragraphs are.
+ */
+const STATION_H = 46;
+
 const FLOW = [
   {
     n: '01',
     label: 'Ask',
-    title: 'One box, whatever you are making.',
-    body: 'Type it. There is no mode to choose first and no account to make.',
+    body: 'One box, and no mode to choose first.',
     chips: ['Text', 'Image', 'Video', 'Code'],
   },
-  {
-    n: '02',
-    label: 'Build on it',
-    title: 'Change the model, not the thread.',
-    body: 'The next model already has everything said so far, so nothing gets described twice.',
-  },
-  {
-    n: '03',
-    label: 'Finish it',
-    title: 'The film, the feature, the answer.',
-    body: 'Finished work, and nothing left on our side once you close the tab.',
-  },
+  { n: '02', label: 'Build on it', body: 'Switch models without starting over.' },
+  { n: '03', label: 'Finish it', body: 'Take the work. Nothing is kept.' },
 ];
 
 function Flow() {
   return (
     <Reveal>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-          gap: { xs: '0px', md: '48px' },
-          mt: { xs: '34px', md: '60px' },
-        }}
-      >
-        {FLOW.map((step, i) => (
-          <Box
-            key={step.n}
-            sx={{
-              position: 'relative',
-              borderTop: `1px solid ${T.line}`,
-              pt: { xs: '22px', md: '30px' },
-              pb: { xs: '34px', md: 0 },
-              
-            }}
-          >
-            {/* the node, sitting on the rule, as everywhere else on this page */}
+      <Box sx={{ position: 'relative', mt: { xs: '36px', md: '62px' } }}>
+        {/* The rail, run the whole width and passing behind the stations,
+            which knock it out with their own background. */}
+        <Box
+          aria-hidden="true"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: `${STATION_H / 2}px`,
+            height: '1px',
+            backgroundColor: T.line2,
+          }}
+        />
+
+        <Box
+          sx={{
+            position: 'relative',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+            gap: { xs: '34px', md: '40px' },
+          }}
+        >
+          {FLOW.map((step, i) => (
             <Box
-              aria-hidden="true"
+              key={step.n}
               sx={{
-                position: 'absolute',
-                left: 0,
-                top: '-4px',
-                width: '7px',
-                height: '7px',
-                borderRadius: '50%',
-                border: `1px solid ${T.line2}`,
-                backgroundColor: T.bg,
-              }}
-            />
-            {/* and the direction, in the gap between two rules */}
-            {i > 0 && (
-              <Box
-                aria-hidden="true"
-                sx={{
-                  display: { xs: 'none', md: 'block' },
-                  position: 'absolute',
-                  left: '-22px',
-                  top: '-9px',
-                  fontFamily: T.mono,
-                  fontSize: '12px',
-                  lineHeight: 1,
-                  color: T.fg3,
-                }}
-              >
-                →
-              </Box>
-            )}
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mb: '20px' }}>
-              <Mono sx={{ color: T.brand }}>{step.n}</Mono>
-              <Mono>{step.label}</Mono>
-            </Box>
-
-            <Typography
-              sx={{
-                fontSize: { xs: '18px', md: '20px' },
-                lineHeight: 1.35,
-                letterSpacing: '-0.022em',
-                fontWeight: 600,
-                color: T.fg,
-                mb: '14px',
-                maxWidth: '22ch',
-                textWrap: 'balance',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: { xs: 'flex-start', md: 'center' },
+                textAlign: { md: 'center' },
               }}
             >
-              {step.title}
-            </Typography>
-            <Typography sx={{ fontSize: '14.5px', lineHeight: 1.65, color: T.fg2, maxWidth: '32ch' }}>
-              {step.body}
-            </Typography>
-
-            {step.chips && (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '7px', mt: '24px' }}>
-                {step.chips.map((c) => (
-                  <Box
-                    key={c}
-                    sx={{
-                      px: '9px',
-                      py: '5px',
-                      borderRadius: '6px',
-                      backgroundColor: T.surface2,
-                      fontFamily: T.mono,
-                      fontSize: '10px',
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      color: T.fg2,
-                    }}
-                  >
-                    {c}
+              {/* the direction, centred in the gap and sitting on the rail */}
+              {i > 0 && (
+                <Box
+                  aria-hidden="true"
+                  sx={{
+                    position: 'absolute',
+                    left: { md: '-20px' },
+                    top: { xs: '-19px', md: `${STATION_H / 2}px` },
+                    transform: { xs: 'translateX(0)', md: 'translate(-50%, -50%)' },
+                    px: { md: '7px' },
+                    backgroundColor: T.bg,
+                    fontFamily: T.mono,
+                    fontSize: '13px',
+                    color: T.fg3,
+                    /* A glyph does not sit centred in its own line box, so
+                       the arrow landed a few pixels under the rail. Giving
+                       the box a height and centring the glyph inside it puts
+                       the transform on something predictable. */
+                    height: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
+                    →
                   </Box>
-                ))}
+                  <Box component="span" sx={{ display: { xs: 'inline', md: 'none' } }}>
+                    ↓
+                  </Box>
+                </Box>
+              )}
+
+              {/* the station */}
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '11px',
+                  height: `${STATION_H}px`,
+                  px: '20px',
+                  borderRadius: '999px',
+                  border: `1px solid ${T.line2}`,
+                  backgroundColor: T.bg,
+                }}
+              >
+                <Mono sx={{ color: T.brand, fontSize: '10.5px' }}>{step.n}</Mono>
+                <Typography
+                  sx={{
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    letterSpacing: '-0.018em',
+                    color: T.fg,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {step.label}
+                </Typography>
               </Box>
-            )}
-          </Box>
-        ))}
+
+              <Typography
+                sx={{
+                  mt: '20px',
+                  fontSize: '14.5px',
+                  lineHeight: 1.6,
+                  color: T.fg2,
+                  maxWidth: '28ch',
+                  textWrap: 'pretty',
+                }}
+              >
+                {step.body}
+              </Typography>
+
+              {step.chips && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '7px',
+                    mt: '16px',
+                    justifyContent: { md: 'center' },
+                  }}
+                >
+                  {step.chips.map((c) => (
+                    <Box
+                      key={c}
+                      sx={{
+                        px: '9px',
+                        py: '5px',
+                        borderRadius: '6px',
+                        backgroundColor: T.surface2,
+                        fontFamily: T.mono,
+                        fontSize: '10px',
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase',
+                        color: T.fg2,
+                      }}
+                    >
+                      {c}
+                    </Box>
+                  ))}
+                </Box>
+              )}
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Reveal>
   );
