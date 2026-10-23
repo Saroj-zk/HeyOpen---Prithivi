@@ -278,13 +278,6 @@ const COMPARE = [
   ['Every month', '$165', '$20'],
 ];
 
-const PRIVACY = [
-  ['Start with no account', 'No email, no name, nothing connecting the session to you.'],
-  ['Prompts are not kept', 'We record that a request happened so we can bill and stop abuse. Not what was in it.'],
-  ['Memory never leaves your browser', 'No server copy to leak, subpoena or restore.'],
-  ['Hardware isolation where it matters', 'Models marked TEE run in an enclave. The picker shows which.'],
-];
-
 /* Other things the same message box handles. Deliberately mundane and
    deliberately unalike, because the point is that there is no list. */
 const OTHERS = [
@@ -356,44 +349,56 @@ const THREADS = [
   },
   {
     tag: 'Building on it',
-    title: 'An app on every model at once.',
+    title: 'Nine thousand listings, by Friday.',
     body:
-      'An OpenAI compatible endpoint. Change the base URL and the integration you already wrote reaches the whole catalogue.',
+      'An OpenAI compatible endpoint, so this is the integration you have already written. What changes is that one key now reaches text, images and voice, and picks a model per request.',
     turns: [
       {
-        mode: 'Shell',
-        ask: 'Give me a key.',
-        note: 'One key reaches every model. There is no second integration later.',
-        kind: 'code',
-        lines: [{ t: '$ openledger keys create' }, { t: 'sk-ol-7f2c...9a41', hot: true }],
-      },
-      {
         mode: 'Code',
-        ask: 'Point my client at it.',
-        note: 'One line changes. The rest of your code does not know anything happened.',
-        kind: 'code',
-        lines: [{ t: 'new OpenAI({' }, { t: '  baseURL: ".../v1"', hot: true }, { t: '})' }],
-      },
-      {
-        mode: 'Code',
-        ask: 'Stop cheap requests hitting expensive models.',
-        note: 'Set auto and each request is routed on what it actually needs.',
-        kind: 'code',
-        lines: [{ t: 'model: "auto"', hot: true }, { t: 'messages: [...]' }],
-      },
-      {
-        mode: 'Response',
-        ask: 'What did that cost?',
-        note: 'Every response says which model served it and what it came to.',
+        ask: 'Point the client you already have at us.',
+        note: 'A base URL and a key. Nothing else in the application changes.',
         kind: 'code',
         lines: [
-          { t: '200 OK', hot: true },
-          { t: 'served_by: claude-opus-5' },
-          { t: 'cost: $0.0021' },
+          { t: 'new OpenAI({' },
+          { t: '  baseURL: ".../v1",', hot: true },
+          { t: '  apiKey: OPENLEDGER_KEY' },
+          { t: '})' },
+        ],
+      },
+      {
+        mode: 'Batch',
+        ask: 'Write the copy for every listing that has none.',
+        note: 'Set the model to auto and each request lands on the cheapest one that can do it.',
+        kind: 'table',
+        cols: ['SKU', 'Generated'],
+        rows: [
+          ['AW-2291', 'Knit runner, bone white'],
+          ['AW-2292', 'Trail shell, taped seams'],
+          ['AW-2293', 'Merino crew, charcoal'],
+        ],
+        meta: '9,412 listings  ·  auto routed',
+      },
+      {
+        mode: 'Image',
+        ask: 'And shoot the ones with no photography.',
+        note: 'Same key, same account. A second modality is not a second integration.',
+        kind: 'image',
+        img: '/images/imagine_sneaker.jpg',
+      },
+      {
+        mode: 'Ledger',
+        ask: 'How much of this do I now maintain?',
+        note: 'Every response names the model that served it, so swapping one is a config change.',
+        kind: 'receipt',
+        rows: [
+          ['requests', '9,412', false],
+          ['models used', '3', false],
+          ['integrations', '1', true],
+          ['code changed', 'one line', false],
         ],
       },
     ],
-    result: 'One integration, every model.',
+    result: 'A feature in production, on one key.',
     resultNote: 'Adding a model later is a string change, not a sprint.',
   },
   {
@@ -578,6 +583,56 @@ function Artifact({ turn, fill }) {
             </Box>
           </Box>
         ))}
+      </Box>
+    );
+  }
+
+  if (turn.kind === 'table') {
+    return (
+      <Box
+        sx={{
+          ...art(fill),
+          backgroundColor: T.bg,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          px: { xs: '18px', md: '26px' },
+          py: '20px',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'auto 1fr',
+            gap: '10px 20px',
+            pb: '10px',
+            borderBottom: `1px solid ${T.line}`,
+          }}
+        >
+          {turn.cols.map((c) => (
+            <Mono key={c} sx={{ fontSize: '9.5px' }}>
+              {c}
+            </Mono>
+          ))}
+        </Box>
+        {turn.rows.map(([sku, copy]) => (
+          <Box
+            key={sku}
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'auto 1fr',
+              gap: '10px 20px',
+              py: '10px',
+              borderBottom: `1px solid ${T.line}`,
+            }}
+          >
+            <Typography sx={{ fontFamily: T.mono, fontSize: '11.5px', color: T.fg3 }}>{sku}</Typography>
+            <Typography sx={{ fontSize: '13px', color: T.fg, lineHeight: 1.3 }}>{copy}</Typography>
+          </Box>
+        ))}
+        <Mono sx={{ mt: '12px', fontSize: '10px', textTransform: 'none', letterSpacing: '0.03em' }}>
+          {turn.meta}
+        </Mono>
       </Box>
     );
   }
@@ -1200,86 +1255,6 @@ export default function DocsPage() {
                 </Typography>
               </Box>
             ))}
-          </Box>
-        </Reveal>
-      </Section>
-
-      {/* ================= PRIVATE ================= */}
-      <Section id="private">
-        <Header
-          eyebrow="Private and uncensored"
-          title="The two things we will not trade away."
-          lede="Most of this industry treats both as features to switch on later. They are the reason this exists."
-        />
-        <Reveal>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1.15fr 1fr' },
-              gap: { xs: '32px', md: '56px' },
-              alignItems: 'start',
-            }}
-          >
-            <Box>
-              {PRIVACY.map(([t, d], i) => (
-                <Box
-                  key={t}
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'auto 1fr',
-                    gap: '16px',
-                    py: '18px',
-                    borderTop: i === 0 ? 'none' : `1px solid ${T.line}`,
-                  }}
-                >
-                  <Mono sx={{ color: T.brand, pt: '3px' }}>{String(i + 1).padStart(2, '0')}</Mono>
-                  <Box>
-                    <Typography
-                      sx={{
-                        fontSize: '17px',
-                        fontWeight: 600,
-                        letterSpacing: '-0.02em',
-                        color: T.fg,
-                        mb: '6px',
-                      }}
-                    >
-                      {t}
-                    </Typography>
-                    <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg2 }}>{d}</Typography>
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-
-            <Box
-              sx={{
-                borderRadius: T.r,
-                backgroundColor: T.ink,
-                p: { xs: '22px', md: '28px' },
-              }}
-            >
-              <Mono sx={{ color: 'rgba(255,255,255,.4)' }}>Uncensored means</Mono>
-              <Typography
-                sx={{
-                  mt: '16px',
-                  fontSize: { xs: '17px', md: '19px' },
-                  lineHeight: 1.5,
-                  color: '#FFFFFF',
-                  letterSpacing: '-0.02em',
-                  textWrap: 'pretty',
-                }}
-              >
-                A screenplay about addiction. A security write up with working exploit code. A
-                medical question you would rather not have attached to your name.
-              </Typography>
-              <Typography
-                sx={{ mt: '16px', fontSize: '14.5px', lineHeight: 1.6, color: 'rgba(255,255,255,.58)' }}
-              >
-                Mainstream assistants refuse all three, and none of them are unreasonable to ask.
-                Models marked uncensored refuse less. That describes the model, not permission: the
-                acceptable use terms apply on every model here, and what is illegal stays illegal.
-              </Typography>
-            </Box>
           </Box>
         </Reveal>
       </Section>
