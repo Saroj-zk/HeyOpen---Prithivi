@@ -992,8 +992,13 @@ function ModeCycle() {
 /* ------------------------------------------------------------------ */
 
 export default function DocsPage() {
+  /* clip, not hidden, on the wrapper below. Setting one axis to hidden
+     resolves the other to auto, which makes the element a scroll container,
+     and the stack in the examples then pins to that box rather than to the
+     viewport, so it never appears to pin at all. clip stops the sideways
+     scroll without becoming a scroll container. */
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: T.bg, position: 'relative', overflowX: 'hidden' }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: T.bg, position: 'relative', overflowX: 'clip' }}>
       <Head>
         <title>What You Can Build With Hey Open | Hey Open</title>
         <meta
