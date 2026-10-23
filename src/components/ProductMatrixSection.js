@@ -374,7 +374,11 @@ export default function ProductMatrixSection() {
                     position: 'absolute', inset: 0,
                     opacity: activeIdx === idx ? 1 : 0,
                     transition: 'opacity 0.6s ease',
-                    pointerEvents: activeIdx === idx ? 'auto' : 'none'
+                    pointerEvents: activeIdx === idx ? 'auto' : 'none',
+                    /* A clip that has not arrived yet leaves an empty element.
+                       Without this the tile is a hole in the section rather
+                       than a panel waiting to fill. */
+                    backgroundColor: 'var(--bg-card-active)',
                   }}
                 >
                   {opt.demo ? (

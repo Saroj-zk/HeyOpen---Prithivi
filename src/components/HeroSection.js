@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import HeroChatBox from './HeroChatBox';
-import SuggestionChips from './SuggestionChips';
 import TrustBadges from './TrustBadges';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
@@ -33,29 +32,20 @@ export default function HeroSection() {
         { y: 25, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.9 }
       )
-        .fromTo(
-          '#hero-subtitle',
-          { y: 18, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.75 },
-          '-=0.5'
-        )
+        /* There is no subtitle element in this hero, and SuggestionChips is
+           not rendered here, so the tweens for both are gone rather than
+           firing at nothing. */
         .fromTo(
           '#hero-chat-container',
           { y: 24, opacity: 0, scale: 0.98 },
           { y: 0, opacity: 1, scale: 1, duration: 0.85 },
-          '-=0.45'
-        )
-        .fromTo(
-          '#hero-suggestion-chips button',
-          { y: 12, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.06, duration: 0.6 },
-          '-=0.45'
+          '-=0.5'
         )
         .fromTo(
           '#hero-trust-badges',
           { y: 15, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.75 },
-          '-=0.35'
+          '-=0.45'
         );
 
       // Scroll-driven bottom curve: curves inward as hero scrolls off, then flattens back
@@ -173,11 +163,14 @@ export default function HeroSection() {
           </Typography>
         </Box>
 
-        {/* Interactive Chat Box matching openledger_chat */}
-        <HeroChatBox
-          prompt={prompt}
-          setPrompt={setPrompt}
-        />
+        {/* Interactive Chat Box matching openledger_chat. The id is what
+            the intro timeline animates. */}
+        <Box id="hero-chat-container">
+          <HeroChatBox
+            prompt={prompt}
+            setPrompt={setPrompt}
+          />
+        </Box>
       </Container>
 
       {/* Backdrop switch. Small, in the corner, and it does something. */}
@@ -229,7 +222,9 @@ export default function HeroSection() {
       </Box>
 
       {/* Trust Badges */}
-      <TrustBadges />
+      <Box id="hero-trust-badges">
+        <TrustBadges />
+      </Box>
 
       {/* Dynamic Curved Bottom Divider - Curves inwards on scroll and flattens back */}
       <Box
