@@ -32,9 +32,8 @@ export default function HeroSection() {
         { y: 25, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.9 }
       )
-        /* There is no subtitle element in this hero, and SuggestionChips is
-           not rendered here, so the tweens for both are gone rather than
-           firing at nothing. */
+        /* There is no subtitle element in this hero, so that tween is gone
+           rather than firing at nothing. */
         .fromTo(
           '#hero-chat-container',
           { y: 24, opacity: 0, scale: 0.98 },
@@ -42,10 +41,16 @@ export default function HeroSection() {
           '-=0.5'
         )
         .fromTo(
+          '#hero-suggestion-chips button',
+          { y: 12, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, stagger: 0.06 },
+          '-=0.45'
+        )
+        .fromTo(
           '#hero-trust-badges',
           { y: 15, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.75 },
-          '-=0.45'
+          '-=0.3'
         );
 
       // Scroll-driven bottom curve: curves inward as hero scrolls off, then flattens back
