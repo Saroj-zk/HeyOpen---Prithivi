@@ -246,15 +246,14 @@ export default function WhyAskMultipleModelsSection() {
                 <Typography
                   sx={{
                     fontFamily: '"Fraunces", Georgia, serif',
+                    fontStyle: 'italic',
                     fontWeight: 600,
                     fontSize: { xs: '1.6rem', sm: '2rem', md: '2.25rem' },
                     lineHeight: 1.2,
                     color: C.text,
                   }}
                 >
-                  Ask anything.
-                  <br />
-                  <Box component="span" sx={{ fontStyle: 'italic' }}>Think in the open.</Box>
+                  Hey Open..
                 </Typography>
                 <Typography sx={{ mt: 1.75, fontSize: { xs: '0.85rem', md: '0.92rem' }, lineHeight: 1.6, color: C.textSecondary }}>
                   A private, multi-model AI experience

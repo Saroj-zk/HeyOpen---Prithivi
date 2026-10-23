@@ -595,7 +595,10 @@ export default function CoreFeaturesSection() {
               border: '1px solid var(--border-subtle)',
               boxShadow: 'var(--shadow-card)',
               backgroundColor: 'var(--bg-card)',
-              height: { xs: '440px', sm: '460px', md: '500px' },
+              /* Fixed only where the panels are stacked absolutely. Below
+                 md a single panel is in flow and sets the height itself,
+                 otherwise tall mobile content spills past the border. */
+              height: { xs: 'auto', md: '500px' },
               maxHeight: { md: '56vh' },
             }}
           >
@@ -604,11 +607,13 @@ export default function CoreFeaturesSection() {
                 key={tab.id}
                 ref={(el) => (imageRefs.current[idx] = el)}
                 sx={{
-                  position: 'absolute',
-                  inset: 0,
+                  position: { xs: 'static', md: 'absolute' },
+                  inset: { md: 0 },
                   width: '100%',
-                  height: '100%',
-                  display: 'flex',
+                  height: { xs: 'auto', md: '100%' },
+                  /* Only the active panel exists below md, so the
+                     container can size to it. */
+                  display: { xs: activeTab === idx ? 'flex' : 'none', md: 'flex' },
                   flexDirection: { xs: 'column', md: 'row-reverse' },
                   gap: { xs: 2, md: 4 },
                   p: { xs: 2.2, sm: 3.2, md: 3.8 },

@@ -234,9 +234,8 @@ export default function ProductWindow() {
             {/* The headline steps back while the picker is up, as it does in
                 the app, rather than showing through it. */}
             <Box ref={headRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Typography sx={{ fontFamily: '"Fraunces", Georgia, serif', fontWeight: 500, fontSize: { xs: '1.5rem', sm: '2rem', md: '2.6rem' }, lineHeight: 1.18, color: D.ink, textAlign: 'center' }}>
-                Ask anything.
-                <Box component="span" sx={{ display: 'block', fontStyle: 'italic' }}>Think in the open.</Box>
+              <Typography sx={{ fontFamily: '"Fraunces", Georgia, serif', fontStyle: 'italic', fontWeight: 500, fontSize: { xs: '1.5rem', sm: '2rem', md: '2.6rem' }, lineHeight: 1.18, color: D.ink, textAlign: 'center' }}>
+                Hey Open..
               </Typography>
               <Typography sx={{ mt: { xs: 1.2, md: 1.8 }, fontSize: { xs: 11, md: 13.5 }, lineHeight: 1.6, color: D.inkMuted, textAlign: 'center', maxWidth: 360 }}>
                 A private, multi-model AI experience with no account required to start.

@@ -127,11 +127,23 @@ export default function PricingSection() {
 
         {/* HERO HEADER */}
         <Box ref={headRef} sx={{ textAlign: 'center', mb: { xs: 8, md: 10 }, ...revealSx(headShown) }}>
-          <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem', lg: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: primaryText, mb: 2 }}>
-            One Subscription.<br />All your go-to AI models.
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em', color: '#ff6600', textTransform: 'uppercase', mb: 2 }}>
+            One bill
           </Typography>
-          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 650, mx: 'auto', lineHeight: 1.6 }}>
-            Get the models you use in one place, under one subscription.
+          <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem', lg: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: primaryText, mb: 2.5, textWrap: 'balance' }}>
+            Stop paying for{' '}
+            <Box component="span" sx={{ color: '#ff6600' }}>every AI separately.</Box>
+          </Typography>
+          {/* The figures are the ones the cards below show: eight of them at
+              $165 the hard way against $20 here. $20 is what ChatGPT Plus,
+              Claude Pro, Gemini Pro and Perplexity Pro each ask on their own,
+              which is the comparison being drawn. It does not claim to undercut
+              the cheapest, since Copilot is $10 and Runway $15. */}
+          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 660, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
+            Separate subscriptions to ChatGPT, Claude, Gemini and the rest come to{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
+            All of them, and 200+ more, cost{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here.
           </Typography>
         </Box>
 
@@ -211,7 +223,7 @@ export default function PricingSection() {
                   Total
                 </Typography>
                 <Typography sx={{ fontSize: '2.8rem', fontWeight: 800, color: mutedText, lineHeight: 1 }}>
-                  $120+
+                  $165
                 </Typography>
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 600, color: mutedText }}>
                   /mo
@@ -354,7 +366,7 @@ export default function PricingSection() {
                       / mo
                     </Typography>
                     <Typography sx={{ ml: 'auto', fontSize: '1rem', fontWeight: 700, color: 'var(--text-muted)', textDecoration: 'line-through', opacity: 0.5 }}>
-                      $120
+                      $165
                     </Typography>
                   </Box>
 

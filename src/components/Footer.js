@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { useThemeMode } from '@/context/ThemeContext';
 
 // Social SVGs for accurate official branding
@@ -20,59 +19,52 @@ const SocialIcons = {
       <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.093.252-.19.372-.287a.075.075 0 0 1 .077-.01c3.931 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.194.373.287a.077.077 0 0 1-.007.128 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
     </svg>
   ),
-  GitHub: () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-      />
-    </svg>
-  ),
-  Bluesky: () => (
+  Telegram: () => (
     <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566 1.01 1.5 1.762 1.5 4.502c0 2.213.626 9.489 1.012 10.895.967 3.52 4.457 4.437 7.075 2.25-2.226 2.059-4.834 3.738-3.087 5.433 3.328 3.228 5.5-1.08 5.5-1.08s2.172 4.308 5.5 1.08c1.747-1.695-.861-3.374-3.087-5.433 2.618 2.187 6.108 1.27 7.075-2.25.386-1.406 1.012-8.682 1.012-10.895 0-2.74-1.066-3.492-3.702-1.697-2.752 1.942-5.711 5.881-6.798 7.995z" />
+      <path d="M21.94 4.3 18.9 19.1c-.23 1.02-.84 1.27-1.7.79l-4.7-3.46-2.27 2.18c-.25.25-.46.46-.95.46l.34-4.8 8.74-7.9c.38-.34-.08-.53-.59-.19l-10.8 6.8-4.65-1.46c-1.01-.32-1.03-1.01.21-1.5l18.2-7.01c.84-.31 1.58.2 1.21 1.29z" />
     </svg>
   ),
 };
 
+/* Only destinations that exist. Anchors are written against the home page
+   rather than bare, because this footer renders on every route and a bare
+   #pricing resolves to nothing on a subpage. */
 const FOOTER_COLUMNS = [
   {
     title: 'Product',
     links: [
       { label: 'Chat', href: 'https://ais.openledger.xyz/chat', external: true },
+      { label: 'Product guide', href: '/docs' },
       { label: 'Models', href: '/models' },
-      { label: 'Consensus Mode', href: '#consensus-mode' },
-      { label: 'iOS app', href: '#' },
-      { label: 'Android app', href: '#' },
-      { label: 'Pricing', href: '#pricing' },
+      { label: 'Consensus Mode', href: '/#consensus-mode' },
+      { label: 'Universal Memory', href: '/memory' },
+      { label: 'Private AI', href: '/private' },
     ],
   },
   {
-    title: 'Developers',
+    title: 'Platform',
     links: [
-      { label: 'API reference', href: '#api' },
-      { label: 'Quickstart', href: '#api' },
-      { label: 'Model IDs', href: '/models' },
-      { label: 'Status', href: '#' },
-      { label: 'Documentation', href: '#' },
+      { label: 'Pricing', href: '/#pricing' },
+      { label: 'API', href: '/#api' },
+      { label: 'Token', href: '/token' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms and Conditions', href: '/terms' },
     ],
   },
 ];
 
-const COMPANY_LINKS = [
-  { label: 'About', href: '#' },
-  { label: '$OPEN token', href: '#' },
-  { label: 'Blog', href: '#' },
-  { label: 'Careers', href: '#' },
-  { label: 'Contact', href: '#' },
-];
+
 
 const SOCIAL_PLATFORMS = [
   { name: 'X', icon: SocialIcons.X, href: 'https://x.com/openledger' },
   { name: 'Discord', icon: SocialIcons.Discord, href: 'https://discord.gg/openledger' },
-  { name: 'GitHub', icon: SocialIcons.GitHub, href: 'https://github.com/openledger' },
-  { name: 'Bluesky', icon: SocialIcons.Bluesky, href: 'https://bsky.app/profile/openledger.xyz' },
+  /* Address to follow. Left on '#' deliberately until there is one. */
+  { name: 'Telegram', icon: SocialIcons.Telegram, href: '#' },
 ];
 
 export default function Footer({ showCta = false }) {
@@ -314,21 +306,25 @@ export default function Footer({ showCta = false }) {
           sx={{
             display: 'grid',
             gridTemplateColumns: {
-              xs: '1fr',
+              xs: '1fr 1fr',
               sm: '1fr 1fr',
-              md: '1.4fr 0.9fr 0.9fr 1.6fr',
+              md: 'repeat(3, 1fr)',
+              lg: '1.5fr 0.9fr 0.9fr 1fr 1.2fr',
             },
-            gap: { xs: 5, sm: 6, md: 5, lg: 6 },
+            columnGap: { xs: 3, sm: 4, md: 4, lg: 5 },
+            rowGap: { xs: 4.5, sm: 7 },
             pt: 2,
             pb: { xs: 6, md: 8 },
           }}
         >
-          {/* COLUMN 1: Brand, Description, & Social Icon Boxes */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          {/* COLUMN 1: Brand, Description, & Social Icon Boxes.
+              Spans both phone columns; the tagline and the social row need
+              the width, and the link groups sit two up underneath. */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gridColumn: { xs: '1 / -1', sm: 'auto' } }}>
             {/* Logo */}
             <Box
               component="a"
-              href="#"
+              href="/"
               onClick={(e) => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -358,8 +354,8 @@ export default function Footer({ showCta = false }) {
                 fontSize: '0.92rem',
                 lineHeight: 1.65,
                 color: 'var(--text-secondary)',
-                maxWidth: '320px',
-                mb: 3.5,
+                maxWidth: '34ch',
+                mb: 3,
               }}
             >
               One private layer for every model. Chat anywhere, keep your memory, leave no trace.
@@ -399,209 +395,145 @@ export default function Footer({ showCta = false }) {
                 );
               })}
             </Box>
+
           </Box>
 
-          {/* COLUMN 2: Product Links */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              sx={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                mb: 2.5,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Product
-            </Typography>
-            <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 1.8 }}>
-              {FOOTER_COLUMNS[0].links.map((link) => (
-                <Box component="li" key={link.label}>
-                  <Box
-                    component="a"
-                    href={link.href}
-                    target={link.external ? '_blank' : undefined}
-                    rel={link.external ? 'noopener noreferrer' : undefined}
-                    sx={{
-                      fontSize: '0.92rem',
-                      color: 'var(--text-secondary)',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease, transform 0.2s ease',
-                      display: 'inline-block',
-                      '&:hover': {
-                        color: isDark ? '#FFFFFF' : '#0F172A',
-                        transform: 'translateX(2px)',
-                      },
-                    }}
-                  >
-                    {link.label}
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          </Box>
-
-          {/* COLUMN 3: Developers Links */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              sx={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                mb: 2.5,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Developers
-            </Typography>
-            <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 1.8 }}>
-              {FOOTER_COLUMNS[1].links.map((link) => (
-                <Box component="li" key={link.label}>
-                  <Box
-                    component="a"
-                    href={link.href}
-                    sx={{
-                      fontSize: '0.92rem',
-                      color: 'var(--text-secondary)',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease, transform 0.2s ease',
-                      display: 'inline-block',
-                      '&:hover': {
-                        color: isDark ? '#FFFFFF' : '#0F172A',
-                        transform: 'translateX(2px)',
-                      },
-                    }}
-                  >
-                    {link.label}
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          </Box>
-
-          {/* COLUMN 4: Company Info & Newsletter Subscription (Image 1 style) */}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography
-              sx={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                mb: 2,
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Company
-            </Typography>
-
-            <Typography
-              sx={{
-                fontSize: '0.92rem',
-                lineHeight: 1.65,
-                color: 'var(--text-secondary)',
-                mb: 2,
-              }}
-            >
-              Helping teams and developers orchestrate multiple frontier models with total privacy and zero retention.
-            </Typography>
-
-            {/* Quick company links */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px 16px', mb: 3 }}>
-              {COMPANY_LINKS.map((item) => (
-                <Box
-                  component="a"
-                  key={item.label}
-                  href={item.href}
-                  sx={{
-                    fontSize: '0.85rem',
-                    color: 'var(--text-muted)',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s ease',
-                    '&:hover': {
-                      color: '#FF6600',
-                    },
-                  }}
-                >
-                  {item.label}
-                </Box>
-              ))}
-            </Box>
-
-            {/* Newsletter Pill Input Bar matching Image 1 */}
+          {/* THE LINK COLUMNS: Product, Developers, Legal. Rendered from the
+              data rather than by index, so a new column is a new entry. */}
+          {FOOTER_COLUMNS.map((col, i) => (
             <Box
-              component="form"
-              onSubmit={handleSubscribe}
+              key={col.title}
               sx={{
-                position: 'relative',
                 display: 'flex',
-                alignItems: 'center',
-                backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
-                borderRadius: '9999px',
-                p: '5px',
-                pl: 2.2,
-                border: '1px solid',
-                borderColor: isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(0, 0, 0, 0.12)',
-                boxShadow: isDark
-                  ? 'inset 0 1px 2px rgba(0, 0, 0, 0.4)'
-                  : '0 2px 8px rgba(0, 0, 0, 0.05)',
-                transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-                '&:focus-within': {
-                  borderColor: '#FF6600',
-                  boxShadow: '0 0 0 3px rgba(255, 102, 0, 0.18)',
-                },
+                flexDirection: 'column',
+                /* Two up on phones. The first group is the long one, so
+                   anything after the second rides up into column two rather
+                   than starting a row with an empty half beside it. */
+                gridColumn: { xs: i >= 2 ? 2 : 'auto', sm: 'auto' },
               }}
             >
-              <input
+              <Typography
+                sx={{
+                  fontSize: '0.95rem',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  mb: 2.5,
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                {col.title}
+              </Typography>
+              <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, display: 'flex', flexDirection: 'column', gap: 1.8 }}>
+                {col.links.map((link) => (
+                  <Box component="li" key={link.label}>
+                    <Box
+                      component="a"
+                      href={link.href}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noopener noreferrer' : undefined}
+                      sx={{
+                        fontSize: '0.92rem',
+                        color: 'var(--text-secondary)',
+                        textDecoration: 'none',
+                        transition: 'color 0.2s ease, transform 0.2s ease',
+                        display: 'inline-block',
+                        '&:hover': {
+                          color: isDark ? '#FFFFFF' : '#0F172A',
+                          transform: 'translateX(2px)',
+                        },
+                      }}
+                    >
+                      {link.label}
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          ))}
+
+          {/* Its own column rather than wedged under the social row, where it
+              had no air above it and ran wider than everything near it. Full
+              width on phones, because the email field needs it. */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gridColumn: { xs: '1 / -1', sm: 'auto' } }}>
+            <Typography
+              sx={{
+                fontSize: '0.95rem',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                mb: 2.5,
+                letterSpacing: '-0.01em',
+              }}
+            >
+              Keep up
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: '0.9rem',
+                lineHeight: 1.6,
+                color: 'var(--text-secondary)',
+                mb: 2.5,
+                textWrap: 'pretty',
+              }}
+            >
+              New models as they land, and what changes when they do.
+            </Typography>
+            {/* Stacked. The button was a heavy black pill squeezed inside a
+                pill, overrunning the field it sat in. Field, then button. */}
+            <Box component="form" onSubmit={handleSubscribe} sx={{ display: 'flex', flexDirection: 'column', gap: 1.2 }}>
+              <Box
+                component="input"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
                 required
                 disabled={subscribed}
-                style={{
+                sx={{
                   width: '100%',
-                  background: 'transparent',
-                  border: 'none',
+                  boxSizing: 'border-box',
+                  px: 1.8,
+                  py: 1.3,
+                  borderRadius: '12px',
+                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : '#FFFFFF',
+                  border: '1px solid',
+                  borderColor: 'var(--border-normal)',
                   outline: 'none',
                   fontSize: '0.9rem',
                   fontFamily: 'inherit',
-                  color: isDark ? '#FFFFFF' : '#0F172A',
+                  color: 'var(--text-primary)',
+                  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                  '&::placeholder': { color: 'var(--text-muted)' },
+                  '&:focus': {
+                    borderColor: '#FF6600',
+                    boxShadow: '0 0 0 3px rgba(255, 102, 0, 0.16)',
+                  },
                 }}
               />
-              <Button
+              <Box
+                component="button"
                 type="submit"
-                variant="contained"
                 disabled={subscribed}
-                endIcon={
-                  subscribed ? (
-                    <CheckCircleRoundedIcon sx={{ fontSize: '1rem !important' }} />
-                  ) : (
-                    <ArrowForwardRoundedIcon sx={{ fontSize: '1rem !important' }} />
-                  )
-                }
                 sx={{
-                  backgroundColor: subscribed ? '#10B981' : isDark ? '#FFFFFF' : '#0F172A',
-                  color: subscribed ? '#FFFFFF' : isDark ? '#0A0C10' : '#FFFFFF',
-                  borderRadius: '9999px',
-                  px: 2.8,
-                  py: 1,
-                  fontSize: '0.85rem',
+                  width: '100%',
+                  px: 2,
+                  py: 1.3,
+                  borderRadius: '12px',
+                  border: 'none',
+                  cursor: subscribed ? 'default' : 'pointer',
+                  font: 'inherit',
+                  fontSize: '0.9rem',
                   fontWeight: 700,
-                  whiteSpace: 'nowrap',
-                  textTransform: 'none',
-                  letterSpacing: '0.01em',
-                  boxShadow: 'none',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    backgroundColor: subscribed ? '#10B981' : '#FF6600',
-                    color: '#FFFFFF',
-                    transform: 'none',
-                  },
+                  color: '#FFFFFF',
+                  backgroundColor: subscribed ? '#10B981' : '#FF6600',
+                  transition: 'background-color 0.2s ease',
+                  '&:hover': { backgroundColor: subscribed ? '#10B981' : '#E65C00' },
                 }}
               >
                 {subscribed ? 'Joined' : 'Subscribe'}
-              </Button>
+              </Box>
             </Box>
           </Box>
+
         </Box>
 
         {/* ==============================================================
@@ -633,104 +565,6 @@ export default function Footer({ showCta = false }) {
             © {new Date().getFullYear()} Hey Open. All rights reserved.
           </Typography>
 
-          {/* System routing status dot */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1.2,
-              color: 'var(--text-secondary)',
-              fontSize: '0.85rem',
-              fontWeight: 500,
-            }}
-          >
-            <Box
-              sx={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 10,
-                height: 10,
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%',
-                  backgroundColor: '#10B981',
-                  opacity: 0.75,
-                  animation: 'footerPulse 2s cubic-bezier(0, 0, 0.2, 1) infinite',
-                  '@keyframes footerPulse': {
-                    '0%': { transform: 'scale(0.9)', opacity: 0.8 },
-                    '70%': { transform: 'scale(2.4)', opacity: 0 },
-                    '100%': { transform: 'scale(2.4)', opacity: 0 },
-                  },
-                }}
-              />
-              <Box
-                sx={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
-                  backgroundColor: '#10B981',
-                }}
-              />
-            </Box>
-            <span>All systems routing</span>
-          </Box>
-
-          {/* Legal Links */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              fontSize: '0.85rem',
-              color: 'var(--text-muted)',
-            }}
-          >
-            <Box
-              component="a"
-              href="#"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease',
-                '&:hover': { color: 'var(--text-primary)' },
-              }}
-            >
-              Data Policy
-            </Box>
-            <Box sx={{ opacity: 0.4 }}>|</Box>
-            <Box
-              component="a"
-              href="#"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease',
-                '&:hover': { color: 'var(--text-primary)' },
-              }}
-            >
-              Terms
-            </Box>
-            <Box sx={{ opacity: 0.4 }}>|</Box>
-            <Box
-              component="a"
-              href="#"
-              sx={{
-                color: 'inherit',
-                textDecoration: 'none',
-                transition: 'color 0.2s ease',
-                '&:hover': { color: 'var(--text-primary)' },
-              }}
-            >
-              Privacy Notice
-            </Box>
-          </Box>
         </Box>
       </Container>
     </Box>

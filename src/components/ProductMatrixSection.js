@@ -43,7 +43,7 @@ const OPTIONS = [
     id: 'imagine',
     title: 'Imagine',
     icon: ImageOutlinedIcon,
-    video: '/Videos/AI ecosystem/Imagine.mp4',
+    video: '/Videos/AI ecosystem/Image generation new.mp4',
     overlayEyebrow: 'VISUAL GENERATION',
     overlayTitle: 'State-of-the-art multi-modal\ncreative synthesis.',
   },
@@ -51,7 +51,7 @@ const OPTIONS = [
     id: 'video-gen',
     title: 'Video Gen',
     icon: PlayCircleOutlineRoundedIcon,
-    video: '/Videos/AI ecosystem/Video Gen.mp4',
+    video: '/Videos/AI ecosystem/video gen new.mp4',
     overlayEyebrow: 'VIDEO GENERATION',
     overlayTitle: 'High-fidelity video\nand motion synthesis.',
   },
@@ -374,7 +374,11 @@ export default function ProductMatrixSection() {
                     position: 'absolute', inset: 0,
                     opacity: activeIdx === idx ? 1 : 0,
                     transition: 'opacity 0.6s ease',
-                    pointerEvents: activeIdx === idx ? 'auto' : 'none'
+                    pointerEvents: activeIdx === idx ? 'auto' : 'none',
+                    /* A clip that has not arrived yet leaves an empty element.
+                       Without this the tile is a hole in the section rather
+                       than a panel waiting to fill. */
+                    backgroundColor: 'var(--bg-card-active)',
                   }}
                 >
                   {opt.demo ? (

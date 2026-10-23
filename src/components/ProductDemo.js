@@ -507,10 +507,8 @@ export default function ProductDemo({ flow = 'multimodel', active = true }) {
       <Box sx={{ flex: 1, minHeight: 0, px: { xs: 1.75, sm: 2.25 }, pt: F.header ? 1.5 : { xs: 2, sm: 2.5 }, overflow: 'hidden' }}>
         {!sent && !F.prior ? (
           <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
-            <Typography sx={{ fontFamily: '"Fraunces", Georgia, serif', fontWeight: 600, fontSize: { xs: '1.15rem', sm: '1.4rem' }, lineHeight: 1.2, color: C.text }}>
-              Ask anything.
-              <br />
-              <Box component="span" sx={{ fontStyle: 'italic' }}>Think in the open.</Box>
+            <Typography sx={{ fontFamily: '"Fraunces", Georgia, serif', fontStyle: 'italic', fontWeight: 600, fontSize: { xs: '1.15rem', sm: '1.4rem' }, lineHeight: 1.2, color: C.text }}>
+              Hey Open..
             </Typography>
             <Typography sx={{ mt: 1.2, fontSize: '0.76rem', lineHeight: 1.55, color: C.textSecondary }}>
               A private, multi-model AI experience
