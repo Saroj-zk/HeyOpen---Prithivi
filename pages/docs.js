@@ -753,40 +753,43 @@ function Artifact({ turn, fill }) {
    start. All three are the same three moves, and the middle one is the whole
    product: the model changes and the conversation does not.
  *
- * Drawn rather than written. The first pass gave each move a heading and a
- * sentence and a set of chips, which is three paragraphs in a row with a
- * rule over them, and reads as more to get through rather than as the shape
- * of what follows. A flow is a line, some stations and a direction, so this
- * is a line, three stations and two arrowheads, and each station is allowed
- * one short line underneath it. If a step needs a paragraph it belongs in
- * the examples, which is where the paragraphs are.
+ * Drawn rather than written, and drawn evenly. The previous pass had the
+ * right parts and no rhythm: stations sized to their own labels, so the gaps
+ * between them came out unequal and the arrowheads never sat halfway between
+ * anything; a rail that ran past the outer stations and stopped in mid air;
+ * one caption wrapping while the other two did not; and the modality chips
+ * hanging under the first column alone, which tipped the whole row to the
+ * left. Evenness is most of what makes a diagram look deliberate.
+ *
+ * So: one word per station, which makes the three nearly the same width; the
+ * rail inset to the first and last station rather than to the edges of the
+ * page; arrowheads drawn rather than typed, so they sit on the line; and the
+ * chips moved under the middle, where they belong to the whole flow instead
+ * of to its first third.
  */
 const STATION_H = 46;
 
 const FLOW = [
-  {
-    n: '01',
-    label: 'Ask',
-    body: 'One box, and no mode to choose first.',
-    chips: ['Text', 'Image', 'Video', 'Code'],
-  },
-  { n: '02', label: 'Build on it', body: 'Switch models without starting over.' },
-  { n: '03', label: 'Finish it', body: 'Take the work. Nothing is kept.' },
+  { n: '01', label: 'Ask', body: 'One box, and no mode to pick first.' },
+  { n: '02', label: 'Build', body: 'Switch models without starting over.' },
+  { n: '03', label: 'Finish', body: 'Take the work. Nothing is kept.' },
 ];
+
+const MODES_IN = ['Text', 'Image', 'Video', 'Code'];
 
 function Flow() {
   return (
     <Reveal>
       <Box sx={{ position: 'relative', mt: { xs: '36px', md: '62px' } }}>
-        {/* The rail, run the whole width and passing behind the stations,
-            which knock it out with their own background. */}
+        {/* The rail, running between the first and last station rather than
+            off to the edges, and knocked out by each station's own fill. */}
         <Box
           aria-hidden="true"
           sx={{
             display: { xs: 'none', md: 'block' },
             position: 'absolute',
-            left: 0,
-            right: 0,
+            left: '16.666%',
+            right: '16.666%',
             top: `${STATION_H / 2}px`,
             height: '1px',
             backgroundColor: T.line2,
@@ -798,7 +801,7 @@ function Flow() {
             position: 'relative',
             display: 'grid',
             gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-            gap: { xs: '34px', md: '40px' },
+            gap: { xs: '34px', md: '24px' },
           }}
         >
           {FLOW.map((step, i) => (
@@ -812,37 +815,23 @@ function Flow() {
                 textAlign: { md: 'center' },
               }}
             >
-              {/* the direction, centred in the gap and sitting on the rail */}
+              {/* the direction, drawn so it sits on the line */}
               {i > 0 && (
                 <Box
                   aria-hidden="true"
                   sx={{
                     position: 'absolute',
-                    left: { md: '-20px' },
-                    top: { xs: '-19px', md: `${STATION_H / 2}px` },
-                    transform: { xs: 'translateX(0)', md: 'translate(-50%, -50%)' },
-                    px: { md: '7px' },
-                    backgroundColor: T.bg,
-                    fontFamily: T.mono,
-                    fontSize: '13px',
-                    color: T.fg3,
-                    /* A glyph does not sit centred in its own line box, so
-                       the arrow landed a few pixels under the rail. Giving
-                       the box a height and centring the glyph inside it puts
-                       the transform on something predictable. */
-                    height: '16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    left: { md: '-12px' },
+                    top: { xs: '-20px', md: `${STATION_H / 2}px` },
+                    transform: { md: 'translate(-50%, -50%)' },
+                    width: 0,
+                    height: 0,
+                    borderTop: { xs: `7px solid ${T.fg3}`, md: '5px solid transparent' },
+                    borderBottom: { xs: 'none', md: '5px solid transparent' },
+                    borderLeft: { xs: '5px solid transparent', md: `8px solid ${T.fg3}` },
+                    borderRight: { xs: '5px solid transparent', md: 'none' },
                   }}
-                >
-                  <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
-                    →
-                  </Box>
-                  <Box component="span" sx={{ display: { xs: 'inline', md: 'none' } }}>
-                    ↓
-                  </Box>
-                </Box>
+                />
               )}
 
               {/* the station */}
@@ -852,7 +841,7 @@ function Flow() {
                   alignItems: 'center',
                   gap: '11px',
                   height: `${STATION_H}px`,
-                  px: '20px',
+                  px: '22px',
                   borderRadius: '999px',
                   border: `1px solid ${T.line2}`,
                   backgroundColor: T.bg,
@@ -878,43 +867,42 @@ function Flow() {
                   fontSize: '14.5px',
                   lineHeight: 1.6,
                   color: T.fg2,
-                  maxWidth: '28ch',
                   textWrap: 'pretty',
                 }}
               >
                 {step.body}
               </Typography>
+            </Box>
+          ))}
+        </Box>
 
-              {step.chips && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '7px',
-                    mt: '16px',
-                    justifyContent: { md: 'center' },
-                  }}
-                >
-                  {step.chips.map((c) => (
-                    <Box
-                      key={c}
-                      sx={{
-                        px: '9px',
-                        py: '5px',
-                        borderRadius: '6px',
-                        backgroundColor: T.surface2,
-                        fontFamily: T.mono,
-                        fontSize: '10px',
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        color: T.fg2,
-                      }}
-                    >
-                      {c}
-                    </Box>
-                  ))}
-                </Box>
-              )}
+        {/* What can go in the box. Under the whole flow, not under its first
+            step, because it is true of the thread rather than of one move. */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '7px',
+            mt: { xs: '30px', md: '36px' },
+            justifyContent: { xs: 'flex-start', md: 'center' },
+          }}
+        >
+          {MODES_IN.map((c) => (
+            <Box
+              key={c}
+              sx={{
+                px: '10px',
+                py: '6px',
+                borderRadius: '6px',
+                backgroundColor: T.surface2,
+                fontFamily: T.mono,
+                fontSize: '10px',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: T.fg2,
+              }}
+            >
+              {c}
             </Box>
           ))}
         </Box>
