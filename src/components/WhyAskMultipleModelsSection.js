@@ -252,7 +252,7 @@ export default function WhyAskMultipleModelsSection() {
                     color: C.text,
                   }}
                 >
-                  Hey Open
+                  Hey Open..
                 </Typography>
                 <Typography sx={{ mt: 1.75, fontSize: { xs: '0.85rem', md: '0.92rem' }, lineHeight: 1.6, color: C.textSecondary }}>
                   A private, multi-model AI experience
