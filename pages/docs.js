@@ -278,17 +278,18 @@ const COMPARE = [
   ['Every month', '$165', '$20'],
 ];
 
-/* Other things the same message box handles. Deliberately mundane and
-   deliberately unalike, because the point is that there is no list. */
-const OTHERS = [
-  'Research memo',
-  'Lesson plan',
-  'Pitch deck copy',
-  'Messy spreadsheet',
-  'Legal translation',
-  'Code review',
-  'Podcast edit',
-  'Product photography',
+/* The thread carrying on past the three worked examples. These are whole
+   sentences rather than one word labels, because "Lesson plan" is a category
+   and "Turn the syllabus into twelve lessons" is a thing someone types. The
+   column fades out instead of ending, which makes the point that the list
+   does not stop here without a line of copy claiming so. */
+const OPEN_ENDED = [
+  ['Text', 'Draft the quarterly memo before the board call.'],
+  ['Data', 'Clean this export and tell me what actually changed.'],
+  ['Code', 'Explain the service nobody has touched in two years.'],
+  ['Image', 'Shoot the forty products that have no photography.'],
+  ['Audio', 'Cut the interview down to twenty minutes.'],
+  ['Text', 'Translate the supplier contract and flag what moved.'],
 ];
 
 /* Three worked examples.
@@ -349,9 +350,9 @@ const THREADS = [
   },
   {
     tag: 'Building on it',
-    title: 'Nine thousand listings, by Friday.',
+    title: 'A support agent that knows when to escalate.',
     body:
-      'An OpenAI compatible endpoint, so this is the integration you have already written. What changes is that one key now reaches text, images and voice, and picks a model per request.',
+      'An OpenAI compatible endpoint, so this is the client you have already written. What changes is that one key triages on a cheap model, escalates the hard ones to a strong model, and reads the photo the customer attached.',
     turns: [
       {
         mode: 'Code',
@@ -366,40 +367,40 @@ const THREADS = [
         ],
       },
       {
-        mode: 'Batch',
-        ask: 'Write the copy for every listing that has none.',
-        note: 'Set the model to auto and each request lands on the cheapest one that can do it.',
+        mode: 'Routing',
+        ask: 'Answer the easy tickets on something cheap.',
+        note: 'Set the model to auto. Most of the queue never reaches an expensive model, and the ones that need it still get it.',
         kind: 'table',
-        cols: ['SKU', 'Generated'],
+        cols: ['Ticket', 'Routed to'],
         rows: [
-          ['AW-2291', 'Knit runner, bone white'],
-          ['AW-2292', 'Trail shell, taped seams'],
-          ['AW-2293', 'Merino crew, charcoal'],
+          ['Where is my order', 'haiku 4.5'],
+          ['Refund, box arrived open', 'haiku 4.5'],
+          ['Enterprise SLA, clause 9', 'opus 5'],
         ],
-        meta: '9,412 listings  ·  auto routed',
+        meta: 'auto routed  ·  one escalated',
       },
       {
-        mode: 'Image',
-        ask: 'And shoot the ones with no photography.',
-        note: 'Same key, same account. A second modality is not a second integration.',
+        mode: 'Vision',
+        ask: 'A customer sent a photo asking if this is what they ordered.',
+        note: 'The same key reads images. You did not sign up to a vision provider to get this.',
         kind: 'image',
         img: '/images/imagine_sneaker.jpg',
       },
       {
         mode: 'Ledger',
-        ask: 'How much of this do I now maintain?',
-        note: 'Every response names the model that served it, so swapping one is a config change.',
+        ask: 'And how much of this do I now maintain?',
+        note: 'Every response names the model that served it, so replacing one is config rather than a rewrite.',
         kind: 'receipt',
         rows: [
-          ['requests', '9,412', false],
-          ['models used', '3', false],
+          ['models in use', '3', false],
+          ['vendor accounts', '1', true],
           ['integrations', '1', true],
           ['code changed', 'one line', false],
         ],
       },
     ],
-    result: 'A feature in production, on one key.',
-    resultNote: 'Adding a model later is a string change, not a sprint.',
+    result: 'An agent in production, on one key.',
+    resultNote: 'Swapping or adding a model later is a string change, not a sprint.',
   },
   {
     tag: 'Work you cannot paste elsewhere',
@@ -603,7 +604,7 @@ function Artifact({ turn, fill }) {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'auto 1fr',
+            gridTemplateColumns: '1fr auto',
             gap: '10px 20px',
             pb: '10px',
             borderBottom: `1px solid ${T.line}`,
@@ -615,19 +616,35 @@ function Artifact({ turn, fill }) {
             </Mono>
           ))}
         </Box>
-        {turn.rows.map(([sku, copy]) => (
+        {turn.rows.map(([label, served]) => (
           <Box
-            key={sku}
+            key={label}
             sx={{
               display: 'grid',
-              gridTemplateColumns: 'auto 1fr',
+              gridTemplateColumns: '1fr auto',
               gap: '10px 20px',
-              py: '10px',
+              py: '11px',
+              alignItems: 'center',
               borderBottom: `1px solid ${T.line}`,
             }}
           >
-            <Typography sx={{ fontFamily: T.mono, fontSize: '11.5px', color: T.fg3 }}>{sku}</Typography>
-            <Typography sx={{ fontSize: '13px', color: T.fg, lineHeight: 1.3 }}>{copy}</Typography>
+            <Typography sx={{ fontSize: '13px', color: T.fg, lineHeight: 1.3 }}>{label}</Typography>
+            {/* The model is the answer this table exists to give, so it is
+                set as a chip rather than as another column of text. */}
+            <Box
+              sx={{
+                px: '8px',
+                py: '3px',
+                borderRadius: '6px',
+                backgroundColor: T.surface2,
+                fontFamily: T.mono,
+                fontSize: '10.5px',
+                color: T.fg2,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {served}
+            </Box>
           </Box>
         ))}
         <Mono sx={{ mt: '12px', fontSize: '10px', textTransform: 'none', letterSpacing: '0.03em' }}>
@@ -723,49 +740,37 @@ function Artifact({ turn, fill }) {
   );
 }
 
-/* One ask on the thread.
+/* One turn: the ask, and the answer pinned beside it.
  *
- * On a wide screen the answer is not here. It is in the panel beside it,
- * which stays put while these scroll past, so a single frame fills in with a
- * script, then a photograph, then footage, then a mix. That is the point of
- * the page: you are not stepping through four cards, you are watching one
- * conversation go somewhere. Each ask holds about half a screen so the
- * handover has room to breathe.
+ * The answer is sticky inside its own turn rather than one shared frame
+ * swapped by script. Scrolling a turn holds its answer in the middle of the
+ * screen; reaching the next turn carries that answer up and out and brings
+ * the next one in behind it. Same walk through the thread, except the
+ * browser does it.
+ *
+ * It got here the other way round, with a frame per chapter and an observer
+ * choosing which answer belonged in it. That needs a trigger, and every
+ * trigger available is conditional: observers and animation frames stop in a
+ * background tab, timers are throttled there, and a programmatic scroll does
+ * not always emit a scroll event at all. Any one of those missing leaves the
+ * panel showing the wrong answer with no way to notice. Sticky positioning
+ * has no trigger to miss.
  *
  * A narrow screen has no second column to pin, so the answer sits under its
- * ask and the thread simply runs down the page. */
-function Ask({ turn, index, last, onEnter }) {
-  const ref = React.useRef(null);
-
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) onEnter(index);
-      },
-      /* Whichever ask is crossing the middle of the screen is the one the
-         panel answers. */
-      { rootMargin: '-48% 0px -48% 0px', threshold: 0 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [index, onEnter]);
-
+ * ask and the thread runs straight down the page.
+ */
+function Turn({ turn, index, total, last }) {
   return (
     <Box
-      ref={ref}
       sx={{
         position: 'relative',
-        pl: { xs: '22px', md: '38px' },
-        minHeight: { md: '46vh' },
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        pt: { xs: index === 0 ? 0 : '30px', md: 0 },
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
+        gap: { xs: 0, md: '56px' },
+        alignItems: 'start',
       }}
     >
-      {/* The spine. Each ask draws a full height run so the segments meet:
+      {/* The spine. Each turn draws a full height run so the segments meet:
           the thread does not break between turns. The last stops at its node
           rather than trailing off the end. */}
       <Box
@@ -779,48 +784,95 @@ function Ask({ turn, index, last, onEnter }) {
           ...(last ? { height: { xs: '36px', md: '50%' } } : { bottom: 0 }),
         }}
       />
-      <Box
-        aria-hidden="true"
-        sx={{
-          position: 'absolute',
-          left: '-3px',
-          top: { xs: '36px', md: '50%' },
-          mt: '-3px',
-          width: '7px',
-          height: '7px',
-          borderRadius: '50%',
-          border: `1px solid ${T.line2}`,
-          backgroundColor: T.bg,
-        }}
-      />
 
-      <Mono sx={{ color: T.brand, letterSpacing: '0.12em' }}>{turn.mode}</Mono>
-      <Typography
+      <Box
         sx={{
-          mt: '12px',
-          mb: '12px',
-          fontSize: { xs: '18px', md: '22px' },
-          lineHeight: 1.35,
-          letterSpacing: '-0.025em',
-          fontWeight: 500,
-          color: T.fg,
-          maxWidth: '26ch',
-          textWrap: 'pretty',
+          position: 'relative',
+          pl: { xs: '22px', md: '38px' },
+          /* Taller than the answer beside it, which is what gives the
+             answer something to stay still against. At 52vh the panel held
+             for about 150px and the hold barely registered. */
+          minHeight: { md: '64vh' },
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          pt: { xs: index === 0 ? 0 : '30px', md: 0 },
         }}
       >
-        {turn.ask}
-      </Typography>
-      <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg3, maxWidth: '40ch' }}>
-        {turn.note}
-      </Typography>
+        <Box
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            left: { xs: '-25px', md: '-41px' },
+            top: { xs: '36px', md: '50%' },
+            mt: '-3px',
+            width: '7px',
+            height: '7px',
+            borderRadius: '50%',
+            border: `1px solid ${T.line2}`,
+            backgroundColor: T.bg,
+          }}
+        />
+
+        <Mono sx={{ color: T.brand, letterSpacing: '0.12em' }}>{turn.mode}</Mono>
+        <Typography
+          sx={{
+            mt: '12px',
+            mb: '12px',
+            fontSize: { xs: '18px', md: '22px' },
+            lineHeight: 1.35,
+            letterSpacing: '-0.025em',
+            fontWeight: 500,
+            color: T.fg,
+            maxWidth: '26ch',
+            textWrap: 'pretty',
+          }}
+        >
+          {turn.ask}
+        </Typography>
+        <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg3, maxWidth: '40ch' }}>
+          {turn.note}
+        </Typography>
+      </Box>
+
+      {/* The answer, pinned while its ask is being read. */}
+      <Box
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          position: 'sticky',
+          top: 'calc(50vh - 180px)',
+          alignSelf: 'start',
+        }}
+      >
+        <Box sx={{ boxShadow: T.shadow, borderRadius: T.r }}>
+          <Artifact turn={turn} />
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px', mt: '14px' }}>
+          <Mono sx={{ fontSize: '9.5px', color: T.brand }}>
+            {String(index + 1).padStart(2, '0')}
+          </Mono>
+          <Box sx={{ flex: 1, height: '1px', backgroundColor: T.line }}>
+            <Box
+              sx={{
+                width: `${((index + 1) / total) * 100}%`,
+                height: '100%',
+                backgroundColor: T.brand,
+              }}
+            />
+          </Box>
+          <Mono sx={{ fontSize: '9.5px' }}>{String(total).padStart(2, '0')}</Mono>
+        </Box>
+      </Box>
+
+      {/* the answer, inline, narrow screens only */}
+      <Box sx={{ display: { md: 'none' }, pl: '22px', pt: '18px', pb: '8px' }}>
+        <Artifact turn={turn} />
+      </Box>
     </Box>
   );
 }
 
 function Thread({ thread }) {
-  const [active, setActive] = React.useState(0);
-  const onEnter = React.useCallback((i) => setActive(i), []);
-
   return (
     <Box sx={{ pt: { xs: '46px', md: '90px' } }}>
       <Reveal>
@@ -856,78 +908,15 @@ function Thread({ thread }) {
         </Box>
       </Reveal>
 
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
-          gap: { xs: 0, md: '56px' },
-          alignItems: 'start',
-        }}
-      >
-        <Box>
-          {thread.turns.map((turn, i) => (
-            <React.Fragment key={turn.ask}>
-              <Ask turn={turn} index={i} last={i === thread.turns.length - 1} onEnter={onEnter} />
-              {/* the answer, inline, narrow screens only */}
-              <Box sx={{ display: { md: 'none' }, pl: '22px', pt: '18px' }}>
-                <Artifact turn={turn} />
-              </Box>
-            </React.Fragment>
-          ))}
-        </Box>
-
-        {/* The stack. One frame, pinned near the middle of the screen, with
-            the answers laid over each other and only the current one up. */}
-        <Box
-          aria-hidden="true"
-          sx={{
-            display: { xs: 'none', md: 'block' },
-            position: 'sticky',
-            top: 'calc(50vh - 190px)',
-            alignSelf: 'start',
-          }}
-        >
-          <Box sx={{ position: 'relative', aspectRatio: '16 / 9' }}>
-            {thread.turns.map((turn, i) => {
-              const on = i === active;
-              return (
-                <Box
-                  key={turn.ask}
-                  sx={{
-                    position: 'absolute',
-                    inset: 0,
-                    opacity: on ? 1 : 0,
-                    transform: on ? 'none' : 'translateY(12px) scale(0.985)',
-                    boxShadow: on ? T.shadow : 'none',
-                    borderRadius: T.r,
-                    transition:
-                      'opacity .5s cubic-bezier(.32,.72,0,1), transform .5s cubic-bezier(.32,.72,0,1)',
-                    '@media (prefers-reduced-motion: reduce)': { transition: 'opacity .01ms' },
-                  }}
-                >
-                  <Artifact turn={turn} fill />
-                </Box>
-              );
-            })}
-          </Box>
-
-          {/* Where you are in the thread. */}
-          <Box sx={{ display: 'flex', gap: '6px', mt: '18px' }}>
-            {thread.turns.map((turn, i) => (
-              <Box
-                key={turn.ask}
-                sx={{
-                  height: '2px',
-                  flex: 1,
-                  borderRadius: '1px',
-                  backgroundColor: i === active ? T.brand : T.line2,
-                  transition: 'background-color .4s ease',
-                }}
-              />
-            ))}
-          </Box>
-        </Box>
-      </Box>
+      {thread.turns.map((turn, i) => (
+        <Turn
+          key={turn.ask}
+          turn={turn}
+          index={i}
+          total={thread.turns.length}
+          last={i === thread.turns.length - 1}
+        />
+      ))}
 
       {/* What the thread was for. The one other place orange appears. */}
       <Box
@@ -1151,41 +1140,78 @@ export default function DocsPage() {
             worked examples in a row can read as the whole of what the thing
             does. */}
         <Reveal>
-          <Box sx={{ mt: { xs: '48px', md: '84px' }, pt: { xs: '28px', md: '36px' }, borderTop: `1px solid ${T.line}` }}>
-            <Typography
+          <Box
+            sx={{
+              mt: { xs: '48px', md: '90px' },
+              pt: { xs: '30px', md: '40px' },
+              borderTop: `1px solid ${T.line}`,
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1.05fr' },
+              gap: { xs: '28px', md: '56px' },
+              alignItems: { xs: 'start', md: 'center' },
+            }}
+          >
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: { xs: '24px', md: '32px' },
+                  lineHeight: 1.12,
+                  letterSpacing: '-0.032em',
+                  fontWeight: 600,
+                  color: T.fg,
+                  maxWidth: '18ch',
+                  mb: '16px',
+                  textWrap: 'balance',
+                }}
+              >
+                None of that is a mode or a template.
+              </Typography>
+              <Typography sx={{ fontSize: '15.5px', lineHeight: 1.6, color: T.fg2, maxWidth: '40ch' }}>
+                It is one message box, and the thread does not care what you put in it.
+              </Typography>
+            </Box>
+
+            {/* The thread carrying on, fading out rather than ending. */}
+            <Box
               sx={{
-                fontSize: { xs: '19px', md: '24px' },
-                lineHeight: 1.45,
-                letterSpacing: '-0.025em',
-                fontWeight: 500,
-                color: T.fg,
-                maxWidth: '34ch',
-                mb: '22px',
-                textWrap: 'balance',
+                position: 'relative',
+                pl: { xs: '22px', md: '26px' },
+                maskImage: 'linear-gradient(to bottom, #000 52%, transparent 96%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, #000 52%, transparent 96%)',
               }}
             >
-              None of that is a mode, a template or a plan you pick.
-            </Typography>
-            <Typography sx={{ fontSize: '15.5px', lineHeight: 1.6, color: T.fg2, maxWidth: '58ch', mb: '20px' }}>
-              It is one message box. The same thread takes a lesson plan, a quarterly memo, a
-              dataset nobody has cleaned, a contract in a language you do not read, a codebase you
-              did not write, or the thing you are actually here for.
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {OTHERS.map((o) => (
-                <Box
-                  key={o}
-                  sx={{
-                    px: '12px',
-                    py: '7px',
-                    borderRadius: '999px',
-                    border: `1px solid ${T.line}`,
-                    backgroundColor: T.bg,
-                    fontSize: '13.5px',
-                    color: T.fg2,
-                  }}
-                >
-                  {o}
+              <Box
+                aria-hidden="true"
+                sx={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '1px', backgroundColor: T.line2 }}
+              />
+              {OPEN_ENDED.map(([mode, ask]) => (
+                <Box key={ask} sx={{ position: 'relative', py: { xs: '11px', md: '13px' } }}>
+                  <Box
+                    aria-hidden="true"
+                    sx={{
+                      position: 'absolute',
+                      left: { xs: '-25px', md: '-29px' },
+                      top: { xs: '17px', md: '19px' },
+                      width: '5px',
+                      height: '5px',
+                      borderRadius: '50%',
+                      border: `1px solid ${T.line2}`,
+                      backgroundColor: T.bg,
+                    }}
+                  />
+                  <Mono sx={{ color: T.brand, fontSize: '9.5px', letterSpacing: '0.12em' }}>{mode}</Mono>
+                  <Typography
+                    sx={{
+                      mt: '5px',
+                      fontSize: { xs: '15.5px', md: '17px' },
+                      lineHeight: 1.4,
+                      letterSpacing: '-0.015em',
+                      color: T.fg,
+                      textWrap: 'pretty',
+                    }}
+                  >
+                    {ask}
+                  </Typography>
                 </Box>
               ))}
             </Box>
