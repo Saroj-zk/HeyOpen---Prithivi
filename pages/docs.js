@@ -749,6 +749,140 @@ function Artifact({ turn, fill }) {
   );
 }
 
+/* The shape every example below has in common, said once before any of them
+   start. All three are the same three moves, and the middle one is the whole
+   product: the model changes and the conversation does not. The modalities
+   hang off the first move, because that is the moment they matter, when you
+   have not yet had to decide which tool this job belongs to. */
+const FLOW = [
+  {
+    n: '01',
+    label: 'Ask',
+    title: 'One box, whatever you are making.',
+    body: 'Type it. There is no mode to choose first and no account to make.',
+    chips: ['Text', 'Image', 'Video', 'Code'],
+  },
+  {
+    n: '02',
+    label: 'Build on it',
+    title: 'Change the model, not the thread.',
+    body: 'The next model already has everything said so far, so nothing gets described twice.',
+  },
+  {
+    n: '03',
+    label: 'Finish it',
+    title: 'The film, the feature, the answer.',
+    body: 'Finished work, and nothing left on our side once you close the tab.',
+  },
+];
+
+function Flow() {
+  return (
+    <Reveal>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+          gap: { xs: '0px', md: '30px' },
+          mt: { xs: '8px', md: '18px' },
+        }}
+      >
+        {FLOW.map((step, i) => (
+          <Box
+            key={step.n}
+            sx={{
+              position: 'relative',
+              borderTop: `1px solid ${T.line}`,
+              pt: { xs: '20px', md: '24px' },
+              pb: { xs: '26px', md: 0 },
+              pr: { md: '18px' },
+            }}
+          >
+            {/* the node, sitting on the rule, as everywhere else on this page */}
+            <Box
+              aria-hidden="true"
+              sx={{
+                position: 'absolute',
+                left: 0,
+                top: '-4px',
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                border: `1px solid ${T.line2}`,
+                backgroundColor: T.bg,
+              }}
+            />
+            {/* and the direction, in the gap between two rules */}
+            {i > 0 && (
+              <Box
+                aria-hidden="true"
+                sx={{
+                  display: { xs: 'none', md: 'block' },
+                  position: 'absolute',
+                  left: '-22px',
+                  top: '-9px',
+                  fontFamily: T.mono,
+                  fontSize: '12px',
+                  lineHeight: 1,
+                  color: T.fg3,
+                }}
+              >
+                →
+              </Box>
+            )}
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', mb: '14px' }}>
+              <Mono sx={{ color: T.brand }}>{step.n}</Mono>
+              <Mono>{step.label}</Mono>
+            </Box>
+
+            <Typography
+              sx={{
+                fontSize: { xs: '18px', md: '20px' },
+                lineHeight: 1.3,
+                letterSpacing: '-0.022em',
+                fontWeight: 600,
+                color: T.fg,
+                mb: '10px',
+                maxWidth: '24ch',
+                textWrap: 'balance',
+              }}
+            >
+              {step.title}
+            </Typography>
+            <Typography sx={{ fontSize: '14.5px', lineHeight: 1.6, color: T.fg2, maxWidth: '36ch' }}>
+              {step.body}
+            </Typography>
+
+            {step.chips && (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '6px', mt: '16px' }}>
+                {step.chips.map((c) => (
+                  <Box
+                    key={c}
+                    sx={{
+                      px: '9px',
+                      py: '5px',
+                      borderRadius: '6px',
+                      backgroundColor: T.surface2,
+                      fontFamily: T.mono,
+                      fontSize: '10px',
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      color: T.fg2,
+                    }}
+                  >
+                    {c}
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Box>
+        ))}
+      </Box>
+    </Reveal>
+  );
+}
+
 /* One ask on the thread. The answer is not here on a wide screen: it is in
    the frame beside it, which stays put and changes. On a narrow screen there
    is no second column to pin, so the answer sits under its ask. */
@@ -1201,6 +1335,7 @@ export default function DocsPage() {
           title="Start anywhere. Finish in the same thread."
           lede="Scroll through any of these and watch one panel fill in. They are single conversations read top to bottom, and the only thing changing is which model answers."
         />
+        <Flow />
         {THREADS.map((thread) => (
           <Thread key={thread.tag} thread={thread} />
         ))}
