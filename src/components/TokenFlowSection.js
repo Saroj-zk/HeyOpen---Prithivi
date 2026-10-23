@@ -111,14 +111,14 @@ const SMOKE = glass({
 const TILES = [
   { tag: 'You hold', k: '$OPEN', s: 'in your wallet', kind: 'brand', glyph: '◆' },
   { tag: 'Staked', k: 'sOPEN', s: 'collateral', kind: 'glass', glyph: '▤' },
-  { tag: 'Minted', k: 'OIU', s: 'against sOPEN', kind: 'glass', glyph: '◇' },
+  { tag: 'Minted', k: 'HEY', s: 'against sOPEN', kind: 'glass', glyph: '◇' },
   { tag: 'You receive', k: 'Credits', s: 'every day', kind: 'ink', glyph: '✦' },
 ];
 
 const MARKERS = [
   { n: '1', t: 'stake' },
   { n: '2', t: 'mint against it' },
-  { n: '3', t: 'stake the OIU' },
+  { n: '3', t: 'stake HEY' },
 ];
 
 
@@ -329,7 +329,7 @@ export default function TokenFlowSection() {
             <Box component="span" sx={{ color: ORANGE }}>Credits arrive daily.</Box>
           </Typography>
           <Typography sx={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.65, textWrap: 'pretty' }}>
-            This route spends nothing. You lock $OPEN as collateral, mint OIU against it, and
+            This route spends nothing. You lock $OPEN as collateral, mint HEY against it, and
             credits arrive every day until you decide to unlock. The stake stays yours the whole
             time.
           </Typography>
@@ -397,7 +397,7 @@ export default function TokenFlowSection() {
                   color: 'var(--text-secondary)',
                 }}
               >
-                Locked while it backs the OIU
+                Locked while it backs HEY
               </Typography>
 
               {TILES.map((tile, i) => (
@@ -421,7 +421,7 @@ export default function TokenFlowSection() {
                   gridRow: 2,
                   mt: '18px',
                   /* Half the 162px tile, so the line drops from under the
-                     centre of OIU and rises into the centre of sOPEN
+                     centre of HEY and rises into the centre of sOPEN
                      rather than into the gaps beside them. */
                   mx: '81px',
                   height: 30,
@@ -454,7 +454,7 @@ export default function TokenFlowSection() {
                   color: 'var(--text-secondary)',
                 }}
               >
-                Burn the OIU to unlock it
+                Burn HEY to unlock it
               </Typography>
             </Box>
 
@@ -487,7 +487,7 @@ export default function TokenFlowSection() {
                     fontSize: '0.56rem',
                   }}
                 >
-                  Locked while it backs the OIU
+                  Locked while it backs HEY
                 </Typography>
                 <Tile tile={TILES[1]} stacked />
                 <Step marker={MARKERS[1]} />
@@ -507,7 +507,7 @@ export default function TokenFlowSection() {
                   textWrap: 'pretty',
                 }}
               >
-                Burn the OIU to unlock the collateral at any time.
+                Burn HEY to unlock the collateral at any time.
               </Typography>
             </Box>
           </Box>
