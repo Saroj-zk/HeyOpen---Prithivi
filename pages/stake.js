@@ -14,7 +14,7 @@ import { TOKEN } from '@/data/token';
  *
  * Laid out to follow Venice's VVV page, which is the thing this was asked to
  * be like, with the same two tokens doing the same two jobs. $OPEN is the
- * capital asset you buy and stake, as VVV is. HEY is minted only by stakers
+ * capital asset you buy and stake, as VVV is. $HEY is minted only by stakers
  * and pays out credit every day, as DIEM is.
  *
  * Drawn as a ledger, because that is the company's own word and because
@@ -64,25 +64,25 @@ const RATES = {
      emission is. The page never calls this guaranteed. Guaranteed by whom,
      and backed by what, is the version of that claim that can be written,
      and it needs an answer from the business before it goes on a page. */
-  addLow: '40%',
-  addHigh: '50%',
-  /* The floor and the target added together, on the basis that the target
-     was described as additional throughout. If the band already includes the
-     floor this is the one number to correct, and the worked example below
-     follows from it. */
-  total: '46% to 56%',
+  /* All in, and inclusive of the floor rather than stacked on top of it.
+     The floor is the worst case inside this band, not a separate payment
+     added to it, which is why nothing on the page sums the two. */
+  total: '40% to 50%',
+  /* What actually lands: the floor at worst, the top of the band at best. */
+  range: '6.00% to 50%',
 };
 
 /* The same thing on an actual stake. A percentage is an abstraction and six
    hundred tokens is not, which is why the page this was measured against
    works its rate through ten thousand dollars rather than leaving it at a
-   rate. Arithmetic only, on the figures above. */
+   rate. Arithmetic only, on the figures above, and the target figure is the
+   whole return rather than an amount added to the floor. */
 const EXAMPLE = {
   stake: "10,000",
   floorAdd: "+600",
   targetAdd: "+4,000 to +5,000",
   floorTotal: "10,600",
-  planTotal: "14,600 to 15,600",
+  planTotal: "14,000 to 15,000",
 };
 
 /* What makes the number checkable. These are the claims that let a page
@@ -122,15 +122,15 @@ const HOW = [
   {
     n: '02',
     title: 'Stake it',
-    body: `Everything you stake earns from the epoch it lands in: ${RATES.base} fixed, with a target on top.`,
+    body: `Everything you stake earns from the epoch it lands in. ${RATES.base} is the floor, ${RATES.total} is the aim.`,
     cta: 'Stake $OPEN',
     href: LINKS.stake,
   },
   {
     n: '03',
-    title: 'Mint HEY',
-    body: 'Staked $OPEN mints HEY, and nothing else does. Stake the HEY and it pays you in compute.',
-    cta: 'Mint HEY',
+    title: 'Mint $HEY',
+    body: 'Staked $OPEN mints $HEY, and nothing else does. Stake the $HEY and it pays you in compute.',
+    cta: 'Mint $HEY',
     href: LINKS.mint,
   },
 ];
@@ -146,7 +146,7 @@ const STAKES = [
     paidIn: 'Value',
     lead: true,
     body:
-      'The asset you buy and hold. Staking it earns a fixed floor with a target on top, paid in $OPEN rather than in anything you have to spend here.',
+      'The asset you buy and hold. Staking it pays a fixed floor you cannot drop below and aims well above it, in $OPEN rather than in anything you have to spend here.',
     rows: [
       ['Floor', RATES.base],
       ['On plan', RATES.total],
@@ -156,7 +156,7 @@ const STAKES = [
     href: LINKS.stake,
   },
   {
-    token: 'HEY',
+    token: '$HEY',
     kind: 'Minted by stakers',
     paidIn: 'Compute credits',
     body:
@@ -166,7 +166,7 @@ const STAKES = [
       ['Pays out', 'Compute credits'],
       ['Good for', 'Every model'],
     ],
-    cta: 'Mint HEY',
+    cta: 'Mint $HEY',
     href: LINKS.mint,
   },
 ];
@@ -300,9 +300,9 @@ function Statement({ onInk }) {
         <Label onInk={onInk}>Per epoch</Label>
       </Box>
 
-      <Entry name="Base rate" figure={RATES.base} onInk={onInk} />
-      <Entry name="Target on top" figure={`${RATES.addLow} to ${RATES.addHigh}`} dashed onInk={onInk} />
-      <Entry name="Paid to you" figure={RATES.total} total onInk={onInk} />
+      <Entry name="The floor" figure={RATES.base} onInk={onInk} />
+      <Entry name="Target, all in" figure={RATES.total} dashed onInk={onInk} />
+      <Entry name="So you are paid" figure={RATES.range} total onInk={onInk} />
 
       <Typography
         sx={{
@@ -312,8 +312,9 @@ function Statement({ onInk }) {
           color: onInk ? 'rgba(255,255,255,0.52)' : 'var(--text-muted)',
         }}
       >
-        The {RATES.base} is fixed. The line above the total is a target, not a
-        rate, and it is only ever added.
+        The {RATES.base} is fixed and is the worst case. The line above it is
+        the figure we are aiming at, all in, and it is a target rather than a
+        rate.
       </Typography>
     </Box>
   );
@@ -420,10 +421,10 @@ export default function StakePage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
       <Head>
-        <title>Stake $OPEN: Earn Yield and Mint HEY | Hey Open</title>
+        <title>Stake $OPEN: Earn Yield and Mint $HEY | Hey Open</title>
         <meta
           name="description"
-          content="$OPEN is the capital asset of Hey Open. Stake it to earn a fixed base rate with a share on top, to unlock the full app, and to mint HEY, which pays out credit every day."
+          content="$OPEN is the capital asset of Hey Open. Stake it for a fixed floor and a target well above it, and to mint $HEY, which pays out compute credits when you stake it."
         />
       </Head>
 
@@ -485,7 +486,7 @@ export default function StakePage() {
                 }}
               >
                 $OPEN is the capital asset of Hey Open. Stake it and it earns. Staking it is
-                also the only way to mint HEY, and staking that pays you in compute credit for
+                also the only way to mint $HEY, and staking that pays you in compute credit for
                 any model on the network.
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
@@ -593,7 +594,7 @@ export default function StakePage() {
                   onInk
                   eyebrow="The yield"
                   title={`A ${RATES.base} floor, and a target well above it.`}
-                  lede="The floor is a rate the protocol sets and pays whatever happens. The target is what the treasury is managing to on top of it. Both are paid in value rather than in credit, and the difference between the two is worth understanding before you stake."
+                  lede="The floor is a rate the protocol sets and pays whatever happens. The target is the figure the treasury is run to, all in, with the floor as its worst case rather than a separate payment beside it. Both arrive in value rather than in credit."
                   maxWidth={760}
                 />
               </Box>
@@ -661,9 +662,10 @@ export default function StakePage() {
                     <Typography
                       sx={{ mt: 2, fontSize: '1rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.66)', maxWidth: '38ch' }}
                     >
-                      The floor plus a target of {RATES.addLow} to {RATES.addHigh}. The treasury
-                      puts the staked supply to work and stakers take a share of what comes back,
-                      reported once a period has closed rather than promised before it starts.
+                      All in, with the {RATES.base} floor sitting inside it rather than beside
+                      it. The treasury puts the staked supply to work and stakers take a share of
+                      what comes back, reported once a period has closed rather than promised
+                      before it starts.
                     </Typography>
                   </Box>
                 </Box>
@@ -697,7 +699,7 @@ export default function StakePage() {
 
                     <Entry name="You stake" figure={`${EXAMPLE.stake} $OPEN`} onInk />
                     <Entry name="The floor pays" figure={EXAMPLE.floorAdd} onInk />
-                    <Entry name="The target adds" figure={EXAMPLE.targetAdd} dashed onInk />
+                    <Entry name="On plan, all in" figure={EXAMPLE.targetAdd} dashed onInk />
                     <Entry name="You hold, on plan" figure={EXAMPLE.planTotal} total onInk />
 
                     <Typography
@@ -708,8 +710,8 @@ export default function StakePage() {
                         color: 'rgba(255,255,255,0.52)',
                       }}
                     >
-                      And {EXAMPLE.floorTotal} if the target returns nothing at all, because the
-                      floor is paid either way. Both lines are paid in value, not in credit. HEY is
+                      And {EXAMPLE.floorTotal} if the target is missed entirely, because the
+                      floor is paid either way. Both lines are paid in value, not in credit. $HEY is
                       the credit side and is minted separately.
                     </Typography>
                   </Box>
@@ -767,7 +769,7 @@ export default function StakePage() {
               <Head2
                 eyebrow="Two tokens"
                 title="Two things to stake, paid in two different ways."
-                lede="$OPEN is the capital asset and HEY is what it mints. Staking the first pays you in value. Staking the second pays you in the thing the network actually makes, which is compute."
+                lede="$OPEN is the capital asset and $HEY is what it mints. Staking the first pays you in value. Staking the second pays you in the thing the network actually makes, which is compute."
               />
             </Box>
           </Reveal>
@@ -869,7 +871,7 @@ export default function StakePage() {
                 maxWidth: '76ch',
               }}
             >
-              HEY is minted against staked $OPEN and nothing else mints it. Burning HEY releases
+              $HEY is minted against staked $OPEN and nothing else mints it. Burning $HEY releases
               the stake behind it.
             </Typography>
           </Reveal>
@@ -976,8 +978,9 @@ export default function StakePage() {
                   mx: 'auto',
                 }}
               >
-                Staking rewards are not a guarantee. The base rate is fixed; the share on top is
-                not, and can be nothing in any period. Nothing here is investment advice. Read the
+                Staking rewards are not a guarantee. The {RATES.base} floor is fixed; the
+                {RATES.total} is a target the treasury is run to, not a promised rate, and what
+                lands above the floor varies by period. Nothing here is investment advice. Read the
                 terms before you stake.
               </Typography>
             </Box>
