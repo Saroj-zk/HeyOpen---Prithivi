@@ -348,7 +348,7 @@ export default function StakePage() {
         <Box component="section" sx={{ pb: { xs: 7, md: 11 } }}>
           <Reveal>
             <Box sx={{ mb: { xs: 4, md: 6 } }}>
-              <Head2 eyebrow="How $OPEN works" title="Three moves, and the stake stays yours." />
+              <Head2 eyebrow="How $OPEN works" title={C.howTitle} />
             </Box>
           </Reveal>
 

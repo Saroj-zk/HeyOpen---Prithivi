@@ -1,245 +1,247 @@
 /**
  * Three versions of the staking page's copy.
  *
- * Not three rewordings of one argument. Each takes a different position on
- * why a reader should care, because that is the thing worth deciding before
- * anybody polishes a sentence:
+ * Not three rewordings of one argument. Each opens on a different hook:
  *
- *   A, Statement     the mechanics, stated precisely and left to speak.
- *                    For a reader who distrusts being sold to.
- *   B, Idle capital  the cost of doing nothing, said first and plainly.
- *                    For a reader who already holds and has not moved.
- *   C, The claim     compute is the scarce asset and this is the claim on
- *                    it. For a reader deciding whether the thing is real.
+ *   A, The guarantee   leads on the word the page is allowed to use.
+ *                      6% guaranteed, and we are not stopping there.
+ *   B, It pays for you the loop nobody else can offer: the tokens you
+ *                      hold end up paying for the AI you use.
+ *   C, Don't sell it   short, direct, for a holder deciding what to do
+ *                      with a position they already have.
  *
- * Every version carries the same facts and the same restraint: the floor is
- * fixed and said to be fixed, the band is a target and never called
- * guaranteed, and nothing names where the return comes from.
+ * Guaranteed is used, deliberately, and only ever about the 6.00%. That
+ * figure is a protocol rate written into the staking contract, so calling it
+ * guaranteed is a statement of fact and is the strongest honest word on the
+ * page. The 40% to 50% is a target in all three versions and is never called
+ * guaranteed, promised or expected, and none of the three says where it comes
+ * from. Contractions are used freely: the brief asked for a warmer tone and
+ * the page was reading like a prospectus.
  */
 
 export const VERSIONS = [
   {
     id: 'A',
-    name: 'Statement',
-    note: 'Precise and understated. Reads like the account it describes.',
+    name: 'The guarantee',
+    note: 'Leads on the one word the page is allowed to use. Confident, clean.',
 
     hero: {
-      eyebrow: 'The capital asset',
-      title: 'Stake $OPEN.',
+      eyebrow: 'Staking',
+      title: "6% guaranteed. And we're not stopping there.",
       lede:
-        '$OPEN is the capital asset of Hey Open. Staking it pays a floor that is owed to you and aims a long way above it, and it is the only thing that mints $HEY, which pays you in compute.',
+        "Stake $OPEN and 6% is the floor, written into the contract. Above it we run the book to 40% to 50%. Your stake never leaves your wallet, and it mints $HEY, which pays for your compute.",
     },
 
+    howTitle: 'Three moves. Then it earns.',
     how: [
       {
         title: 'Get $OPEN',
-        body: 'An ERC-20, with a fixed supply and no inflation switch. Buy it wherever it trades.',
+        body: 'Fixed supply, no inflation switch. Buy it wherever it already trades.',
       },
       {
         title: 'Stake it',
-        body: 'Everything you stake earns from the epoch it lands in. 6.00% is the floor, 40% to 50% is the aim.',
+        body: "One transaction, and it's earning in the same epoch. Nothing sold, nothing locked away.",
       },
       {
         title: 'Mint $HEY',
-        body: 'Staked $OPEN mints $HEY, and nothing else does. Stake the $HEY and it pays you in compute.',
+        body: 'Your stake mints $HEY, and nothing else does. Stake that, and your compute is paid for too.',
       },
     ],
 
     yield: {
       eyebrow: 'The yield',
-      title: 'A 6.00% floor, and a target well above it.',
+      title: "A floor you can't fall through.",
       lede:
-        'The floor is a rate the protocol sets and pays whatever happens. The target is the figure the treasury is run to, all in, with the floor as its worst case rather than a separate payment beside it.',
-      floorLabel: 'However the year goes',
+        "The 6% is guaranteed, in the contract, paid whatever kind of year it's been. The 40% to 50% is the band we run the book to. One is a promise and one is a target, and you should know which is which.",
+      floorLabel: 'Guaranteed',
       floorBody:
-        'Set by the protocol and paid on schedule. It does not wait on anything going well, and nothing that happens later takes it back.',
-      targetLabel: 'When the year goes to plan',
+        "Written into the staking contract and paid on schedule. It doesn't wait on a good year, a good quarter, or anybody's decision.",
+      targetLabel: "What we're aiming at",
       targetBody:
-        'All in, with the 6.00% floor sitting inside it rather than beside it. The treasury puts the staked supply to work and stakers take a share of what comes back, reported once a period has closed rather than promised before it starts.',
+        'The range we manage to, all in, with the 6% sitting inside it as the worst case. Reported after a period closes, never promised before it opens.',
       workedNote:
-        'And 10,600 if the target is missed entirely, because the floor is paid either way. Both lines are paid in value, not in credit. $HEY is the credit side and is minted separately.',
-      proofEyebrow: 'Why you can check it',
+        "Miss the target completely and you still hold 10,600, because the floor doesn't depend on it. Both lines pay in value. Compute is what $HEY pays, and that's minted separately.",
+      proofEyebrow: 'Check it yourself',
     },
 
     pro: {
-      eyebrow: 'What the stake unlocks',
-      title: 'Stake 100 $OPEN and the app stops being a subscription.',
+      eyebrow: 'The hundred',
+      title: 'Stake 100 and stop paying for AI.',
       lede:
-        'Everything the paid tier gets you, for as long as the stake is there. The stake keeps earning the whole time, so the access costs you nothing you were not already holding.',
-      note: 'Unstake and it goes back to being a subscription. Nothing is lost in between.',
+        'Every model, unlimited prompts, the whole app. Free for as long as the stake is there, and the stake keeps earning the entire time it covers you.',
+      note: "Unstake whenever you like. It just goes back to being a subscription.",
     },
 
     stakes: {
       eyebrow: 'Two tokens',
-      title: 'Two things to stake, paid in two different ways.',
+      title: 'One earns you money. One earns you compute.',
       lede:
-        '$OPEN is the capital asset and $HEY is what it mints. Staking the first pays you in value. Staking the second pays you in the thing the network actually makes, which is compute.',
+        "$OPEN is what you buy and stake. $HEY is what your stake mints. Stake the first and you're paid in value. Stake the second and you're paid in inference.",
       openBody:
-        'The asset you buy and hold. Staking it pays a fixed floor you cannot drop below and aims well above it, in $OPEN rather than in anything you have to spend here.',
+        "The one you hold. Staked, it pays a guaranteed 6% floor and aims a long way past it, in $OPEN, with nothing you have to spend here to collect it.",
       heyBody:
-        'Minted against staked $OPEN and held or sold like anything else. Staking it pays out credit for the catalogue, which is the network paying you in the thing it makes.',
-      foot:
-        '$HEY is minted against staked $OPEN and nothing else mints it. Burning $HEY releases the stake behind it.',
+        "The one your stake makes. Staked, it pays out compute every day, across the whole catalogue. Or sell it, if you'd rather have the money.",
+      foot: 'Only staked $OPEN mints $HEY. Burn the $HEY and your stake comes back.',
     },
 
     supply: {
-      title: 'Bought back and burned, not printed.',
+      title: 'Less of it every month.',
       body:
-        'A share of what the product earns buys $OPEN on the open market, rewards the providers doing the work, and burns what the network does not need. Less supply, verifiably, rather than more.',
+        'Revenue buys $OPEN on the open market, pays the providers doing the work, and burns the rest on chain. The supply only moves one way.',
     },
 
     close: {
-      title: 'Hold it, stake it, spend what it makes.',
+      title: 'Put it to work.',
     },
   },
 
   {
     id: 'B',
-    name: 'Idle capital',
-    note: 'Leads with the cost of doing nothing. Direct, and slightly pointed.',
+    name: 'It pays for you',
+    note: 'The loop nobody else can offer: your tokens end up paying for your AI.',
 
     hero: {
-      eyebrow: 'Put it to work',
-      title: 'Your $OPEN is sitting still.',
+      eyebrow: 'Staking',
+      title: 'Let your tokens pay for your AI.',
       lede:
-        'Staked, it earns a floor of 6.00% that cannot be taken back, aims at 40% to 50%, covers your own use of the app at a hundred, and mints the token that pays for compute. Held in a wallet, it does none of that.',
+        'Stake $OPEN and it earns 6%, guaranteed. Stake 100 and the app costs you nothing. Mint $HEY and your compute is covered as well. You stop paying, and the tokens start.',
     },
 
+    howTitle: 'Buy, stake, stop paying.',
     how: [
       {
-        title: 'Buy it',
-        body: 'An ERC-20 with a fixed supply and no inflation switch. Wherever it already trades.',
+        title: 'Buy $OPEN',
+        body: 'Fixed supply, no inflation switch. Wherever it already trades.',
       },
       {
         title: 'Stake it',
-        body: 'One transaction, and it starts earning in the epoch it lands in. Nothing is sold and nothing leaves your control.',
+        body: "One transaction, earning in the same epoch. Nothing sold, and it never leaves your wallet.",
       },
       {
-        title: 'Spend what it makes',
-        body: 'Yield in $OPEN, compute in the $HEY it mints, and the app thrown in once a hundred is staked.',
+        title: 'Let it pay',
+        body: '6% guaranteed in $OPEN, compute from the $HEY it mints, and the app free once a hundred is staked.',
       },
     ],
 
     yield: {
       eyebrow: 'What it pays',
-      title: '6.00% you cannot lose, and a long way further to go.',
+      title: '6% guaranteed. 40 to 50 is the plan.',
       lede:
-        'Two things happen the moment you stake. The floor starts paying and never stops. The target is the figure the book is run to on everything staked, all in, and that floor is the worst it can do.',
-      floorLabel: 'The worst case',
+        "The 6% is in the contract, so it turns up whatever kind of year it's been. The 40% to 50% is the band we run the book to. We'd rather tell you which is which than blur the two together.",
+      floorLabel: 'Guaranteed',
       floorBody:
-        'This is what you get if nothing goes right all year. It is written into the staking contract rather than decided each period, and nothing that happens later reaches back for it.',
-      targetLabel: 'The case worth staking for',
+        "In the contract and paid on schedule. It doesn't need a good year to show up, and nothing that happens later comes back for it.",
+      targetLabel: 'The plan',
       targetBody:
-        'What the treasury is managing to, reported once a period closes rather than promised before it opens. The floor is inside this figure, not added to it, so a flat year still pays the 6.00% in full.',
+        "What we're managing to, all in, with the 6% inside it as the worst case. Reported once a period closes, never promised before one starts.",
       workedNote:
-        'And 10,600 if the target is missed completely, because the floor does not depend on it. Both lines pay in value. Compute is the $HEY side, and that is minted separately.',
-      proofEyebrow: 'Before you take our word for it',
+        "Even a complete miss leaves you holding 10,600, because the floor isn't conditional. Both lines pay in value. Compute comes from $HEY, which is minted separately.",
+      proofEyebrow: "Don't take our word for it",
     },
 
     pro: {
-      eyebrow: 'The hundred',
-      title: 'A hundred staked, and you stop paying for the app.',
+      eyebrow: 'A hundred',
+      title: 'A hundred staked, and the app is free.',
       lede:
-        'Not a discount and not a trial. The subscription simply stops being something you pay for, for as long as the stake is there, and the stake carries on earning the whole time.',
-      note: 'Unstake whenever you like and it goes back to being a subscription. Nothing is forfeited.',
+        "Not a trial and not a discount. Every model and unlimited prompts, for as long as you're staked, with the stake still earning the whole time.",
+      note: 'Unstake whenever you want. It simply goes back to being a subscription.',
     },
 
     stakes: {
       eyebrow: 'Two tokens',
-      title: 'One asset, two ways to be paid.',
+      title: 'One pays you money. One pays you compute.',
       lede:
-        'Stake $OPEN and the network pays you in value. Stake the $HEY that your stake mints and it pays you in compute instead. Most people end up doing both.',
+        '$OPEN is what you hold. $HEY is what your stake mints. Between them you get paid twice, in two different currencies, for the same position.',
       openBody:
-        'What you buy and hold. Staking it pays a floor you cannot drop below and aims a long way past it, in $OPEN, with nothing you have to spend here to collect it.',
+        "What you buy. Staked, it pays 6% guaranteed and aims well past it, in $OPEN, with nothing you have to spend here to collect it.",
       heyBody:
-        'What your stake mints. Stake it and the network pays you in inference instead of money, on any model in the catalogue. Sell it instead if you would rather have the money.',
-      foot:
-        'Only staked $OPEN mints $HEY. Burn the $HEY and the stake behind it comes back.',
+        "What your stake mints. Staked, it pays out compute every day on any model in the catalogue. Sell it instead, if you'd rather have the money.",
+      foot: 'Only staked $OPEN mints $HEY. Burn it and your stake comes back.',
     },
 
     supply: {
-      title: 'Every month there is less of it.',
+      title: 'Less of it every month.',
       body:
-        'Revenue buys $OPEN on the open market, the providers doing the work are paid first, and what the network does not need is burned on chain. The supply has one direction and it is down.',
+        'Revenue buys $OPEN on the open market, pays the providers carrying the work, and burns what is left on chain. Supply has one direction and it is down.',
     },
 
     close: {
-      title: 'Nothing you hold should sit still.',
+      title: 'Stop paying for AI.',
     },
   },
 
   {
     id: 'C',
-    name: 'The claim',
-    note: 'Thesis first. Compute is the scarce asset and this is the claim on it.',
+    name: "Don't sell it",
+    note: 'Short and direct, for a holder deciding what to do with a position.',
 
     hero: {
-      eyebrow: 'The capital asset of private AI',
-      title: 'The asset behind the compute.',
+      eyebrow: 'Staking',
+      title: "Don't sell it. Stake it.",
       lede:
-        'Every model on this network runs on hardware somebody has to pay for, and $OPEN is the claim on that capacity. Stake it for a 6.00% floor with the book run to 40% to 50%, and mint $HEY, which turns the claim into the inference itself.',
+        '6% guaranteed. 40% to 50% the target. Plus $HEY, which turns the stake into compute. Your $OPEN stays yours the whole way through.',
     },
 
+    howTitle: 'Three moves, and it stays yours.',
     how: [
       {
-        title: 'Acquire it',
-        body: 'An ERC-20 with a fixed supply. The supply does not grow. What the network does with it is what changes.',
+        title: 'Get it',
+        body: 'Fixed supply. No inflation switch. Buy it wherever it trades.',
       },
       {
-        title: 'Commit it',
-        body: 'Capital committed to the network earns a floor of 6.00%, from the epoch it lands in, with the book run to 40% to 50%.',
+        title: 'Stake it',
+        body: 'One transaction. Earning the same epoch. Still yours.',
       },
       {
-        title: 'Convert it',
-        body: 'Staked $OPEN mints $HEY, which is capacity rather than currency: a fixed amount of inference a day that renews.',
+        title: 'Use it',
+        body: '6% guaranteed, compute from the $HEY it mints, and the whole app free at a hundred.',
       },
     ],
 
     yield: {
-      eyebrow: 'Why there is a yield at all',
-      title: 'Capital that does something earns something.',
+      eyebrow: 'The numbers',
+      title: '6% floor. 40 to 50 target.',
       lede:
-        'The floor is paid by the protocol and is not conditional on anything. Above it, committed capital is put to work and stakers take the share that comes back, which is why that figure is a band rather than a rate.',
-      floorLabel: 'Unconditional',
+        "The floor is contractual and does not move. The target is the band we run the book to. Two different kinds of number, kept apart so you always know which one you're owed.",
+      floorLabel: 'Owed to you',
       floorBody:
-        'A protocol rate, set in advance and paid on schedule. It does not depend on performance, on a decision, or on anyone agreeing it was a good period.',
-      targetLabel: 'Managed',
+        "Written in, paid on schedule, and not conditional on a good year or anybody's judgement.",
+      targetLabel: 'Aimed at',
       targetBody:
-        'The range the book is run to, all in, with the floor as the worst case inside it. Declared at the close of a period against what was actually returned, rather than asserted at the start of one.',
+        'The range we manage to, all in. The 6% is the worst case inside it. Reported after the period, never promised before it.',
       workedNote:
-        'And 10,600 if the target returns nothing, since the floor is unconditional. Both lines settle in value. Inference is what $HEY pays, and $HEY is minted separately.',
-      proofEyebrow: 'What is verifiable',
+        'Worst case you hold 10,600, because the floor stands on its own. Both lines pay in value. $HEY is the compute side, and it is minted separately.',
+      proofEyebrow: 'Verify it',
     },
 
     pro: {
-      eyebrow: 'The threshold',
-      title: 'A hundred staked covers your own use of the network.',
+      eyebrow: '100',
+      title: 'Stake 100. Use everything.',
       lede:
-        'Past that, the subscription stops being a cost and becomes a consequence of the position you already hold. The capital keeps earning while it does the covering.',
-      note: 'The threshold is a position, not a payment. Unwind it and the subscription returns.',
+        "Every model on the network, unlimited, for as long as you're staked. The stake carries on earning while it does it.",
+      note: 'Unstake any time. The subscription just comes back.',
     },
 
     stakes: {
       eyebrow: 'Two tokens',
-      title: 'One token for the capital, one for the compute.',
+      title: 'Paid twice, in two currencies.',
       lede:
-        '$OPEN is the claim on the network and $HEY is the capacity that claim can be converted into. Staking the first returns value. Staking the second returns inference.',
+        '$OPEN pays you in value. $HEY, which only your stake can mint, pays you in compute. Same position, two returns.',
       openBody:
-        'The capital asset. Committed to the network it earns a floor that is not conditional and aims well past it, settled in $OPEN rather than in anything redeemable only here.',
+        'The one you buy. Staked, it pays 6% guaranteed and aims a long way past it, settled in $OPEN rather than in anything you can only spend here.',
       heyBody:
-        'Capacity, minted only against committed capital. Staked, it returns a fixed amount of inference a day across the catalogue. Transferable, so the capacity can go to whoever values it most.',
-      foot:
-        'All $HEY originates in staked $OPEN. Burning it returns the capital underneath.',
+        'The one your stake makes. Staked, it pays out compute daily across the catalogue. Transferable, so it can go to whoever wants it more.',
+      foot: 'All $HEY comes from staked $OPEN. Burn it and the stake underneath is released.',
     },
 
     supply: {
-      title: 'Fixed supply, falling float.',
+      title: 'Supply only goes down.',
       body:
-        'Revenue buys $OPEN on the open market, compensates the providers carrying the work, and burns the remainder on chain. Supply was fixed at the start and has moved one way since.',
+        'Revenue buys $OPEN on the market, pays the providers doing the work, and burns the remainder on chain. Fixed at the start, smaller every month since.',
     },
 
     close: {
-      title: 'Own the capacity, not the invoice.',
+      title: 'Your move.',
     },
   },
 ];
