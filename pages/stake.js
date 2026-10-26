@@ -53,8 +53,19 @@ const FIG = { fontFamily: MONO, fontVariantNumeric: 'tabular-nums', letterSpacin
 /* are, the page reads as unfinished rather than as a wrong promise.   */
 /* ------------------------------------------------------------------ */
 const RATES = {
-  base: '[BASE]',
-  total: '[TOTAL]',
+  /* Fixed, and stated as fixed. */
+  base: '6.00%',
+  /* A range, and stated as a target rather than as a rate, because a return
+     produced by deploying a treasury is not a rate the way a protocol
+     emission is. The page never calls this guaranteed. Guaranteed by whom,
+     and backed by what, is the version of that claim that can be written,
+     and it needs an answer from the business before it goes on a page. */
+  addLow: '40%',
+  addHigh: '50%',
+  /* Not a sum. Whether the target is added to the base or already includes
+     it is the business's to say, and doing that arithmetic here would be
+     inventing the headline number. Say what it is made of instead. */
+  total: '6.00% plus target',
   payout: '[PERIOD]',
   unbond: '[UNBONDING]',
   threshold: '[THRESHOLD]',
@@ -197,17 +208,24 @@ function Entry({ name, figure, dashed, total, onInk }) {
         sx={{ flex: 1, minWidth: '16px', borderBottom: `1px dotted ${rule}`, transform: 'translateY(-5px)' }}
       />
       {dashed ? (
-        /* No figure, and an empty rule where one would go. There is nothing
-           honest to print here before the period is over. */
+        /* Set inside a dashed rule rather than printed like the entry above
+           it. A target is a different kind of number from a rate and should
+           not be typeset as though it were the same. */
         <Box
-          aria-hidden="true"
           sx={{
-            width: { xs: '58px', md: '74px' },
-            height: '22px',
+            px: '9px',
+            py: '3px',
             borderRadius: '4px',
             border: `1.5px dashed ${onInk ? 'rgba(255,255,255,0.4)' : 'rgba(11,15,26,0.3)'}`,
+            ...FIG,
+            fontSize: '0.9rem',
+            fontWeight: 500,
+            color: onInk ? 'rgba(255,255,255,0.72)' : 'var(--text-secondary)',
+            whiteSpace: 'nowrap',
           }}
-        />
+        >
+          {figure}
+        </Box>
       ) : (
         <Typography
           sx={{
@@ -257,7 +275,7 @@ function Statement({ onInk }) {
       </Box>
 
       <Entry name="Base rate" figure={RATES.base} onInk={onInk} />
-      <Entry name="Share on top" dashed onInk={onInk} />
+      <Entry name="Target on top" figure={`${RATES.addLow} to ${RATES.addHigh}`} dashed onInk={onInk} />
       <Entry name="Paid to you" figure={RATES.total} total onInk={onInk} />
 
       <Typography
@@ -268,8 +286,8 @@ function Statement({ onInk }) {
           color: onInk ? 'rgba(255,255,255,0.52)' : 'var(--text-muted)',
         }}
       >
-        The base rate is fixed. The line above the total is not, and can be
-        nothing, but it is only ever added.
+        The {RATES.base} is fixed. The line above the total is a target, not a
+        rate, and it is only ever added.
       </Typography>
     </Box>
   );
@@ -547,10 +565,93 @@ export default function StakePage() {
                 <Head2
                   onInk
                   eyebrow="The yield"
-                  title="Two entries. Only one of them is owed to you."
-                  lede="They arrive in the same payment and they are not the same kind of promise, so the statement keeps them on separate lines."
-                  maxWidth={720}
+                  title="Two layers, and they are not the same kind of number."
+                  lede="One is a rate the protocol sets and pays. The other is what the treasury aims to return on top of it. They land in the same payment, in value rather than in credit, and the page keeps them apart because they are not promised in the same way."
+                  maxWidth={760}
                 />
+              </Box>
+            </Reveal>
+
+            {/* The stack. Two bars on one scale, the second starting where the
+                first ends, because the second is added to the first and the
+                drawing should say so without a sentence. The base is filled.
+                The target is an open band with a floor and a ceiling, which
+                is what a range looks like when it is drawn honestly: there is
+                no single point to put a bar at. */}
+            <Reveal delay={80}>
+              <Box
+                sx={{
+                  border: `1px solid ${RULE_ON_INK}`,
+                  borderRadius: '4px',
+                  px: { xs: 2.5, md: 4 },
+                  py: { xs: 3, md: 4 },
+                  mb: { xs: 5, md: 7 },
+                }}
+              >
+                {/* Layer one */}
+                <Box sx={{ mb: { xs: 3.5, md: 4.5 } }}>
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 1.4 }}>
+                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>Layer one, fixed</Label>
+                    <Typography sx={{ ...FIG, fontSize: { xs: '1.1rem', md: '1.25rem' }, fontWeight: 600, color: '#FFFFFF' }}>
+                      {RATES.base}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', height: '34px' }}>
+                    <Box
+                      sx={{
+                        width: `${(6 / 56) * 100}%`,
+                        height: '100%',
+                        borderRadius: '3px',
+                        backgroundColor: 'var(--brand-accent)',
+                      }}
+                    />
+                  </Box>
+                </Box>
+
+                {/* Layer two, offset by layer one so it reads as added to it */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 1.4 }}>
+                    <Label onInk>Layer two, a target</Label>
+                    <Typography
+                      sx={{
+                        ...FIG,
+                        fontSize: { xs: '1.1rem', md: '1.25rem' },
+                        fontWeight: 600,
+                        color: 'rgba(255,255,255,0.8)',
+                      }}
+                    >
+                      {RATES.addLow} to {RATES.addHigh}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', height: '34px' }}>
+                    {/* the offset: where layer one finished */}
+                    <Box aria-hidden="true" sx={{ width: `${(6 / 56) * 100}%`, flexShrink: 0 }} />
+                    <Box
+                      sx={{
+                        width: `${(44 / 56) * 100}%`,
+                        height: '100%',
+                        borderRadius: '3px',
+                        border: `1.5px dashed rgba(255,255,255,0.45)`,
+                        /* A faint wash rather than a fill, so it reads as a
+                           region the number might land in rather than as an
+                           amount already counted. */
+                        background:
+                          'repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 5px, transparent 5px, transparent 11px)',
+                      }}
+                    />
+                  </Box>
+                </Box>
+
+                {/* the scale */}
+                <Box sx={{ display: 'flex', mt: 1.6 }}>
+                  <Box sx={{ width: `${(6 / 56) * 100}%`, flexShrink: 0 }}>
+                    <Label onInk sx={{ fontSize: '0.6rem' }}>0</Label>
+                  </Box>
+                  <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
+                    <Label onInk sx={{ fontSize: '0.6rem' }}>{RATES.base}</Label>
+                    <Label onInk sx={{ fontSize: '0.6rem' }}>Target band</Label>
+                  </Box>
+                </Box>
               </Box>
             </Reveal>
 
@@ -577,17 +678,17 @@ export default function StakePage() {
                         mb: 1.4,
                       }}
                     >
-                      The base rate is owed to you.
+                      {RATES.base} is owed to you.
                     </Typography>
                     <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
-                      Set in advance, accruing from the epoch your stake lands in, and not
+                      Set by the protocol, accruing from the epoch your stake lands in, and not
                       dependent on anything going well. Stake and do nothing else, and this is
                       what you get.
                     </Typography>
                   </Box>
 
                   <Box>
-                    <Label onInk>Additional</Label>
+                    <Label onInk>The target on top</Label>
                     <Typography
                       sx={{
                         mt: 1.6,
@@ -599,19 +700,33 @@ export default function StakePage() {
                         mb: 1.4,
                       }}
                     >
-                      The share on top only ever adds.
+                      {RATES.addLow} to {RATES.addHigh} is what we are aiming at.
                     </Typography>
                     <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
-                      Declared after a period rather than promised before it, so the size of it
-                      moves and it can be nothing at all. What it cannot do is go backwards. A
-                      quiet period pays the base in full; a good one pays more than it.
+                      The treasury puts the staked supply to work and stakers take a share of what
+                      it returns. The band is the range we are managing to, declared after a period
+                      rather than promised before it. What it cannot do is go backwards: a weak
+                      period still pays the {RATES.base} in full.
                     </Typography>
                   </Box>
                 </Box>
               </Reveal>
 
               <Reveal delay={120}>
-                <Statement onInk />
+                <Box>
+                  <Statement onInk />
+                  <Typography
+                    sx={{
+                      mt: 2.5,
+                      fontSize: '0.86rem',
+                      lineHeight: 1.7,
+                      color: 'rgba(255,255,255,0.52)',
+                    }}
+                  >
+                    Both layers are paid in value, not in credit. The credit side of the network
+                    is HEY, which is minted separately and does a different job.
+                  </Typography>
+                </Box>
               </Reveal>
             </Box>
           </Box>
