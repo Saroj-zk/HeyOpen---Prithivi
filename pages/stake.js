@@ -73,7 +73,45 @@ const RATES = {
   buyAt: '[EXCHANGE]',
   chain: '[CHAIN]',
   supply: '[SUPPLY]',
+  benchAsOf: 'as of [DATE]',
+  benchSource: '[SOURCES]',
 };
+
+/* The comparison, and the scale it is drawn on.
+ *
+ * A rate means nothing on its own, so the section shows it next to what the
+ * same money earns elsewhere. The benchmark figures below are the ones that
+ * need checking before this page is published, and the footnote under the
+ * chart carries the date and the source so a reader can check them too. They
+ * are set as numbers rather than as placeholder text because the bars have to
+ * be drawn to a scale, and a bar cannot be drawn from the word SAVINGS. */
+const BENCH = [
+  { label: 'A savings account', value: 0.4, figure: '0.40%' },
+  { label: 'Treasury bills, three month', value: 4, figure: '4.00%' },
+  { label: 'Lending a stablecoin onchain', value: 8, figure: '8.00%' },
+  { label: 'Staked $OPEN', base: 6, low: 40, high: 50, ours: true },
+];
+/* The axis runs to the top of our own band, so every bar is drawn true. */
+const SCALE = 56;
+
+/* What makes the number checkable. These are the claims that let a page
+   print a figure well above the alternatives without asking to be taken on
+   faith, and they are the same three any reader of this kind of page looks
+   for. Each needs a real answer from the business before publication. */
+const PROOF = [
+  [
+    'The floor is on chain',
+    `The ${RATES.base} is a protocol rate. It is set in the contract, it pays on schedule, and you do not have to trust anyone to read it.`,
+  ],
+  [
+    'The target is reported, not asserted',
+    'Each period closes with the figure the treasury actually returned, published against the band rather than compared to it afterwards. [WHERE IT IS PUBLISHED]',
+  ],
+  [
+    'The book is examined',
+    'Reserves and controls are reviewed by somebody who does not work here. [WHO AUDITS IT, AND HOW OFTEN]',
+  ],
+];
 
 /* Swap the # for the real destinations when they exist. */
 const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' };
@@ -565,108 +603,159 @@ export default function StakePage() {
                 <Head2
                   onInk
                   eyebrow="The yield"
-                  title="Two layers, and they are not the same kind of number."
-                  lede="One is a rate the protocol sets and pays. The other is what the treasury aims to return on top of it. They land in the same payment, in value rather than in credit, and the page keeps them apart because they are not promised in the same way."
+                  title={`A ${RATES.base} floor, and a target well above it.`}
+                  lede="The floor is a rate the protocol sets and pays whatever happens. The target is what the treasury is managing to on top of it. Both are paid in value rather than in credit, and the difference between the two is worth understanding before you stake."
                   maxWidth={760}
                 />
               </Box>
             </Reveal>
 
-            {/* The stack. Two bars on one scale, the second starting where the
-                first ends, because the second is added to the first and the
-                drawing should say so without a sentence. The base is filled.
-                The target is an open band with a floor and a ceiling, which
-                is what a range looks like when it is drawn honestly: there is
-                no single point to put a bar at. */}
+            {/* The comparison. The number only means something next to the
+                numbers it is competing with, which is the move both of the
+                pages this was measured against make. Ours is the only bar
+                drawn in two materials, because it is the only one that is
+                part fixed and part aimed at. */}
             <Reveal delay={80}>
               <Box
                 sx={{
                   border: `1px solid ${RULE_ON_INK}`,
                   borderRadius: '4px',
                   px: { xs: 2.5, md: 4 },
-                  py: { xs: 3, md: 4 },
+                  pt: { xs: 3, md: 3.5 },
+                  pb: { xs: 2.5, md: 3 },
                   mb: { xs: 5, md: 7 },
                 }}
               >
-                {/* Layer one */}
-                <Box sx={{ mb: { xs: 3.5, md: 4.5 } }}>
-                  <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 1.4 }}>
-                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>Layer one, fixed</Label>
-                    <Typography sx={{ ...FIG, fontSize: { xs: '1.1rem', md: '1.25rem' }, fontWeight: 600, color: '#FFFFFF' }}>
-                      {RATES.base}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', height: '34px' }}>
-                    <Box
-                      sx={{
-                        width: `${(6 / 56) * 100}%`,
-                        height: '100%',
-                        borderRadius: '3px',
-                        backgroundColor: 'var(--brand-accent)',
-                      }}
-                    />
-                  </Box>
+                <Box sx={{ mb: { xs: 3, md: 3.5 } }}>
+                  <Label onInk sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                    What the same money earns, a year
+                  </Label>
                 </Box>
 
-                {/* Layer two, offset by layer one so it reads as added to it */}
-                <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2, mb: 1.4 }}>
-                    <Label onInk>Layer two, a target</Label>
-                    <Typography
-                      sx={{
-                        ...FIG,
-                        fontSize: { xs: '1.1rem', md: '1.25rem' },
-                        fontWeight: 600,
-                        color: 'rgba(255,255,255,0.8)',
-                      }}
-                    >
-                      {RATES.addLow} to {RATES.addHigh}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', height: '34px' }}>
-                    {/* the offset: where layer one finished */}
-                    <Box aria-hidden="true" sx={{ width: `${(6 / 56) * 100}%`, flexShrink: 0 }} />
-                    <Box
-                      sx={{
-                        width: `${(44 / 56) * 100}%`,
-                        height: '100%',
-                        borderRadius: '3px',
-                        border: `1.5px dashed rgba(255,255,255,0.45)`,
-                        /* A faint wash rather than a fill, so it reads as a
-                           region the number might land in rather than as an
-                           amount already counted. */
-                        background:
-                          'repeating-linear-gradient(135deg, rgba(255,255,255,0.055) 0px, rgba(255,255,255,0.055) 5px, transparent 5px, transparent 11px)',
-                      }}
-                    />
-                  </Box>
-                </Box>
+                {BENCH.map((row) => {
+                  const ours = Boolean(row.ours);
+                  const total = ours ? row.base + row.high : row.value;
+                  return (
+                    <Box key={row.label} sx={{ mb: { xs: 2.2, md: 2.6 } }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'baseline',
+                          justifyContent: 'space-between',
+                          gap: 2,
+                          mb: 1,
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: { xs: '0.9rem', md: '0.96rem' },
+                            fontWeight: ours ? 700 : 400,
+                            color: ours ? '#FFFFFF' : 'rgba(255,255,255,0.6)',
+                          }}
+                        >
+                          {row.label}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            ...FIG,
+                            fontSize: { xs: '0.9rem', md: '1rem' },
+                            fontWeight: ours ? 700 : 500,
+                            color: ours ? 'var(--brand-accent)' : 'rgba(255,255,255,0.55)',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {ours ? `${RATES.base} + ${RATES.addLow} to ${RATES.addHigh}` : row.figure}
+                        </Typography>
+                      </Box>
 
-                {/* the scale */}
-                <Box sx={{ display: 'flex', mt: 1.6 }}>
-                  <Box sx={{ width: `${(6 / 56) * 100}%`, flexShrink: 0 }}>
-                    <Label onInk sx={{ fontSize: '0.6rem' }}>0</Label>
-                  </Box>
-                  <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
-                    <Label onInk sx={{ fontSize: '0.6rem' }}>{RATES.base}</Label>
-                    <Label onInk sx={{ fontSize: '0.6rem' }}>Target band</Label>
-                  </Box>
-                </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', height: ours ? '28px' : '12px' }}>
+                        {ours ? (
+                          <>
+                            {/* the part that is owed */}
+                            <Box
+                              sx={{
+                                width: `${(row.base / SCALE) * 100}%`,
+                                height: '100%',
+                                borderTopLeftRadius: '3px',
+                                borderBottomLeftRadius: '3px',
+                                backgroundColor: 'var(--brand-accent)',
+                              }}
+                            />
+                            {/* the target, up to the bottom of the band */}
+                            <Box
+                              sx={{
+                                width: `${(row.low / SCALE) * 100}%`,
+                                height: '100%',
+                                border: '1.5px dashed rgba(255,255,255,0.45)',
+                                borderLeft: 'none',
+                                borderRight: 'none',
+                                background:
+                                  'repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0px, rgba(255,255,255,0.07) 5px, transparent 5px, transparent 11px)',
+                              }}
+                            />
+                            {/* and the rest of the band, where it is less
+                                certain still. Drawing the range as one block
+                                would say the figure could land anywhere above
+                                the floor, which is not what a band means. */}
+                            <Box
+                              sx={{
+                                width: `${((row.high - row.low) / SCALE) * 100}%`,
+                                height: '100%',
+                                borderTopRightRadius: '3px',
+                                borderBottomRightRadius: '3px',
+                                border: '1.5px dashed rgba(255,255,255,0.28)',
+                                borderLeft: 'none',
+                                background:
+                                  'repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 5px, transparent 5px, transparent 11px)',
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <Box
+                            sx={{
+                              width: `${Math.max((row.value / SCALE) * 100, 0.6)}%`,
+                              height: '100%',
+                              borderRadius: '3px',
+                              backgroundColor: 'rgba(255,255,255,0.26)',
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </Box>
+                  );
+                })}
+
+                <Typography
+                  sx={{
+                    mt: { xs: 2.5, md: 3 },
+                    pt: 2,
+                    borderTop: `1px solid ${RULE_ON_INK}`,
+                    fontFamily: MONO,
+                    fontSize: '0.68rem',
+                    lineHeight: 1.8,
+                    color: 'rgba(255,255,255,0.42)',
+                  }}
+                >
+                  Solid is the fixed floor. Hatched is the target, not a rate.
+                  Comparison rates {RATES.benchAsOf}, sources {RATES.benchSource}.
+                </Typography>
               </Box>
             </Reveal>
 
+            {/* The two layers, said in words */}
             <Box
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
                 gap: { xs: 4, md: 8 },
                 alignItems: 'start',
+                mb: { xs: 6, md: 9 },
               }}
             >
               <Reveal>
                 <Box>
                   <Box sx={{ pb: 3.5, mb: 3.5, borderBottom: `1px solid ${RULE_ON_INK}` }}>
-                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>Fixed</Label>
+                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>The floor</Label>
                     <Typography
                       sx={{
                         mt: 1.6,
@@ -682,13 +771,13 @@ export default function StakePage() {
                     </Typography>
                     <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
                       Set by the protocol, accruing from the epoch your stake lands in, and not
-                      dependent on anything going well. Stake and do nothing else, and this is
-                      what you get.
+                      dependent on anything going well. Stake and do nothing else and this is
+                      what you get, in a good year and a bad one.
                     </Typography>
                   </Box>
 
                   <Box>
-                    <Label onInk>The target on top</Label>
+                    <Label onInk>The target</Label>
                     <Typography
                       sx={{
                         mt: 1.6,
@@ -700,13 +789,13 @@ export default function StakePage() {
                         mb: 1.4,
                       }}
                     >
-                      {RATES.addLow} to {RATES.addHigh} is what we are aiming at.
+                      {RATES.addLow} to {RATES.addHigh} is what we are managing to.
                     </Typography>
                     <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
                       The treasury puts the staked supply to work and stakers take a share of what
-                      it returns. The band is the range we are managing to, declared after a period
-                      rather than promised before it. What it cannot do is go backwards: a weak
-                      period still pays the {RATES.base} in full.
+                      it returns. The band is the range we run the book to, reported after each
+                      period rather than promised before it. It is added to the floor and never
+                      taken out of it.
                     </Typography>
                   </Box>
                 </Box>
@@ -723,12 +812,50 @@ export default function StakePage() {
                       color: 'rgba(255,255,255,0.52)',
                     }}
                   >
-                    Both layers are paid in value, not in credit. The credit side of the network
-                    is HEY, which is minted separately and does a different job.
+                    Both lines are paid in value, not in credit. The credit side of the network is
+                    HEY, which is minted separately and does a different job.
                   </Typography>
                 </Box>
               </Reveal>
             </Box>
+
+            {/* Why the number is believable. A rate this far above the
+                alternatives is only worth printing next to the reason anyone
+                should believe it, which is the second thing both reference
+                pages do and the part most yield pages skip. */}
+            <Reveal delay={60}>
+              <Box sx={{ borderTop: `1px solid ${RULE_ON_INK}`, pt: { xs: 4, md: 5 } }}>
+                <Box sx={{ mb: { xs: 3, md: 4 } }}>
+                  <Label onInk sx={{ color: 'rgba(255,255,255,0.7)' }}>Why you can check it</Label>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                    gap: { xs: 3, md: 6 },
+                  }}
+                >
+                  {PROOF.map(([title, body]) => (
+                    <Box key={title}>
+                      <Typography
+                        sx={{
+                          fontSize: '1.02rem',
+                          fontWeight: 700,
+                          letterSpacing: '-0.02em',
+                          color: '#FFFFFF',
+                          mb: 1.2,
+                        }}
+                      >
+                        {title}
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.92rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.6)' }}>
+                        {body}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Reveal>
           </Box>
         </Container>
       </Box>
