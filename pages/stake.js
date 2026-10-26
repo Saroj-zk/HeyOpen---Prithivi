@@ -62,10 +62,11 @@ const RATES = {
      and it needs an answer from the business before it goes on a page. */
   addLow: '40%',
   addHigh: '50%',
-  /* Not a sum. Whether the target is added to the base or already includes
-     it is the business's to say, and doing that arithmetic here would be
-     inventing the headline number. Say what it is made of instead. */
-  total: '6.00% plus target',
+  /* The floor and the target added together, on the basis that the target
+     was described as additional throughout. If the band already includes the
+     floor this is the one number to correct, and the worked example below
+     follows from it. */
+  total: '46% to 56%',
   payout: '[PERIOD]',
   unbond: '[UNBONDING]',
   threshold: '[THRESHOLD]',
@@ -75,6 +76,18 @@ const RATES = {
   supply: '[SUPPLY]',
   benchAsOf: 'as of [DATE]',
   benchSource: '[SOURCES]',
+};
+
+/* The same thing on an actual stake. A percentage is an abstraction and six
+   hundred tokens is not, which is why the page this was measured against
+   works its rate through ten thousand dollars rather than leaving it at a
+   rate. Arithmetic only, on the figures above. */
+const EXAMPLE = {
+  stake: "10,000",
+  floorAdd: "+600",
+  targetAdd: "+4,000 to +5,000",
+  floorTotal: "10,600",
+  planTotal: "14,600 to 15,600",
 };
 
 /* The comparison, and the scale it is drawn on.
@@ -742,60 +755,71 @@ export default function StakePage() {
               </Box>
             </Reveal>
 
-            {/* The two layers, said in words */}
+            {/* The deal, in two numbers, and then what it looks like on an
+                actual stake.
+             *
+             * This block used to be two matched paragraphs beside a repeat of
+             * the chart above it, which buried the proposition in prose and
+             * then said nothing new. A reader wants two things here: the worst
+             * case, and the case worth staking for. So the worst case is a
+             * number, the good case is a number, and the panel beside them
+             * works it through on a round figure, because a percentage is an
+             * abstraction and six hundred tokens is not. */}
             <Box
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                gap: { xs: 4, md: 8 },
-                alignItems: 'start',
+                gap: { xs: 5, md: 8 },
+                alignItems: 'center',
                 mb: { xs: 6, md: 9 },
               }}
             >
               <Reveal>
                 <Box>
-                  <Box sx={{ pb: 3.5, mb: 3.5, borderBottom: `1px solid ${RULE_ON_INK}` }}>
-                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>The floor</Label>
+                  <Box sx={{ pb: { xs: 3.5, md: 4 }, mb: { xs: 3.5, md: 4 }, borderBottom: `1px solid ${RULE_ON_INK}` }}>
+                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>However the year goes</Label>
                     <Typography
                       sx={{
-                        mt: 1.6,
-                        fontSize: { xs: '1.4rem', md: '1.65rem' },
-                        fontWeight: 700,
-                        letterSpacing: '-0.025em',
-                        lineHeight: 1.25,
+                        ...FIG,
+                        mt: 1.8,
+                        fontSize: { xs: '3.2rem', md: '4.4rem' },
+                        fontWeight: 600,
+                        lineHeight: 0.92,
+                        letterSpacing: '-0.045em',
                         color: '#FFFFFF',
-                        mb: 1.4,
                       }}
                     >
-                      {RATES.base} is owed to you.
+                      {RATES.base}
                     </Typography>
-                    <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
-                      Set by the protocol, accruing from the epoch your stake lands in, and not
-                      dependent on anything going well. Stake and do nothing else and this is
-                      what you get, in a good year and a bad one.
+                    <Typography
+                      sx={{ mt: 2, fontSize: '1rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.66)', maxWidth: '38ch' }}
+                    >
+                      Set by the protocol and paid on schedule. It does not wait on anything going
+                      well, and nothing that happens later takes it back.
                     </Typography>
                   </Box>
 
                   <Box>
-                    <Label onInk>The target</Label>
+                    <Label onInk>When the year goes to plan</Label>
                     <Typography
                       sx={{
-                        mt: 1.6,
-                        fontSize: { xs: '1.4rem', md: '1.65rem' },
-                        fontWeight: 700,
-                        letterSpacing: '-0.025em',
-                        lineHeight: 1.25,
-                        color: '#FFFFFF',
-                        mb: 1.4,
+                        ...FIG,
+                        mt: 1.8,
+                        fontSize: { xs: '3.2rem', md: '4.4rem' },
+                        fontWeight: 600,
+                        lineHeight: 0.92,
+                        letterSpacing: '-0.045em',
+                        color: 'var(--brand-accent)',
                       }}
                     >
-                      {RATES.addLow} to {RATES.addHigh} is what we are managing to.
+                      {RATES.total}
                     </Typography>
-                    <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
-                      The treasury puts the staked supply to work and stakers take a share of what
-                      it returns. The band is the range we run the book to, reported after each
-                      period rather than promised before it. It is added to the floor and never
-                      taken out of it.
+                    <Typography
+                      sx={{ mt: 2, fontSize: '1rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.66)', maxWidth: '38ch' }}
+                    >
+                      The floor plus a target of {RATES.addLow} to {RATES.addHigh}. The treasury
+                      puts the staked supply to work and stakers take a share of what comes back,
+                      reported once a period has closed rather than promised before it starts.
                     </Typography>
                   </Box>
                 </Box>
@@ -803,21 +827,52 @@ export default function StakePage() {
 
               <Reveal delay={120}>
                 <Box>
-                  <Statement onInk />
-                  <Typography
+                  <Box
                     sx={{
-                      mt: 2.5,
-                      fontSize: '0.86rem',
-                      lineHeight: 1.7,
-                      color: 'rgba(255,255,255,0.52)',
+                      borderRadius: '4px',
+                      border: `1px solid ${RULE_ON_INK}`,
+                      backgroundColor: 'rgba(255,255,255,0.03)',
+                      px: { xs: 2.5, md: 3.5 },
+                      pt: { xs: 2.2, md: 2.6 },
+                      pb: { xs: 2.4, md: 3 },
                     }}
                   >
-                    Both lines are paid in value, not in credit. The credit side of the network is
-                    HEY, which is minted separately and does a different job.
-                  </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 2,
+                        pb: '14px',
+                        borderBottom: `1px solid ${RULE_ON_INK}`,
+                      }}
+                    >
+                      <Label onInk>Worked through</Label>
+                      <Label onInk>A year</Label>
+                    </Box>
+
+                    <Entry name="You stake" figure={`${EXAMPLE.stake} $OPEN`} onInk />
+                    <Entry name="The floor pays" figure={EXAMPLE.floorAdd} onInk />
+                    <Entry name="The target adds" figure={EXAMPLE.targetAdd} dashed onInk />
+                    <Entry name="You hold, on plan" figure={EXAMPLE.planTotal} total onInk />
+
+                    <Typography
+                      sx={{
+                        mt: '16px',
+                        fontSize: '0.84rem',
+                        lineHeight: 1.7,
+                        color: 'rgba(255,255,255,0.52)',
+                      }}
+                    >
+                      And {EXAMPLE.floorTotal} if the target returns nothing at all, because the
+                      floor is paid either way. Both lines are paid in value, not in credit. HEY is
+                      the credit side and is minted separately.
+                    </Typography>
+                  </Box>
                 </Box>
               </Reveal>
             </Box>
+
 
             {/* Why the number is believable. A rate this far above the
                 alternatives is only worth printing next to the reason anyone
