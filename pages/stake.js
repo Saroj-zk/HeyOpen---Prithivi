@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
+import { TOKEN } from '@/data/token';
 
 /**
  * $OPEN, and what staking it does.
@@ -53,6 +54,9 @@ const FIG = { fontFamily: MONO, fontVariantNumeric: 'tabular-nums', letterSpacin
 /* are, the page reads as unfinished rather than as a wrong promise.   */
 /* ------------------------------------------------------------------ */
 const RATES = {
+  /* Supply comes from the tokenomics data rather than being retyped, so the
+     two pages cannot drift apart. */
+  supply: TOKEN.supply,
   /* Fixed, and stated as fixed. */
   base: '6.00%',
   /* A range, and stated as a target rather than as a rate, because a return
@@ -67,15 +71,6 @@ const RATES = {
      floor this is the one number to correct, and the worked example below
      follows from it. */
   total: '46% to 56%',
-  payout: '[PERIOD]',
-  unbond: '[UNBONDING]',
-  threshold: '[THRESHOLD]',
-  heyRate: '[CREDIT]',
-  buyAt: '[EXCHANGE]',
-  chain: '[CHAIN]',
-  supply: '[SUPPLY]',
-  benchAsOf: 'as of [DATE]',
-  benchSource: '[SOURCES]',
 };
 
 /* The same thing on an actual stake. A percentage is an abstraction and six
@@ -90,39 +85,25 @@ const EXAMPLE = {
   planTotal: "14,600 to 15,600",
 };
 
-/* The comparison, and the scale it is drawn on.
- *
- * A rate means nothing on its own, so the section shows it next to what the
- * same money earns elsewhere. The benchmark figures below are the ones that
- * need checking before this page is published, and the footnote under the
- * chart carries the date and the source so a reader can check them too. They
- * are set as numbers rather than as placeholder text because the bars have to
- * be drawn to a scale, and a bar cannot be drawn from the word SAVINGS. */
-const BENCH = [
-  { label: 'A savings account', value: 0.4, figure: '0.40%' },
-  { label: 'Treasury bills, three month', value: 4, figure: '4.00%' },
-  { label: 'Lending a stablecoin onchain', value: 8, figure: '8.00%' },
-  { label: 'Staked $OPEN', base: 6, low: 40, high: 50, ours: true },
-];
-/* The axis runs to the top of our own band, so every bar is drawn true. */
-const SCALE = 56;
-
 /* What makes the number checkable. These are the claims that let a page
    print a figure well above the alternatives without asking to be taken on
    faith, and they are the same three any reader of this kind of page looks
    for. Each needs a real answer from the business before publication. */
+/* Three things a reader can establish without being asked to take anyone's
+   word for it. Each follows from how the thing is built, which is why they
+   can sit on the page before anybody signs off on an audit. */
 const PROOF = [
   [
-    'The floor is on chain',
-    `The ${RATES.base} is a protocol rate. It is set in the contract, it pays on schedule, and you do not have to trust anyone to read it.`,
+    'The floor is a contract rate',
+    `The ${RATES.base} is set in the staking contract. It pays on schedule, it does not wait on a decision, and anyone can read it without asking us.`,
   ],
   [
-    'The target is reported, not asserted',
-    'Each period closes with the figure the treasury actually returned, published against the band rather than compared to it afterwards. [WHERE IT IS PUBLISHED]',
+    'The stake stays yours',
+    'Staking does not sell your $OPEN or move it beyond your reach. You can unstake, and the balance is visible the whole time.',
   ],
   [
-    'The book is examined',
-    'Reserves and controls are reviewed by somebody who does not work here. [WHO AUDITS IT, AND HOW OFTEN]',
+    'The target is reported after the fact',
+    'Each period closes with the figure that was actually returned, published against the band rather than compared with it later.',
   ],
 ];
 
@@ -134,66 +115,60 @@ const HOW = [
   {
     n: '01',
     title: 'Get $OPEN',
-    body: `An ERC-20 on ${RATES.chain}. Buy it on ${RATES.buyAt}, or anywhere else it trades.`,
+    body: 'An ERC-20, with a fixed supply and no inflation switch. Buy it wherever it trades.',
     cta: 'Buy $OPEN',
     href: LINKS.buy,
   },
   {
     n: '02',
     title: 'Stake it',
-    body: `Earn on everything you stake, and at ${RATES.threshold} the app stops being something you pay for.`,
+    body: `Everything you stake earns from the epoch it lands in: ${RATES.base} fixed, with a target on top.`,
     cta: 'Stake $OPEN',
     href: LINKS.stake,
   },
   {
     n: '03',
     title: 'Mint HEY',
-    body: `The second token here, and only stakers can make it. Each one pays out ${RATES.heyRate} of credit a day.`,
+    body: 'Staked $OPEN mints HEY, and nothing else does. Stake the HEY and it pays you in compute.',
     cta: 'Mint HEY',
     href: LINKS.mint,
   },
 ];
 
-const UNLOCKS = [
-  ['Yield on the stake', 'Base rate, plus the share on top'],
-  ['The right to mint HEY', 'Staked $OPEN only'],
-  ['The full app', `At ${RATES.threshold} staked`],
-  ['Governance weight', 'Carried by the stake'],
-];
-
-const HEY_SPEC = [
-  ['Minted from', 'Staked $OPEN only'],
-  ['Pays out', `${RATES.heyRate} of credit, daily`],
-  ['Good for', 'Every model on the network'],
-  ['Runs for', 'As long as you hold it'],
-  ['To release the stake', 'Burn the HEY'],
-];
-
-const FAQ = [
-  [
-    'How is the yield paid?',
-    `In $OPEN, every ${RATES.payout}, to the address holding the stake. Both entries arrive together.`,
-  ],
-  [
-    'Is the share on top guaranteed?',
-    'No. It is declared after a period rather than promised before it, and it can be nothing. What it cannot do is go backwards: a quiet period still pays the base rate in full.',
-  ],
-  [
-    'Can I unstake?',
-    `Yes, after an unbonding period of ${RATES.unbond}. Stake backing minted HEY stays locked until that HEY is burned.`,
-  ],
-  [
-    'What is HEY, exactly?',
-    `A second token, minted only against staked $OPEN. Each one pays out ${RATES.heyRate} of credit every day, for any model on the network, for as long as you hold it.`,
-  ],
-  [
-    'What happens to HEY when I unstake?',
-    'Nothing, unless it was minted against the stake you are withdrawing. That HEY is burned first, which releases the $OPEN behind it.',
-  ],
-  [
-    'How is this different from the tokenomics page?',
-    'That page covers where $OPEN comes from and what takes it out of supply. This one covers what happens while you hold it.',
-  ],
+/* The two stakes, which is the part of this that is easy to get wrong.
+   Staking the capital asset pays in value. Staking what it mints pays in
+   compute. Same verb, two different currencies out, and the page is clearer
+   for putting them side by side than for explaining them a section apart. */
+const STAKES = [
+  {
+    token: '$OPEN',
+    kind: 'The capital asset',
+    paidIn: 'Value',
+    lead: true,
+    body:
+      'The asset you buy and hold. Staking it earns a fixed floor with a target on top, paid in $OPEN rather than in anything you have to spend here.',
+    rows: [
+      ['Floor', RATES.base],
+      ['On plan', RATES.total],
+      ['Paid in', '$OPEN'],
+    ],
+    cta: 'Stake $OPEN',
+    href: LINKS.stake,
+  },
+  {
+    token: 'HEY',
+    kind: 'Minted by stakers',
+    paidIn: 'Compute credits',
+    body:
+      'Minted against staked $OPEN and held or sold like anything else. Staking it pays out credit for the catalogue, which is the network paying you in the thing it makes.',
+    rows: [
+      ['Minted from', 'Staked $OPEN'],
+      ['Pays out', 'Compute credits'],
+      ['Good for', 'Every model'],
+    ],
+    cta: 'Mint HEY',
+    href: LINKS.mint,
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -322,7 +297,7 @@ function Statement({ onInk }) {
         }}
       >
         <Label onInk={onInk}>Statement</Label>
-        <Label onInk={onInk}>Per {RATES.payout}</Label>
+        <Label onInk={onInk}>Per epoch</Label>
       </Box>
 
       <Entry name="Base rate" figure={RATES.base} onInk={onInk} />
@@ -509,8 +484,9 @@ export default function StakePage() {
                   textWrap: 'pretty',
                 }}
               >
-                $OPEN is the capital asset of Hey Open. Stake it to earn, to unlock the full app,
-                and to mint HEY, which pays out credit every day for any model on the network.
+                $OPEN is the capital asset of Hey Open. Stake it and it earns. Staking it is
+                also the only way to mint HEY, and staking that pays you in compute credit for
+                any model on the network.
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
                 <Button href={LINKS.stake} primary>
@@ -620,138 +596,6 @@ export default function StakePage() {
                   lede="The floor is a rate the protocol sets and pays whatever happens. The target is what the treasury is managing to on top of it. Both are paid in value rather than in credit, and the difference between the two is worth understanding before you stake."
                   maxWidth={760}
                 />
-              </Box>
-            </Reveal>
-
-            {/* The comparison. The number only means something next to the
-                numbers it is competing with, which is the move both of the
-                pages this was measured against make. Ours is the only bar
-                drawn in two materials, because it is the only one that is
-                part fixed and part aimed at. */}
-            <Reveal delay={80}>
-              <Box
-                sx={{
-                  border: `1px solid ${RULE_ON_INK}`,
-                  borderRadius: '4px',
-                  px: { xs: 2.5, md: 4 },
-                  pt: { xs: 3, md: 3.5 },
-                  pb: { xs: 2.5, md: 3 },
-                  mb: { xs: 5, md: 7 },
-                }}
-              >
-                <Box sx={{ mb: { xs: 3, md: 3.5 } }}>
-                  <Label onInk sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                    What the same money earns, a year
-                  </Label>
-                </Box>
-
-                {BENCH.map((row) => {
-                  const ours = Boolean(row.ours);
-                  const total = ours ? row.base + row.high : row.value;
-                  return (
-                    <Box key={row.label} sx={{ mb: { xs: 2.2, md: 2.6 } }}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'baseline',
-                          justifyContent: 'space-between',
-                          gap: 2,
-                          mb: 1,
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            fontSize: { xs: '0.9rem', md: '0.96rem' },
-                            fontWeight: ours ? 700 : 400,
-                            color: ours ? '#FFFFFF' : 'rgba(255,255,255,0.6)',
-                          }}
-                        >
-                          {row.label}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            ...FIG,
-                            fontSize: { xs: '0.9rem', md: '1rem' },
-                            fontWeight: ours ? 700 : 500,
-                            color: ours ? 'var(--brand-accent)' : 'rgba(255,255,255,0.55)',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {ours ? `${RATES.base} + ${RATES.addLow} to ${RATES.addHigh}` : row.figure}
-                        </Typography>
-                      </Box>
-
-                      <Box sx={{ display: 'flex', alignItems: 'center', height: ours ? '28px' : '12px' }}>
-                        {ours ? (
-                          <>
-                            {/* the part that is owed */}
-                            <Box
-                              sx={{
-                                width: `${(row.base / SCALE) * 100}%`,
-                                height: '100%',
-                                borderTopLeftRadius: '3px',
-                                borderBottomLeftRadius: '3px',
-                                backgroundColor: 'var(--brand-accent)',
-                              }}
-                            />
-                            {/* the target, up to the bottom of the band */}
-                            <Box
-                              sx={{
-                                width: `${(row.low / SCALE) * 100}%`,
-                                height: '100%',
-                                border: '1.5px dashed rgba(255,255,255,0.45)',
-                                borderLeft: 'none',
-                                borderRight: 'none',
-                                background:
-                                  'repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0px, rgba(255,255,255,0.07) 5px, transparent 5px, transparent 11px)',
-                              }}
-                            />
-                            {/* and the rest of the band, where it is less
-                                certain still. Drawing the range as one block
-                                would say the figure could land anywhere above
-                                the floor, which is not what a band means. */}
-                            <Box
-                              sx={{
-                                width: `${((row.high - row.low) / SCALE) * 100}%`,
-                                height: '100%',
-                                borderTopRightRadius: '3px',
-                                borderBottomRightRadius: '3px',
-                                border: '1.5px dashed rgba(255,255,255,0.28)',
-                                borderLeft: 'none',
-                                background:
-                                  'repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 5px, transparent 5px, transparent 11px)',
-                              }}
-                            />
-                          </>
-                        ) : (
-                          <Box
-                            sx={{
-                              width: `${Math.max((row.value / SCALE) * 100, 0.6)}%`,
-                              height: '100%',
-                              borderRadius: '3px',
-                              backgroundColor: 'rgba(255,255,255,0.26)',
-                            }}
-                          />
-                        )}
-                      </Box>
-                    </Box>
-                  );
-                })}
-
-                <Typography
-                  sx={{
-                    mt: { xs: 2.5, md: 3 },
-                    pt: 2,
-                    borderTop: `1px solid ${RULE_ON_INK}`,
-                    fontFamily: MONO,
-                    fontSize: '0.68rem',
-                    lineHeight: 1.8,
-                    color: 'rgba(255,255,255,0.42)',
-                  }}
-                >
-                  Solid is the fixed floor. Hatched is the target, not a rate.
-                  Comparison rates {RATES.benchAsOf}, sources {RATES.benchSource}.
-                </Typography>
               </Box>
             </Reveal>
 
@@ -916,90 +760,121 @@ export default function StakePage() {
       </Box>
 
       <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 }, position: 'relative', zIndex: 1 }}>
-        {/* ── What staking unlocks ───────────────────────────────── */}
+        {/* ── Two things to stake ────────────────────────────────── */}
         <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-              gap: { xs: 4, md: 8 },
-              alignItems: 'center',
-            }}
-          >
-            <Reveal>
-              <Box>
-                <Head2
-                  eyebrow="What it unlocks"
-                  title={`Stake ${RATES.threshold} and stop paying for the app.`}
-                  lede="Everything the subscription gets you, for as long as the stake is there. Unstake and it goes back to being a subscription, with nothing lost in between."
-                />
-                <Box sx={{ mt: 4 }}>
-                  <Button href={LINKS.stake} primary>
-                    Stake $OPEN
-                    <Box component="span" aria-hidden="true">→</Box>
-                  </Button>
-                </Box>
-              </Box>
-            </Reveal>
+          <Reveal>
+            <Box sx={{ mb: { xs: 4, md: 6 } }}>
+              <Head2
+                eyebrow="Two tokens"
+                title="Two things to stake, paid in two different ways."
+                lede="$OPEN is the capital asset and HEY is what it mints. Staking the first pays you in value. Staking the second pays you in the thing the network actually makes, which is compute."
+              />
+            </Box>
+          </Reveal>
 
-            <Reveal delay={100}>
-              <Box sx={{ borderTop: `2px solid ${INK}`, pt: 1 }}>
-                {UNLOCKS.map(([name, figure]) => (
-                  <Entry key={name} name={name} figure={figure} />
-                ))}
-              </Box>
-            </Reveal>
-          </Box>
+          <Reveal delay={80}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                gap: { xs: 2.5, md: 3 },
+              }}
+            >
+              {STAKES.map((s) => (
+                <Box
+                  key={s.token}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderRadius: '4px',
+                    border: `1px solid ${s.lead ? 'rgba(255,102,0,0.4)' : RULE}`,
+                    backgroundColor: 'var(--bg-card)',
+                    boxShadow: s.lead
+                      ? '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -28px rgba(255,102,0,.3)'
+                      : '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -32px rgba(11,15,26,.18)',
+                    px: { xs: 2.5, md: 3.5 },
+                    pt: { xs: 2.4, md: 3 },
+                    pb: { xs: 2.8, md: 3.5 },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 2,
+                      pb: '16px',
+                      mb: '20px',
+                      borderBottom: `1px solid ${RULE}`,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        ...FIG,
+                        fontSize: '1.05rem',
+                        fontWeight: 600,
+                        color: s.lead ? 'var(--brand-accent)' : 'var(--text-heading)',
+                      }}
+                    >
+                      {s.token}
+                    </Typography>
+                    <Label>{s.kind}</Label>
+                  </Box>
+
+                  <Label sx={{ color: 'var(--text-muted)' }}>Paid in</Label>
+                  <Typography
+                    sx={{
+                      mt: 1.4,
+                      mb: 2.4,
+                      fontSize: { xs: '1.5rem', md: '1.8rem' },
+                      fontWeight: 700,
+                      letterSpacing: '-0.03em',
+                      lineHeight: 1.1,
+                      color: 'var(--text-heading)',
+                    }}
+                  >
+                    {s.paidIn}
+                  </Typography>
+
+                  <Typography
+                    sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--text-secondary)', mb: 3, flex: 1 }}
+                  >
+                    {s.body}
+                  </Typography>
+
+                  <Box sx={{ borderTop: `1px solid ${RULE}`, pt: 1 }}>
+                    {s.rows.map(([name, figure]) => (
+                      <Entry key={name} name={name} figure={figure} />
+                    ))}
+                  </Box>
+
+                  <Box sx={{ mt: 3 }}>
+                    <Button href={s.href} primary={s.lead} small>
+                      {s.cta}
+                    </Button>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </Reveal>
+
+          <Reveal delay={140}>
+            <Typography
+              sx={{
+                mt: { xs: 3, md: 4 },
+                fontFamily: MONO,
+                fontSize: '0.74rem',
+                lineHeight: 1.8,
+                color: 'var(--text-muted)',
+                maxWidth: '76ch',
+              }}
+            >
+              HEY is minted against staked $OPEN and nothing else mints it. Burning HEY releases
+              the stake behind it.
+            </Typography>
+          </Reveal>
         </Box>
 
-        {/* ── HEY ────────────────────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1.05fr 1fr' },
-              gap: { xs: 4, md: 8 },
-              alignItems: 'center',
-            }}
-          >
-            <Reveal>
-              <Box>
-                <Head2
-                  eyebrow="The second token"
-                  title="Mint HEY with staked $OPEN."
-                  lede="HEY is how the network hands out use rather than money. All of it is made from staked $OPEN, and nothing else can make it. Use what it pays, or sell it to somebody who will."
-                />
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
-                  <Button href={LINKS.mint} primary>
-                    Mint HEY
-                    <Box component="span" aria-hidden="true">→</Box>
-                  </Button>
-                  <Button href="/docs">See what credit buys</Button>
-                </Box>
-              </Box>
-            </Reveal>
-
-            <Reveal delay={100}>
-              <Box
-                sx={{
-                  borderRadius: '4px',
-                  border: `1px solid ${RULE}`,
-                  backgroundColor: 'var(--bg-card)',
-                  boxShadow: '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -30px rgba(11,15,26,.20)',
-                  px: { xs: 2.5, md: 3.5 },
-                  py: { xs: 2, md: 2.5 },
-                }}
-              >
-                <Box sx={{ pb: '14px', borderBottom: `1px solid ${RULE}` }}>
-                  <Label>HEY</Label>
-                </Box>
-                {HEY_SPEC.map(([name, figure]) => (
-                  <Entry key={name} name={name} figure={figure} />
-                ))}
-              </Box>
-            </Reveal>
-          </Box>
-        </Box>
 
         {/* ── Supply ─────────────────────────────────────────────── */}
         <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
@@ -1034,6 +909,7 @@ export default function StakePage() {
                 </Box>
                 <Box>
                   <Typography
+                    component="h2"
                     sx={{
                       fontSize: { xs: '1.3rem', md: '1.6rem' },
                       fontWeight: 700,
@@ -1058,44 +934,6 @@ export default function StakePage() {
                   </Box>
                 </Box>
               </Box>
-            </Box>
-          </Reveal>
-        </Box>
-
-        {/* ── FAQ ────────────────────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
-          <Reveal>
-            <Box sx={{ mb: { xs: 4, md: 6 } }}>
-              <Head2 eyebrow="Questions" title="The ones that actually get asked." />
-            </Box>
-          </Reveal>
-
-          <Reveal delay={80}>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
-                columnGap: { md: 8 },
-              }}
-            >
-              {FAQ.map(([q, a]) => (
-                <Box key={q} sx={{ borderTop: `1px solid ${RULE}`, py: { xs: 2.6, md: 3 } }}>
-                  <Typography
-                    sx={{
-                      fontSize: '1.04rem',
-                      fontWeight: 700,
-                      letterSpacing: '-0.02em',
-                      color: 'var(--text-heading)',
-                      mb: 1.2,
-                    }}
-                  >
-                    {q}
-                  </Typography>
-                  <Typography sx={{ fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                    {a}
-                  </Typography>
-                </Box>
-              ))}
             </Box>
           </Reveal>
         </Box>
