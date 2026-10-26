@@ -13,27 +13,37 @@ import { Reveal } from '@/components/ui/LedgerUI';
  *
  * Laid out to follow Venice's VVV page, which is the thing this was asked to
  * be like, with the same two tokens doing the same two jobs. $OPEN is the
- * capital asset you buy and stake, the way VVV is. HEY is minted only by
- * stakers and pays out credit every day, the way DIEM is. The section order
- * follows theirs too: how it works in three cards, then the capital asset,
- * then what staking unlocks, then the mint, then supply, then questions.
+ * capital asset you buy and stake, as VVV is. HEY is minted only by stakers
+ * and pays out credit every day, as DIEM is.
  *
- * The one thing we have that they do not is a yield in two parts, and that
- * is where the care goes. A fixed base rate and a variable share on top are
- * different kinds of promise, so the page never lets them look alike: the
- * base is a filled bar inside a solid card, the variable share is an open
- * dashed one with no fill, because no number can honestly sit in it ahead of
- * time. Someone who reads only the graphic still learns that the second part
- * is not owed to them.
+ * Drawn as a ledger, because that is the company's own word and because
+ * staking is bookkeeping. Figures are monospace and tabular so columns line
+ * up the way they do on a statement, entries are set with leader dots, and
+ * the total carries a double rule, which is the one convention every
+ * accountant recognises and which nothing else on the site uses.
  *
- * Two things the copy deliberately does and does not do. It does say that
- * the variable share only ever adds, which is true and is the reassuring
- * part: a period with nothing to share pays the base, it never pays less.
- * It does not say where that share comes from. Leaving the strategy off a
- * landing page is normal. Naming a source that is not the real one would be
- * an easier sentence and would be false, and on a yield product that is the
- * difference someone eventually asks about.
+ * That device is also what carries the honesty, which is the reason it was
+ * chosen over something merely decorative. A fixed base rate and a variable
+ * share on top are different kinds of promise, so they are different kinds
+ * of entry: the base is a firm line, the share above the total is dashed and
+ * holds no figure, because no number can honestly sit there ahead of time.
+ * Read only the card and you still learn which half is owed to you.
+ *
+ * Two things the copy does and does not do. It does say the share only ever
+ * adds, which is true and is the reassuring part: a quiet period pays the
+ * base in full, never less. It does not say where the share comes from.
+ * Leaving a strategy off a landing page is normal; naming a source that is
+ * not the real one would be an easier sentence and would be false.
  */
+
+/* ---- page scoped tokens ------------------------------------------ */
+/* Ink is a near black with a blue cast rather than a true black, so the
+   dark band reads as paper stock rather than as a hole in the page. */
+const INK = '#0B0F1A';
+const MONO = '"Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
+const RULE = 'rgba(11, 15, 26, 0.14)';
+const RULE_ON_INK = 'rgba(255, 255, 255, 0.20)';
+const FIG = { fontFamily: MONO, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em' };
 
 /* ------------------------------------------------------------------ */
 /* Fill these in before the page goes live.                            */
@@ -43,72 +53,72 @@ import { Reveal } from '@/components/ui/LedgerUI';
 /* are, the page reads as unfinished rather than as a wrong promise.   */
 /* ------------------------------------------------------------------ */
 const RATES = {
-  base: '[BASE APY]',
-  variableLabel: '[VARIABLE]',
-  payout: '[PAYOUT PERIOD]',
-  unbond: '[UNBONDING PERIOD]',
-  proThreshold: '[THRESHOLD]',
-  heyRate: '[DAILY CREDIT]',
+  base: '[BASE]',
+  total: '[TOTAL]',
+  payout: '[PERIOD]',
+  unbond: '[UNBONDING]',
+  threshold: '[THRESHOLD]',
+  heyRate: '[CREDIT]',
   buyAt: '[EXCHANGE]',
   chain: '[CHAIN]',
   supply: '[SUPPLY]',
 };
 
 /* Swap the # for the real destinations when they exist. */
-const LINKS = {
-  buy: '#',
-  stake: '#',
-  mint: '#',
-  explorer: '#',
-  marketCap: '#',
-};
-
+const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' };
 const APP = 'https://ais.openledger.xyz/chat';
 
-/* The three moves, as on the page this follows: acquire, stake, mint. */
 const HOW = [
   {
     n: '01',
-    title: `Get $OPEN`,
+    title: 'Get $OPEN',
     body: `An ERC-20 on ${RATES.chain}. Buy it on ${RATES.buyAt}, or anywhere else it trades.`,
     cta: 'Buy $OPEN',
     href: LINKS.buy,
   },
   {
     n: '02',
-    title: 'Stake $OPEN',
-    body: `Earn on everything you stake, and at ${RATES.proThreshold} the app stops being something you pay for.`,
+    title: 'Stake it',
+    body: `Earn on everything you stake, and at ${RATES.threshold} the app stops being something you pay for.`,
     cta: 'Stake $OPEN',
     href: LINKS.stake,
   },
   {
     n: '03',
     title: 'Mint HEY',
-    body: `HEY is the second token here, and only stakers can make it. Each one pays out ${RATES.heyRate} of credit a day.`,
+    body: `The second token here, and only stakers can make it. Each one pays out ${RATES.heyRate} of credit a day.`,
     cta: 'Mint HEY',
     href: LINKS.mint,
   },
 ];
 
 const UNLOCKS = [
-  ['Yield on the stake', 'A base rate on everything staked, and a variable share on top of it.'],
-  ['The right to mint HEY', 'HEY is minted against staked $OPEN and nothing else. No stake, no mint.'],
-  [`${RATES.proThreshold} unlocks the full app`, 'Stake the threshold and the subscription stops being something you pay for.'],
-  ['A vote that costs something', 'Governance weight sits with the stake, so the people steering the network are the ones exposed to it.'],
+  ['Yield on the stake', 'Base rate, plus the share on top'],
+  ['The right to mint HEY', 'Staked $OPEN only'],
+  ['The full app', `At ${RATES.threshold} staked`],
+  ['Governance weight', 'Carried by the stake'],
+];
+
+const HEY_SPEC = [
+  ['Minted from', 'Staked $OPEN only'],
+  ['Pays out', `${RATES.heyRate} of credit, daily`],
+  ['Good for', 'Every model on the network'],
+  ['Runs for', 'As long as you hold it'],
+  ['To release the stake', 'Burn the HEY'],
 ];
 
 const FAQ = [
   [
     'How is the yield paid?',
-    `In $OPEN, every ${RATES.payout}, to the address holding the stake. The base rate and the variable share arrive together.`,
+    `In $OPEN, every ${RATES.payout}, to the address holding the stake. Both entries arrive together.`,
   ],
   [
-    'Is the variable share guaranteed?',
-    'No. It is declared per period rather than promised in advance, and it can be zero. What it cannot do is go backwards: a period with nothing to share still pays the base rate in full.',
+    'Is the share on top guaranteed?',
+    'No. It is declared after a period rather than promised before it, and it can be nothing. What it cannot do is go backwards: a quiet period still pays the base rate in full.',
   ],
   [
     'Can I unstake?',
-    `Yes, after an unbonding period of ${RATES.unbond}. Stake that is backing minted HEY stays locked until that HEY is burned.`,
+    `Yes, after an unbonding period of ${RATES.unbond}. Stake backing minted HEY stays locked until that HEY is burned.`,
   ],
   [
     'What is HEY, exactly?',
@@ -116,7 +126,7 @@ const FAQ = [
   ],
   [
     'What happens to HEY when I unstake?',
-    'Nothing, unless it was minted against the stake you are withdrawing. That HEY has to be burned first, which releases the $OPEN behind it.',
+    'Nothing, unless it was minted against the stake you are withdrawing. That HEY is burned first, which releases the $OPEN behind it.',
   ],
   [
     'How is this different from the tokenomics page?',
@@ -125,16 +135,21 @@ const FAQ = [
 ];
 
 /* ------------------------------------------------------------------ */
+/* Ledger parts                                                        */
+/* ------------------------------------------------------------------ */
 
-function Eyebrow({ children }) {
+function Label({ children, sx, onInk }) {
   return (
     <Typography
+      component="span"
       sx={{
-        fontSize: '0.74rem',
-        fontWeight: 700,
-        letterSpacing: '0.16em',
+        fontFamily: MONO,
+        fontSize: '0.66rem',
+        fontWeight: 500,
+        letterSpacing: '0.18em',
         textTransform: 'uppercase',
-        color: 'var(--brand-accent)',
+        color: onInk ? 'rgba(255,255,255,0.52)' : 'var(--text-muted)',
+        ...sx,
       }}
     >
       {children}
@@ -142,52 +157,136 @@ function Eyebrow({ children }) {
   );
 }
 
-function SectionHead({ eyebrow, title, lede, center }) {
+/* One line of a statement: what it is, a run of leader dots, what it comes
+   to. The dots are the thing that makes a row read as an entry rather than
+   as a label and a number that happen to share a line. */
+function Entry({ name, figure, dashed, total, onInk }) {
+  const ink = onInk ? '#FFFFFF' : 'var(--text-heading)';
+  const quiet = onInk ? 'rgba(255,255,255,0.62)' : 'var(--text-secondary)';
+  const rule = onInk ? RULE_ON_INK : RULE;
+
   return (
-    <Box sx={{ maxWidth: 820, mb: { xs: 4, md: 6 }, mx: center ? 'auto' : 0, textAlign: center ? 'center' : 'left' }}>
-      <Eyebrow>{eyebrow}</Eyebrow>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'baseline',
+        gap: '12px',
+        pt: total ? { xs: '16px', md: '18px' } : '13px',
+        pb: '13px',
+        /* The total sits under a double rule. It is the one piece of
+           accounting grammar everyone can already read. */
+        borderTop: total ? `3px double ${onInk ? 'rgba(255,255,255,0.5)' : 'rgba(11,15,26,0.45)'}` : 'none',
+      }}
+    >
       <Typography
-        component="h2"
         sx={{
-          mt: 2,
-          fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
-          fontWeight: 700,
-          letterSpacing: '-0.03em',
-          lineHeight: 1.08,
-          color: 'var(--text-heading)',
-          textWrap: 'balance',
+          fontSize: total ? { xs: '0.95rem', md: '1rem' } : '0.92rem',
+          fontWeight: total ? 600 : 400,
+          color: total ? ink : quiet,
+          /* Entries carry words as well as figures here, so neither side can
+             refuse to wrap: at 375px a nowrap value ran 85px past the edge,
+             clipped rather than scrolling because the page clips overflow. */
+          whiteSpace: { xs: 'normal', md: 'nowrap' },
+          minWidth: 0,
         }}
       >
-        {title}
+        {name}
       </Typography>
-      {lede && (
+      <Box
+        aria-hidden="true"
+        sx={{ flex: 1, minWidth: '16px', borderBottom: `1px dotted ${rule}`, transform: 'translateY(-5px)' }}
+      />
+      {dashed ? (
+        /* No figure, and an empty rule where one would go. There is nothing
+           honest to print here before the period is over. */
+        <Box
+          aria-hidden="true"
+          sx={{
+            width: { xs: '58px', md: '74px' },
+            height: '22px',
+            borderRadius: '4px',
+            border: `1.5px dashed ${onInk ? 'rgba(255,255,255,0.4)' : 'rgba(11,15,26,0.3)'}`,
+          }}
+        />
+      ) : (
         <Typography
           sx={{
-            mt: 2,
-            fontSize: '1.05rem',
-            lineHeight: 1.65,
-            color: 'var(--text-secondary)',
-            textWrap: 'pretty',
+            ...FIG,
+            fontSize: total ? { xs: '1.15rem', md: '1.3rem' } : '0.98rem',
+            fontWeight: total ? 600 : 500,
+            color: total ? 'var(--brand-accent)' : ink,
+            whiteSpace: 'normal',
+            textAlign: 'right',
+            minWidth: 0,
           }}
         >
-          {lede}
+          {figure}
         </Typography>
       )}
     </Box>
   );
 }
 
-function Button({ children, href, primary, small }) {
+/* The thesis of the page, as an object: what staking pays, set as the
+   statement it produces. */
+function Statement({ onInk }) {
+  return (
+    <Box
+      sx={{
+        borderRadius: '4px',
+        border: `1px solid ${onInk ? RULE_ON_INK : RULE}`,
+        backgroundColor: onInk ? 'rgba(255,255,255,0.03)' : 'var(--bg-card)',
+        boxShadow: onInk ? 'none' : '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -28px rgba(11,15,26,.22)',
+        px: { xs: 2.5, md: 3.5 },
+        pt: { xs: 2.2, md: 2.6 },
+        pb: { xs: 2.2, md: 2.8 },
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2,
+          pb: '14px',
+          borderBottom: `1px solid ${onInk ? RULE_ON_INK : RULE}`,
+        }}
+      >
+        <Label onInk={onInk}>Statement</Label>
+        <Label onInk={onInk}>Per {RATES.payout}</Label>
+      </Box>
+
+      <Entry name="Base rate" figure={RATES.base} onInk={onInk} />
+      <Entry name="Share on top" dashed onInk={onInk} />
+      <Entry name="Paid to you" figure={RATES.total} total onInk={onInk} />
+
+      <Typography
+        sx={{
+          mt: '14px',
+          fontSize: '0.8rem',
+          lineHeight: 1.6,
+          color: onInk ? 'rgba(255,255,255,0.52)' : 'var(--text-muted)',
+        }}
+      >
+        The base rate is fixed. The line above the total is not, and can be
+        nothing, but it is only ever added.
+      </Typography>
+    </Box>
+  );
+}
+
+function Button({ children, href, primary, onInk, small }) {
   const external = href.startsWith('http');
   const sx = {
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '8px',
-    px: small ? '16px' : '22px',
+    gap: '9px',
+    px: small ? '17px' : '23px',
     py: small ? '10px' : '13px',
-    borderRadius: '9999px',
-    fontSize: small ? '0.86rem' : '0.95rem',
+    borderRadius: '4px',
+    fontSize: small ? '0.86rem' : '0.94rem',
     fontWeight: 600,
+    letterSpacing: '-0.005em',
     textDecoration: 'none',
     transition: 'all .18s cubic-bezier(.32,.72,0,1)',
     ...(primary
@@ -195,12 +294,19 @@ function Button({ children, href, primary, small }) {
           backgroundColor: 'var(--brand-accent)',
           color: '#FFFFFF',
           border: '1px solid var(--brand-accent)',
-          '&:hover': { filter: 'brightness(1.07)' },
+          '&:hover': { filter: 'brightness(1.08)' },
+        }
+      : onInk
+      ? {
+          backgroundColor: 'transparent',
+          color: '#FFFFFF',
+          border: `1px solid ${RULE_ON_INK}`,
+          '&:hover': { backgroundColor: 'rgba(255,255,255,0.07)' },
         }
       : {
-          backgroundColor: 'var(--bg-card)',
+          backgroundColor: 'transparent',
           color: 'var(--text-heading)',
-          border: '1px solid var(--border-normal)',
+          border: `1px solid ${RULE}`,
           '&:hover': { backgroundColor: 'var(--bg-card-hover)' },
         }),
   };
@@ -227,96 +333,39 @@ function Button({ children, href, primary, small }) {
   );
 }
 
-/* The two parts of the yield, drawn so the difference is visible before
-   anything is read. The base is a filled bar. The variable share is an open
-   one, dashed, with no fill to measure, because there is no number that can
-   honestly go in it ahead of time. */
-function YieldMeter() {
+function Head2({ eyebrow, title, lede, onInk, center, maxWidth = 860 }) {
   return (
-    <Box
-      sx={{
-        borderRadius: '20px',
-        border: '1px solid var(--border-subtle)',
-        backgroundColor: 'var(--bg-card)',
-        boxShadow: 'var(--shadow-card)',
-        p: { xs: 2.5, md: 3.5 },
-      }}
-    >
-      <Box
+    <Box sx={{ maxWidth, mx: center ? 'auto' : 0, textAlign: center ? 'center' : 'left' }}>
+      <Label onInk={onInk} sx={{ color: onInk ? 'rgba(255,255,255,0.6)' : 'var(--brand-accent)' }}>
+        {eyebrow}
+      </Label>
+      <Typography
+        component="h2"
         sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-          gap: { xs: 2.5, sm: 3 },
+          mt: 2,
+          fontSize: { xs: '2rem', sm: '2.5rem', md: '3.05rem' },
+          fontWeight: 700,
+          letterSpacing: '-0.035em',
+          lineHeight: 1.06,
+          color: onInk ? '#FFFFFF' : 'var(--text-heading)',
+          textWrap: 'balance',
         }}
       >
-        <Box>
-          <Typography
-            sx={{
-              fontSize: '0.68rem',
-              fontWeight: 700,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: 'var(--text-muted)',
-              mb: 1.2,
-            }}
-          >
-            Base rate
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: { xs: '2.2rem', md: '2.8rem' },
-              fontWeight: 700,
-              letterSpacing: '-0.04em',
-              lineHeight: 1,
-              color: 'var(--text-heading)',
-            }}
-          >
-            {RATES.base}
-          </Typography>
-          <Box sx={{ mt: 2, height: '10px', borderRadius: '5px', backgroundColor: 'var(--brand-accent)' }} />
-          <Typography sx={{ mt: 1.5, fontSize: '0.88rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
-            Fixed. Paid every {RATES.payout}, whatever else happens.
-          </Typography>
-        </Box>
-
-        <Box>
-          <Typography
-            sx={{
-              fontSize: '0.68rem',
-              fontWeight: 700,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: 'var(--text-muted)',
-              mb: 1.2,
-            }}
-          >
-            On top of it
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: { xs: '2.2rem', md: '2.8rem' },
-              fontWeight: 700,
-              letterSpacing: '-0.04em',
-              lineHeight: 1,
-              color: 'var(--text-muted)',
-            }}
-          >
-            {RATES.variableLabel}
-          </Typography>
-          <Box
-            sx={{
-              mt: 2,
-              height: '10px',
-              borderRadius: '5px',
-              border: '1.5px dashed var(--brand-accent)',
-              backgroundColor: 'transparent',
-            }}
-          />
-          <Typography sx={{ mt: 1.5, fontSize: '0.88rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
-            Variable, and only ever added. Never taken off the base.
-          </Typography>
-        </Box>
-      </Box>
+        {title}
+      </Typography>
+      {lede && (
+        <Typography
+          sx={{
+            mt: 2.2,
+            fontSize: '1.04rem',
+            lineHeight: 1.65,
+            color: onInk ? 'rgba(255,255,255,0.66)' : 'var(--text-secondary)',
+            textWrap: 'pretty',
+          }}
+        >
+          {lede}
+        </Typography>
+      )}
     </Box>
   );
 }
@@ -330,14 +379,12 @@ export default function StakePage() {
         <title>Stake $OPEN: Earn Yield and Mint HEY | Hey Open</title>
         <meta
           name="description"
-          content="$OPEN is the capital asset of Hey Open. Stake it to earn a fixed base rate with a variable share on top, to unlock the full app, and to mint HEY, which pays out credit every day."
+          content="$OPEN is the capital asset of Hey Open. Stake it to earn a fixed base rate with a share on top, to unlock the full app, and to mint HEY, which pays out credit every day."
         />
       </Head>
 
       <PageHeader />
 
-      {/* Ambient warmth, matching the tokenomics page so the two read as a
-          pair rather than as two different products. */}
       <Box
         data-ambient-blur
         aria-hidden="true"
@@ -348,35 +395,35 @@ export default function StakePage() {
           transform: 'translateX(-50%)',
           width: '100%',
           maxWidth: 1400,
-          height: 700,
+          height: 640,
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 102, 0, 0.18) 0%, rgba(255, 80, 0, 0.04) 50%, transparent 80%)',
+            'radial-gradient(ellipse 72% 58% at 50% 0%, rgba(255, 102, 0, 0.15) 0%, rgba(255, 80, 0, 0.03) 52%, transparent 78%)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
+      {/* ── Hero ─────────────────────────────────────────────────── */}
       <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 }, position: 'relative', zIndex: 1 }}>
-        {/* ── Hero ───────────────────────────────────────────────── */}
-        <Box component="section" sx={{ pt: { xs: 7, md: 12 }, pb: { xs: 6, md: 9 } }}>
+        <Box component="section" sx={{ pt: { xs: 7, md: 12 }, pb: { xs: 7, md: 11 } }}>
           <Box
             sx={{
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-              gap: { xs: 5, md: 7 },
+              gridTemplateColumns: { xs: '1fr', md: '1fr 0.92fr' },
+              gap: { xs: 5, md: 8 },
               alignItems: 'center',
             }}
           >
             <Reveal>
-              <Eyebrow>The capital asset</Eyebrow>
+              <Label sx={{ color: 'var(--brand-accent)' }}>The capital asset</Label>
               <Typography
                 component="h1"
                 sx={{
                   mt: 2.5,
-                  fontSize: { xs: '2.6rem', sm: '3.4rem', md: '4.2rem' },
+                  fontSize: { xs: '2.8rem', sm: '3.6rem', md: '4.6rem' },
                   fontWeight: 700,
-                  letterSpacing: '-0.045em',
-                  lineHeight: 1.02,
+                  letterSpacing: '-0.05em',
+                  lineHeight: 0.98,
                   color: 'var(--text-heading)',
                   textWrap: 'balance',
                 }}
@@ -386,16 +433,15 @@ export default function StakePage() {
               <Typography
                 sx={{
                   mt: 3,
-                  fontSize: { xs: '1.05rem', md: '1.15rem' },
+                  fontSize: { xs: '1.05rem', md: '1.16rem' },
                   lineHeight: 1.6,
                   color: 'var(--text-secondary)',
-                  maxWidth: '52ch',
+                  maxWidth: '48ch',
                   textWrap: 'pretty',
                 }}
               >
-                $OPEN is the capital asset of Hey Open. Stake it to earn a base rate with a
-                variable share on top, to unlock the full app, and to mint HEY, which pays out
-                credit every day for any model on the network.
+                $OPEN is the capital asset of Hey Open. Stake it to earn, to unlock the full app,
+                and to mint HEY, which pays out credit every day for any model on the network.
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
                 <Button href={LINKS.stake} primary>
@@ -404,20 +450,22 @@ export default function StakePage() {
                 </Button>
                 <Button href={LINKS.buy}>Buy $OPEN</Button>
               </Box>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2.5, mt: 3 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mt: 3.5 }}>
                 {[['Market data', LINKS.marketCap], ['Contract', LINKS.explorer]].map(([label, href]) => (
                   <Box
                     key={label}
                     component="a"
                     href={href}
                     sx={{
-                      fontSize: '0.86rem',
-                      fontWeight: 600,
+                      fontFamily: MONO,
+                      fontSize: '0.72rem',
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
                       color: 'var(--text-muted)',
                       textDecoration: 'none',
-                      borderBottom: '1px solid var(--border-normal)',
-                      pb: '2px',
-                      '&:hover': { color: 'var(--text-heading)' },
+                      borderBottom: `1px solid ${RULE}`,
+                      pb: '3px',
+                      '&:hover': { color: 'var(--text-heading)', borderColor: 'var(--brand-accent)' },
                     }}
                   >
                     {label}
@@ -427,15 +475,17 @@ export default function StakePage() {
             </Reveal>
 
             <Reveal delay={120}>
-              <YieldMeter />
+              <Statement />
             </Reveal>
           </Box>
         </Box>
 
-        {/* ── How it works, in three ─────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 6, md: 9 } }}>
+        {/* ── Three moves ────────────────────────────────────────── */}
+        <Box component="section" sx={{ pb: { xs: 7, md: 11 } }}>
           <Reveal>
-            <SectionHead eyebrow="How $OPEN works" title="Three moves, and the stake stays yours." center />
+            <Box sx={{ mb: { xs: 4, md: 6 } }}>
+              <Head2 eyebrow="How $OPEN works" title="Three moves, and the stake stays yours." />
+            </Box>
           </Reveal>
 
           <Reveal delay={80}>
@@ -443,7 +493,7 @@ export default function StakePage() {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-                gap: { xs: 2, md: 2.5 },
+                gap: { xs: 0, md: 5 },
               }}
             >
               {HOW.map((step) => (
@@ -452,38 +502,27 @@ export default function StakePage() {
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    borderRadius: '18px',
-                    border: '1px solid var(--border-subtle)',
-                    backgroundColor: 'var(--bg-card)',
-                    p: { xs: 3, md: 3.5 },
-                    transition: 'border-color .2s ease, box-shadow .2s ease',
-                    '&:hover': { borderColor: 'var(--border-normal)', boxShadow: 'var(--shadow-card)' },
+                    borderTop: `2px solid ${INK}`,
+                    pt: { xs: 2.4, md: 3 },
+                    pb: { xs: 4, md: 0 },
                   }}
                 >
-                  <Typography
-                    sx={{
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      letterSpacing: '0.1em',
-                      color: 'var(--brand-accent)',
-                      mb: 1.8,
-                    }}
-                  >
+                  <Typography sx={{ ...FIG, fontSize: '0.78rem', fontWeight: 600, color: 'var(--brand-accent)', mb: 2 }}>
                     {step.n}
                   </Typography>
                   <Typography
                     sx={{
-                      fontSize: '1.3rem',
+                      fontSize: { xs: '1.45rem', md: '1.6rem' },
                       fontWeight: 700,
-                      letterSpacing: '-0.025em',
+                      letterSpacing: '-0.03em',
                       color: 'var(--text-heading)',
-                      mb: 1.2,
+                      mb: 1.4,
                     }}
                   >
                     {step.title}
                   </Typography>
                   <Typography
-                    sx={{ fontSize: '0.95rem', lineHeight: 1.65, color: 'var(--text-secondary)', mb: 3, flex: 1 }}
+                    sx={{ fontSize: '0.96rem', lineHeight: 1.65, color: 'var(--text-secondary)', mb: 3, flex: 1 }}
                   >
                     {step.body}
                   </Typography>
@@ -497,276 +536,241 @@ export default function StakePage() {
             </Box>
           </Reveal>
         </Box>
+      </Container>
 
-        {/* ── The yield, in two parts ────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 6, md: 9 } }}>
-          <Reveal>
-            <SectionHead
-              eyebrow="The yield"
-              title="One payment, two different promises."
-              lede="They arrive together and they are not the same kind of thing, so the page keeps them apart."
-            />
-          </Reveal>
-
-          <Reveal delay={80}>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                gap: { xs: 2.5, md: 3 },
-              }}
-            >
-              <Box
-                sx={{
-                  borderRadius: '20px',
-                  border: '1px solid var(--border-normal)',
-                  backgroundColor: 'var(--bg-card)',
-                  boxShadow: 'var(--shadow-card)',
-                  p: { xs: 3, md: 4 },
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
-                    color: 'var(--brand-accent)',
-                    mb: 2,
-                  }}
-                >
-                  Fixed
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: { xs: '1.4rem', md: '1.6rem' },
-                    fontWeight: 700,
-                    letterSpacing: '-0.025em',
-                    lineHeight: 1.25,
-                    color: 'var(--text-heading)',
-                    mb: 1.6,
-                  }}
-                >
-                  The base rate is owed to you.
-                </Typography>
-                <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
-                  It is set in advance, it accrues from the epoch your stake lands in, and it does
-                  not depend on anything going well. If you stake and do nothing else, this is
-                  what you get.
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
-                  borderRadius: '20px',
-                  /* Dashed, deliberately. This is not the same promise as the
-                     card beside it and should not look like it. */
-                  border: '1.5px dashed var(--border-strong)',
-                  backgroundColor: 'transparent',
-                  p: { xs: 3, md: 4 },
-                }}
-              >
-                <Typography
-                  sx={{
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
-                    color: 'var(--text-muted)',
-                    mb: 2,
-                  }}
-                >
-                  Additional
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: { xs: '1.4rem', md: '1.6rem' },
-                    fontWeight: 700,
-                    letterSpacing: '-0.025em',
-                    lineHeight: 1.25,
-                    color: 'var(--text-heading)',
-                    mb: 1.6,
-                  }}
-                >
-                  The share on top only ever adds.
-                </Typography>
-                <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
-                  It is declared after a period rather than promised before it, so the size of it
-                  moves and it can be nothing at all. What it cannot do is go backwards. A quiet
-                  period pays the base rate in full, and a good one pays more than it.
-                </Typography>
-              </Box>
-            </Box>
-          </Reveal>
-        </Box>
-
-        {/* ── Stake to unlock the app ────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 6, md: 9 } }}>
-          <Reveal>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                gap: { xs: 4, md: 7 },
-                alignItems: 'center',
-              }}
-            >
-              <Box>
-                <SectionHead
-                  eyebrow="What it unlocks"
-                  title={`Stake ${RATES.proThreshold} and stop paying for the app.`}
-                  lede="Everything the subscription gets you, for as long as the stake is there. Unstake and it goes back to being a subscription, with nothing lost in between."
+      {/* ── The yield, on ink ────────────────────────────────────── */}
+      <Box component="section" sx={{ backgroundColor: INK, position: 'relative', zIndex: 1 }}>
+        <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 } }}>
+          <Box sx={{ py: { xs: 8, md: 13 } }}>
+            <Reveal>
+              <Box sx={{ mb: { xs: 5, md: 7 } }}>
+                <Head2
+                  onInk
+                  eyebrow="The yield"
+                  title="Two entries. Only one of them is owed to you."
+                  lede="They arrive in the same payment and they are not the same kind of promise, so the statement keeps them on separate lines."
+                  maxWidth={720}
                 />
-                <Button href={LINKS.stake} primary>
-                  Stake $OPEN
-                  <Box component="span" aria-hidden="true">→</Box>
-                </Button>
               </Box>
+            </Reveal>
 
-              <Box sx={{ borderTop: '1px solid var(--border-subtle)' }}>
-                {UNLOCKS.map(([title, body]) => (
-                  <Box key={title} sx={{ py: { xs: 2.2, md: 2.6 }, borderBottom: '1px solid var(--border-subtle)' }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                gap: { xs: 4, md: 8 },
+                alignItems: 'start',
+              }}
+            >
+              <Reveal>
+                <Box>
+                  <Box sx={{ pb: 3.5, mb: 3.5, borderBottom: `1px solid ${RULE_ON_INK}` }}>
+                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>Fixed</Label>
                     <Typography
                       sx={{
-                        fontSize: '1.02rem',
+                        mt: 1.6,
+                        fontSize: { xs: '1.4rem', md: '1.65rem' },
                         fontWeight: 700,
-                        letterSpacing: '-0.02em',
-                        color: 'var(--text-heading)',
-                        mb: 0.8,
+                        letterSpacing: '-0.025em',
+                        lineHeight: 1.25,
+                        color: '#FFFFFF',
+                        mb: 1.4,
                       }}
                     >
-                      {title}
+                      The base rate is owed to you.
                     </Typography>
-                    <Typography sx={{ fontSize: '0.94rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-                      {body}
+                    <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
+                      Set in advance, accruing from the epoch your stake lands in, and not
+                      dependent on anything going well. Stake and do nothing else, and this is
+                      what you get.
                     </Typography>
                   </Box>
+
+                  <Box>
+                    <Label onInk>Additional</Label>
+                    <Typography
+                      sx={{
+                        mt: 1.6,
+                        fontSize: { xs: '1.4rem', md: '1.65rem' },
+                        fontWeight: 700,
+                        letterSpacing: '-0.025em',
+                        lineHeight: 1.25,
+                        color: '#FFFFFF',
+                        mb: 1.4,
+                      }}
+                    >
+                      The share on top only ever adds.
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.66)' }}>
+                      Declared after a period rather than promised before it, so the size of it
+                      moves and it can be nothing at all. What it cannot do is go backwards. A
+                      quiet period pays the base in full; a good one pays more than it.
+                    </Typography>
+                  </Box>
+                </Box>
+              </Reveal>
+
+              <Reveal delay={120}>
+                <Statement onInk />
+              </Reveal>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+
+      <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 }, position: 'relative', zIndex: 1 }}>
+        {/* ── What staking unlocks ───────────────────────────────── */}
+        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+              gap: { xs: 4, md: 8 },
+              alignItems: 'center',
+            }}
+          >
+            <Reveal>
+              <Box>
+                <Head2
+                  eyebrow="What it unlocks"
+                  title={`Stake ${RATES.threshold} and stop paying for the app.`}
+                  lede="Everything the subscription gets you, for as long as the stake is there. Unstake and it goes back to being a subscription, with nothing lost in between."
+                />
+                <Box sx={{ mt: 4 }}>
+                  <Button href={LINKS.stake} primary>
+                    Stake $OPEN
+                    <Box component="span" aria-hidden="true">→</Box>
+                  </Button>
+                </Box>
+              </Box>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <Box sx={{ borderTop: `2px solid ${INK}`, pt: 1 }}>
+                {UNLOCKS.map(([name, figure]) => (
+                  <Entry key={name} name={name} figure={figure} />
                 ))}
               </Box>
-            </Box>
-          </Reveal>
+            </Reveal>
+          </Box>
         </Box>
 
-        {/* ── Mint HEY ───────────────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 6, md: 9 } }}>
-          <Reveal>
-            <Box
-              sx={{
-                borderRadius: '24px',
-                border: '1px solid var(--border-subtle)',
-                backgroundColor: 'var(--bg-section-alt)',
-                px: { xs: 3, md: 6 },
-                py: { xs: 5, md: 7 },
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '1.1fr 1fr' },
-                  gap: { xs: 3.5, md: 7 },
-                  alignItems: 'center',
-                }}
-              >
-                <Box>
-                  <Eyebrow>The second token</Eyebrow>
-                  <Typography
-                    component="h2"
-                    sx={{
-                      mt: 2,
-                      fontSize: { xs: '2rem', md: '2.8rem' },
-                      fontWeight: 700,
-                      letterSpacing: '-0.035em',
-                      lineHeight: 1.08,
-                      color: 'var(--text-heading)',
-                      textWrap: 'balance',
-                    }}
-                  >
-                    Mint HEY with staked $OPEN.
-                  </Typography>
-                  <Typography
-                    sx={{
-                      mt: 2.5,
-                      fontSize: '1.02rem',
-                      lineHeight: 1.65,
-                      color: 'var(--text-secondary)',
-                      textWrap: 'pretty',
-                    }}
-                  >
-                    HEY is how the network hands out use rather than money. Every HEY pays out{' '}
-                    {RATES.heyRate} of credit a day, for any model in the catalogue, for as long
-                    as you hold it. All of it is made from staked $OPEN, and nothing else can make
-                    it. Use what it pays, or sell it to somebody who will.
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 3.5 }}>
-                    <Button href={LINKS.mint} primary>
-                      Mint HEY
-                      <Box component="span" aria-hidden="true">→</Box>
-                    </Button>
-                    <Button href="/docs">See what credit buys</Button>
-                  </Box>
-                </Box>
-
-                <Box
-                  sx={{
-                    borderRadius: '18px',
-                    border: '1px solid var(--border-subtle)',
-                    backgroundColor: 'var(--bg-card)',
-                    p: { xs: 2.5, md: 3 },
-                  }}
-                >
-                  {[
-                    ['Minted from', 'Staked $OPEN only'],
-                    ['Pays out', `${RATES.heyRate} of credit, daily`],
-                    ['Good for', 'Every model on the network'],
-                    ['Runs for', 'As long as you hold it'],
-                    ['To unlock the stake', 'Burn the HEY'],
-                  ].map(([k, v], i, arr) => (
-                    <Box
-                      key={k}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'baseline',
-                        justifyContent: 'space-between',
-                        gap: 2,
-                        py: 1.6,
-                        borderBottom: i === arr.length - 1 ? 'none' : '1px solid var(--border-subtle)',
-                      }}
-                    >
-                      <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)' }}>{k}</Typography>
-                      <Typography
-                        sx={{
-                          fontSize: '0.92rem',
-                          fontWeight: 600,
-                          color: 'var(--text-heading)',
-                          textAlign: 'right',
-                        }}
-                      >
-                        {v}
-                      </Typography>
-                    </Box>
-                  ))}
+        {/* ── HEY ────────────────────────────────────────────────── */}
+        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1.05fr 1fr' },
+              gap: { xs: 4, md: 8 },
+              alignItems: 'center',
+            }}
+          >
+            <Reveal>
+              <Box>
+                <Head2
+                  eyebrow="The second token"
+                  title="Mint HEY with staked $OPEN."
+                  lede="HEY is how the network hands out use rather than money. All of it is made from staked $OPEN, and nothing else can make it. Use what it pays, or sell it to somebody who will."
+                />
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
+                  <Button href={LINKS.mint} primary>
+                    Mint HEY
+                    <Box component="span" aria-hidden="true">→</Box>
+                  </Button>
+                  <Button href="/docs">See what credit buys</Button>
                 </Box>
               </Box>
-            </Box>
-          </Reveal>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <Box
+                sx={{
+                  borderRadius: '4px',
+                  border: `1px solid ${RULE}`,
+                  backgroundColor: 'var(--bg-card)',
+                  boxShadow: '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -30px rgba(11,15,26,.20)',
+                  px: { xs: 2.5, md: 3.5 },
+                  py: { xs: 2, md: 2.5 },
+                }}
+              >
+                <Box sx={{ pb: '14px', borderBottom: `1px solid ${RULE}` }}>
+                  <Label>HEY</Label>
+                </Box>
+                {HEY_SPEC.map(([name, figure]) => (
+                  <Entry key={name} name={name} figure={figure} />
+                ))}
+              </Box>
+            </Reveal>
+          </Box>
         </Box>
 
         {/* ── Supply ─────────────────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 6, md: 9 } }}>
+        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
           <Reveal>
-            <SectionHead
-              eyebrow="Supply"
-              title="Bought back and burned, not printed."
-              lede={`$OPEN launched with a fixed supply of ${RATES.supply}. A share of what the product earns buys $OPEN on the open market, rewards the providers doing the work, and burns what the network does not need. Less supply, verifiably, rather than more.`}
-            />
-            <Button href="/token">Read the tokenomics</Button>
+            <Box sx={{ borderTop: `2px solid ${INK}`, pt: { xs: 3, md: 4 } }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', md: '0.8fr 1.2fr' },
+                  gap: { xs: 2.5, md: 8 },
+                  alignItems: 'start',
+                }}
+              >
+                <Box>
+                  <Label sx={{ color: 'var(--brand-accent)' }}>Supply</Label>
+                  <Typography
+                    sx={{
+                      ...FIG,
+                      mt: 2,
+                      fontSize: { xs: '3rem', md: '4.2rem' },
+                      fontWeight: 600,
+                      lineHeight: 0.95,
+                      letterSpacing: '-0.04em',
+                      color: 'var(--text-heading)',
+                    }}
+                  >
+                    {RATES.supply}
+                  </Typography>
+                  <Typography sx={{ mt: 1.5, fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+                    Fixed at launch. No inflation switch.
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize: { xs: '1.3rem', md: '1.6rem' },
+                      fontWeight: 700,
+                      letterSpacing: '-0.028em',
+                      lineHeight: 1.3,
+                      color: 'var(--text-heading)',
+                      mb: 1.8,
+                      textWrap: 'balance',
+                    }}
+                  >
+                    Bought back and burned, not printed.
+                  </Typography>
+                  <Typography sx={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+                    A share of what the product earns buys $OPEN on the open market, rewards the
+                    providers doing the work, and burns what the network does not need. Less
+                    supply, verifiably, rather than more.
+                  </Typography>
+                  <Box sx={{ mt: 3 }}>
+                    <Button href="/token" small>
+                      Read the tokenomics
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
           </Reveal>
         </Box>
 
         {/* ── FAQ ────────────────────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 6, md: 9 } }}>
+        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
           <Reveal>
-            <SectionHead eyebrow="Questions" title="The ones that actually get asked." />
+            <Box sx={{ mb: { xs: 4, md: 6 } }}>
+              <Head2 eyebrow="Questions" title="The ones that actually get asked." />
+            </Box>
           </Reveal>
 
           <Reveal delay={80}>
@@ -774,31 +778,23 @@ export default function StakePage() {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
-                gap: { xs: 2, md: 2.5 },
+                columnGap: { md: 8 },
               }}
             >
               {FAQ.map(([q, a]) => (
-                <Box
-                  key={q}
-                  sx={{
-                    borderRadius: '16px',
-                    border: '1px solid var(--border-subtle)',
-                    backgroundColor: 'var(--bg-card)',
-                    p: { xs: 2.5, md: 3 },
-                  }}
-                >
+                <Box key={q} sx={{ borderTop: `1px solid ${RULE}`, py: { xs: 2.6, md: 3 } }}>
                   <Typography
                     sx={{
-                      fontSize: '1.02rem',
+                      fontSize: '1.04rem',
                       fontWeight: 700,
-                      letterSpacing: '-0.015em',
+                      letterSpacing: '-0.02em',
                       color: 'var(--text-heading)',
                       mb: 1.2,
                     }}
                   >
                     {q}
                   </Typography>
-                  <Typography sx={{ fontSize: '0.94rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                  <Typography sx={{ fontSize: '0.95rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
                     {a}
                   </Typography>
                 </Box>
@@ -808,36 +804,23 @@ export default function StakePage() {
         </Box>
 
         {/* ── Close ──────────────────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
+        <Box component="section" sx={{ pt: { xs: 5, md: 8 }, pb: { xs: 8, md: 13 } }}>
           <Reveal>
             <Box sx={{ textAlign: 'center' }}>
               <Typography
                 component="h2"
                 sx={{
-                  fontSize: { xs: '1.9rem', md: '2.8rem' },
+                  fontSize: { xs: '2rem', md: '3rem' },
                   fontWeight: 700,
-                  letterSpacing: '-0.035em',
-                  lineHeight: 1.1,
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1.06,
                   color: 'var(--text-heading)',
-                  maxWidth: '18ch',
+                  maxWidth: '17ch',
                   mx: 'auto',
                   textWrap: 'balance',
                 }}
               >
                 Hold it, stake it, spend what it makes.
-              </Typography>
-              <Typography
-                sx={{
-                  mt: 2.5,
-                  fontSize: '1.02rem',
-                  lineHeight: 1.65,
-                  color: 'var(--text-secondary)',
-                  maxWidth: '58ch',
-                  mx: 'auto',
-                }}
-              >
-                The stake earns, the HEY it mints pays for the models, and the $OPEN behind both
-                is still yours the whole time.
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4, justifyContent: 'center' }}>
                 <Button href={LINKS.stake} primary>
@@ -849,16 +832,17 @@ export default function StakePage() {
 
               <Typography
                 sx={{
-                  mt: 5,
-                  fontSize: '0.8rem',
-                  lineHeight: 1.6,
+                  mt: 6,
+                  fontFamily: MONO,
+                  fontSize: '0.72rem',
+                  lineHeight: 1.85,
                   color: 'var(--text-muted)',
-                  maxWidth: '66ch',
+                  maxWidth: '72ch',
                   mx: 'auto',
                 }}
               >
                 Staking rewards are not a guarantee. The base rate is fixed; the share on top is
-                not, and can be zero in any period. Nothing here is investment advice. Read the
+                not, and can be nothing in any period. Nothing here is investment advice. Read the
                 terms before you stake.
               </Typography>
             </Box>
