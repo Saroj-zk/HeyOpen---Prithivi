@@ -8,6 +8,7 @@ import SupportedModelsSection from '@/components/SupportedModelsSection';
 import WhyAskMultipleModelsSection from '@/components/WhyAskMultipleModelsSection';
 import ProductMatrixSection from '@/components/ProductMatrixSection';
 import TokenFlowSection from '@/components/TokenFlowSection';
+import RevenueBurnSection from '@/components/RevenueBurnSection';
 import PricingSection from '@/components/PricingSection';
 import TokenOptimizationSection from '@/components/TokenOptimizationSection';
 import EnterpriseSection from '@/components/EnterpriseSection';
@@ -36,6 +37,7 @@ export default function Home() {
         <ProductMatrixSection />
         <PricingSection />
         <TokenFlowSection />
+        <RevenueBurnSection />
         <TokenOptimizationSection />
         <ApiSection />
         <EnterpriseSection />
