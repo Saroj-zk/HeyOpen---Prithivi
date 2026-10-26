@@ -8,6 +8,8 @@ import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
 import { INK, MONO, RULE, RULE_ON_INK, FIG, Label, Entry, Button, Head2 } from '@/components/ui/Ledger';
 import { TOKEN } from '@/data/token';
+import { VERSIONS } from '@/data/stakeCopy';
+import CopySwitch, { useCopyVersion } from '@/components/ui/CopySwitch';
 
 /**
  * $OPEN, and what staking it does.
@@ -229,6 +231,12 @@ function Statement({ onInk }) {
 /* ------------------------------------------------------------------ */
 
 export default function StakePage() {
+  /* Three versions of this page's words, switchable in the corner while they
+     are being chosen between. The structure, the figures and the drawing are
+     the same in all three: only the argument changes. */
+  const [version, setVersion] = useCopyVersion('heyopen.stake.copy', VERSIONS.length);
+  const C = VERSIONS[version];
+
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
       <Head>
@@ -240,6 +248,7 @@ export default function StakePage() {
       </Head>
 
       <PageHeader />
+      <CopySwitch versions={VERSIONS} index={version} onChange={setVersion} />
 
       <Box
         data-ambient-blur
@@ -271,7 +280,7 @@ export default function StakePage() {
             }}
           >
             <Reveal>
-              <Label sx={{ color: 'var(--brand-accent)' }}>The capital asset</Label>
+              <Label sx={{ color: 'var(--brand-accent)' }}>{C.hero.eyebrow}</Label>
               <Typography
                 component="h1"
                 sx={{
@@ -284,7 +293,7 @@ export default function StakePage() {
                   textWrap: 'balance',
                 }}
               >
-                Stake $OPEN.
+                {C.hero.title}
               </Typography>
               <Typography
                 sx={{
@@ -296,9 +305,7 @@ export default function StakePage() {
                   textWrap: 'pretty',
                 }}
               >
-                $OPEN is the capital asset of Hey Open. Stake it and it earns. Staking it is
-                also the only way to mint $HEY, and staking that pays you in compute credit for
-                any model on the network.
+                {C.hero.lede}
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
                 <Button href={LINKS.stake} primary>
@@ -353,7 +360,7 @@ export default function StakePage() {
                 gap: { xs: 0, md: 5 },
               }}
             >
-              {HOW.map((step) => (
+              {HOW.map((step, i) => (
                 <Box
                   key={step.n}
                   sx={{
@@ -376,12 +383,12 @@ export default function StakePage() {
                       mb: 1.4,
                     }}
                   >
-                    {step.title}
+                    {C.how[i].title}
                   </Typography>
                   <Typography
                     sx={{ fontSize: '0.96rem', lineHeight: 1.65, color: 'var(--text-secondary)', mb: 3, flex: 1 }}
                   >
-                    {step.body}
+                    {C.how[i].body}
                   </Typography>
                   <Box>
                     <Button href={step.href} small>
@@ -403,9 +410,9 @@ export default function StakePage() {
               <Box sx={{ mb: { xs: 5, md: 7 } }}>
                 <Head2
                   onInk
-                  eyebrow="The yield"
-                  title={`A ${RATES.base} floor, and a target well above it.`}
-                  lede="The floor is a rate the protocol sets and pays whatever happens. The target is the figure the treasury is run to, all in, with the floor as its worst case rather than a separate payment beside it. Both arrive in value rather than in credit."
+                  eyebrow={C.yield.eyebrow}
+                  title={C.yield.title}
+                  lede={C.yield.lede}
                   maxWidth={760}
                 />
               </Box>
@@ -433,7 +440,7 @@ export default function StakePage() {
               <Reveal>
                 <Box>
                   <Box sx={{ pb: { xs: 3.5, md: 4 }, mb: { xs: 3.5, md: 4 }, borderBottom: `1px solid ${RULE_ON_INK}` }}>
-                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>However the year goes</Label>
+                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>{C.yield.floorLabel}</Label>
                     <Typography
                       sx={{
                         ...FIG,
@@ -450,13 +457,12 @@ export default function StakePage() {
                     <Typography
                       sx={{ mt: 2, fontSize: '1rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.66)', maxWidth: '38ch' }}
                     >
-                      Set by the protocol and paid on schedule. It does not wait on anything going
-                      well, and nothing that happens later takes it back.
+                      {C.yield.floorBody}
                     </Typography>
                   </Box>
 
                   <Box>
-                    <Label onInk>When the year goes to plan</Label>
+                    <Label onInk>{C.yield.targetLabel}</Label>
                     <Typography
                       sx={{
                         ...FIG,
@@ -473,10 +479,7 @@ export default function StakePage() {
                     <Typography
                       sx={{ mt: 2, fontSize: '1rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.66)', maxWidth: '38ch' }}
                     >
-                      All in, with the {RATES.base} floor sitting inside it rather than beside
-                      it. The treasury puts the staked supply to work and stakers take a share of
-                      what comes back, reported once a period has closed rather than promised
-                      before it starts.
+                      {C.yield.targetBody}
                     </Typography>
                   </Box>
                 </Box>
@@ -521,9 +524,7 @@ export default function StakePage() {
                         color: 'rgba(255,255,255,0.52)',
                       }}
                     >
-                      And {EXAMPLE.floorTotal} if the target is missed entirely, because the
-                      floor is paid either way. Both lines are paid in value, not in credit. $HEY is
-                      the credit side and is minted separately.
+                      {C.yield.workedNote}
                     </Typography>
                   </Box>
                 </Box>
@@ -538,7 +539,7 @@ export default function StakePage() {
             <Reveal delay={60}>
               <Box sx={{ borderTop: `1px solid ${RULE_ON_INK}`, pt: { xs: 4, md: 5 } }}>
                 <Box sx={{ mb: { xs: 3, md: 4 } }}>
-                  <Label onInk sx={{ color: 'rgba(255,255,255,0.7)' }}>Why you can check it</Label>
+                  <Label onInk sx={{ color: 'rgba(255,255,255,0.7)' }}>{C.yield.proofEyebrow}</Label>
                 </Box>
                 <Box
                   sx={{
@@ -586,9 +587,9 @@ export default function StakePage() {
             <Reveal>
               <Box>
                 <Head2
-                  eyebrow="What the stake unlocks"
-                  title={`Stake ${RATES.threshold} and the app stops being a subscription.`}
-                  lede="Everything the paid tier gets you, for as long as the stake is there. The stake keeps earning the whole time, so the access costs you nothing you were not already holding."
+                  eyebrow={C.pro.eyebrow}
+                  title={C.pro.title}
+                  lede={C.pro.lede}
                 />
                 <Box sx={{ mt: 4 }}>
                   <Button href={LINKS.stake} primary>
@@ -628,7 +629,7 @@ export default function StakePage() {
                   <Entry key={name} name={name} figure={figure} />
                 ))}
                 <Typography sx={{ mt: '14px', fontSize: '0.84rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
-                  Unstake and it goes back to being a subscription. Nothing is lost in between.
+                  {C.pro.note}
                 </Typography>
               </Box>
             </Reveal>
@@ -641,9 +642,9 @@ export default function StakePage() {
           <Reveal>
             <Box sx={{ mb: { xs: 4, md: 6 } }}>
               <Head2
-                eyebrow="Two tokens"
-                title="Two things to stake, paid in two different ways."
-                lede="$OPEN is the capital asset and $HEY is what it mints. Staking the first pays you in value. Staking the second pays you in the thing the network actually makes, which is compute."
+                eyebrow={C.stakes.eyebrow}
+                title={C.stakes.title}
+                lede={C.stakes.lede}
               />
             </Box>
           </Reveal>
@@ -656,7 +657,7 @@ export default function StakePage() {
                 gap: { xs: 2.5, md: 3 },
               }}
             >
-              {STAKES.map((s) => (
+              {STAKES.map((s, i) => (
                 <Box
                   key={s.token}
                   sx={{
@@ -715,7 +716,7 @@ export default function StakePage() {
                   <Typography
                     sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--text-secondary)', mb: 3, flex: 1 }}
                   >
-                    {s.body}
+                    {i === 0 ? C.stakes.openBody : C.stakes.heyBody}
                   </Typography>
 
                   <Box sx={{ borderTop: `1px solid ${RULE}`, pt: 1 }}>
@@ -745,8 +746,7 @@ export default function StakePage() {
                 maxWidth: '76ch',
               }}
             >
-              $HEY is minted against staked $OPEN and nothing else mints it. Burning $HEY releases
-              the stake behind it.
+              {C.stakes.foot}
             </Typography>
           </Reveal>
         </Box>
@@ -796,12 +796,10 @@ export default function StakePage() {
                       textWrap: 'balance',
                     }}
                   >
-                    Bought back and burned, not printed.
+                    {C.supply.title}
                   </Typography>
                   <Typography sx={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                    A share of what the product earns buys $OPEN on the open market, rewards the
-                    providers doing the work, and burns what the network does not need. Less
-                    supply, verifiably, rather than more.
+                    {C.supply.body}
                   </Typography>
                   <Box sx={{ mt: 3 }}>
                     <Button href="/token" small>
@@ -831,7 +829,7 @@ export default function StakePage() {
                   textWrap: 'balance',
                 }}
               >
-                Hold it, stake it, spend what it makes.
+                {C.close.title}
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4, justifyContent: 'center' }}>
                 <Button href={LINKS.stake} primary>
