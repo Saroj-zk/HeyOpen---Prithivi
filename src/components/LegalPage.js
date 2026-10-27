@@ -32,6 +32,36 @@ const P_SX = {
   textWrap: 'pretty',
 };
 
+/* A contact address in a legal document is there to be used, so the ones
+   written into the copy are turned into mailto links rather than left as text
+   the reader has to retype. The capturing group means split() hands back the
+   addresses at the odd indices, with the surrounding prose at the even ones. */
+const EMAIL = /([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi;
+
+function linkEmails(text) {
+  if (typeof text !== 'string' || text.indexOf('@') === -1) return text;
+  const parts = text.split(EMAIL);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <Box
+        component="a"
+        key={i}
+        href={`mailto:${part}`}
+        sx={{
+          color: '#FF6600',
+          textDecoration: 'none',
+          '&:hover': { textDecoration: 'underline' },
+        }}
+      >
+        {part}
+      </Box>
+    ) : (
+      part
+    )
+  );
+}
+
 /* Venice leads most paragraphs with a short bold label. In list items the same
    shape is written inline ("Access. To know what..."), so it gets split back
    out here. Deliberately narrow: a short lead-in, a period, then real text. */
@@ -92,25 +122,38 @@ function DraftNote({ children }) {
   );
 }
 
-/** One body node. `number` is the parent section's number, for sub-clauses. */
-function Node({ node, number, clauseIndex }) {
-  if (typeof node === 'string') return <Paragraph>{node}</Paragraph>;
+const SUBHEAD_SX = {
+  fontSize: { xs: '1rem', md: '1.05rem' },
+  fontWeight: 700,
+  color: 'var(--text-heading)',
+  mt: 4,
+  mb: 1.8,
+};
+
+/**
+ * One body node. `number` is the parent section's number, for sub-clauses.
+ *
+ * `sub` carries its own label; `part` is numbered from its position in the
+ * section, so 1.1, 1.2 and so on are derived the same way the section numbers
+ * are and an inserted sub-part cannot leave the ones after it wrong.
+ */
+function Node({ node, number, clauseIndex, partIndex }) {
+  if (typeof node === 'string') return <Paragraph>{linkEmails(node)}</Paragraph>;
 
   if (node.note) return <DraftNote>{node.note}</DraftNote>;
 
   if (node.sub) {
     return (
-      <Typography
-        component="h3"
-        sx={{
-          fontSize: { xs: '1rem', md: '1.05rem' },
-          fontWeight: 700,
-          color: 'var(--text-heading)',
-          mt: 4,
-          mb: 1.8,
-        }}
-      >
+      <Typography component="h3" sx={SUBHEAD_SX}>
         {node.sub}
+      </Typography>
+    );
+  }
+
+  if (node.part) {
+    return (
+      <Typography component="h3" sx={SUBHEAD_SX}>
+        {number}.{partIndex} {node.part}
       </Typography>
     );
   }
@@ -148,7 +191,7 @@ function Node({ node, number, clauseIndex }) {
       <Paragraph sx={node.text ? undefined : { mb: 1.2 }}>
         <Label>{node.label}</Label>
         {node.text ? ' ' : null}
-        {node.text}
+        {linkEmails(node.text)}
       </Paragraph>
     );
   }
@@ -177,10 +220,10 @@ function Node({ node, number, clauseIndex }) {
             <Box component="li" key={i}>
               {m ? (
                 <>
-                  <Label>{m[1]}.</Label> {m[2]}
+                  <Label>{m[1]}.</Label> {linkEmails(m[2])}
                 </>
               ) : (
-                item
+                linkEmails(item)
               )}
             </Box>
           );
@@ -192,30 +235,48 @@ function Node({ node, number, clauseIndex }) {
   return null;
 }
 
-/** Body nodes, with sub-clause numbering counted as we go. */
+/** Body nodes, with sub-clause and sub-part numbering counted as we go. */
 function Body({ body, number }) {
   let clauses = 0;
+  let parts = 0;
   return (
     <>
       {body.map((node, i) => {
         if (node && node.clause) clauses += 1;
-        return <Node key={i} node={node} number={number} clauseIndex={clauses} />;
+        if (node && node.part) parts += 1;
+        return (
+          <Node
+            key={i}
+            node={node}
+            number={number}
+            clauseIndex={clauses}
+            partIndex={parts}
+          />
+        );
       })}
     </>
   );
 }
 
+/* A bracketed capitalised slot is how this file marks a fact only the company
+   can supply: [LEGAL ENTITY NAME], [EFFECTIVE DATE]. While any remain, the
+   document is not finished, and an unfinished policy should not be the version
+   search engines hold. */
+const PLACEHOLDER = /\[[A-Z][A-Z0-9 ,./'-]{2,}\]/;
+
 export default function LegalPage({ doc, description }) {
   const sections = (doc && doc.sections) || [];
   const hasText = sections.length > 0;
+  const unfinished = !hasText || PLACEHOLDER.test(JSON.stringify(doc));
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)' }}>
       <Head>
         <title>{`${doc.title} | Hey Open`}</title>
         <meta name="description" content={description} />
-        {/* Not worth indexing while it is a holding page. */}
-        {!hasText && <meta name="robots" content="noindex" />}
+        {/* Not worth indexing while it is a holding page, and not safe to index
+            while it still has blanks in it. */}
+        {unfinished && <meta name="robots" content="noindex" />}
       </Head>
 
       <PageHeader />
@@ -237,10 +298,19 @@ export default function LegalPage({ doc, description }) {
             {doc.title}
           </Typography>
 
-          {doc.updated && (
-            <Typography sx={{ fontSize: '0.9rem', color: 'var(--text-muted)', mb: { xs: 4, md: 5 } }}>
-              {doc.dateLabel || 'Last updated'}: {doc.updated}
-            </Typography>
+          {(doc.effective || doc.updated) && (
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              {doc.effective && (
+                <Typography sx={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  Effective: {doc.effective}
+                </Typography>
+              )}
+              {doc.updated && (
+                <Typography sx={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  {doc.dateLabel || 'Last updated'}: {doc.updated}
+                </Typography>
+              )}
+            </Box>
           )}
 
           {hasText ? (
