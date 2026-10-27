@@ -35,17 +35,33 @@ import { VERSIONS } from '@/data/stakeCopy';
  * The order answers questions in the order they get asked.
  *
  *   1  what is it, and what would it pay me      hero, calculator
- *   2  the three figures                         strip
- *   3  is any of this real                       architecture, proof
- *   4  how much, and which part is owed          scale, owed against aimed at
- *   5  what else do I get                        Pro
- *   6  there are two tokens?                     $OPEN and $HEY
- *   7  alright, how do I start                   three moves
- *   8  the ask                                   supply, close
+ *   2  is any of this real                       architecture, proof
+ *   3  how much, and which part is owed          scale, owed against aimed at
+ *   4  what else do I get                        Pro
+ *   5  there are two tokens?                     $OPEN and $HEY
+ *   6  alright, how do I start                   three moves
+ *   7  the ask                                   supply, close
  *
  * The three moves used to sit in the middle, which put "buy it" in front of a
  * reader who had not yet been told what it pays. They now land last, next to
  * the button.
+ *
+ * ------------------------------------------------------------------
+ * Each section says the two figures at most once, and most do not say them
+ * at all.
+ *
+ * They were being printed eight and seven times across six of eight
+ * sections, which is what made the page feel like it was saying one thing
+ * over and over. A strip of figures sat directly under a hero that had just
+ * stated them and a calculator that was showing them live. The diagram
+ * captioned a node that already carried the number. The $OPEN card repeated
+ * the rate table a fifth time.
+ *
+ * So: the hero states them, the calculator computes them, the diagram labels
+ * one node with the floor, the scale plots both, and the disclaimer repeats
+ * them because that is what a disclaimer is for. Everywhere else says "the
+ * floor" and "the band" and trusts the reader to have been paying
+ * attention.
  *
  * ------------------------------------------------------------------
  * The architecture diagram is a fan, not a table.
@@ -101,7 +117,7 @@ const PRO = [
 const PROOF = [
   [
     'The floor is a contract rate',
-    `The ${RATES.base} is set in the staking contract. It pays on schedule and anyone can read it without asking us.`,
+    'The floor is set in the staking contract. It pays on schedule, and anyone can read it without asking us.',
   ],
   [
     'The stake stays yours',
@@ -109,7 +125,7 @@ const PROOF = [
   ],
   [
     'The target is reported after',
-    'Each period closes with the figure that was actually returned, published against the band rather than compared with it later.',
+    'Each period ends with the figure that was actually returned, published against the band rather than compared with it later.',
   ],
 ];
 
@@ -141,7 +157,7 @@ const RETURNS = [
   {
     tag: 'Aimed at',
     k: 'Everything above it',
-    s: `What the book returns on top, run toward ${RATES.total} all in. Reported once a period closes.`,
+    s: 'What the book makes on top of it. Reported once a period has closed, never promised before.',
   },
 ];
 
@@ -153,9 +169,9 @@ const STAKES = [
     paidIn: 'Value',
     lead: true,
     rows: [
-      ['Floor', RATES.base],
-      ['On plan', RATES.total],
+      ['Minted into', '$HEY'],
       ['Paid in', '$OPEN'],
+      ['Spendable', 'Anywhere'],
     ],
     cta: 'Stake $OPEN',
     href: LINKS.stake,
@@ -326,8 +342,8 @@ function Calculator() {
       </Box>
 
       <Box sx={{ px: { xs: 2.2, md: 2.6 }, pt: 1, pb: { xs: 2.4, md: 2.8 }, borderTop: `1px solid ${RULE_ON_INK}` }}>
-        <Entry name={`The floor, ${RATES.base}`} figure={`+${money(floor)}`} onInk />
-        <Entry name={`On plan, ${RATES.total}`} figure={`+${money(low)} to +${money(high)}`} dashed onInk />
+        <Entry name="The floor pays" figure={`+${money(floor)}`} onInk />
+        <Entry name="On plan, all in" figure={`+${money(low)} to +${money(high)}`} dashed onInk />
         <Entry name="You hold, all in" figure={`${money(stake + floor)} to ${money(stake + high)}`} total onInk />
 
         <Box sx={{ mt: '14px', display: 'flex', alignItems: 'center', gap: 1, color: pro ? 'var(--brand-accent)' : QUIET }}>
@@ -692,55 +708,7 @@ export default function StakePage() {
         </Box>
       </Section>
 
-      {/* ── 2. The three figures ──────────────────────────────────── */}
-      <Section sx={{ pb: { xs: 6, md: 9 } }}>
-        <Reveal delay={60}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
-              borderTop: `1px solid ${RULE_ON_INK}`,
-              borderBottom: `1px solid ${RULE_ON_INK}`,
-            }}
-          >
-            {[
-              ['Owed to you', RATES.base, 'Written into the contract', true],
-              ['Aimed at, all in', RATES.total, 'Reported once a period closes', false],
-              ['Supply', RATES.supply, 'Fixed at launch, no inflation switch', false],
-            ].map(([label, value, note, accent], i) => (
-              <Box
-                key={label}
-                sx={{
-                  pr: { sm: 3 },
-                  pl: { sm: i === 0 ? 0 : 3 },
-                  py: { xs: 2.6, md: 3.2 },
-                  borderRight: { sm: i < 2 ? `1px solid ${RULE_ON_INK}` : 'none' },
-                  borderBottom: { xs: i < 2 ? `1px solid ${RULE_ON_INK}` : 'none', sm: 'none' },
-                }}
-              >
-                <Label onInk sx={accent ? { color: 'var(--brand-accent)' } : undefined}>{label}</Label>
-                <Typography
-                  sx={{
-                    ...FIG,
-                    mt: 1.4,
-                    fontSize: { xs: '2.1rem', md: '2.6rem' },
-                    fontWeight: 600,
-                    lineHeight: 0.95,
-                    letterSpacing: '-0.04em',
-                    whiteSpace: 'nowrap',
-                    color: accent ? 'var(--brand-accent)' : WHITE,
-                  }}
-                >
-                  {value}
-                </Typography>
-                <Typography sx={{ mt: 1.2, fontSize: '0.78rem', lineHeight: 1.5, color: QUIET }}>{note}</Typography>
-              </Box>
-            ))}
-          </Box>
-        </Reveal>
-      </Section>
-
-      {/* ── 3. The architecture ───────────────────────────────────── */}
+      {/* ── 2. The architecture ───────────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 5, md: 6 } }}>
@@ -833,7 +801,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 4. The two numbers on one axis ────────────────────────── */}
+      {/* ── 3. The two numbers on one axis ────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 5, md: 6 } }}>
@@ -867,7 +835,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 5. Pro ────────────────────────────────────────────────── */}
+      {/* ── 4. Pro ────────────────────────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ ...PANEL, overflow: 'hidden', display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
@@ -904,7 +872,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 6. Two things to stake ────────────────────────────────── */}
+      {/* ── 5. Two things to stake ────────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
@@ -976,7 +944,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 7. How to start. Last, because it is the thing you do
+      {/* ── 6. How to start. Last, because it is the thing you do
              once everything above has been answered. ───────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
@@ -1005,7 +973,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 8. Supply, then the ask ───────────────────────────────── */}
+      {/* ── 7. Supply, then the ask ───────────────────────────────── */}
       <Section sx={{ pt: { xs: 7, md: 10 }, pb: { xs: 8, md: 12 } }}>
         {/* The second field of warmth, behind the button. */}
         <Box

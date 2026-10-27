@@ -289,7 +289,7 @@ export const VERSIONS = [
         "Written into the contract and paid on schedule. It does not wait on a good year, a good quarter, or anybody's decision.",
       targetLabel: 'Aimed at',
       targetBody:
-        'The range we manage to, all in, with the 6% sitting inside it as the worst case. Reported after a period closes, never promised before it opens.',
+        'The range we manage to, all in, with the floor sitting inside it as the worst case. Reported after a period closes, never promised before it opens.',
       workedNote:
         'Miss the band completely and the floor still pays in full. That is what makes it a floor rather than a forecast.',
       proofEyebrow: 'Check it yourself',
@@ -309,7 +309,7 @@ export const VERSIONS = [
       lede:
         '$OPEN is what you buy and stake. $HEY is what the stake mints. Same position, two returns, in two different currencies.',
       openBody:
-        'The one you hold. Staked, it pays the 6% floor and aims a long way past it, in $OPEN, with nothing you have to spend here to collect it.',
+        'The one you hold. Staked, it pays in $OPEN rather than in anything you can only spend here, and nothing has to be spent to collect it.',
       heyBody:
         'The one your stake makes. Staked, it pays out compute every day across the whole catalogue. Or sell it, if you would rather have the money.',
       foot: 'Only staked $OPEN mints $HEY. Burn the $HEY and your stake comes back.',
