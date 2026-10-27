@@ -5,39 +5,81 @@ import Typography from '@mui/material/Typography';
 import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
 import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded';
 import { useReveal, revealSx } from '@/utils/reveal';
-import { ORANGE, LABEL, CLEAR, AMBER, CHIP_BEVEL, CANVAS, DASH_C } from '@/components/ui/glass';
-import { INK, MONO } from '@/components/ui/Ledger';
 
 /**
  * Where the money goes, and the one way to pay that never joins the route.
  *
- * A flow diagram, like the section above it, but not the same flow diagram.
- * That one is a straight chain on paper: every node the same size, every link
- * the same, one direction. This one branches. The trunk runs left to right and
- * the costs come off it downward, which is the whole claim the headline makes,
- * and it is drawn on ink so the two are told apart before a word is read.
+ * Built to the supplied reference: two light panels in a 2:1 split, the left
+ * one a funnel that narrows at every step from the four revenue sources down
+ * to the burn, the right one the enterprise route, which is paid up front and
+ * so never enters the funnel at the top. Everything is centred on one axis and
+ * the connectors are dashed with a plain arrowhead.
  *
- * The branch is why the geometry is pinned rather than flowed. The junction
- * cell spans the first two rows and draws its own elbow, so the line along the
- * trunk and the line down to the costs meet at a point instead of being two
- * separate rules that happen to be near each other. That needs a known centre,
- * so the first row has a fixed height and everything in it is centred against
- * that; TRUNK_H is therefore load bearing, not decoration.
+ * It is deliberately not drawn in the glass the section above uses. That one
+ * is a horizontal chain of square tiles with numbered markers, and borrowing
+ * its surface as well as its palette gave the page the same figure twice. This
+ * one stays flat and quiet, and takes its weight from the taper, the type and
+ * the shadows rather than from a bevel.
  *
- * Below lg the branch cannot survive, so the diagram becomes a single column
- * and the costs take their place in it as a step.
+ * The taper is the argument, so the widths are deliberate rather than whatever
+ * the content happens to need: every band is narrower than the one above it,
+ * the orange narrower again, and the burn is the smallest thing on the page.
  *
  * No figures anywhere. None of these ratios are settled in the repo, and a
  * number here would read as a commitment.
  */
 
-const TRUNK_H = 180;   /* row 1: the trunk, and the centre the elbow meets.
-                          Tall enough for the source node, which is the tallest
-                          thing on the trunk; shorter and it hangs out of the row. */
-const DROP_H = 34;     /* row 2: the gap the branch travels down through */
-const JUNCTION_W = 44; /* col 2: where the trunk and the branch meet */
+const ORANGE = '#ff6600';
+const INK = '#141820';
+const DASH = 'rgba(15, 23, 42, 0.32)';
+const QUIET = 'rgba(71, 85, 105, 0.72)';
 
-const DASH_INK = 'rgba(255,255,255,0.34)';
+const LABEL = {
+  fontSize: '0.6rem',
+  fontWeight: 800,
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
+};
+
+/* The two panels. Warm at the top left, cooling across, which is all that
+   separates them from the page behind. */
+const PANEL = {
+  position: 'relative',
+  borderRadius: '24px',
+  border: '1px solid rgba(15,23,42,0.06)',
+  background: 'linear-gradient(152deg, #F8F3EF 0%, #F2F4F7 44%, #EAEEF3 100%)',
+  boxShadow: '0 1px 2px rgba(15,23,42,0.03), 0 30px 60px -40px rgba(15,23,42,0.28)',
+  overflow: 'hidden',
+};
+
+/* One shadow for everything that sits on a panel: a hairline to hold the edge,
+   a tight contact shadow, and a long soft one for lift. The inset highlight
+   along the top is what keeps a flat white card from going chalky. */
+const LIFT =
+  'inset 0 1px 0 rgba(255,255,255,0.9), 0 0 0 1px rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.05), 0 16px 30px -20px rgba(15,23,42,0.30)';
+
+const TONE = {
+  plain: {
+    background: 'linear-gradient(170deg, #FFFFFF 0%, #FDFDFE 60%, #F7F9FC 100%)',
+    boxShadow: LIFT,
+    label: QUIET,
+    title: '#0F172A',
+  },
+  orange: {
+    background: `linear-gradient(145deg, #FF8A2B 0%, ${ORANGE} 52%, #E85900 100%)`,
+    boxShadow:
+      'inset 0 1px 0 rgba(255,255,255,0.4), 0 1px 2px rgba(15,23,42,0.06), 0 20px 36px -22px rgba(232,89,0,0.75)',
+    label: 'rgba(255,255,255,0.78)',
+    title: '#FFFFFF',
+  },
+  ink: {
+    background: `linear-gradient(145deg, #262B36 0%, ${INK} 55%, #090C12 100%)`,
+    boxShadow:
+      'inset 0 1px 0 rgba(255,255,255,0.14), 0 1px 2px rgba(15,23,42,0.08), 0 22px 40px -24px rgba(20,24,32,0.8)',
+    label: 'rgba(255,255,255,0.55)',
+    title: '#FFFFFF',
+  },
+};
 
 const REVENUE = [
   'Enterprise inference & API',
@@ -46,149 +88,68 @@ const REVENUE = [
   'Agents & compute marketplace',
 ];
 
+/* Listed as parts so a narrow screen breaks the line at a separator rather
+   than through the middle of "Inference costs". */
 const COSTS = ['Inference costs', 'Taxes', 'HEY credits', 'Reserves'];
 
 const ENTERPRISE = [
-  { key: 'upfront', title: 'Pay up front', body: 'One payment for the term' },
-  { key: 'reserve', title: 'Reserve credits', body: 'In advance, before usage' },
+  { key: 'upfront', tone: 'plain', title: 'Pay up front', body: 'One payment for the term' },
+  { key: 'reserve', tone: 'orange', title: 'Reserve credits', body: 'In advance, before usage' },
 ];
 
-/* Content sits above the specular sweep, which is an ::after on a glass tile. */
-const OVER = { position: 'relative', zIndex: 1 };
-
-const TIP = {
-  width: 0,
-  height: 0,
-  position: 'absolute',
-};
-
-/** A node on the diagram. `tone` picks the surface; ink is the default here. */
-function Node({ tag, title, lines, note, tone, icon, sx }) {
-  const amber = tone === 'amber';
-
-  return (
-    <Box
-      sx={{
-        borderRadius: '18px',
-        px: { xs: 1.8, md: 2 },
-        py: { xs: 1.6, md: 1.8 },
-        overflow: 'hidden',
-        ...(amber
-          ? AMBER
-          : {
-              position: 'relative',
-              backgroundColor: 'rgba(255,255,255,0.055)',
-              boxShadow:
-                'inset 0 0 0 1px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.14)',
-            }),
-        ...sx,
-      }}
-    >
-      <Box sx={{ ...OVER, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
-        <Box sx={{ minWidth: 0 }}>
-          <Typography
-            component="div"
-            sx={{ ...LABEL, color: amber ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.46)', mb: 0.9 }}
-          >
-            {tag}
-          </Typography>
-
-          {lines ? (
-            lines.map((line) => (
-              <Typography
-                key={line}
-                sx={{
-                  fontFamily: MONO,
-                  fontSize: { xs: '0.78rem', md: '0.8rem' },
-                  lineHeight: 1.65,
-                  letterSpacing: '-0.01em',
-                  color: 'rgba(255,255,255,0.84)',
-                }}
-              >
-                {line}
-              </Typography>
-            ))
-          ) : (
-            <>
-              <Typography
-                sx={{
-                  fontSize: { xs: '1.02rem', md: '1.1rem' },
-                  fontWeight: 750,
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1.2,
-                  color: '#FFFFFF',
-                }}
-              >
-                {title}
-              </Typography>
-              {note && (
-                <Typography
-                  sx={{
-                    mt: 0.5,
-                    fontFamily: MONO,
-                    fontSize: '0.71rem',
-                    lineHeight: 1.4,
-                    color: amber ? 'rgba(255,255,255,0.84)' : 'rgba(255,255,255,0.5)',
-                  }}
-                >
-                  {note}
-                </Typography>
-              )}
-            </>
-          )}
-        </Box>
-        {icon && <Box sx={{ flexShrink: 0, display: 'flex', mt: '-2px' }}>{icon}</Box>}
-      </Box>
-    </Box>
-  );
-}
-
-/** A plain link along the trunk, at lg. */
-function Along() {
+function Arrow() {
   return (
     <Box
       aria-hidden="true"
-      sx={{
-        display: { xs: 'none', lg: 'flex' },
-        alignItems: 'center',
-        alignSelf: 'center',
-        position: 'relative',
-        height: '10px',
-      }}
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: { xs: 0.6, md: 0.7 } }}
     >
-      <Box sx={{ flex: 1, borderTop: `1.5px dashed ${DASH_INK}` }} />
-      <Box
-        sx={{
-          ...TIP,
-          right: '-1px',
-          top: '50%',
-          mt: '-5px',
-          borderTop: '5px solid transparent',
-          borderBottom: '5px solid transparent',
-          borderLeft: `7.5px solid ${DASH_INK}`,
-        }}
-      />
-    </Box>
-  );
-}
-
-/** A link down the column, below lg. */
-function Down() {
-  return (
-    <Box
-      aria-hidden="true"
-      sx={{ display: { xs: 'flex', lg: 'none' }, flexDirection: 'column', alignItems: 'center', py: 1 }}
-    >
-      <Box sx={{ height: '14px', borderLeft: `1.5px dashed ${DASH_INK}` }} />
+      <Box sx={{ height: { xs: 15, md: 17 }, borderLeft: `1.5px dashed ${DASH}` }} />
       <Box
         sx={{
           width: 0,
           height: 0,
           borderLeft: '5px solid transparent',
           borderRight: '5px solid transparent',
-          borderTop: `7.5px solid ${DASH_INK}`,
+          borderTop: `7px solid ${DASH}`,
         }}
       />
+    </Box>
+  );
+}
+
+/** One band of the funnel. */
+function Band({ width, label, tone = 'plain', icon, children }) {
+  const t = TONE[tone];
+
+  return (
+    <Box
+      sx={{
+        width,
+        mx: 'auto',
+        borderRadius: '18px',
+        px: { xs: 2, md: 3 },
+        py: { xs: 1.6, md: 1.9 },
+        textAlign: 'center',
+        background: t.background,
+        boxShadow: t.boxShadow,
+      }}
+    >
+      {icon}
+      <Typography component="div" sx={{ ...LABEL, color: t.label, mb: 0.7 }}>
+        {label}
+      </Typography>
+      <Typography
+        component="div"
+        sx={{
+          fontSize: { xs: '1rem', md: '1.15rem' },
+          fontWeight: 750,
+          letterSpacing: '-0.025em',
+          lineHeight: 1.25,
+          color: t.title,
+        }}
+      >
+        {children}
+      </Typography>
     </Box>
   );
 }
@@ -197,13 +158,11 @@ export default function BurnEnterpriseSection() {
   const [headRef, headShown] = useReveal();
   const [figRef, figShown] = useReveal();
 
-  const trunkNode = { alignSelf: { lg: 'center' } };
-
   return (
-    <Container id="burn" maxWidth="xl" sx={{ py: { xs: 6, md: 9 }, scrollMarginTop: '96px' }}>
+    <Container id="burn" maxWidth="xl" sx={{ py: { xs: 6, md: 8 }, scrollMarginTop: '96px' }}>
       <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
         {/* ---- heading ---- */}
-        <Box ref={headRef} sx={{ maxWidth: 820, mb: { xs: 3.5, md: 4.5 }, ...revealSx(headShown) }}>
+        <Box ref={headRef} sx={{ maxWidth: 820, mb: { xs: 3.5, md: 4 }, ...revealSx(headShown) }}>
           <Typography sx={{ ...LABEL, fontSize: '0.75rem', letterSpacing: '0.1em', color: ORANGE, mb: 1.8 }}>
             Burn &amp; enterprise
           </Typography>
@@ -223,6 +182,7 @@ export default function BurnEnterpriseSection() {
           </Typography>
         </Box>
 
+        {/* ---- the two panels ---- */}
         <Box
           ref={figRef}
           sx={{
@@ -233,208 +193,177 @@ export default function BurnEnterpriseSection() {
             ...revealSx(figShown, 120),
           }}
         >
-          {/* ---- the diagram ---- */}
+          {/* ---- left: the funnel ---- */}
           <Box
             sx={{
-              flex: { lg: '1 1 calc(70% - 12px)' },
+              flex: { lg: '1 1 calc(66.667% - 12px)' },
               minWidth: 0,
-              position: 'relative',
-              overflow: 'hidden',
-              borderRadius: '24px',
-              backgroundColor: INK,
-              /* One ember, in the corner the burn ends in. */
-              backgroundImage:
-                'radial-gradient(56% 74% at 90% 94%, rgba(255,102,0,0.20) 0%, transparent 62%)',
-              px: { xs: 2.2, md: 3.5 },
-              py: { xs: 2.8, md: 3.5 },
+              ...PANEL,
+              px: { xs: 2, md: 4 },
+              py: { xs: 3, md: 3.5 },
             }}
           >
-            <Box
-              sx={{
-                display: { xs: 'flex', lg: 'grid' },
-                flexDirection: { xs: 'column' },
-                gridTemplateColumns: {
-                  lg: `minmax(0, 1.55fr) ${JUNCTION_W}px minmax(0, 0.95fr) 30px minmax(0, 0.88fr) 30px minmax(0, 1fr)`,
-                },
-                gridTemplateRows: { lg: `${TRUNK_H}px ${DROP_H}px auto` },
-              }}
-            >
-              {/* source */}
-              <Box sx={{ gridColumn: { lg: 1 }, gridRow: { lg: 1 }, ...trunkNode }}>
-                <Node tag="Revenue in" lines={REVENUE} />
-              </Box>
+            <Typography sx={{ ...LABEL, color: QUIET, textAlign: 'center', mb: { xs: 2, md: 2.5 } }}>
+              Revenue
+            </Typography>
 
-              {/* the junction: trunk out to the right, branch down to the
-                  costs. One element so the two meet at a point. */}
+            {/* Four sources, sharing the row equally and wrapping their own
+                text, so the long one does not take a row to itself. */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 1.2, md: 1.4 } }}>
+              {REVENUE.map((line) => (
+                <Box
+                  key={line}
+                  sx={{
+                    flex: { xs: '1 1 140px', md: '1 1 0' },
+                    minWidth: 0,
+                    borderRadius: '14px',
+                    px: 1.6,
+                    py: 1.5,
+                    textAlign: 'center',
+                    background: TONE.plain.background,
+                    boxShadow: LIFT,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: { xs: '0.82rem', md: '0.86rem' },
+                      fontWeight: 700,
+                      lineHeight: 1.35,
+                      letterSpacing: '-0.015em',
+                      color: '#0F172A',
+                    }}
+                  >
+                    {line}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+
+            <Arrow />
+            <Band width={{ xs: '100%', md: '80%' }} label="Taken out first">
               <Box
-                aria-hidden="true"
                 sx={{
-                  display: { xs: 'none', lg: 'block' },
-                  gridColumn: 2,
-                  gridRow: '1 / 3',
-                  position: 'relative',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  columnGap: 1,
+                  rowGap: 0.2,
                 }}
               >
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: `${TRUNK_H / 2}px`,
-                    borderTop: `1.5px dashed ${DASH_INK}`,
-                  }}
-                />
-                <Box
-                  sx={{
-                    ...TIP,
-                    right: '-1px',
-                    top: `${TRUNK_H / 2 - 5}px`,
-                    borderTop: '5px solid transparent',
-                    borderBottom: '5px solid transparent',
-                    borderLeft: `7.5px solid ${DASH_INK}`,
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: `${TRUNK_H / 2}px`,
-                    bottom: 0,
-                    borderLeft: `1.5px dashed ${DASH_INK}`,
-                  }}
-                />
-                <Box
-                  sx={{
-                    ...TIP,
-                    left: '50%',
-                    ml: '-5px',
-                    bottom: '-1px',
-                    borderLeft: '5px solid transparent',
-                    borderRight: '5px solid transparent',
-                    borderTop: `7.5px solid ${DASH_INK}`,
-                  }}
-                />
+                {COSTS.map((cost, i) => (
+                  <React.Fragment key={cost}>
+                    {i > 0 && (
+                      <Box component="span" aria-hidden="true" sx={{ color: 'rgba(71,85,105,0.5)' }}>
+                        &middot;
+                      </Box>
+                    )}
+                    <Box component="span" sx={{ whiteSpace: 'nowrap' }}>{cost}</Box>
+                  </React.Fragment>
+                ))}
               </Box>
+            </Band>
 
-              <Down />
-              <Box sx={{ gridColumn: { lg: '2 / 6' }, gridRow: { lg: 3 }, pt: { lg: 0 } }}>
-                <Node tag="Taken out first" lines={COSTS} />
-              </Box>
+            <Arrow />
+            <Band width={{ xs: '90%', md: '58%' }} label="What is left">
+              Available surplus
+            </Band>
 
-              <Down />
-              <Box sx={{ gridColumn: { lg: 3 }, gridRow: { lg: 1 }, ...trunkNode }}>
-                <Node tag="What is left" title="Available surplus" note="After everything above" />
-              </Box>
+            <Arrow />
+            <Band width={{ xs: '80%', md: '42%' }} label="Buyback" tone="orange">
+              Buy OPEN
+            </Band>
 
-              <Box sx={{ gridColumn: { lg: 4 }, gridRow: { lg: 1 } }}>
-                <Along />
-              </Box>
-              <Down />
-              <Box sx={{ gridColumn: { lg: 5 }, gridRow: { lg: 1 }, ...trunkNode }}>
-                <Node tag="Buyback" title="Buy OPEN" note="On the open market" tone="amber" />
-              </Box>
-
-              <Box sx={{ gridColumn: { lg: 6 }, gridRow: { lg: 1 } }}>
-                <Along />
-              </Box>
-              <Down />
-              <Box sx={{ gridColumn: { lg: 7 }, gridRow: { lg: 1 }, ...trunkNode }}>
-                <Node
-                  tag="Burn"
-                  title="OPEN, gone for good"
-                  note="Verifiably on chain"
-                  icon={<LocalFireDepartmentRoundedIcon sx={{ fontSize: '1.15rem', color: ORANGE }} />}
+            <Arrow />
+            <Band
+              width={{ xs: '78%', md: '34%' }}
+              label="Burn"
+              tone="ink"
+              icon={
+                <LocalFireDepartmentRoundedIcon
+                  sx={{ fontSize: '1.2rem', color: ORANGE, display: 'block', mx: 'auto', mb: 0.4 }}
                 />
-              </Box>
-            </Box>
+              }
+            >
+              OPEN, gone for good
+            </Band>
           </Box>
 
-          {/* ---- the money that never joins the route ---- */}
+          {/* ---- right: enterprise ---- */}
           <Box
             sx={{
-              flex: { lg: '1 1 calc(30% - 12px)' },
+              flex: { lg: '1 1 calc(33.333% - 12px)' },
               minWidth: 0,
               display: 'flex',
               flexDirection: 'column',
-              ...CANVAS,
+              ...PANEL,
               px: { xs: 2, md: 3 },
-              py: { xs: 2.8, md: 3.5 },
+              py: { xs: 3, md: 3.5 },
             }}
           >
-            <Typography sx={{ ...LABEL, color: 'var(--text-muted)' }}>Enterprise</Typography>
+            <Typography sx={{ ...LABEL, color: QUIET, textAlign: 'center', mb: { xs: 2, md: 2.5 } }}>
+              Enterprise
+            </Typography>
 
-            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', pt: 2 }}>
-              {ENTERPRISE.map((item, i) => (
-                <React.Fragment key={item.key}>
-                  {i > 0 && (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 1.2 }}>
-                      <Box aria-hidden="true" sx={{ height: '14px', borderLeft: `1.5px dashed ${DASH_C}` }} />
-                      <Box
-                        aria-hidden="true"
-                        sx={{
-                          width: 0,
-                          height: 0,
-                          borderLeft: '5px solid transparent',
-                          borderRight: '5px solid transparent',
-                          borderTop: `7.5px solid ${DASH_C}`,
-                        }}
-                      />
-                    </Box>
-                  )}
-                  <Box
-                    sx={{
-                      borderRadius: '18px',
-                      px: { xs: 1.9, md: 2 },
-                      py: { xs: 1.9, md: 2 },
-                      overflow: 'hidden',
-                      ...CLEAR,
-                    }}
-                  >
-                    <Box sx={{ ...OVER, display: 'flex', alignItems: 'center', gap: 1.8 }}>
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                pb: { xs: 0.5, md: 1 },
+              }}
+            >
+              {ENTERPRISE.map((item, i) => {
+                const orange = item.tone === 'orange';
+                return (
+                  <React.Fragment key={item.key}>
+                    {i > 0 && <Arrow />}
+                    <Box sx={{ textAlign: 'center' }}>
                       <Box
                         sx={{
-                          width: 50,
-                          height: 50,
-                          flexShrink: 0,
+                          width: { xs: 88, md: 100 },
+                          height: { xs: 88, md: 100 },
+                          mx: 'auto',
+                          mb: 1.8,
                           borderRadius: '50%',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          backgroundColor: 'rgba(255,255,255,0.92)',
-                          boxShadow: CHIP_BEVEL,
+                          background: orange ? TONE.orange.background : TONE.plain.background,
+                          boxShadow: orange ? TONE.orange.boxShadow : LIFT,
                         }}
                       >
-                        {item.key === 'reserve' ? (
-                          <Box component="span" sx={{ fontSize: '1.4rem', fontWeight: 800, color: ORANGE, lineHeight: 1 }}>
+                        {orange ? (
+                          <Box
+                            component="span"
+                            sx={{ fontSize: { xs: '2rem', md: '2.25rem' }, fontWeight: 800, color: '#FFFFFF', lineHeight: 1 }}
+                          >
                             $
                           </Box>
                         ) : (
-                          <PaymentsRoundedIcon sx={{ fontSize: '1.4rem', color: 'var(--text-heading)' }} />
+                          <PaymentsRoundedIcon sx={{ fontSize: { xs: '2rem', md: '2.2rem' }, color: '#0F172A' }} />
                         )}
                       </Box>
-                      <Box sx={{ minWidth: 0 }}>
-                        <Typography
-                          sx={{
-                            fontSize: { xs: '1rem', md: '1.06rem' },
-                            fontWeight: 750,
-                            letterSpacing: '-0.025em',
-                            lineHeight: 1.2,
-                            color: 'var(--text-heading)',
-                            mb: 0.4,
-                          }}
-                        >
-                          {item.title}
-                        </Typography>
-                        <Typography
-                          sx={{ fontFamily: MONO, fontSize: '0.72rem', lineHeight: 1.4, color: 'var(--text-muted)' }}
-                        >
-                          {item.body}
-                        </Typography>
-                      </Box>
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '1.05rem', md: '1.18rem' },
+                          fontWeight: 750,
+                          letterSpacing: '-0.025em',
+                          color: '#0F172A',
+                          mb: 0.5,
+                        }}
+                      >
+                        {item.title}
+                      </Typography>
+                      <Typography sx={{ fontSize: { xs: '0.86rem', md: '0.9rem' }, lineHeight: 1.5, color: 'rgba(71,85,105,0.9)' }}>
+                        {item.body}
+                      </Typography>
                     </Box>
-                  </Box>
-                </React.Fragment>
-              ))}
+                  </React.Fragment>
+                );
+              })}
             </Box>
           </Box>
         </Box>
