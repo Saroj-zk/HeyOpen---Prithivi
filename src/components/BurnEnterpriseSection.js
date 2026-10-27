@@ -5,30 +5,39 @@ import Typography from '@mui/material/Typography';
 import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
 import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded';
 import { useReveal, revealSx } from '@/utils/reveal';
-import { ORANGE, DASH_C, LABEL, CLEAR, AMBER, SMOKE, CHIP_BEVEL, CANVAS } from '@/components/ui/glass';
+import { ORANGE, LABEL, CLEAR, AMBER, CHIP_BEVEL, CANVAS, DASH_C } from '@/components/ui/glass';
+import { INK, MONO } from '@/components/ui/Ledger';
 
 /**
  * Where the money goes, and the one way to pay that never joins the route.
  *
- * Sits under "the other way to pay" and is drawn in the same glass, from the
- * same module: same canvas, same tints, same tile anatomy of a tag, the thing
- * itself, and a note under it.
+ * A flow diagram, like the section above it, but not the same flow diagram.
+ * That one is a straight chain on paper: every node the same size, every link
+ * the same, one direction. This one branches. The trunk runs left to right and
+ * the costs come off it downward, which is the whole claim the headline makes,
+ * and it is drawn on ink so the two are told apart before a word is read.
  *
- * Laid out as that section is, left to right in one band, because a vertical
- * funnel ran to two screens. Order is carried by the tags and by the direction
- * of travel, which is what a reader follows anyway, so the steps are not also
- * numbered.
+ * The branch is why the geometry is pinned rather than flowed. The junction
+ * cell spans the first two rows and draws its own elbow, so the line along the
+ * trunk and the line down to the costs meet at a point instead of being two
+ * separate rules that happen to be near each other. That needs a known centre,
+ * so the first row has a fixed height and everything in it is centred against
+ * that; TRUNK_H is therefore load bearing, not decoration.
  *
- * Two headers inside the left canvas rather than one: the sources are a set,
- * everything after them is a sequence, and they are different kinds of thing.
- * The collector bracket between the two bands is what says the four sources
- * become one pot before anything is taken out of it.
+ * Below lg the branch cannot survive, so the diagram becomes a single column
+ * and the costs take their place in it as a step.
  *
  * No figures anywhere. None of these ratios are settled in the repo, and a
  * number here would read as a commitment.
  */
 
-const TINT = { clear: CLEAR, amber: AMBER, smoke: SMOKE };
+const TRUNK_H = 180;   /* row 1: the trunk, and the centre the elbow meets.
+                          Tall enough for the source node, which is the tallest
+                          thing on the trunk; shorter and it hangs out of the row. */
+const DROP_H = 34;     /* row 2: the gap the branch travels down through */
+const JUNCTION_W = 44; /* col 2: where the trunk and the branch meet */
+
+const DASH_INK = 'rgba(255,255,255,0.34)';
 
 const REVENUE = [
   'Enterprise inference & API',
@@ -37,160 +46,63 @@ const REVENUE = [
   'Agents & compute marketplace',
 ];
 
-const STAGES = [
-  {
-    key: 'costs',
-    tag: 'Taken out first',
-    glyph: '▤',
-    /* A list rather than a sentence: four separate obligations, and run
-       together with separators they read as one line of small print. */
-    lines: ['Inference costs', 'Taxes', 'HEY credits', 'Reserves'],
-  },
-  {
-    key: 'surplus',
-    tag: 'What is left',
-    glyph: '◇',
-    title: 'Available surplus',
-    note: 'After everything above',
-  },
-  {
-    key: 'buyback',
-    tag: 'Buyback',
-    glyph: '◆',
-    tone: 'amber',
-    title: 'Buy OPEN',
-    note: 'On the open market',
-  },
-  {
-    key: 'burn',
-    tag: 'Burn',
-    tone: 'smoke',
-    title: 'OPEN, gone for good',
-    note: 'Verifiably on chain',
-  },
-];
+const COSTS = ['Inference costs', 'Taxes', 'HEY credits', 'Reserves'];
 
 const ENTERPRISE = [
-  { key: 'upfront', tone: 'clear', title: 'Pay up front', body: 'One payment for the term' },
-  { key: 'reserve', tone: 'amber', title: 'Reserve credits', body: 'In advance, before usage' },
+  { key: 'upfront', title: 'Pay up front', body: 'One payment for the term' },
+  { key: 'reserve', title: 'Reserve credits', body: 'In advance, before usage' },
 ];
 
-/* Content sits above the specular sweep, which is an ::after on the tile. */
+/* Content sits above the specular sweep, which is an ::after on a glass tile. */
 const OVER = { position: 'relative', zIndex: 1 };
 
-const headingOn = (onDark) => (onDark ? '#FFFFFF' : 'var(--text-heading)');
-const tagOn = (onDark) => (onDark ? 'rgba(255,255,255,0.88)' : 'var(--text-muted)');
-const noteOn = (onDark) => (onDark ? 'rgba(255,255,255,0.84)' : 'var(--text-muted)');
+const TIP = {
+  width: 0,
+  height: 0,
+  position: 'absolute',
+};
 
-/* A header for a band inside a canvas. One level up from a tile's tag: same
-   letterform, but larger, darker, and marked, so the two do not read as the
-   same kind of thing. */
-function Band({ children, sx }) {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ...sx }}>
-      <Box
-        aria-hidden="true"
-        sx={{ width: '5px', height: '5px', borderRadius: '1.5px', backgroundColor: ORANGE, flexShrink: 0 }}
-      />
-      <Typography
-        sx={{ ...LABEL, fontSize: '0.68rem', letterSpacing: '0.12em', color: 'var(--text-secondary)' }}
-      >
-        {children}
-      </Typography>
-    </Box>
-  );
-}
-
-/**
- * The route between two tiles. Along the row on a wide canvas, down the column
- * on a narrow one, with the arrowhead turning to match.
- */
-function Route() {
-  const line = {
-    flex: { md: 1 },
-    width: { xs: 0, md: 'auto' },
-    height: { xs: 12, md: 0 },
-    borderLeft: { xs: `1.5px dashed ${DASH_C}`, md: 0 },
-    borderTop: { xs: 0, md: `1.5px dashed ${DASH_C}` },
-    minWidth: { md: 10 },
-  };
-
-  return (
-    <Box
-      aria-hidden="true"
-      sx={{
-        display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        alignItems: 'center',
-        flexShrink: 0,
-        width: { xs: '100%', md: 24, lg: 32 },
-        py: { xs: 0.8, md: 0 },
-      }}
-    >
-      <Box sx={line} />
-      <Box
-        sx={{
-          width: 0,
-          height: 0,
-          flexShrink: 0,
-          borderLeft: { xs: '5px solid transparent', md: `7.5px solid ${DASH_C}` },
-          borderRight: { xs: '5px solid transparent', md: 0 },
-          borderTop: { xs: `7.5px solid ${DASH_C}`, md: '5px solid transparent' },
-          borderBottom: { xs: 0, md: '5px solid transparent' },
-        }}
-      />
-    </Box>
-  );
-}
-
-/** One stage in the band: tag at the top, the thing itself under it. */
-function Stage({ stage }) {
-  const onDark = Boolean(stage.tone) && stage.tone !== 'clear';
+/** A node on the diagram. `tone` picks the surface; ink is the default here. */
+function Node({ tag, title, lines, note, tone, icon, sx }) {
+  const amber = tone === 'amber';
 
   return (
     <Box
       sx={{
-        flex: { md: '1 1 0' },
-        minWidth: 0,
-        display: 'flex',
-        borderRadius: '20px',
-        px: { xs: 1.9, md: 2 },
-        py: { xs: 1.7, md: 1.9 },
+        borderRadius: '18px',
+        px: { xs: 1.8, md: 2 },
+        py: { xs: 1.6, md: 1.8 },
         overflow: 'hidden',
-        ...TINT[stage.tone || 'clear'],
+        ...(amber
+          ? AMBER
+          : {
+              position: 'relative',
+              backgroundColor: 'rgba(255,255,255,0.055)',
+              boxShadow:
+                'inset 0 0 0 1px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.14)',
+            }),
+        ...sx,
       }}
     >
-      <Box sx={{ ...OVER, display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
-          <Typography component="div" sx={{ ...LABEL, color: tagOn(onDark) }}>
-            {stage.tag}
-          </Typography>
-          <Box
-            aria-hidden="true"
-            sx={{
-              fontSize: '0.95rem',
-              lineHeight: 1,
-              display: 'flex',
-              flexShrink: 0,
-              opacity: onDark ? 0.85 : 0.4,
-              color: headingOn(onDark),
-            }}
+      <Box sx={{ ...OVER, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
+        <Box sx={{ minWidth: 0 }}>
+          <Typography
+            component="div"
+            sx={{ ...LABEL, color: amber ? 'rgba(255,255,255,0.88)' : 'rgba(255,255,255,0.46)', mb: 0.9 }}
           >
-            {stage.key === 'burn' ? <LocalFireDepartmentRoundedIcon sx={{ fontSize: '1.1rem' }} /> : stage.glyph}
-          </Box>
-        </Box>
+            {tag}
+          </Typography>
 
-        <Box sx={{ mt: 'auto', pt: 1.2 }}>
-          {stage.lines ? (
-            stage.lines.map((line) => (
+          {lines ? (
+            lines.map((line) => (
               <Typography
                 key={line}
                 sx={{
-                  fontSize: { xs: '0.92rem', md: '0.9rem', lg: '0.95rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.015em',
-                  lineHeight: 1.5,
-                  color: headingOn(onDark),
+                  fontFamily: MONO,
+                  fontSize: { xs: '0.78rem', md: '0.8rem' },
+                  lineHeight: 1.65,
+                  letterSpacing: '-0.01em',
+                  color: 'rgba(255,255,255,0.84)',
                 }}
               >
                 {line}
@@ -200,29 +112,83 @@ function Stage({ stage }) {
             <>
               <Typography
                 sx={{
-                  fontSize: { xs: '1rem', md: '1.02rem', lg: '1.1rem' },
+                  fontSize: { xs: '1.02rem', md: '1.1rem' },
                   fontWeight: 750,
                   letterSpacing: '-0.025em',
                   lineHeight: 1.2,
-                  color: headingOn(onDark),
+                  color: '#FFFFFF',
                 }}
               >
-                {stage.title}
+                {title}
               </Typography>
-              <Typography
-                sx={{
-                  mt: 0.5,
-                  fontSize: { xs: '0.76rem', md: '0.78rem' },
-                  lineHeight: 1.4,
-                  color: noteOn(onDark),
-                }}
-              >
-                {stage.note}
-              </Typography>
+              {note && (
+                <Typography
+                  sx={{
+                    mt: 0.5,
+                    fontFamily: MONO,
+                    fontSize: '0.71rem',
+                    lineHeight: 1.4,
+                    color: amber ? 'rgba(255,255,255,0.84)' : 'rgba(255,255,255,0.5)',
+                  }}
+                >
+                  {note}
+                </Typography>
+              )}
             </>
           )}
         </Box>
+        {icon && <Box sx={{ flexShrink: 0, display: 'flex', mt: '-2px' }}>{icon}</Box>}
       </Box>
+    </Box>
+  );
+}
+
+/** A plain link along the trunk, at lg. */
+function Along() {
+  return (
+    <Box
+      aria-hidden="true"
+      sx={{
+        display: { xs: 'none', lg: 'flex' },
+        alignItems: 'center',
+        alignSelf: 'center',
+        position: 'relative',
+        height: '10px',
+      }}
+    >
+      <Box sx={{ flex: 1, borderTop: `1.5px dashed ${DASH_INK}` }} />
+      <Box
+        sx={{
+          ...TIP,
+          right: '-1px',
+          top: '50%',
+          mt: '-5px',
+          borderTop: '5px solid transparent',
+          borderBottom: '5px solid transparent',
+          borderLeft: `7.5px solid ${DASH_INK}`,
+        }}
+      />
+    </Box>
+  );
+}
+
+/** A link down the column, below lg. */
+function Down() {
+  return (
+    <Box
+      aria-hidden="true"
+      sx={{ display: { xs: 'flex', lg: 'none' }, flexDirection: 'column', alignItems: 'center', py: 1 }}
+    >
+      <Box sx={{ height: '14px', borderLeft: `1.5px dashed ${DASH_INK}` }} />
+      <Box
+        sx={{
+          width: 0,
+          height: 0,
+          borderLeft: '5px solid transparent',
+          borderRight: '5px solid transparent',
+          borderTop: `7.5px solid ${DASH_INK}`,
+        }}
+      />
     </Box>
   );
 }
@@ -230,6 +196,8 @@ function Stage({ stage }) {
 export default function BurnEnterpriseSection() {
   const [headRef, headShown] = useReveal();
   const [figRef, figShown] = useReveal();
+
+  const trunkNode = { alignSelf: { lg: 'center' } };
 
   return (
     <Container id="burn" maxWidth="xl" sx={{ py: { xs: 6, md: 9 }, scrollMarginTop: '96px' }}>
@@ -255,7 +223,6 @@ export default function BurnEnterpriseSection() {
           </Typography>
         </Box>
 
-        {/* ---- the two canvases ---- */}
         <Box
           ref={figRef}
           sx={{
@@ -266,188 +233,208 @@ export default function BurnEnterpriseSection() {
             ...revealSx(figShown, 120),
           }}
         >
-          {/* ---- left: in, then out, in that order ---- */}
+          {/* ---- the diagram ---- */}
           <Box
             sx={{
-              flex: { lg: '1 1 calc(72% - 12px)' },
+              flex: { lg: '1 1 calc(70% - 12px)' },
               minWidth: 0,
-              ...CANVAS,
-              px: { xs: 2, md: 3.5 },
-              py: { xs: 2.5, md: 3.5 },
+              position: 'relative',
+              overflow: 'hidden',
+              borderRadius: '24px',
+              backgroundColor: INK,
+              /* One ember, in the corner the burn ends in. */
+              backgroundImage:
+                'radial-gradient(56% 74% at 90% 94%, rgba(255,102,0,0.20) 0%, transparent 62%)',
+              px: { xs: 2.2, md: 3.5 },
+              py: { xs: 2.8, md: 3.5 },
             }}
           >
-            <Band sx={{ mb: 1.6 }}>Revenue in</Band>
-
-            {/* Four sources, sharing the row equally and wrapping their own
-                text, so the long one does not take a row to itself. */}
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 1, md: 1.2 } }}>
-              {REVENUE.map((line) => (
-                <Box
-                  key={line}
-                  sx={{
-                    flex: { xs: '1 1 140px', md: '1 1 0' },
-                    minWidth: 0,
-                    borderRadius: '14px',
-                    px: 1.4,
-                    py: 1.3,
-                    overflow: 'hidden',
-                    ...CLEAR,
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      ...OVER,
-                      fontSize: { xs: '0.8rem', md: '0.82rem' },
-                      fontWeight: 700,
-                      lineHeight: 1.3,
-                      letterSpacing: '-0.015em',
-                      textAlign: 'center',
-                      color: 'var(--text-heading)',
-                    }}
-                  >
-                    {line}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-
-            {/* The four sources become one pot. A bracket closing downward
-                says that in a way a single arrow from nowhere does not. */}
-            <Box aria-hidden="true" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Box
-                sx={{
-                  alignSelf: 'stretch',
-                  mx: '12%',
-                  mt: '12px',
-                  height: '13px',
-                  borderBottom: `1.5px dashed ${DASH_C}`,
-                  borderLeft: `1.5px dashed ${DASH_C}`,
-                  borderRight: `1.5px dashed ${DASH_C}`,
-                  borderBottomLeftRadius: '10px',
-                  borderBottomRightRadius: '10px',
-                }}
-              />
-              <Box sx={{ height: '11px', borderLeft: `1.5px dashed ${DASH_C}` }} />
-              <Box
-                sx={{
-                  width: 0,
-                  height: 0,
-                  borderLeft: '5px solid transparent',
-                  borderRight: '5px solid transparent',
-                  borderTop: `7.5px solid ${DASH_C}`,
-                }}
-              />
-            </Box>
-
-            <Band sx={{ mt: 2, mb: 1.6 }}>Where it goes, in this order</Band>
-
             <Box
               sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
-                alignItems: { xs: 'stretch', md: 'stretch' },
+                display: { xs: 'flex', lg: 'grid' },
+                flexDirection: { xs: 'column' },
+                gridTemplateColumns: {
+                  lg: `minmax(0, 1.55fr) ${JUNCTION_W}px minmax(0, 0.95fr) 30px minmax(0, 0.88fr) 30px minmax(0, 1fr)`,
+                },
+                gridTemplateRows: { lg: `${TRUNK_H}px ${DROP_H}px auto` },
               }}
             >
-              {STAGES.map((stage, i) => (
-                <React.Fragment key={stage.key}>
-                  {i > 0 && <Route />}
-                  <Stage stage={stage} />
-                </React.Fragment>
-              ))}
+              {/* source */}
+              <Box sx={{ gridColumn: { lg: 1 }, gridRow: { lg: 1 }, ...trunkNode }}>
+                <Node tag="Revenue in" lines={REVENUE} />
+              </Box>
+
+              {/* the junction: trunk out to the right, branch down to the
+                  costs. One element so the two meet at a point. */}
+              <Box
+                aria-hidden="true"
+                sx={{
+                  display: { xs: 'none', lg: 'block' },
+                  gridColumn: 2,
+                  gridRow: '1 / 3',
+                  position: 'relative',
+                }}
+              >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: `${TRUNK_H / 2}px`,
+                    borderTop: `1.5px dashed ${DASH_INK}`,
+                  }}
+                />
+                <Box
+                  sx={{
+                    ...TIP,
+                    right: '-1px',
+                    top: `${TRUNK_H / 2 - 5}px`,
+                    borderTop: '5px solid transparent',
+                    borderBottom: '5px solid transparent',
+                    borderLeft: `7.5px solid ${DASH_INK}`,
+                  }}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: `${TRUNK_H / 2}px`,
+                    bottom: 0,
+                    borderLeft: `1.5px dashed ${DASH_INK}`,
+                  }}
+                />
+                <Box
+                  sx={{
+                    ...TIP,
+                    left: '50%',
+                    ml: '-5px',
+                    bottom: '-1px',
+                    borderLeft: '5px solid transparent',
+                    borderRight: '5px solid transparent',
+                    borderTop: `7.5px solid ${DASH_INK}`,
+                  }}
+                />
+              </Box>
+
+              <Down />
+              <Box sx={{ gridColumn: { lg: '2 / 6' }, gridRow: { lg: 3 }, pt: { lg: 0 } }}>
+                <Node tag="Taken out first" lines={COSTS} />
+              </Box>
+
+              <Down />
+              <Box sx={{ gridColumn: { lg: 3 }, gridRow: { lg: 1 }, ...trunkNode }}>
+                <Node tag="What is left" title="Available surplus" note="After everything above" />
+              </Box>
+
+              <Box sx={{ gridColumn: { lg: 4 }, gridRow: { lg: 1 } }}>
+                <Along />
+              </Box>
+              <Down />
+              <Box sx={{ gridColumn: { lg: 5 }, gridRow: { lg: 1 }, ...trunkNode }}>
+                <Node tag="Buyback" title="Buy OPEN" note="On the open market" tone="amber" />
+              </Box>
+
+              <Box sx={{ gridColumn: { lg: 6 }, gridRow: { lg: 1 } }}>
+                <Along />
+              </Box>
+              <Down />
+              <Box sx={{ gridColumn: { lg: 7 }, gridRow: { lg: 1 }, ...trunkNode }}>
+                <Node
+                  tag="Burn"
+                  title="OPEN, gone for good"
+                  note="Verifiably on chain"
+                  icon={<LocalFireDepartmentRoundedIcon sx={{ fontSize: '1.15rem', color: ORANGE }} />}
+                />
+              </Box>
             </Box>
           </Box>
 
-          {/* ---- right: the money that never joins the route ---- */}
+          {/* ---- the money that never joins the route ---- */}
           <Box
             sx={{
-              flex: { lg: '1 1 calc(28% - 12px)' },
+              flex: { lg: '1 1 calc(30% - 12px)' },
               minWidth: 0,
               display: 'flex',
               flexDirection: 'column',
               ...CANVAS,
               px: { xs: 2, md: 3 },
-              py: { xs: 2.5, md: 3.5 },
+              py: { xs: 2.8, md: 3.5 },
             }}
           >
-            <Band sx={{ mb: 1.6 }}>Enterprise</Band>
+            <Typography sx={{ ...LABEL, color: 'var(--text-muted)' }}>Enterprise</Typography>
 
-            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              {ENTERPRISE.map((item, i) => {
-                const onDark = item.tone !== 'clear';
-                return (
-                  <React.Fragment key={item.key}>
-                    {i > 0 && (
-                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 1 }}>
-                        <Box aria-hidden="true" sx={{ height: '14px', borderLeft: `1.5px dashed ${DASH_C}` }} />
-                        <Box
-                          aria-hidden="true"
-                          sx={{
-                            width: 0,
-                            height: 0,
-                            borderLeft: '5px solid transparent',
-                            borderRight: '5px solid transparent',
-                            borderTop: `7.5px solid ${DASH_C}`,
-                          }}
-                        />
+            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', pt: 2 }}>
+              {ENTERPRISE.map((item, i) => (
+                <React.Fragment key={item.key}>
+                  {i > 0 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 1.2 }}>
+                      <Box aria-hidden="true" sx={{ height: '14px', borderLeft: `1.5px dashed ${DASH_C}` }} />
+                      <Box
+                        aria-hidden="true"
+                        sx={{
+                          width: 0,
+                          height: 0,
+                          borderLeft: '5px solid transparent',
+                          borderRight: '5px solid transparent',
+                          borderTop: `7.5px solid ${DASH_C}`,
+                        }}
+                      />
+                    </Box>
+                  )}
+                  <Box
+                    sx={{
+                      borderRadius: '18px',
+                      px: { xs: 1.9, md: 2 },
+                      py: { xs: 1.9, md: 2 },
+                      overflow: 'hidden',
+                      ...CLEAR,
+                    }}
+                  >
+                    <Box sx={{ ...OVER, display: 'flex', alignItems: 'center', gap: 1.8 }}>
+                      <Box
+                        sx={{
+                          width: 50,
+                          height: 50,
+                          flexShrink: 0,
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: 'rgba(255,255,255,0.92)',
+                          boxShadow: CHIP_BEVEL,
+                        }}
+                      >
+                        {item.key === 'reserve' ? (
+                          <Box component="span" sx={{ fontSize: '1.4rem', fontWeight: 800, color: ORANGE, lineHeight: 1 }}>
+                            $
+                          </Box>
+                        ) : (
+                          <PaymentsRoundedIcon sx={{ fontSize: '1.4rem', color: 'var(--text-heading)' }} />
+                        )}
                       </Box>
-                    )}
-                    <Box
-                      sx={{
-                        borderRadius: '18px',
-                        px: { xs: 1.9, md: 2 },
-                        py: { xs: 1.9, md: 2.1 },
-                        overflow: 'hidden',
-                        ...TINT[item.tone],
-                      }}
-                    >
-                      <Box sx={{ ...OVER, display: 'flex', alignItems: 'center', gap: 1.8 }}>
-                        <Box
+                      <Box sx={{ minWidth: 0 }}>
+                        <Typography
                           sx={{
-                            width: 52,
-                            height: 52,
-                            flexShrink: 0,
-                            borderRadius: '50%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            /* On the amber tile a white disc fights the body,
-                               so the disc is a lighter wash of it instead. */
-                            backgroundColor: onDark ? 'rgba(255,255,255,0.20)' : 'rgba(255,255,255,0.92)',
-                            boxShadow: onDark
-                              ? 'inset 0 0 0 1px rgba(255,255,255,0.42), inset 0 1px 0 rgba(255,255,255,0.6)'
-                              : CHIP_BEVEL,
+                            fontSize: { xs: '1rem', md: '1.06rem' },
+                            fontWeight: 750,
+                            letterSpacing: '-0.025em',
+                            lineHeight: 1.2,
+                            color: 'var(--text-heading)',
+                            mb: 0.4,
                           }}
                         >
-                          {onDark ? (
-                            <Box component="span" sx={{ fontSize: '1.45rem', fontWeight: 800, color: '#FFFFFF', lineHeight: 1 }}>
-                              $
-                            </Box>
-                          ) : (
-                            <PaymentsRoundedIcon sx={{ fontSize: '1.45rem', color: 'var(--text-heading)' }} />
-                          )}
-                        </Box>
-                        <Box sx={{ minWidth: 0 }}>
-                          <Typography
-                            sx={{
-                              fontSize: { xs: '1rem', md: '1.06rem' },
-                              fontWeight: 750,
-                              letterSpacing: '-0.025em',
-                              lineHeight: 1.2,
-                              color: headingOn(onDark),
-                              mb: 0.4,
-                            }}
-                          >
-                            {item.title}
-                          </Typography>
-                          <Typography sx={{ fontSize: '0.78rem', lineHeight: 1.4, color: noteOn(onDark) }}>
-                            {item.body}
-                          </Typography>
-                        </Box>
+                          {item.title}
+                        </Typography>
+                        <Typography
+                          sx={{ fontFamily: MONO, fontSize: '0.72rem', lineHeight: 1.4, color: 'var(--text-muted)' }}
+                        >
+                          {item.body}
+                        </Typography>
                       </Box>
                     </Box>
-                  </React.Fragment>
-                );
-              })}
+                  </Box>
+                </React.Fragment>
+              ))}
             </Box>
           </Box>
         </Box>
