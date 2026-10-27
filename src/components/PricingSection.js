@@ -138,12 +138,27 @@ export default function PricingSection() {
               $165 the hard way against $20 here. $20 is what ChatGPT Plus,
               Claude Pro, Gemini Pro and Perplexity Pro each ask on their own,
               which is the comparison being drawn. It does not claim to undercut
-              the cheapest, since Copilot is $10 and Runway $15. */}
-          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 660, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
+              the cheapest, since Copilot is $10 and Runway $15.
+
+              What the price includes belongs in the same sentence as the price,
+              not on a line of its own: split out, it read as a separate boast
+              rather than as part of what the $20 buys. Unlimited generation is
+              the claim doing the work here, so it carries the weight in the
+              heading ink, and uncensored keeps the orange, since that is the
+              one none of those eight will sell at any price. Both are made
+              elsewhere on the site already: uncensored on the Private AI and
+              capabilities pages, unlimited on the $20 card below, which still
+              says "messages" and says nothing about images. */}
+          <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 680, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
             Separate subscriptions to ChatGPT, Claude, Gemini and the rest come to{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
             All of them, and 200+ more, cost{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here.
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here, with{' '}
+            <Box component="span" sx={{ color: primaryText, fontWeight: 700 }}>
+              unlimited text and image generation
+            </Box>
+            ,{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>uncensored</Box>.
           </Typography>
         </Box>
 
@@ -397,7 +412,7 @@ export default function PricingSection() {
                       <Box sx={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(255,102,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6600' }}>
                         <CheckCircleRoundedIcon sx={{ fontSize: '0.85rem' }} />
                       </Box>
-                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: primaryText }}>Unlimited daily messages</Typography>
+                      <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: primaryText }}>Unlimited text &amp; image generation</Typography>
                     </Box>
                   </Box>
 

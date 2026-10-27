@@ -32,6 +32,78 @@ const P_SX = {
   textWrap: 'pretty',
 };
 
+/* A contact address in a legal document is there to be used, so the ones
+   written into the copy are turned into mailto links rather than left as text
+   the reader has to retype. The capturing group means split() hands back the
+   addresses at the odd indices, with the surrounding prose at the even ones. */
+const EMAIL = /([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi;
+
+/* A bracketed run of capitals is how these documents mark a fact only the
+   company can supply: [REGISTERED ADDRESS], [REFUND POLICY URL]. One sitting
+   mid-sentence in a clause about refunds is easy to read straight past, so it
+   is drawn as an obvious gap rather than as prose. */
+const SLOT = /(\[[A-Z][A-Z0-9 ,./'-]{2,}\])/g;
+
+function Slot({ children }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        /* Kept tight: a slot is usually followed straight by a full stop, and
+           roomier padding reads as a stray space before it. */
+        px: '2px',
+        borderRadius: '4px',
+        border: '1px dashed rgba(255, 102, 0, 0.6)',
+        backgroundColor: 'rgba(255, 102, 0, 0.08)',
+        color: '#C24E00',
+        fontSize: '0.86em',
+        fontWeight: 700,
+        letterSpacing: '0.02em',
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+/* Emails become links, unfilled slots become marked gaps. Splitting on a
+   capturing group puts the matches at the odd indices and the prose at the
+   even ones, so each pass walks the output of the one before it. */
+function markup(text) {
+  if (typeof text !== 'string') return text;
+
+  const withSlots =
+    text.indexOf('[') === -1
+      ? [text]
+      : text
+          .split(SLOT)
+          .map((part, i) => (i % 2 === 1 ? <Slot key={`s${i}`}>{part}</Slot> : part));
+
+  return withSlots.map((part, i) => {
+    if (typeof part !== 'string' || part.indexOf('@') === -1) return part;
+    const pieces = part.split(EMAIL);
+    if (pieces.length === 1) return part;
+    return pieces.map((piece, j) =>
+      j % 2 === 1 ? (
+        <Box
+          component="a"
+          key={`e${i}-${j}`}
+          href={`mailto:${piece}`}
+          sx={{
+            color: '#FF6600',
+            textDecoration: 'none',
+            '&:hover': { textDecoration: 'underline' },
+          }}
+        >
+          {piece}
+        </Box>
+      ) : (
+        piece
+      )
+    );
+  });
+}
+
 /* Venice leads most paragraphs with a short bold label. In list items the same
    shape is written inline ("Access. To know what..."), so it gets split back
    out here. Deliberately narrow: a short lead-in, a period, then real text. */
@@ -92,25 +164,38 @@ function DraftNote({ children }) {
   );
 }
 
-/** One body node. `number` is the parent section's number, for sub-clauses. */
-function Node({ node, number, clauseIndex }) {
-  if (typeof node === 'string') return <Paragraph>{node}</Paragraph>;
+const SUBHEAD_SX = {
+  fontSize: { xs: '1rem', md: '1.05rem' },
+  fontWeight: 700,
+  color: 'var(--text-heading)',
+  mt: 4,
+  mb: 1.8,
+};
+
+/**
+ * One body node. `number` is the parent section's number, for sub-clauses.
+ *
+ * `sub` carries its own label; `part` is numbered from its position in the
+ * section, so 1.1, 1.2 and so on are derived the same way the section numbers
+ * are and an inserted sub-part cannot leave the ones after it wrong.
+ */
+function Node({ node, number, clauseIndex, partIndex }) {
+  if (typeof node === 'string') return <Paragraph>{markup(node)}</Paragraph>;
 
   if (node.note) return <DraftNote>{node.note}</DraftNote>;
 
   if (node.sub) {
     return (
-      <Typography
-        component="h3"
-        sx={{
-          fontSize: { xs: '1rem', md: '1.05rem' },
-          fontWeight: 700,
-          color: 'var(--text-heading)',
-          mt: 4,
-          mb: 1.8,
-        }}
-      >
+      <Typography component="h3" sx={SUBHEAD_SX}>
         {node.sub}
+      </Typography>
+    );
+  }
+
+  if (node.part) {
+    return (
+      <Typography component="h3" sx={SUBHEAD_SX}>
+        {number}.{partIndex} {node.part}
       </Typography>
     );
   }
@@ -148,7 +233,7 @@ function Node({ node, number, clauseIndex }) {
       <Paragraph sx={node.text ? undefined : { mb: 1.2 }}>
         <Label>{node.label}</Label>
         {node.text ? ' ' : null}
-        {node.text}
+        {markup(node.text)}
       </Paragraph>
     );
   }
@@ -177,10 +262,10 @@ function Node({ node, number, clauseIndex }) {
             <Box component="li" key={i}>
               {m ? (
                 <>
-                  <Label>{m[1]}.</Label> {m[2]}
+                  <Label>{m[1]}.</Label> {markup(m[2])}
                 </>
               ) : (
-                item
+                markup(item)
               )}
             </Box>
           );
@@ -192,30 +277,44 @@ function Node({ node, number, clauseIndex }) {
   return null;
 }
 
-/** Body nodes, with sub-clause numbering counted as we go. */
+/** Body nodes, with sub-clause and sub-part numbering counted as we go. */
 function Body({ body, number }) {
   let clauses = 0;
+  let parts = 0;
   return (
     <>
       {body.map((node, i) => {
         if (node && node.clause) clauses += 1;
-        return <Node key={i} node={node} number={number} clauseIndex={clauses} />;
+        if (node && node.part) parts += 1;
+        return (
+          <Node
+            key={i}
+            node={node}
+            number={number}
+            clauseIndex={clauses}
+            partIndex={parts}
+          />
+        );
       })}
     </>
   );
 }
 
+/* While any slot remains, the document is not finished, and an unfinished
+   policy should not be the version search engines hold. */
 export default function LegalPage({ doc, description }) {
   const sections = (doc && doc.sections) || [];
   const hasText = sections.length > 0;
+  const unfinished = !hasText || new RegExp(SLOT.source).test(JSON.stringify(doc));
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)' }}>
       <Head>
         <title>{`${doc.title} | Hey Open`}</title>
         <meta name="description" content={description} />
-        {/* Not worth indexing while it is a holding page. */}
-        {!hasText && <meta name="robots" content="noindex" />}
+        {/* Not worth indexing while it is a holding page, and not safe to index
+            while it still has blanks in it. */}
+        {unfinished && <meta name="robots" content="noindex" />}
       </Head>
 
       <PageHeader />
@@ -237,10 +336,19 @@ export default function LegalPage({ doc, description }) {
             {doc.title}
           </Typography>
 
-          {doc.updated && (
-            <Typography sx={{ fontSize: '0.9rem', color: 'var(--text-muted)', mb: { xs: 4, md: 5 } }}>
-              {doc.dateLabel || 'Last updated'}: {doc.updated}
-            </Typography>
+          {(doc.effective || doc.updated) && (
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              {doc.effective && (
+                <Typography sx={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  Effective: {doc.effective}
+                </Typography>
+              )}
+              {doc.updated && (
+                <Typography sx={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  {doc.dateLabel || 'Last updated'}: {doc.updated}
+                </Typography>
+              )}
+            </Box>
           )}
 
           {hasText ? (

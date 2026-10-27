@@ -8,7 +8,7 @@ import SupportedModelsSection from '@/components/SupportedModelsSection';
 import WhyAskMultipleModelsSection from '@/components/WhyAskMultipleModelsSection';
 import ProductMatrixSection from '@/components/ProductMatrixSection';
 import TokenFlowSection from '@/components/TokenFlowSection';
-import RevenueBurnSection from '@/components/RevenueBurnSection';
+import BurnEnterpriseSection from '@/components/BurnEnterpriseSection';
 import PricingSection from '@/components/PricingSection';
 import TokenOptimizationSection from '@/components/TokenOptimizationSection';
 import EnterpriseSection from '@/components/EnterpriseSection';
@@ -32,12 +32,17 @@ export default function Home() {
       <Box component="main" sx={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh', transition: 'background-color 0.35s ease' }}>
         <HeroSection />
         <CoreFeaturesSection />
+        {/* Price comes third, straight after the case for using this at all,
+            so the cost is answered while that case is still in mind rather
+            than after four more sections of product. */}
+        <PricingSection />
         <SupportedModelsSection />
         <WhyAskMultipleModelsSection />
         <ProductMatrixSection />
-        <PricingSection />
         <TokenFlowSection />
-        <RevenueBurnSection />
+        {/* Follows the two ways to pay with what happens to the money that
+            does get spent, and with the route that skips the loop. */}
+        <BurnEnterpriseSection />
         <TokenOptimizationSection />
         <ApiSection />
         <EnterpriseSection />
