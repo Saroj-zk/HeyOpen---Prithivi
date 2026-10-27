@@ -503,186 +503,105 @@ function Calculator() {
 /* ------------------------------------------------------------------ */
 
 /**
- * The two outcomes on one axis.
+ * What a period pays, as one bar.
  *
- * The old chart drew the floor and the band as two separate blocks with
- * thirty points of empty track between them, which said the opposite of what
- * the copy next to it says. The copy says the floor sits inside the band as
- * the worst case. The picture said they were unrelated, and two thirds of it
- * was nothing, so it read as a claim with a hole in it.
+ * The version before this had a headline, a lede, a two row chart, an axis,
+ * a three item legend and two paragraphs underneath, which is seven things
+ * explaining two numbers. The legend was the tell: a chart that needs a key
+ * to three fills is a chart that has not said it yet.
  *
- * It is a comparison now: the same axis, twice. The top bar is the period
- * where the book returns nothing at all, the bottom is the period that goes
- * to plan, and the floor is the identical dark block at the start of both.
- * That is the argument. You can see that the bad case is not zero, and you
- * can see where the rest comes from.
+ * One track now. The dark block at the start is what the contract owes you
+ * whatever happens, the rest is what the book adds on plan, and the hatching
+ * at the end is the only uncertain thing on the page, so it is the only
+ * thing drawn as uncertain. The two labels sit over the two parts they name,
+ * which is what removes the need for a key, an axis and a second row.
  *
- * Nothing is invented. Every number plotted is one of the two already stated,
- * the axis stops at the top of the band so there is no dead track, and the
- * part that is uncertain is the only part drawn as hatching.
+ * Nothing invented: both figures are the ones already stated, and the track
+ * ends at the top of the band so there is no empty space pretending to be
+ * headroom.
  */
 const MAX = PLOT.targetHigh;
 const at = (v) => `${(v / MAX) * 100}%`;
 
-const SEG = {
-  /* Owed. Solid, and the same block in both rows. */
-  floor: {
-    background: `linear-gradient(180deg, #2A3142 0%, ${INK} 100%)`,
-    boxShadow: 'inset -1px 0 0 rgba(255,255,255,0.18)',
-  },
-  /* On the way. Solid, because on plan this part arrives. */
-  fill: { background: 'linear-gradient(180deg, #FFB071 0%, #FF8A2B 100%)' },
-  /* The band itself, and the only uncertain thing on the chart. */
-  band: {
-    background:
-      'repeating-linear-gradient(135deg, rgba(255,102,0,0.9) 0 7px, rgba(255,160,90,0.42) 7px 14px)',
-    boxShadow: 'inset 1px 0 0 rgba(214,86,0,0.6), inset -1px 0 0 rgba(214,86,0,0.6)',
-  },
-};
-
-const ROWS = [
-  {
-    label: 'If the book returns nothing',
-    note: 'The worst period there is',
-    fig: RATES.base,
-    accent: false,
-    segs: [['floor', 0, PLOT.floor]],
-  },
-  {
-    label: 'If it goes to plan',
-    note: 'What we run the book to',
-    fig: RATES.total,
-    accent: true,
-    segs: [
-      ['floor', 0, PLOT.floor],
-      ['fill', PLOT.floor, PLOT.targetLow],
-      ['band', PLOT.targetLow, PLOT.targetHigh],
-    ],
-  },
-];
-
 function Scale() {
-  const ticks = [0, 10, 20, 30, 40, 50];
-
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: '220px minmax(0,1fr) 128px' },
-        columnGap: { md: 3 },
-        rowGap: { xs: 2.5, md: 2.5 },
-        alignItems: 'center',
-        '@keyframes growBar': { from: { transform: 'scaleX(0)' } },
-      }}
-    >
-      {ROWS.map((row, i) => (
-        <React.Fragment key={row.label}>
-          <Box sx={{ gridColumn: { md: 1 } }}>
-            <Typography
-              sx={{
-                fontSize: { xs: '0.94rem', md: '0.98rem' },
-                fontWeight: 700,
-                letterSpacing: '-0.015em',
-                lineHeight: 1.25,
-                color: 'var(--text-heading)',
-              }}
-            >
-              {row.label}
-            </Typography>
-            <Typography sx={{ mt: 0.4, fontSize: '0.78rem', lineHeight: 1.45, color: 'var(--text-muted)' }}>
-              {row.note}
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              gridColumn: { md: 2 },
-              position: 'relative',
-              height: { xs: 40, md: 46 },
-              borderRadius: '9px',
-              border: `1px solid ${RULE}`,
-              backgroundColor: 'rgba(11,15,26,0.03)',
-              overflow: 'hidden',
-            }}
-          >
-            {row.segs.map(([kind, from, to]) => (
-              <Box
-                key={kind}
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  left: at(from),
-                  width: at(to - from),
-                  transformOrigin: 'left center',
-                  animation: `growBar .85s cubic-bezier(.22,1,.36,1) ${0.12 + i * 0.14}s both`,
-                  '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-                  ...SEG[kind],
-                }}
-              />
-            ))}
-          </Box>
-
-          <Box sx={{ gridColumn: { md: 3 }, textAlign: { md: 'right' } }}>
-            <Typography
-              sx={{
-                ...FIG,
-                fontSize: { xs: '1.3rem', md: '1.5rem' },
-                fontWeight: 600,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.05,
-                whiteSpace: 'nowrap',
-                color: row.accent ? 'var(--brand-accent)' : 'var(--text-heading)',
-              }}
-            >
-              {row.fig}
-            </Typography>
-          </Box>
-        </React.Fragment>
-      ))}
-
-      {/* the shared axis, under the track column only */}
-      <Box sx={{ gridColumn: { md: 2 }, position: 'relative', height: 20, mt: 0.2 }}>
-        {ticks.map((t) => (
-          <Typography
-            key={t}
-            sx={{
-              ...FIG,
-              position: 'absolute',
-              left: at(t),
-              transform: t === 0 ? 'none' : t === MAX ? 'translateX(-100%)' : 'translateX(-50%)',
-              fontSize: '0.66rem',
-              whiteSpace: 'nowrap',
-              color: 'var(--text-muted)',
-            }}
-          >
-            {t}%
-          </Typography>
-        ))}
-      </Box>
-
-      {/* what the three fills mean, once */}
+    <Box sx={{ '@keyframes growBar': { from: { transform: 'scaleX(0)' } } }}>
       <Box
         sx={{
-          gridColumn: { md: '1 / -1' },
           display: 'flex',
-          flexWrap: 'wrap',
-          gap: { xs: 1.5, md: 3 },
-          pt: { xs: 1.5, md: 2 },
-          mt: { xs: 0.5, md: 1 },
-          borderTop: `1px solid ${RULE}`,
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          gap: 2,
+          mb: 1.6,
         }}
       >
-        {[
-          ['floor', 'Owed to you, either way'],
-          ['fill', 'What the book adds on plan'],
-          ['band', 'The band it is run to'],
-        ].map(([kind, text]) => (
-          <Box key={kind} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 22, height: 11, borderRadius: '3px', flexShrink: 0, ...SEG[kind] }} />
-            <Typography sx={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>{text}</Typography>
-          </Box>
-        ))}
+        <Box>
+          <Label>Owed to you</Label>
+          <Typography
+            sx={{ ...FIG, mt: 0.8, fontSize: { xs: '1.7rem', md: '2.2rem' }, fontWeight: 600, letterSpacing: '-0.035em', lineHeight: 1, color: 'var(--text-heading)' }}
+          >
+            {RATES.base}
+          </Typography>
+        </Box>
+        <Box sx={{ textAlign: 'right' }}>
+          <Label sx={{ color: 'var(--brand-accent)' }}>Aimed at, all in</Label>
+          <Typography
+            sx={{ ...FIG, mt: 0.8, fontSize: { xs: '1.7rem', md: '2.2rem' }, fontWeight: 600, letterSpacing: '-0.035em', lineHeight: 1, whiteSpace: 'nowrap', color: 'var(--brand-accent)' }}
+          >
+            {RATES.total}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          position: 'relative',
+          height: { xs: 56, md: 72 },
+          borderRadius: '14px',
+          overflow: 'hidden',
+          backgroundColor: 'rgba(11,15,26,0.04)',
+          border: `1px solid ${RULE}`,
+        }}
+      >
+        {/* what the book adds on plan, and the band it is run to */}
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            transformOrigin: 'left center',
+            animation: 'growBar 1s cubic-bezier(.22,1,.36,1) .15s both',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+            background: `linear-gradient(90deg, #FFA45C 0%, #FF8A2B ${at(PLOT.targetLow)}, #FF8A2B ${at(PLOT.targetLow)})`,
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: at(PLOT.targetLow),
+            right: 0,
+            background:
+              'repeating-linear-gradient(135deg, rgba(255,255,255,0.46) 0 8px, rgba(255,255,255,0) 8px 16px)',
+            borderLeft: '1.5px dashed rgba(255,255,255,0.85)',
+          }}
+        />
+
+        {/* what is owed, whatever the period did */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: at(PLOT.floor),
+            transformOrigin: 'left center',
+            animation: 'growBar .8s cubic-bezier(.22,1,.36,1) both',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+            background: `linear-gradient(180deg, #2A3142 0%, ${INK} 100%)`,
+            boxShadow: 'inset -1px 0 0 rgba(255,255,255,0.35)',
+          }}
+        />
       </Box>
     </Box>
   );
@@ -1018,25 +937,17 @@ export default function StakePage() {
           </Box>
         </Reveal>
 
-        <Reveal delay={120}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 3.5, md: 6 } }}>
-            <Box>
-              <Label>{C.yield.floorLabel}</Label>
-              <Typography sx={{ mt: 1.4, fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                {C.yield.floorBody}
-              </Typography>
-            </Box>
-            <Box>
-              <Label sx={{ color: 'var(--brand-accent)' }}>{C.yield.targetLabel}</Label>
-              <Typography sx={{ mt: 1.4, fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                {C.yield.targetBody}
-              </Typography>
-            </Box>
-          </Box>
-        </Reveal>
-
         <Reveal delay={160}>
-          <Typography sx={{ mt: { xs: 3, md: 3.5 }, fontFamily: MONO, fontSize: '0.78rem', lineHeight: 1.8, color: 'var(--text-muted)', maxWidth: '72ch' }}>
+          <Typography
+            sx={{
+              mt: { xs: 3, md: 4 },
+              fontSize: { xs: '1rem', md: '1.08rem' },
+              lineHeight: 1.7,
+              color: 'var(--text-secondary)',
+              maxWidth: '58ch',
+              textWrap: 'pretty',
+            }}
+          >
             {C.yield.workedNote}
           </Typography>
         </Reveal>
