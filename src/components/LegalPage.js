@@ -38,28 +38,70 @@ const P_SX = {
    addresses at the odd indices, with the surrounding prose at the even ones. */
 const EMAIL = /([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi;
 
-function linkEmails(text) {
-  if (typeof text !== 'string' || text.indexOf('@') === -1) return text;
-  const parts = text.split(EMAIL);
-  if (parts.length === 1) return text;
-  return parts.map((part, i) =>
-    i % 2 === 1 ? (
-      <Box
-        component="a"
-        key={i}
-        href={`mailto:${part}`}
-        sx={{
-          color: '#FF6600',
-          textDecoration: 'none',
-          '&:hover': { textDecoration: 'underline' },
-        }}
-      >
-        {part}
-      </Box>
-    ) : (
-      part
-    )
+/* A bracketed run of capitals is how these documents mark a fact only the
+   company can supply: [REGISTERED ADDRESS], [REFUND POLICY URL]. One sitting
+   mid-sentence in a clause about refunds is easy to read straight past, so it
+   is drawn as an obvious gap rather than as prose. */
+const SLOT = /(\[[A-Z][A-Z0-9 ,./'-]{2,}\])/g;
+
+function Slot({ children }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        /* Kept tight: a slot is usually followed straight by a full stop, and
+           roomier padding reads as a stray space before it. */
+        px: '2px',
+        borderRadius: '4px',
+        border: '1px dashed rgba(255, 102, 0, 0.6)',
+        backgroundColor: 'rgba(255, 102, 0, 0.08)',
+        color: '#C24E00',
+        fontSize: '0.86em',
+        fontWeight: 700,
+        letterSpacing: '0.02em',
+      }}
+    >
+      {children}
+    </Box>
   );
+}
+
+/* Emails become links, unfilled slots become marked gaps. Splitting on a
+   capturing group puts the matches at the odd indices and the prose at the
+   even ones, so each pass walks the output of the one before it. */
+function markup(text) {
+  if (typeof text !== 'string') return text;
+
+  const withSlots =
+    text.indexOf('[') === -1
+      ? [text]
+      : text
+          .split(SLOT)
+          .map((part, i) => (i % 2 === 1 ? <Slot key={`s${i}`}>{part}</Slot> : part));
+
+  return withSlots.map((part, i) => {
+    if (typeof part !== 'string' || part.indexOf('@') === -1) return part;
+    const pieces = part.split(EMAIL);
+    if (pieces.length === 1) return part;
+    return pieces.map((piece, j) =>
+      j % 2 === 1 ? (
+        <Box
+          component="a"
+          key={`e${i}-${j}`}
+          href={`mailto:${piece}`}
+          sx={{
+            color: '#FF6600',
+            textDecoration: 'none',
+            '&:hover': { textDecoration: 'underline' },
+          }}
+        >
+          {piece}
+        </Box>
+      ) : (
+        piece
+      )
+    );
+  });
 }
 
 /* Venice leads most paragraphs with a short bold label. In list items the same
@@ -138,7 +180,7 @@ const SUBHEAD_SX = {
  * are and an inserted sub-part cannot leave the ones after it wrong.
  */
 function Node({ node, number, clauseIndex, partIndex }) {
-  if (typeof node === 'string') return <Paragraph>{linkEmails(node)}</Paragraph>;
+  if (typeof node === 'string') return <Paragraph>{markup(node)}</Paragraph>;
 
   if (node.note) return <DraftNote>{node.note}</DraftNote>;
 
@@ -191,7 +233,7 @@ function Node({ node, number, clauseIndex, partIndex }) {
       <Paragraph sx={node.text ? undefined : { mb: 1.2 }}>
         <Label>{node.label}</Label>
         {node.text ? ' ' : null}
-        {linkEmails(node.text)}
+        {markup(node.text)}
       </Paragraph>
     );
   }
@@ -220,10 +262,10 @@ function Node({ node, number, clauseIndex, partIndex }) {
             <Box component="li" key={i}>
               {m ? (
                 <>
-                  <Label>{m[1]}.</Label> {linkEmails(m[2])}
+                  <Label>{m[1]}.</Label> {markup(m[2])}
                 </>
               ) : (
-                linkEmails(item)
+                markup(item)
               )}
             </Box>
           );
@@ -258,16 +300,12 @@ function Body({ body, number }) {
   );
 }
 
-/* A bracketed capitalised slot is how this file marks a fact only the company
-   can supply: [LEGAL ENTITY NAME], [EFFECTIVE DATE]. While any remain, the
-   document is not finished, and an unfinished policy should not be the version
-   search engines hold. */
-const PLACEHOLDER = /\[[A-Z][A-Z0-9 ,./'-]{2,}\]/;
-
+/* While any slot remains, the document is not finished, and an unfinished
+   policy should not be the version search engines hold. */
 export default function LegalPage({ doc, description }) {
   const sections = (doc && doc.sections) || [];
   const hasText = sections.length > 0;
-  const unfinished = !hasText || PLACEHOLDER.test(JSON.stringify(doc));
+  const unfinished = !hasText || new RegExp(SLOT.source).test(JSON.stringify(doc));
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)' }}>
