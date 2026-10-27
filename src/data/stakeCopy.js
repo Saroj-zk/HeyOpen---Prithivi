@@ -297,7 +297,7 @@ export const VERSIONS = [
 
     pro: {
       eyebrow: 'The hundred',
-      title: 'Stake a hundred. Stop paying for AI.',
+      title: 'At a hundred staked, the app is free.',
       lede:
         'Every model, unlimited prompts, the whole app, free for as long as the stake is there. The stake keeps earning the entire time it covers you.',
       note: 'Unstake whenever you like. It just goes back to being a subscription.',

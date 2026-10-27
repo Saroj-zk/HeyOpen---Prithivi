@@ -319,15 +319,49 @@ function Section({ ground, children, sx }) {
   );
 }
 
-function SectionHead({ eyebrow, title, lede, onInk, maxWidth = 760 }) {
+/**
+ * A section heading.
+ *
+ * Two things here are the page's flow, and both were missing.
+ *
+ * The step number. Every section used to open the same way, so each one read
+ * as the top of a new page rather than as the next move in one argument. A
+ * reader could not tell whether they were three sections in or starting
+ * over. Numbering says where you are.
+ *
+ * The tier. Five consecutive headings were set at the same 48px and the same
+ * weight, which is a flat line, not a shape. The two sections that carry the
+ * argument stay large; the three that support it step down. The page now
+ * reads big, big, big, smaller, smaller, smaller, big, which is a rhythm a
+ * reader can feel without being told.
+ */
+function SectionHead({ n, eyebrow, title, lede, onInk, tier = 'major', maxWidth = 760 }) {
+  const rule = onInk ? 'rgba(255,255,255,0.28)' : 'rgba(11,15,26,0.18)';
+
   return (
     <Box sx={{ maxWidth }}>
-      <Label onInk={onInk} sx={{ color: 'var(--brand-accent)' }}>{eyebrow}</Label>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.3 }}>
+        {n && (
+          <>
+            <Typography
+              component="span"
+              sx={{ ...FIG, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--brand-accent)' }}
+            >
+              {n}
+            </Typography>
+            <Box aria-hidden="true" sx={{ width: 16, height: '1px', backgroundColor: rule, flexShrink: 0 }} />
+          </>
+        )}
+        <Label onInk={onInk} sx={{ color: 'var(--brand-accent)' }}>{eyebrow}</Label>
+      </Box>
       <Typography
         component="h2"
         sx={{
           mt: 2,
-          fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+          fontSize:
+            tier === 'minor'
+              ? { xs: '1.7rem', sm: '2rem', md: '2.2rem' }
+              : { xs: '2rem', sm: '2.5rem', md: '3rem' },
           fontWeight: 700,
           letterSpacing: '-0.035em',
           lineHeight: 1.06,
@@ -974,7 +1008,7 @@ export default function StakePage() {
       <Section sx={{ pb: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead eyebrow={C.yield.eyebrow} title={C.yield.title} lede={C.yield.lede} />
+            <SectionHead n="01" eyebrow={C.yield.eyebrow} title={C.yield.title} lede={C.yield.lede} />
           </Box>
         </Reveal>
 
@@ -1013,8 +1047,9 @@ export default function StakePage() {
         <Reveal>
           <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
             <SectionHead
+              n="02"
               eyebrow="Where the stake works"
-              title="Locked here. Put to work there."
+              title="Where the work actually happens."
               lede="Your $OPEN does not leave your wallet. What it backs is deployed across three places, and two different kinds of thing come back: a rate the contract owes you either way, and whatever the book makes on top."
             />
           </Box>
@@ -1095,7 +1130,7 @@ export default function StakePage() {
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead eyebrow={C.stakes.eyebrow} title={C.stakes.title} lede={C.stakes.lede} />
+            <SectionHead n="03" tier="minor" eyebrow={C.stakes.eyebrow} title={C.stakes.title} lede={C.stakes.lede} />
           </Box>
         </Reveal>
 
@@ -1175,7 +1210,7 @@ export default function StakePage() {
         >
           <Reveal>
             <Box>
-              <SectionHead onInk eyebrow={C.pro.eyebrow} title={C.pro.title} lede={C.pro.lede} maxWidth={480} />
+              <SectionHead n="04" tier="minor" onInk eyebrow={C.pro.eyebrow} title={C.pro.title} lede={C.pro.lede} maxWidth={480} />
               <Box sx={{ mt: 4 }}>
                 <Button href={LINKS.stake} primary>
                   Stake $OPEN
@@ -1208,7 +1243,7 @@ export default function StakePage() {
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead eyebrow="How $OPEN works" title={C.howTitle} />
+            <SectionHead n="05" tier="minor" eyebrow="How $OPEN works" title={C.howTitle} />
           </Box>
         </Reveal>
 
