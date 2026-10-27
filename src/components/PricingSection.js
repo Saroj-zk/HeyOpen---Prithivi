@@ -140,20 +140,52 @@ export default function PricingSection() {
               which is the comparison being drawn. It does not claim to undercut
               the cheapest, since Copilot is $10 and Runway $15.
 
-              Three highlights rather than two, because the third sentence is
-              the answer to what the price actually buys, and "uncensored" is
-              the part none of those eight will sell at any price. Both claims
-              in it are made elsewhere on the site already: uncensored on the
-              Private AI and capabilities pages, unlimited on the $20 card
-              below, which still says "messages" and not images. */}
+              What the price buys is a separate claim from what it costs, so it
+              gets its own line below rather than a clause tacked onto the end
+              of the comparison, where it read like a footnote. Three short
+              declaratives, landing on the one none of those eight will sell at
+              any price. Both claims are made elsewhere on the site already:
+              uncensored on the Private AI and capabilities pages, unlimited on
+              the $20 card below, which still says "messages" and not images. */}
           <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 660, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
             Separate subscriptions to ChatGPT, Claude, Gemini and the rest come to{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
             All of them, and 200+ more, cost{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here.{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>Uncensored</Box>,
-            with unlimited text and image generation.
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here.
           </Typography>
+
+          {/* A flex row rather than one string, so a narrow screen breaks
+              between the three and never through the middle of one of them. */}
+          <Box
+            sx={{
+              mt: { xs: 2.5, md: 3 },
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              columnGap: 1,
+              rowGap: 0.4,
+            }}
+          >
+            {[
+              { text: 'Unlimited text.' },
+              { text: 'Unlimited images.' },
+              { text: 'Uncensored.', accent: true },
+            ].map(({ text, accent }) => (
+              <Typography
+                key={text}
+                component="span"
+                sx={{
+                  fontSize: { xs: '1.05rem', md: '1.25rem' },
+                  fontWeight: 800,
+                  letterSpacing: '-0.015em',
+                  whiteSpace: 'nowrap',
+                  color: accent ? '#ff6600' : primaryText,
+                }}
+              >
+                {text}
+              </Typography>
+            ))}
+          </Box>
         </Box>
 
         {/* COMPARISON LAYOUT (Flex Node Graph) */}
