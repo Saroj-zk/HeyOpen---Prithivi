@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
@@ -14,79 +15,62 @@ import { VERSIONS } from '@/data/stakeCopy';
  * $OPEN, and what staking it does.
  *
  * Follows Venice's VVV page, which is the thing this was asked to be like,
- * with the same two tokens doing the same two jobs. $OPEN is the capital
- * asset you buy and stake, as VVV is. $HEY is minted only by stakers and
- * pays out credit every day, as DIEM is.
+ * with the same two tokens doing the same two jobs.
  *
  * ------------------------------------------------------------------
- * On the drawing.
+ * Two things carry this page now, and both were asked for.
  *
- * The page was argued well and drawn as nothing but type: hairline rules,
- * monospace figures, paper cards, one band of ink. Rebuilding those surfaces
- * did not fix it, because the problem was not the surfaces. A page about a
- * mechanism had no picture of the mechanism, and a page about a rate had no
- * picture of the rate. Three things were missing and are now here.
+ * A calculator, in the hero. A rate is an abstraction and six hundred tokens
+ * is not, and the page had been answering that with one worked example on a
+ * fixed ten thousand. Two sliders and the reader can put their own number in,
+ * which is the whole difference between reading a claim and testing one.
  *
- * A loop. $OPEN becomes sOPEN becomes $HEY becomes credits, and the credits
- * are what sends you back for more $OPEN. That is a cycle, it was being
- * described in three paragraphs, and it is drawn in the hero instead.
+ * It never shows the target on its own. Every state of it prints the floor
+ * and the band together, and the total is a range from one to the other, so
+ * there is no position of the sliders that produces a single confident
+ * figure to screenshot. That is deliberate: the floor is owed and the band is
+ * aimed at, and an interactive thing that let you forget which was which
+ * would be worse than no calculator at all. Returns are simple rather than
+ * compounded, and the note says so.
  *
- * A scale. The whole argument is that the floor is low and certain and the
- * target sits a long way above it. On one axis that gap is the picture; in
- * two sentences it is arithmetic the reader has to do. Nothing on it is
- * invented: a solid bar at the contract rate, a hatched band at the target,
- * and the axis they both sit on.
+ * A flow, for where the stake actually goes. The page used to stop at "we run
+ * the book", which asked for trust and gave nothing to look at. It now shows
+ * the stake being deployed and the two different kinds of thing that come
+ * back: a contract rate that does not depend on any of it, and a surplus
+ * that does.
  *
- * Bands. Sections alternate between paper, a warm wash, ink and a cool wash,
- * so the page has a rhythm rather than seven white sections and one dark one.
- *
- * Figures stay monospace and totals keep the double rule, because the ledger
- * idiom is the honest part: a fixed rate and a managed target are different
- * kinds of promise and they are still set as different kinds of entry.
+ * WORDING ON THE DEPLOYMENT CARDS NEEDS SIGN-OFF. What the treasury is
+ * actually placed in is a representation about money. The three cards below
+ * name the categories that were described and deliberately say nothing about
+ * instruments, venues, counterparties or proportions, because none of that
+ * was given and none of it can be guessed.
  * ------------------------------------------------------------------
  */
 
 /* ------------------------------------------------------------------ */
 /* Fill these in before the page goes live.                            */
-/*                                                                     */
-/* Every one of these is a representation about money, so none of them */
-/* is invented here.                                                   */
 /* ------------------------------------------------------------------ */
 const RATES = {
-  /* Supply comes from the tokenomics data rather than being retyped, so the
-     two pages cannot drift apart. */
   supply: TOKEN.supply,
   /* Fixed, and stated as fixed. */
   base: '6.00%',
-  /* All in, and inclusive of the floor rather than stacked on top of it. The
-     floor is the worst case inside this band, not a separate payment added to
-     it, which is why nothing on the page sums the two. */
+  /* All in, and inclusive of the floor rather than stacked on top of it. */
   total: '40% to 50%',
-  /* What actually lands: the floor at worst, the top of the band at best. */
   range: '6.00% to 50%',
-  /* The same hundred that unlocks Pro on the page this follows. */
   threshold: '100 $OPEN',
 };
 
-/* The scale the chart is drawn on, and the two figures plotted on it. Held
-   as numbers here because a chart cannot read "40% to 50%", and kept beside
-   the strings above so a change to one is obviously a change to both. */
+/* The same figures as decimals, for the chart and the calculator, which
+   cannot read "40% to 50%". Kept beside the strings so a change to one is
+   obviously a change to both. */
 const PLOT = { max: 60, floor: 6, targetLow: 40, targetHigh: 50 };
+const RATE = { floor: 0.06, low: 0.4, high: 0.5 };
 
-/* The same thing on an actual stake. A percentage is an abstraction and six
-   hundred tokens is not. Arithmetic only, on the figures above, and the
-   target figure is the whole return rather than an amount added to the
-   floor. */
-const EXAMPLE = {
-  stake: '10,000',
-  floorAdd: '+600',
-  targetAdd: '+4,000 to +5,000',
-  floorTotal: '10,600',
-  planTotal: '14,000 to 15,000',
-};
+/* The calculator's two controls. Stake is in whole $OPEN; term is months,
+   because a reader thinking about locking something up thinks in months. */
+const STAKE_SLIDER = { min: 100, max: 100000, step: 100, start: 10000 };
+const TERM_SLIDER = { min: 1, max: 36, step: 1, start: 12 };
 
-/* What the stake unlocks beyond the yield. Written as entries rather than as
-   a list of ticks, so it reads as the account it is. */
 const PRO = [
   ['Text prompts', 'Unlimited'],
   ['Image and video models', 'The leading ones'],
@@ -94,8 +78,6 @@ const PRO = [
   ['What it costs while staked', 'Nothing'],
 ];
 
-/* Three things a reader can establish without being asked to take anyone's
-   word for it. Each follows from how the thing is built. */
 const PROOF = [
   [
     'The floor is a contract rate',
@@ -115,27 +97,37 @@ const PROOF = [
 const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' };
 const APP = 'https://ais.openledger.xyz/chat';
 
-/* The cycle, clockwise from the top left. Four states of one position, which
-   is why it is a loop and not a list: the credits at the end are the reason
-   to hold the $OPEN at the start. Glyphs are the same vocabulary the token
-   flow on the home page uses. */
-const LOOP = [
-  { k: '$OPEN', s: 'You buy and hold it', glyph: '◆', tone: 'amber' },
-  { k: 'sOPEN', s: 'Staked, still yours', glyph: '▣', tone: 'paper' },
-  { k: '$HEY', s: 'Minted by the stake', glyph: '◇', tone: 'paper' },
-  { k: 'Credits', s: 'Spend on any model', glyph: '✦', tone: 'ink' },
-];
-
 const HOW = [
   { n: '01', cta: 'Buy $OPEN', href: LINKS.buy, glyph: '◆' },
   { n: '02', cta: 'Stake $OPEN', href: LINKS.stake, glyph: '▣' },
   { n: '03', cta: 'Mint $HEY', href: LINKS.mint, glyph: '◇' },
 ];
 
-/* The two stakes, which is the part of this that is easy to get wrong.
-   Staking the capital asset pays in value. Staking what it mints pays in
-   compute. Same verb, two currencies out, drawn on two different materials
-   so the distinction is seen rather than read. */
+/* Where the stake is put to work. Categories only: see the note at the top
+   of this file about what cannot be written here without an answer. */
+const DEPLOY = [
+  { k: 'Compute capital', s: 'Capacity the network runs on', glyph: '▦' },
+  { k: 'Options', s: 'Positions run against the book', glyph: '◫' },
+  { k: 'AI infrastructure', s: 'The rails underneath the models', glyph: '◈' },
+];
+
+/* And the two different kinds of thing that come back. The first does not
+   depend on any of the above, which is the entire point of printing them
+   side by side. */
+const RETURNS = [
+  {
+    tag: 'Owed to you',
+    k: RATES.base,
+    s: 'Paid from the staking contract whatever the period did. It does not wait on the book.',
+    accent: true,
+  },
+  {
+    tag: 'Aimed at',
+    k: 'Everything above it',
+    s: `What the book returns on top, run toward ${RATES.total} all in. Reported once a period closes.`,
+  },
+];
+
 const STAKES = [
   {
     token: '$OPEN',
@@ -186,19 +178,9 @@ const CARD_INK = {
     'inset 0 1px 0 rgba(255,255,255,0.10), 0 1px 2px rgba(11,15,26,0.08), 0 30px 56px -34px rgba(11,15,26,0.6)',
 };
 
-const CARD_AMBER = {
-  borderRadius: '14px',
-  border: '1px solid rgba(255,102,0,0.22)',
-  background: 'linear-gradient(180deg, #FFF3EA 0%, #FFE8D8 100%)',
-  boxShadow:
-    'inset 0 1px 0 rgba(255,255,255,0.85), 0 1px 2px rgba(11,15,26,0.04), 0 26px 50px -34px rgba(214,86,0,0.4)',
-};
-
-/* The four section grounds. Paper is the page itself, so it is not listed. */
 const WARM = 'linear-gradient(180deg, #FFF8F3 0%, #FDF3EB 100%)';
 const COOL = 'linear-gradient(180deg, #F5F8FB 0%, #EEF3F8 100%)';
 
-/** A full-bleed section, on one of the grounds. */
 function Section({ ground, children, sx }) {
   return (
     <Box
@@ -209,7 +191,11 @@ function Section({ ground, children, sx }) {
         ...(ground === 'ink'
           ? { backgroundColor: INK }
           : ground
-          ? { background: ground, borderTop: '1px solid rgba(11,15,26,0.05)', borderBottom: '1px solid rgba(11,15,26,0.05)' }
+          ? {
+              background: ground,
+              borderTop: '1px solid rgba(11,15,26,0.05)',
+              borderBottom: '1px solid rgba(11,15,26,0.05)',
+            }
           : null),
         ...sx,
       }}
@@ -220,164 +206,240 @@ function Section({ ground, children, sx }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* The loop                                                            */
+/* The calculator                                                      */
 /* ------------------------------------------------------------------ */
 
-const LOOP_DASH = 'rgba(15,23,42,0.3)';
+const money = (n) => Math.round(n).toLocaleString('en-US');
 
-/** One corner of the cycle. */
-function Node({ item }) {
-  const ink = item.tone === 'ink';
-  const amber = item.tone === 'amber';
-  const onDark = ink;
+const SLIDER_SX = {
+  color: 'var(--brand-accent)',
+  height: 5,
+  py: '14px',
+  '& .MuiSlider-rail': { opacity: 1, backgroundColor: 'rgba(11,15,26,0.1)' },
+  '& .MuiSlider-track': { border: 'none' },
+  '& .MuiSlider-thumb': {
+    width: 20,
+    height: 20,
+    backgroundColor: '#FFFFFF',
+    border: '2px solid var(--brand-accent)',
+    boxShadow: '0 2px 6px rgba(11,15,26,0.18)',
+    '&:hover, &.Mui-focusVisible': { boxShadow: '0 0 0 7px rgba(255,102,0,0.14)' },
+    '&.Mui-active': { boxShadow: '0 0 0 11px rgba(255,102,0,0.16)' },
+  },
+};
 
+/** One labelled control: what it is, what it currently says, and the track. */
+function Control({ label, display, ...slider }) {
   return (
-    <Box
-      sx={{
-        px: { xs: 1.4, sm: 1.8 },
-        py: { xs: 1.3, sm: 1.6 },
-        minWidth: 0,
-        ...(ink ? CARD_INK : amber ? CARD_AMBER : CARD),
-      }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1 }}>
+    <Box sx={{ mb: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2 }}>
+        <Label>{label}</Label>
         <Typography
           sx={{
             ...FIG,
-            fontSize: { xs: '0.92rem', sm: '1.02rem' },
+            fontSize: { xs: '1.02rem', md: '1.12rem' },
             fontWeight: 600,
             letterSpacing: '-0.02em',
-            color: onDark ? '#FFFFFF' : amber ? '#9A3C00' : 'var(--text-heading)',
+            color: 'var(--text-heading)',
           }}
         >
-          {item.k}
+          {display}
         </Typography>
-        <Box
-          aria-hidden="true"
-          sx={{
-            fontSize: '0.86rem',
-            lineHeight: 1,
-            flexShrink: 0,
-            opacity: onDark ? 0.8 : 0.45,
-            color: onDark ? '#FFFFFF' : amber ? '#9A3C00' : 'var(--text-heading)',
-          }}
-        >
-          {item.glyph}
-        </Box>
       </Box>
-      <Typography
-        sx={{
-          mt: 0.5,
-          fontSize: { xs: '0.7rem', sm: '0.74rem' },
-          lineHeight: 1.4,
-          color: onDark ? 'rgba(255,255,255,0.7)' : amber ? 'rgba(154,60,0,0.78)' : 'var(--text-muted)',
-        }}
-      >
-        {item.s}
-      </Typography>
-    </Box>
-  );
-}
-
-/** An arrow along one edge of the cycle. */
-function Edge({ dir }) {
-  const horizontal = dir === 'right' || dir === 'left';
-  const tip = {
-    width: 0,
-    height: 0,
-    flexShrink: 0,
-    borderTop: horizontal ? '4.5px solid transparent' : dir === 'down' ? `6.5px solid ${LOOP_DASH}` : '0',
-    borderBottom: horizontal ? '4.5px solid transparent' : dir === 'up' ? `6.5px solid ${LOOP_DASH}` : '0',
-    borderLeft: horizontal
-      ? dir === 'right'
-        ? `6.5px solid ${LOOP_DASH}`
-        : '0'
-      : '4.5px solid transparent',
-    borderRight: horizontal
-      ? dir === 'left'
-        ? `6.5px solid ${LOOP_DASH}`
-        : '0'
-      : '4.5px solid transparent',
-  };
-  const line = horizontal
-    ? { flex: 1, borderTop: `1.5px dashed ${LOOP_DASH}`, minWidth: 10 }
-    : { flex: 1, borderLeft: `1.5px dashed ${LOOP_DASH}`, minHeight: 14 };
-
-  return (
-    <Box
-      aria-hidden="true"
-      sx={{
-        display: 'flex',
-        flexDirection: horizontal ? 'row' : 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'center',
-        justifySelf: 'center',
-        width: horizontal ? '100%' : 'auto',
-        height: horizontal ? 'auto' : '100%',
-        px: horizontal ? 0.6 : 0,
-        py: horizontal ? 0 : 0.6,
-      }}
-    >
-      {(dir === 'left' || dir === 'up') && <Box sx={tip} />}
-      <Box sx={line} />
-      {(dir === 'right' || dir === 'down') && <Box sx={tip} />}
+      <Slider {...slider} sx={SLIDER_SX} />
     </Box>
   );
 }
 
 /**
- * The cycle, as a square.
+ * Put your own number in.
  *
- * A three by three grid: the nodes take the corners, the arrows take the
- * edges between them, and the middle holds the one word that says what the
- * shape is. Clockwise, because that is the direction the value travels.
+ * Simple rather than compounded, and pro-rata on the term, which is the
+ * arithmetic a reader can check in their head. Both lines are always shown:
+ * see the note at the top of the file about why there is no state of this
+ * thing that prints the target by itself.
  */
-function Loop() {
+function Calculator() {
+  const [stake, setStake] = React.useState(STAKE_SLIDER.start);
+  const [months, setMonths] = React.useState(TERM_SLIDER.start);
+
+  const years = months / 12;
+  const floor = stake * RATE.floor * years;
+  const low = stake * RATE.low * years;
+  const high = stake * RATE.high * years;
+  const pro = stake >= 100;
+
+  return (
+    <Box sx={{ ...CARD, overflow: 'hidden' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2,
+          px: { xs: 2.5, md: 3 },
+          py: '15px',
+          borderBottom: `1px solid ${RULE}`,
+        }}
+      >
+        <Label sx={{ color: 'var(--brand-accent)' }}>Work it out</Label>
+        <Label>Move the sliders</Label>
+      </Box>
+
+      <Box sx={{ px: { xs: 2.5, md: 3 }, pt: { xs: 2.2, md: 2.6 }, pb: 1 }}>
+        <Control
+          label="You stake"
+          display={`${money(stake)} $OPEN`}
+          value={stake}
+          min={STAKE_SLIDER.min}
+          max={STAKE_SLIDER.max}
+          step={STAKE_SLIDER.step}
+          aria-label="Amount of OPEN staked"
+          onChange={(e, v) => setStake(v)}
+          valueLabelDisplay="off"
+        />
+        <Control
+          label="For"
+          display={months === 1 ? '1 month' : `${months} months`}
+          value={months}
+          min={TERM_SLIDER.min}
+          max={TERM_SLIDER.max}
+          step={TERM_SLIDER.step}
+          aria-label="Term in months"
+          onChange={(e, v) => setMonths(v)}
+          valueLabelDisplay="off"
+        />
+      </Box>
+
+      <Box sx={{ px: { xs: 2.5, md: 3 }, pt: 1, pb: { xs: 2.4, md: 2.8 }, borderTop: `1px solid ${RULE}` }}>
+        <Entry name={`The floor, ${RATES.base}`} figure={`+${money(floor)}`} />
+        <Entry name={`On plan, ${RATES.total}`} figure={`+${money(low)} to +${money(high)}`} dashed />
+        <Entry name="You hold, all in" figure={`${money(stake + floor)} to ${money(stake + high)}`} total />
+
+        <Box
+          sx={{
+            mt: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            fontSize: '0.8rem',
+            color: pro ? 'var(--brand-accent)' : 'var(--text-muted)',
+          }}
+        >
+          <Box component="span" aria-hidden="true">{pro ? '✓' : '·'}</Box>
+          <Typography sx={{ fontSize: '0.8rem', lineHeight: 1.5, color: 'inherit' }}>
+            {pro
+              ? `Pro unlocked, ${RATES.threshold} is the threshold`
+              : `Stake ${RATES.threshold} to unlock Pro`}
+          </Typography>
+        </Box>
+
+        <Typography sx={{ mt: '10px', fontSize: '0.76rem', lineHeight: 1.6, color: 'var(--text-muted)' }}>
+          Simple, not compounded, and pro-rata on the term. The floor is owed to
+          you; the band is what we run the book to and is not a promised rate.
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* The flow: where the stake goes, and what comes back                 */
+/* ------------------------------------------------------------------ */
+
+const FLOW_DASH = 'rgba(255,255,255,0.32)';
+
+/** An arrow along the flow. Across on a wide canvas, down on a narrow one. */
+function Along() {
+  return (
+    <Box
+      aria-hidden="true"
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', lg: 'row' },
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        py: { xs: 1.4, lg: 0 },
+        px: { lg: 1 },
+        width: { xs: '100%', lg: 'auto' },
+        minWidth: { lg: 34 },
+        height: { lg: '100%' },
+      }}
+    >
+      <Box
+        sx={{
+          flex: { lg: 1 },
+          width: { xs: 0, lg: 'auto' },
+          height: { xs: 16, lg: 0 },
+          minWidth: { lg: 14 },
+          borderLeft: { xs: `1.5px dashed ${FLOW_DASH}`, lg: 0 },
+          borderTop: { xs: 0, lg: `1.5px dashed ${FLOW_DASH}` },
+        }}
+      />
+      <Box
+        sx={{
+          width: 0,
+          height: 0,
+          flexShrink: 0,
+          borderLeft: { xs: '5px solid transparent', lg: `7.5px solid ${FLOW_DASH}` },
+          borderRight: { xs: '5px solid transparent', lg: 0 },
+          borderTop: { xs: `7.5px solid ${FLOW_DASH}`, lg: '5px solid transparent' },
+          borderBottom: { xs: 0, lg: '5px solid transparent' },
+        }}
+      />
+    </Box>
+  );
+}
+
+/** A stage of the flow: a heading strip, then its rows. */
+function Stage({ tag, children, sx }) {
+  return (
+    <Box sx={{ ...CARD_INK, overflow: 'hidden', display: 'flex', flexDirection: 'column', ...sx }}>
+      <Box sx={{ px: { xs: 2, md: 2.2 }, py: '13px', borderBottom: `1px solid ${RULE_ON_INK}` }}>
+        <Label onInk>{tag}</Label>
+      </Box>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>{children}</Box>
+    </Box>
+  );
+}
+
+/** One row inside a stage. Lifts a little under the pointer, so the diagram
+    answers when you move across it. */
+function Row({ k, s, glyph, accent, big, last }) {
   return (
     <Box
       sx={{
-        ...CARD,
-        p: { xs: 2, sm: 2.6, md: 3 },
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0,1fr) auto minmax(0,1fr)',
-        gridTemplateRows: 'auto auto auto',
-        rowGap: { xs: 0.5, sm: 0.8 },
+        flex: 1,
+        px: { xs: 2, md: 2.2 },
+        py: { xs: 1.6, md: 1.9 },
+        borderBottom: last ? 'none' : `1px solid ${RULE_ON_INK}`,
+        transition: 'background-color .18s ease',
+        '&:hover': { backgroundColor: 'rgba(255,255,255,0.04)' },
       }}
     >
-      <Box sx={{ gridColumn: 1, gridRow: 1 }}><Node item={LOOP[0]} /></Box>
-      <Box sx={{ gridColumn: 2, gridRow: 1, display: 'flex', minWidth: { xs: 28, sm: 42 } }}><Edge dir="right" /></Box>
-      <Box sx={{ gridColumn: 3, gridRow: 1 }}><Node item={LOOP[1]} /></Box>
-
-      <Box sx={{ gridColumn: 1, gridRow: 2, display: 'flex', minHeight: { xs: 30, sm: 40 } }}><Edge dir="up" /></Box>
-      <Box
-        sx={{
-          gridColumn: 2,
-          gridRow: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1.2 }}>
         <Typography
           sx={{
-            fontFamily: MONO,
-            fontSize: '0.56rem',
-            fontWeight: 500,
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            color: 'var(--text-muted)',
-            whiteSpace: 'nowrap',
+            ...(big ? FIG : null),
+            fontSize: big ? { xs: '1.5rem', md: '1.7rem' } : { xs: '0.98rem', md: '1.02rem' },
+            fontWeight: big ? 600 : 700,
+            letterSpacing: '-0.025em',
+            lineHeight: 1.15,
+            color: accent ? 'var(--brand-accent)' : '#FFFFFF',
           }}
         >
-          Loop
+          {k}
         </Typography>
+        {glyph && (
+          <Box aria-hidden="true" sx={{ fontSize: '0.95rem', lineHeight: 1, opacity: 0.5, color: '#FFFFFF' }}>
+            {glyph}
+          </Box>
+        )}
       </Box>
-      <Box sx={{ gridColumn: 3, gridRow: 2, display: 'flex', minHeight: { xs: 30, sm: 40 } }}><Edge dir="down" /></Box>
-
-      <Box sx={{ gridColumn: 1, gridRow: 3 }}><Node item={LOOP[3]} /></Box>
-      <Box sx={{ gridColumn: 2, gridRow: 3, display: 'flex' }}><Edge dir="left" /></Box>
-      <Box sx={{ gridColumn: 3, gridRow: 3 }}><Node item={LOOP[2]} /></Box>
+      <Typography sx={{ mt: 0.7, fontSize: '0.82rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.58)' }}>
+        {s}
+      </Typography>
     </Box>
   );
 }
@@ -388,21 +450,12 @@ function Loop() {
 
 const at = (v) => `${(v / PLOT.max) * 100}%`;
 
-/**
- * The two figures on one axis.
- *
- * The argument of the whole section is the distance between them, and a
- * distance is the one thing a sentence cannot show. Everything plotted is a
- * figure already stated above: a solid bar to the contract rate, a hatched
- * band across the target, and the axis they sit on. No series, no history,
- * nothing implied about what lands in between.
- */
+/** The two figures on one axis, because the argument is the gap between them. */
 function Scale() {
   const ticks = [0, 10, 20, 30, 40, 50, 60];
 
   return (
     <Box>
-      {/* labels, held above the track so neither sits on top of a bar */}
       <Box
         sx={{
           position: 'relative',
@@ -431,15 +484,7 @@ function Scale() {
           }}
         >
           <Label onInk>Target, all in</Label>
-          <Typography
-            sx={{
-              ...FIG,
-              fontSize: { xs: '1.3rem', md: '1.6rem' },
-              fontWeight: 600,
-              lineHeight: 1.05,
-              color: 'var(--brand-accent)',
-            }}
-          >
+          <Typography sx={{ ...FIG, fontSize: { xs: '1.3rem', md: '1.6rem' }, fontWeight: 600, lineHeight: 1.05, color: 'var(--brand-accent)' }}>
             {RATES.total}
           </Typography>
         </Box>
@@ -455,7 +500,6 @@ function Scale() {
           overflow: 'hidden',
         }}
       >
-        {/* the floor: solid, because it is */}
         <Box
           sx={{
             position: 'absolute',
@@ -467,8 +511,6 @@ function Scale() {
             borderRight: '2px solid rgba(255,255,255,0.92)',
           }}
         />
-        {/* the target: hatched and dashed, because it is a band we aim at
-            rather than a line we are owed */}
         <Box
           sx={{
             position: 'absolute',
@@ -476,8 +518,7 @@ function Scale() {
             width: at(PLOT.targetHigh - PLOT.targetLow),
             top: 0,
             bottom: 0,
-            background:
-              'repeating-linear-gradient(135deg, rgba(255,122,26,0.62) 0 7px, rgba(255,102,0,0.26) 7px 14px)',
+            background: 'repeating-linear-gradient(135deg, rgba(255,122,26,0.62) 0 7px, rgba(255,102,0,0.26) 7px 14px)',
             borderLeft: '1.5px dashed rgba(255,170,110,0.95)',
             borderRight: '1.5px dashed rgba(255,170,110,0.95)',
           }}
@@ -509,8 +550,6 @@ function Scale() {
 /* ------------------------------------------------------------------ */
 
 export default function StakePage() {
-  /* Three versions of this page's words live in data/stakeCopy. A is the one
-     chosen; change the index to read the page in one of the others. */
   const C = VERSIONS[0];
 
   return (
@@ -543,7 +582,7 @@ export default function StakePage() {
         }}
       />
 
-      {/* ── Hero: the claim, and a picture of the mechanism ───────── */}
+      {/* ── Hero: the claim, and a thing to try ───────────────────── */}
       <Section sx={{ pt: { xs: 7, md: 11 }, pb: { xs: 6, md: 9 } }}>
         <Box
           sx={{
@@ -622,22 +661,15 @@ export default function StakePage() {
           </Reveal>
 
           <Reveal delay={120}>
-            <Loop />
+            <Calculator />
           </Reveal>
         </Box>
       </Section>
 
-      {/* ── The numbers, as a strip under the claim ───────────────── */}
+      {/* ── The numbers, as a strip ───────────────────────────────── */}
       <Section sx={{ pb: { xs: 6, md: 9 } }}>
         <Reveal delay={60}>
-          <Box
-            sx={{
-              ...CARD,
-              overflow: 'hidden',
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
-            }}
-          >
+          <Box sx={{ ...CARD, overflow: 'hidden', display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' } }}>
             {[
               ['The floor', RATES.base, 'Written into the contract', true],
               ['Target, all in', RATES.total, 'Reported once a period closes', false],
@@ -685,18 +717,9 @@ export default function StakePage() {
         </Reveal>
 
         <Reveal delay={80}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 2, md: 2.5 },
-            }}
-          >
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 2.5 } }}>
             {HOW.map((step, i) => (
-              <Box
-                key={step.n}
-                sx={{ ...CARD, display: 'flex', flexDirection: 'column', px: { xs: 2.5, md: 3 }, py: { xs: 2.8, md: 3.2 } }}
-              >
+              <Box key={step.n} sx={{ ...CARD, display: 'flex', flexDirection: 'column', px: { xs: 2.5, md: 3 }, py: { xs: 2.8, md: 3.2 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2.4 }}>
                   <Box
                     sx={{
@@ -720,15 +743,7 @@ export default function StakePage() {
                     {step.glyph}
                   </Box>
                 </Box>
-                <Typography
-                  sx={{
-                    fontSize: { xs: '1.35rem', md: '1.5rem' },
-                    fontWeight: 700,
-                    letterSpacing: '-0.03em',
-                    color: 'var(--text-heading)',
-                    mb: 1.3,
-                  }}
-                >
+                <Typography sx={{ fontSize: { xs: '1.35rem', md: '1.5rem' }, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--text-heading)', mb: 1.3 }}>
                   {C.how[i].title}
                 </Typography>
                 <Typography sx={{ fontSize: '0.95rem', lineHeight: 1.65, color: 'var(--text-secondary)', mb: 3, flex: 1 }}>
@@ -743,16 +758,58 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── The yield, on ink, led by the scale ───────────────────── */}
+      {/* ── Where the stake works, on ink ─────────────────────────── */}
       <Section ground="ink" sx={{ py: { xs: 8, md: 11 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 5, md: 6 } }}>
-            <Head2 onInk eyebrow={C.yield.eyebrow} title={C.yield.title} lede={C.yield.lede} maxWidth={760} />
+            <Head2
+              onInk
+              eyebrow="Where the stake works"
+              title="Locked here. Put to work there."
+              lede="Your $OPEN does not leave your wallet. What it backs is deployed, and two different kinds of thing come back: a rate the contract owes you either way, and whatever the book makes on top."
+              maxWidth={760}
+            />
           </Box>
         </Reveal>
 
         <Reveal delay={80}>
-          <Box sx={{ mb: { xs: 5, md: 7 } }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', lg: 'minmax(0,0.82fr) auto minmax(0,1.06fr) auto minmax(0,1.12fr)' },
+              alignItems: 'stretch',
+              mb: { xs: 6, md: 8 },
+            }}
+          >
+            <Stage tag="The stake">
+              <Row
+                k="Staked $OPEN"
+                s="Locked as collateral, still yours, visible the whole time. You can unstake."
+                glyph={'▣'}
+                last
+              />
+            </Stage>
+
+            <Along />
+
+            <Stage tag="Put to work in">
+              {DEPLOY.map((d, i) => (
+                <Row key={d.k} k={d.k} s={d.s} glyph={d.glyph} last={i === DEPLOY.length - 1} />
+              ))}
+            </Stage>
+
+            <Along />
+
+            <Stage tag="What comes back">
+              {RETURNS.map((r, i) => (
+                <Row key={r.tag} k={r.k} s={r.s} accent={r.accent} big={r.accent} last={i === RETURNS.length - 1} />
+              ))}
+            </Stage>
+          </Box>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <Box sx={{ mb: { xs: 6, md: 8 } }}>
             <Scale />
           </Box>
         </Reveal>
@@ -796,15 +853,16 @@ export default function StakePage() {
                   borderBottom: `1px solid ${RULE_ON_INK}`,
                 }}
               >
-                <Label onInk>Worked through</Label>
-                <Label onInk>A year</Label>
+                <Label onInk>Why the floor holds</Label>
+                <Label onInk>Either way</Label>
               </Box>
-              <Box sx={{ px: { xs: 2.5, md: 3 }, pt: '6px', pb: { xs: 2.4, md: 2.8 } }}>
-                <Entry name="You stake" figure={`${EXAMPLE.stake} $OPEN`} onInk />
-                <Entry name="The floor pays" figure={EXAMPLE.floorAdd} onInk />
-                <Entry name="On plan, all in" figure={EXAMPLE.targetAdd} dashed onInk />
-                <Entry name="You hold, on plan" figure={EXAMPLE.planTotal} total onInk />
-                <Typography sx={{ mt: '16px', fontSize: '0.84rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.52)' }}>
+              <Box sx={{ px: { xs: 2.5, md: 3 }, pt: { xs: 2, md: 2.4 }, pb: { xs: 2.4, md: 2.8 } }}>
+                <Typography sx={{ fontSize: '0.98rem', lineHeight: 1.75, color: 'rgba(255,255,255,0.72)' }}>
+                  The {RATES.base} is a protocol rate, set in the staking contract and paid
+                  on schedule. A quiet period pays it in full. What the book
+                  returns changes what lands above it, never what lands at it.
+                </Typography>
+                <Typography sx={{ mt: 2, fontSize: '0.84rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.52)' }}>
                   {C.yield.workedNote}
                 </Typography>
               </Box>
@@ -833,16 +891,9 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── Pro, on paper ─────────────────────────────────────────── */}
+      {/* ── Pro ───────────────────────────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-            gap: { xs: 4, md: 8 },
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 4, md: 8 }, alignItems: 'center' }}>
           <Reveal>
             <Box>
               <Head2 eyebrow={C.pro.eyebrow} title={C.pro.title} lede={C.pro.lede} />
@@ -884,7 +935,7 @@ export default function StakePage() {
         </Box>
       </Section>
 
-      {/* ── Two things to stake, on a cool ground ─────────────────── */}
+      {/* ── Two things to stake ───────────────────────────────────── */}
       <Section ground={COOL} sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
@@ -893,21 +944,11 @@ export default function StakePage() {
         </Reveal>
 
         <Reveal delay={80}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-              gap: { xs: 2.5, md: 3 },
-              alignItems: 'stretch',
-            }}
-          >
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 2.5, md: 3 }, alignItems: 'stretch' }}>
             {STAKES.map((s, i) => {
               const onInk = Boolean(s.lead);
               return (
-                <Box
-                  key={s.token}
-                  sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', ...(onInk ? CARD_INK : CARD) }}
-                >
+                <Box key={s.token} sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', ...(onInk ? CARD_INK : CARD) }}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -937,30 +978,14 @@ export default function StakePage() {
                       >
                         {s.glyph}
                       </Box>
-                      <Typography
-                        sx={{
-                          ...FIG,
-                          fontSize: '1.05rem',
-                          fontWeight: 600,
-                          color: onInk ? 'var(--brand-accent)' : 'var(--text-heading)',
-                        }}
-                      >
+                      <Typography sx={{ ...FIG, fontSize: '1.05rem', fontWeight: 600, color: onInk ? 'var(--brand-accent)' : 'var(--text-heading)' }}>
                         {s.token}
                       </Typography>
                     </Box>
                     <Label onInk={onInk}>{s.kind}</Label>
                   </Box>
 
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      flex: 1,
-                      px: { xs: 2.5, md: 3 },
-                      pt: { xs: 2.4, md: 2.8 },
-                      pb: { xs: 2.6, md: 3 },
-                    }}
-                  >
+                  <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, px: { xs: 2.5, md: 3 }, pt: { xs: 2.4, md: 2.8 }, pb: { xs: 2.6, md: 3 } }}>
                     <Label onInk={onInk}>Paid in</Label>
                     <Typography
                       sx={{
@@ -1002,32 +1027,16 @@ export default function StakePage() {
         </Reveal>
 
         <Reveal delay={140}>
-          <Typography
-            sx={{
-              mt: { xs: 3, md: 3.5 },
-              fontFamily: MONO,
-              fontSize: '0.74rem',
-              lineHeight: 1.8,
-              color: 'var(--text-muted)',
-              maxWidth: '76ch',
-            }}
-          >
+          <Typography sx={{ mt: { xs: 3, md: 3.5 }, fontFamily: MONO, fontSize: '0.74rem', lineHeight: 1.8, color: 'var(--text-muted)', maxWidth: '76ch' }}>
             {C.stakes.foot}
           </Typography>
         </Reveal>
       </Section>
 
-      {/* ── Supply, on paper ──────────────────────────────────────── */}
+      {/* ── Supply ────────────────────────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
-          <Box
-            sx={{
-              ...CARD,
-              overflow: 'hidden',
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '0.72fr 1.28fr' },
-            }}
-          >
+          <Box sx={{ ...CARD, overflow: 'hidden', display: 'grid', gridTemplateColumns: { xs: '1fr', md: '0.72fr 1.28fr' } }}>
             <Box
               sx={{
                 px: { xs: 2.5, md: 3.5 },
@@ -1038,17 +1047,7 @@ export default function StakePage() {
               }}
             >
               <Label sx={{ color: 'var(--brand-accent)' }}>Supply</Label>
-              <Typography
-                sx={{
-                  ...FIG,
-                  mt: 2,
-                  fontSize: { xs: '3rem', md: '3.8rem' },
-                  fontWeight: 600,
-                  lineHeight: 0.95,
-                  letterSpacing: '-0.04em',
-                  color: 'var(--text-heading)',
-                }}
-              >
+              <Typography sx={{ ...FIG, mt: 2, fontSize: { xs: '3rem', md: '3.8rem' }, fontWeight: 600, lineHeight: 0.95, letterSpacing: '-0.04em', color: 'var(--text-heading)' }}>
                 {RATES.supply}
               </Typography>
               <Typography sx={{ mt: 1.5, fontSize: '0.86rem', lineHeight: 1.55, color: 'var(--text-muted)' }}>
@@ -1059,15 +1058,7 @@ export default function StakePage() {
             <Box sx={{ px: { xs: 2.5, md: 3.5 }, py: { xs: 3, md: 4 } }}>
               <Typography
                 component="h2"
-                sx={{
-                  fontSize: { xs: '1.3rem', md: '1.6rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.028em',
-                  lineHeight: 1.3,
-                  color: 'var(--text-heading)',
-                  mb: 1.6,
-                  textWrap: 'balance',
-                }}
+                sx={{ fontSize: { xs: '1.3rem', md: '1.6rem' }, fontWeight: 700, letterSpacing: '-0.028em', lineHeight: 1.3, color: 'var(--text-heading)', mb: 1.6, textWrap: 'balance' }}
               >
                 {C.supply.title}
               </Typography>
@@ -1082,22 +1073,13 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── Close, on ink ─────────────────────────────────────────── */}
+      {/* ── Close ─────────────────────────────────────────────────── */}
       <Section ground="ink" sx={{ py: { xs: 8, md: 11 } }}>
         <Box sx={{ textAlign: 'center' }}>
           <Reveal>
             <Typography
               component="h2"
-              sx={{
-                fontSize: { xs: '2.2rem', md: '3.4rem' },
-                fontWeight: 700,
-                letterSpacing: '-0.04em',
-                lineHeight: 1.04,
-                color: '#FFFFFF',
-                maxWidth: '17ch',
-                mx: 'auto',
-                textWrap: 'balance',
-              }}
+              sx={{ fontSize: { xs: '2.2rem', md: '3.4rem' }, fontWeight: 700, letterSpacing: '-0.04em', lineHeight: 1.04, color: '#FFFFFF', maxWidth: '17ch', mx: 'auto', textWrap: 'balance' }}
             >
               {C.close.title}
             </Typography>
@@ -1125,8 +1107,9 @@ export default function StakePage() {
             >
               Staking rewards are not a guarantee. The {RATES.base} floor is fixed; the{' '}
               {RATES.total} is a target the treasury is run to, not a promised rate, and what
-              lands above the floor varies by period. Nothing here is investment advice. Read the
-              terms before you stake.
+              lands above the floor varies by period. The calculator is an illustration on the
+              figures above, not a quote. Nothing here is investment advice. Read the terms
+              before you stake.
             </Typography>
           </Reveal>
         </Box>
