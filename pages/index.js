@@ -31,10 +31,13 @@ export default function Home() {
       <Box component="main" sx={{ backgroundColor: 'var(--bg-page)', minHeight: '100vh', transition: 'background-color 0.35s ease' }}>
         <HeroSection />
         <CoreFeaturesSection />
+        {/* Price comes third, straight after the case for using this at all,
+            so the cost is answered while that case is still in mind rather
+            than after four more sections of product. */}
+        <PricingSection />
         <SupportedModelsSection />
         <WhyAskMultipleModelsSection />
         <ProductMatrixSection />
-        <PricingSection />
         <TokenFlowSection />
         <TokenOptimizationSection />
         <ApiSection />
