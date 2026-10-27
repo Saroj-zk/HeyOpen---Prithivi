@@ -503,105 +503,129 @@ function Calculator() {
 /* ------------------------------------------------------------------ */
 
 /**
- * What a period pays, as one bar.
+ * The floor, inside the band.
  *
- * The version before this had a headline, a lede, a two row chart, an axis,
- * a three item legend and two paragraphs underneath, which is seven things
- * explaining two numbers. The legend was the tell: a chart that needs a key
- * to three fills is a chart that has not said it yet.
+ * A bar put the two figures end to end, which is the one reading of them
+ * that is wrong. 6% and 40% to 50% do not add up to 46% to 56%: the floor is
+ * the worst case inside the target, not a payment made on top of it. That
+ * mistake is easy enough to make that it was made here once already, in an
+ * earlier draft of this page, and a bar invites it.
  *
- * One track now. The dark block at the start is what the contract owes you
- * whatever happens, the rest is what the book adds on plan, and the hatching
- * at the end is the only uncertain thing on the page, so it is the only
- * thing drawn as uncertain. The two labels sit over the two parts they name,
- * which is what removes the need for a key, an axis and a second row.
+ * So the drawing is containment rather than length. One card inside another,
+ * which is the shape a reader already understands as "this is part of that",
+ * and the sentence beside it says the same thing in words for anyone who
+ * reads before they look.
  *
- * Nothing invented: both figures are the ones already stated, and the track
- * ends at the top of the band so there is no empty space pretending to be
- * headroom.
+ * Deliberately not to scale. A nested card is read as a set, not as an area,
+ * and drawing 6 as an eighth of the width of 50 would make the guaranteed
+ * part a sliver, which undersells the only figure on the page anybody is
+ * actually owed.
  */
-const MAX = PLOT.targetHigh;
-const at = (v) => `${(v / MAX) * 100}%`;
-
 function Scale() {
   return (
-    <Box sx={{ '@keyframes growBar': { from: { transform: 'scaleX(0)' } } }}>
+    <Box
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: '18px',
+        border: '1px solid rgba(255,102,0,0.26)',
+        background: 'linear-gradient(145deg, #FFF6EE 0%, #FFEEDF 60%, #FFE6D2 100%)',
+        px: { xs: 2.5, md: 4.5 },
+        py: { xs: 3, md: 4.5 },
+        '@keyframes settleIn': {
+          from: { opacity: 0, transform: 'translateY(10px) scale(.985)' },
+        },
+      }}
+    >
+      {/* the band's own texture, kept to the far corner so it reads as the
+          edge of a range rather than as a pattern over everything */}
       <Box
+        aria-hidden="true"
         sx={{
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          gap: 2,
-          mb: 1.6,
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: { xs: '38%', md: '30%' },
+          bottom: 0,
+          background:
+            'repeating-linear-gradient(135deg, rgba(255,102,0,0.16) 0 9px, rgba(255,102,0,0) 9px 18px)',
+          maskImage: 'linear-gradient(90deg, transparent 0%, #000 60%)',
+          WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 60%)',
+          pointerEvents: 'none',
         }}
-      >
-        <Box>
-          <Label>Owed to you</Label>
-          <Typography
-            sx={{ ...FIG, mt: 0.8, fontSize: { xs: '1.7rem', md: '2.2rem' }, fontWeight: 600, letterSpacing: '-0.035em', lineHeight: 1, color: 'var(--text-heading)' }}
+      />
+
+      <Box sx={{ position: 'relative' }}>
+        <Label sx={{ color: 'var(--brand-accent)' }}>Aimed at, all in</Label>
+        <Typography
+          sx={{
+            ...FIG,
+            mt: 1,
+            fontSize: { xs: '2.4rem', md: '3.4rem' },
+            fontWeight: 600,
+            letterSpacing: '-0.04em',
+            lineHeight: 1,
+            color: 'var(--brand-accent)',
+          }}
+        >
+          {RATES.total}
+        </Typography>
+
+        <Box
+          sx={{
+            mt: { xs: 3, md: 4 },
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            alignItems: { md: 'center' },
+            gap: { xs: 2.5, md: 4 },
+          }}
+        >
+          {/* and the part of it you are owed either way */}
+          <Box
+            sx={{
+              flexShrink: 0,
+              borderRadius: '14px',
+              px: { xs: 2.5, md: 3 },
+              py: { xs: 2.2, md: 2.6 },
+              background: `linear-gradient(180deg, #212737 0%, ${INK} 100%)`,
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12), 0 18px 36px -22px rgba(11,15,26,0.7)',
+              animation: 'settleIn .7s cubic-bezier(.22,1,.36,1) .25s both',
+              '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+            }}
           >
-            {RATES.base}
+            <Label onInk>Owed to you</Label>
+            <Typography
+              sx={{
+                ...FIG,
+                mt: 0.9,
+                fontSize: { xs: '2rem', md: '2.6rem' },
+                fontWeight: 600,
+                letterSpacing: '-0.04em',
+                lineHeight: 1,
+                color: '#FFFFFF',
+              }}
+            >
+              {RATES.base}
+            </Typography>
+            <Typography sx={{ mt: 1, fontSize: '0.78rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.56)' }}>
+              Whatever the period did
+            </Typography>
+          </Box>
+
+          <Typography
+            sx={{
+              fontSize: { xs: '0.98rem', md: '1.06rem' },
+              lineHeight: 1.65,
+              color: '#8A4418',
+              maxWidth: '34ch',
+              textWrap: 'pretty',
+            }}
+          >
+            The floor sits <Box component="strong" sx={{ color: '#6E3410', fontWeight: 700 }}>inside</Box> the
+            target, not on top of it. A period that goes to plan pays the band,
+            and the worst period there is still pays the floor.
           </Typography>
         </Box>
-        <Box sx={{ textAlign: 'right' }}>
-          <Label sx={{ color: 'var(--brand-accent)' }}>Aimed at, all in</Label>
-          <Typography
-            sx={{ ...FIG, mt: 0.8, fontSize: { xs: '1.7rem', md: '2.2rem' }, fontWeight: 600, letterSpacing: '-0.035em', lineHeight: 1, whiteSpace: 'nowrap', color: 'var(--brand-accent)' }}
-          >
-            {RATES.total}
-          </Typography>
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
-          position: 'relative',
-          height: { xs: 56, md: 72 },
-          borderRadius: '14px',
-          overflow: 'hidden',
-          backgroundColor: 'rgba(11,15,26,0.04)',
-          border: `1px solid ${RULE}`,
-        }}
-      >
-        {/* what the book adds on plan, and the band it is run to */}
-        <Box
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            transformOrigin: 'left center',
-            animation: 'growBar 1s cubic-bezier(.22,1,.36,1) .15s both',
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-            background: `linear-gradient(90deg, #FFA45C 0%, #FF8A2B ${at(PLOT.targetLow)}, #FF8A2B ${at(PLOT.targetLow)})`,
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: at(PLOT.targetLow),
-            right: 0,
-            background:
-              'repeating-linear-gradient(135deg, rgba(255,255,255,0.46) 0 8px, rgba(255,255,255,0) 8px 16px)',
-            borderLeft: '1.5px dashed rgba(255,255,255,0.85)',
-          }}
-        />
-
-        {/* what is owed, whatever the period did */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: at(PLOT.floor),
-            transformOrigin: 'left center',
-            animation: 'growBar .8s cubic-bezier(.22,1,.36,1) both',
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-            background: `linear-gradient(180deg, #2A3142 0%, ${INK} 100%)`,
-            boxShadow: 'inset -1px 0 0 rgba(255,255,255,0.35)',
-          }}
-        />
       </Box>
     </Box>
   );
@@ -940,15 +964,15 @@ export default function StakePage() {
         <Reveal delay={160}>
           <Typography
             sx={{
-              mt: { xs: 3, md: 4 },
-              fontSize: { xs: '1rem', md: '1.08rem' },
-              lineHeight: 1.7,
-              color: 'var(--text-secondary)',
-              maxWidth: '58ch',
-              textWrap: 'pretty',
+              mt: { xs: 2.5, md: 3 },
+              fontFamily: MONO,
+              fontSize: '0.76rem',
+              lineHeight: 1.8,
+              color: 'var(--text-muted)',
+              maxWidth: '66ch',
             }}
           >
-            {C.yield.workedNote}
+            Reported after a period closes, never promised before it opens.
           </Typography>
         </Reveal>
       </Section>
