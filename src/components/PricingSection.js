@@ -138,12 +138,21 @@ export default function PricingSection() {
               $165 the hard way against $20 here. $20 is what ChatGPT Plus,
               Claude Pro, Gemini Pro and Perplexity Pro each ask on their own,
               which is the comparison being drawn. It does not claim to undercut
-              the cheapest, since Copilot is $10 and Runway $15. */}
+              the cheapest, since Copilot is $10 and Runway $15.
+
+              Three highlights rather than two, because the third sentence is
+              the answer to what the price actually buys, and "uncensored" is
+              the part none of those eight will sell at any price. Both claims
+              in it are made elsewhere on the site already: uncensored on the
+              Private AI and capabilities pages, unlimited on the $20 card
+              below, which still says "messages" and not images. */}
           <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 660, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
             Separate subscriptions to ChatGPT, Claude, Gemini and the rest come to{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
             All of them, and 200+ more, cost{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here.
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here.{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>Uncensored</Box>,
+            with unlimited text and image generation.
           </Typography>
         </Box>
 
