@@ -5,68 +5,31 @@ import Typography from '@mui/material/Typography';
 import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
 import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded';
 import { useReveal, revealSx } from '@/utils/reveal';
+import { ORANGE, DASH_C, LABEL, CLEAR, AMBER, SMOKE, CHIP_BEVEL, CANVAS } from '@/components/ui/glass';
 
 /**
- * Where the money goes, and the one way to pay that skips the loop entirely.
+ * Where the money goes, and the one way to pay that never joins the route.
  *
- * Sits under "the other way to pay", which explains how a holder gets credits
- * without spending. This answers the question that follows: what happens to
- * the money people do spend. The order matters, and the headline says it, so
- * the diagram is built as a funnel rather than a cycle. Costs come out at full
- * width, each step below is narrower than the one above it, and the burn is
- * the smallest box on the page. Nothing here promises a figure, because none
- * of the ratios are settled anywhere in the repo.
+ * Sits under "the other way to pay" and is drawn in the same glass: same
+ * canvas, same tints, same numbered chips on dashed routing, and the same tile
+ * anatomy, which is a tag at the top left, the thing itself below it, and a
+ * glyph in the far corner. The two sections read as one figure in two parts
+ * rather than as two diagrams that happen to share a palette.
  *
- * Two panels rather than one, in a 2:1 split: the left is the revenue funnel,
- * the right is enterprise, which pays up front and so never enters the funnel
- * at the top. Below lg they stack.
+ * A funnel rather than a cycle, because the headline is about order. Revenue
+ * enters at full width, costs come out first, and each step below is narrower
+ * than the one above until the burn, which is the smallest tile on the page.
  *
- * The separator dots in the costs row are their own elements, not characters
- * inside the string, so a narrow screen breaks the line at a dot instead of
- * through the middle of "Inference costs".
+ * The step verbs sit beside the chips rather than inside the tiles, which is
+ * what uses the space either side of a funnel. Left out, the figure was a
+ * narrow column of boxes with wide empty margins, and that was most of what
+ * made it look cheap.
+ *
+ * No figures anywhere. None of these ratios are settled in the repo, and a
+ * number here would read as a commitment.
  */
 
-const ORANGE = '#ff6600';
-const INK = '#141820';
-const DASH = 'rgba(15, 23, 42, 0.34)';
-
-const LABEL = {
-  fontSize: '0.6rem',
-  fontWeight: 800,
-  letterSpacing: '0.14em',
-  textTransform: 'uppercase',
-};
-
-/* Both outer panels. Warm at the top left, cooling across, which is the only
-   thing separating them from the page behind. */
-const PANEL = {
-  borderRadius: '24px',
-  border: '1px solid var(--border-subtle)',
-  background: 'linear-gradient(152deg, #F7F2EE 0%, #F2F4F7 42%, #EAEEF3 100%)',
-  px: { xs: 2.5, md: 4 },
-  py: { xs: 3.5, md: 5 },
-};
-
-const CARD_SHADOW =
-  '0 1px 2px rgba(15,23,42,0.05), 0 14px 28px -18px rgba(15,23,42,0.28)';
-
-/** A step in the funnel. Plain is white, buyback is orange, burn is near black. */
-const TONE = {
-  plain: { bg: '#FFFFFF', label: 'var(--text-muted)', title: INK },
-  orange: {
-    bg: `linear-gradient(135deg, #FF7A1A 0%, ${ORANGE} 55%, #EC5E00 100%)`,
-    label: 'rgba(255,255,255,0.78)',
-    title: '#FFFFFF',
-  },
-  ink: {
-    bg: `linear-gradient(135deg, #20242D 0%, ${INK} 60%, #0C0F15 100%)`,
-    label: 'rgba(255,255,255,0.6)',
-    title: '#FFFFFF',
-  },
-};
-
-/* Costs are listed as parts so the row can break between them. */
-const COSTS = ['Inference costs', 'Taxes', 'HEY credits', 'Reserves'];
+const TINT = { clear: CLEAR, amber: AMBER, smoke: SMOKE };
 
 const REVENUE = [
   'Enterprise inference & API',
@@ -75,81 +38,148 @@ const REVENUE = [
   'Agents & compute marketplace',
 ];
 
+/* Listed as parts so the row can break between them rather than through the
+   middle of "Inference costs". */
+const COSTS = ['Inference costs', 'Taxes', 'HEY credits', 'Reserves'];
+
 const ENTERPRISE = [
-  {
-    key: 'upfront',
-    tone: 'light',
-    title: 'Pay up front',
-    body: 'One payment for the term',
-  },
-  {
-    key: 'reserve',
-    tone: 'orange',
-    title: 'Reserve credits',
-    body: 'In advance, before usage',
-  },
+  { key: 'upfront', tone: 'clear', title: 'Pay up front', body: 'One payment for the term' },
+  { key: 'reserve', tone: 'amber', title: 'Reserve credits', body: 'In advance, before usage' },
 ];
 
-function Arrow({ tight }) {
+/* Content sits above the specular sweep, which is an ::after on the tile. */
+const OVER = { position: 'relative', zIndex: 1 };
+
+const onDarkText = (onDark) => (onDark ? '#FFFFFF' : 'var(--text-heading)');
+const onDarkTag = (onDark) => (onDark ? 'rgba(255,255,255,0.88)' : 'var(--text-muted)');
+
+/**
+ * A run of dashed line down to the next tile, with the step on it.
+ *
+ * `n` gives it a numbered chip, as in the section above. Without one it is
+ * plain routing, which is what the enterprise side wants: that is a single
+ * payment, not a numbered stage in a sequence.
+ */
+function Link({ n, verb }) {
+  const seg = { width: 0, borderLeft: `1.5px dashed ${DASH_C}`, height: { xs: 12, md: 15 } };
+
   return (
     <Box
-      aria-hidden="true"
       sx={{
+        position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        py: tight ? 0.6 : 1,
+        py: { xs: 0.5, md: 0.8 },
       }}
     >
-      <Box sx={{ height: tight ? '18px' : '26px', borderLeft: `1.5px dashed ${DASH}` }} />
+      <Box aria-hidden="true" sx={seg} />
+      {n && (
+        <Box
+          sx={{
+            width: { xs: 30, md: 34 },
+            height: { xs: 30, md: 34 },
+            borderRadius: '12px',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: { xs: '0.72rem', md: '0.76rem' },
+            fontWeight: 800,
+            color: ORANGE,
+            ...CLEAR,
+            boxShadow: CHIP_BEVEL,
+          }}
+        >
+          <Box component="span" sx={OVER}>{n}</Box>
+        </Box>
+      )}
+      <Box aria-hidden="true" sx={seg} />
       <Box
+        aria-hidden="true"
         sx={{
           width: 0,
           height: 0,
+          flexShrink: 0,
           borderLeft: '5px solid transparent',
           borderRight: '5px solid transparent',
-          borderTop: `6px solid ${DASH}`,
+          borderTop: `7.5px solid ${DASH_C}`,
         }}
       />
+      {verb && (
+        /* Beside the chip on a wide panel, under the route on a narrow one.
+           One element either way, so the text is never in the DOM twice. */
+        <Typography
+          sx={{
+            position: { xs: 'static', md: 'absolute' },
+            left: { md: '50%' },
+            top: { md: '50%' },
+            transform: { md: 'translateY(-50%)' },
+            ml: { md: '30px' },
+            mt: { xs: 0.7, md: 0 },
+            whiteSpace: { md: 'nowrap' },
+            textAlign: 'center',
+            fontSize: { xs: '0.74rem', md: '0.78rem' },
+            fontWeight: 600,
+            color: 'var(--text-secondary)',
+          }}
+        >
+          {verb}
+        </Typography>
+      )}
     </Box>
   );
 }
 
-function Step({ width, label, tone = 'plain', icon, children }) {
-  const t = TONE[tone];
+/** One tile in the funnel: tag, the thing itself, and a glyph in the corner. */
+function Node({ width, tag, glyph, tone = 'clear', children }) {
+  const onDark = tone !== 'clear';
+
   return (
     <Box
       sx={{
         width,
         mx: 'auto',
-        borderRadius: '16px',
-        background: t.bg,
-        boxShadow: CARD_SHADOW,
-        px: { xs: 2, md: 3 },
-        py: { xs: 1.8, md: 2.2 },
-        textAlign: 'center',
+        zIndex: 1,
+        borderRadius: '20px',
+        px: { xs: 1.9, md: 2.4 },
+        py: { xs: 1.6, md: 1.9 },
+        overflow: 'hidden',
+        ...TINT[tone],
       }}
     >
-      {icon && (
-        <LocalFireDepartmentRoundedIcon
-          sx={{ fontSize: '1.15rem', color: 'rgba(255,255,255,0.92)', display: 'block', mx: 'auto', mb: 0.4 }}
-        />
-      )}
-      <Typography component="div" sx={{ ...LABEL, color: t.label, mb: 0.7 }}>
-        {label}
-      </Typography>
-      <Typography
-        component="div"
-        sx={{
-          fontSize: { xs: '1rem', md: '1.15rem' },
-          fontWeight: 700,
-          letterSpacing: '-0.015em',
-          lineHeight: 1.3,
-          color: t.title,
-        }}
-      >
-        {children}
-      </Typography>
+      <Box sx={{ ...OVER, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
+        <Box sx={{ minWidth: 0 }}>
+          <Typography component="div" sx={{ ...LABEL, color: onDarkTag(onDark), mb: 0.5 }}>
+            {tag}
+          </Typography>
+          <Typography
+            component="div"
+            sx={{
+              fontSize: { xs: '1rem', md: '1.16rem' },
+              fontWeight: 750,
+              letterSpacing: '-0.025em',
+              lineHeight: 1.25,
+              color: onDarkText(onDark),
+            }}
+          >
+            {children}
+          </Typography>
+        </Box>
+        <Box
+          aria-hidden="true"
+          sx={{
+            fontSize: '1.05rem',
+            lineHeight: 1,
+            flexShrink: 0,
+            display: 'flex',
+            opacity: onDark ? 0.85 : 0.45,
+            color: onDarkText(onDark),
+          }}
+        >
+          {glyph}
+        </Box>
+      </Box>
     </Box>
   );
 }
@@ -182,7 +212,7 @@ export default function BurnEnterpriseSection() {
           </Typography>
         </Box>
 
-        {/* ---- the two panels ---- */}
+        {/* ---- the two canvases ---- */}
         <Box
           ref={figRef}
           sx={{
@@ -193,55 +223,56 @@ export default function BurnEnterpriseSection() {
             ...revealSx(figShown, 120),
           }}
         >
-          {/* ---- left: the funnel ---- */}
-          <Box sx={{ flex: { lg: '1 1 calc(66.667% - 16px)' }, minWidth: 0, ...PANEL }}>
-            <Typography sx={{ ...LABEL, color: 'var(--text-muted)', textAlign: 'center', mb: 2.5 }}>
+          {/* ---- left: the route revenue takes ---- */}
+          <Box
+            sx={{
+              flex: { lg: '1 1 calc(66.667% - 16px)' },
+              minWidth: 0,
+              ...CANVAS,
+              px: { xs: 2, md: 5 },
+              py: { xs: 3, md: 4 },
+            }}
+          >
+            <Typography sx={{ ...LABEL, color: 'var(--text-muted)', mb: { xs: 2, md: 2.5 } }}>
               Revenue
             </Typography>
 
-            <Box
-              sx={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: { xs: 1.2, md: 1.5 },
-              }}
-            >
+            {/* Four sources, sharing the row equally and wrapping their own
+                text, so the long one does not take a row to itself. */}
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 1.2, md: 1.4 } }}>
               {REVENUE.map((line) => (
                 <Box
                   key={line}
                   sx={{
                     flex: { xs: '1 1 140px', md: '1 1 0' },
                     minWidth: 0,
-                    borderRadius: '14px',
-                    backgroundColor: '#FFFFFF',
-                    boxShadow: CARD_SHADOW,
-                    px: 1.5,
+                    borderRadius: '16px',
+                    px: 1.6,
                     py: 1.6,
-                    textAlign: 'center',
-                    fontSize: '0.86rem',
-                    fontWeight: 700,
-                    lineHeight: 1.35,
-                    color: INK,
+                    overflow: 'hidden',
+                    ...CLEAR,
                   }}
                 >
-                  {line}
+                  <Typography
+                    sx={{
+                      ...OVER,
+                      fontSize: { xs: '0.82rem', md: '0.86rem' },
+                      fontWeight: 700,
+                      lineHeight: 1.35,
+                      letterSpacing: '-0.015em',
+                      textAlign: 'center',
+                      color: 'var(--text-heading)',
+                    }}
+                  >
+                    {line}
+                  </Typography>
                 </Box>
               ))}
             </Box>
 
-            <Arrow />
-            <Step width={{ xs: '100%', md: '78%' }} label="Taken out first">
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  columnGap: 1,
-                  rowGap: 0.2,
-                }}
-              >
+            <Link n="1" verb="paid before anything else" />
+            <Node width={{ xs: '100%', md: '84%' }} tag="Taken out first" glyph="▤">
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', columnGap: 1, rowGap: 0.2 }}>
                 {COSTS.map((cost, i) => (
                   <React.Fragment key={cost}>
                     {i > 0 && (
@@ -253,35 +284,42 @@ export default function BurnEnterpriseSection() {
                   </React.Fragment>
                 ))}
               </Box>
-            </Step>
+            </Node>
 
-            <Arrow />
-            <Step width={{ xs: '90%', md: '56%' }} label="What is left">
+            <Link n="2" verb="whatever is still there" />
+            <Node width={{ xs: '92%', md: '62%' }} tag="What is left" glyph="◇">
               Available surplus
-            </Step>
+            </Node>
 
-            <Arrow />
-            <Step width={{ xs: '80%', md: '40%' }} label="Buyback" tone="orange">
+            <Link n="3" verb="bought on the open market" />
+            <Node width={{ xs: '84%', md: '48%' }} tag="Buyback" glyph="◆" tone="amber">
               Buy OPEN
-            </Step>
+            </Node>
 
-            <Arrow />
-            <Step width={{ xs: '78%', md: '36%' }} label="Burn" tone="ink" icon>
+            <Link n="4" verb="burned, verifiably on chain" />
+            <Node
+              width={{ xs: '82%', md: '45%' }}
+              tag="Burn"
+              tone="smoke"
+              glyph={<LocalFireDepartmentRoundedIcon sx={{ fontSize: '1.2rem' }} />}
+            >
               OPEN, gone for good
-            </Step>
+            </Node>
           </Box>
 
-          {/* ---- right: enterprise, which never enters the funnel ---- */}
+          {/* ---- right: the money that never joins the route ---- */}
           <Box
             sx={{
               flex: { lg: '1 1 calc(33.333% - 16px)' },
               minWidth: 0,
               display: 'flex',
               flexDirection: 'column',
-              ...PANEL,
+              ...CANVAS,
+              px: { xs: 2, md: 3.5 },
+              py: { xs: 3, md: 4 },
             }}
           >
-            <Typography sx={{ ...LABEL, color: 'var(--text-muted)', textAlign: 'center', mb: 2.5 }}>
+            <Typography sx={{ ...LABEL, color: 'var(--text-muted)', mb: { xs: 2, md: 2.5 } }}>
               Enterprise
             </Typography>
 
@@ -290,66 +328,81 @@ export default function BurnEnterpriseSection() {
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
                 justifyContent: 'center',
-                py: { xs: 1, md: 2 },
+                pb: { xs: 0.5, md: 1.5 },
               }}
             >
-              {ENTERPRISE.map((item, i) => (
-                <React.Fragment key={item.key}>
-                  {i > 0 && <Arrow />}
-                  <Box sx={{ textAlign: 'center' }}>
+              {ENTERPRISE.map((item, i) => {
+                const onDark = item.tone !== 'clear';
+                return (
+                  <React.Fragment key={item.key}>
+                    {i > 0 && <Link verb="before a single call" />}
                     <Box
                       sx={{
-                        width: { xs: 86, md: 104 },
-                        height: { xs: 86, md: 104 },
-                        mx: 'auto',
-                        mb: 2,
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background:
-                          item.tone === 'orange' ? TONE.orange.bg : '#FFFFFF',
-                        boxShadow:
-                          item.tone === 'orange'
-                            ? '0 18px 36px -18px rgba(236,94,0,0.65), 0 1px 2px rgba(15,23,42,0.06)'
-                            : CARD_SHADOW,
+                        borderRadius: '20px',
+                        px: { xs: 2, md: 2.4 },
+                        py: { xs: 2.2, md: 2.6 },
+                        overflow: 'hidden',
+                        ...TINT[item.tone],
                       }}
                     >
-                      {item.tone === 'orange' ? (
+                      <Box sx={{ ...OVER, display: 'flex', alignItems: 'center', gap: 2 }}>
                         <Box
-                          component="span"
                           sx={{
-                            fontSize: { xs: '2rem', md: '2.4rem' },
-                            fontWeight: 800,
-                            color: '#FFFFFF',
-                            lineHeight: 1,
+                            width: { xs: 56, md: 64 },
+                            height: { xs: 56, md: 64 },
+                            flexShrink: 0,
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            /* On the amber tile a white disc would fight the
+                               body, so the disc is a lighter wash of it. */
+                            backgroundColor: onDark ? 'rgba(255,255,255,0.20)' : 'rgba(255,255,255,0.92)',
+                            boxShadow: onDark
+                              ? 'inset 0 0 0 1px rgba(255,255,255,0.42), inset 0 1px 0 rgba(255,255,255,0.6)'
+                              : CHIP_BEVEL,
                           }}
                         >
-                          $
+                          {onDark ? (
+                            <Box
+                              component="span"
+                              sx={{ fontSize: { xs: '1.5rem', md: '1.7rem' }, fontWeight: 800, color: '#FFFFFF', lineHeight: 1 }}
+                            >
+                              $
+                            </Box>
+                          ) : (
+                            <PaymentsRoundedIcon sx={{ fontSize: { xs: '1.5rem', md: '1.7rem' }, color: 'var(--text-heading)' }} />
+                          )}
                         </Box>
-                      ) : (
-                        <PaymentsRoundedIcon sx={{ fontSize: { xs: '2rem', md: '2.3rem' }, color: INK }} />
-                      )}
+                        <Box sx={{ minWidth: 0 }}>
+                          <Typography
+                            sx={{
+                              fontSize: { xs: '1.02rem', md: '1.16rem' },
+                              fontWeight: 750,
+                              letterSpacing: '-0.025em',
+                              lineHeight: 1.2,
+                              color: onDarkText(onDark),
+                              mb: 0.4,
+                            }}
+                          >
+                            {item.title}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: { xs: '0.78rem', md: '0.82rem' },
+                              lineHeight: 1.45,
+                              color: onDark ? 'rgba(255,255,255,0.86)' : 'var(--text-muted)',
+                            }}
+                          >
+                            {item.body}
+                          </Typography>
+                        </Box>
+                      </Box>
                     </Box>
-                    <Typography
-                      sx={{
-                        fontSize: { xs: '1.05rem', md: '1.2rem' },
-                        fontWeight: 700,
-                        letterSpacing: '-0.02em',
-                        color: 'var(--text-primary)',
-                        mb: 0.6,
-                      }}
-                    >
-                      {item.title}
-                    </Typography>
-                    <Typography sx={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                      {item.body}
-                    </Typography>
-                  </Box>
-                </React.Fragment>
-              ))}
+                  </React.Fragment>
+                );
+              })}
             </Box>
           </Box>
         </Box>
