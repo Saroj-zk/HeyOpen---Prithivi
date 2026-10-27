@@ -503,127 +503,235 @@ function Calculator() {
 /* ------------------------------------------------------------------ */
 
 /**
- * The floor, inside the band.
+ * The yield as a dial.
  *
- * A bar put the two figures end to end, which is the one reading of them
- * that is wrong. 6% and 40% to 50% do not add up to 46% to 56%: the floor is
- * the worst case inside the target, not a payment made on top of it. That
- * mistake is easy enough to make that it was made here once already, in an
- * earlier draft of this page, and a bar invites it.
+ * Four shapes have been tried on these two numbers. A split bar put them end
+ * to end, which invites the one reading that is wrong, because 6% and 40% to
+ * 50% do not add to 46% to 56%. A two row chart needed a key to three fills.
+ * A nested card said containment but could not say distance.
  *
- * So the drawing is containment rather than length. One card inside another,
- * which is the shape a reader already understands as "this is part of that",
- * and the sentence beside it says the same thing in words for anyone who
- * reads before they look.
+ * An arc says both at once. There is one sweep, it starts at nothing, the
+ * first stretch of it is the part the contract owes you, and it carries on
+ * into the band we run the book to. The floor is visibly inside the target
+ * because it is the same arc, and the distance between them is visible
+ * because it is the same arc.
  *
- * Deliberately not to scale. A nested card is read as a set, not as an area,
- * and drawing 6 as an eighth of the width of 50 would make the guaranteed
- * part a sliver, which undersells the only figure on the page anybody is
- * actually owed.
+ * Geometry is computed, not drawn by hand. The scale is 0 to 50 across a
+ * half turn, so a value maps to an angle at 3.6 degrees per point, and the
+ * dash lengths that animate the sweep in are the real arc lengths, r times
+ * theta. Change RATES and the dial follows.
  */
+const DIAL = { cx: 220, cy: 212, r: 158, w: 26, max: PLOT.targetHigh };
+
+const deg = (v) => 180 - (v / DIAL.max) * 180;
+const rad = (d) => (d * Math.PI) / 180;
+const len = (sweepDeg) => DIAL.r * rad(sweepDeg);
+
+function point(d) {
+  return [DIAL.cx + DIAL.r * Math.cos(rad(d)), DIAL.cy - DIAL.r * Math.sin(rad(d))];
+}
+
+/* Angles decrease as the value rises, so every sweep here is clockwise. */
+function arcPath(from, to) {
+  const [x1, y1] = point(from);
+  const [x2, y2] = point(to);
+  return `M${x1.toFixed(2)} ${y1.toFixed(2)} A${DIAL.r} ${DIAL.r} 0 ${Math.abs(to - from) > 180 ? 1 : 0} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+}
+
+const TRACK = arcPath(deg(0), deg(DIAL.max));
+const PLAN = arcPath(deg(0), deg(PLOT.targetLow));
+const BAND = arcPath(deg(PLOT.targetLow), deg(DIAL.max));
+const FLOOR = arcPath(deg(0), deg(PLOT.floor));
+
+const PLAN_LEN = len(180 * (PLOT.targetLow / DIAL.max));
+const FLOOR_LEN = len(180 * (PLOT.floor / DIAL.max));
+
 function Scale() {
   return (
     <Box
       sx={{
         position: 'relative',
-        overflow: 'hidden',
-        borderRadius: '18px',
-        border: '1px solid rgba(255,102,0,0.26)',
-        background: 'linear-gradient(145deg, #FFF6EE 0%, #FFEEDF 60%, #FFE6D2 100%)',
-        px: { xs: 2.5, md: 4.5 },
-        py: { xs: 3, md: 4.5 },
-        '@keyframes settleIn': {
-          from: { opacity: 0, transform: 'translateY(10px) scale(.985)' },
-        },
+        width: '100%',
+        maxWidth: 520,
+        mx: 'auto',
+        '@keyframes drawPlan': { from: { strokeDashoffset: PLAN_LEN } },
+        '@keyframes drawFloor': { from: { strokeDashoffset: FLOOR_LEN } },
+        '@keyframes fadeBand': { from: { opacity: 0 } },
       }}
     >
-      {/* the band's own texture, kept to the far corner so it reads as the
-          edge of a range rather than as a pattern over everything */}
+      <Box component="svg" viewBox="0 0 440 252" sx={{ width: '100%', display: 'block', overflow: 'visible' }}>
+        <defs>
+          <linearGradient id="planGrad" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="#FFB071" />
+            <stop offset="100%" stopColor="#FF7A1A" />
+          </linearGradient>
+        </defs>
+
+        {/* the scale itself */}
+        <path d={TRACK} fill="none" stroke="rgba(11,15,26,0.07)" strokeWidth={DIAL.w} strokeLinecap="round" />
+
+        {/* a soft fill under the band, so the sweep ends in one round cap
+            rather than in the grey of the track showing past the dashes */}
+        <Box
+          component="path"
+          d={BAND}
+          sx={{
+            fill: 'none',
+            stroke: 'rgba(255,138,43,0.22)',
+            strokeWidth: DIAL.w,
+            strokeLinecap: 'round',
+            animation: 'fadeBand .5s ease 1.1s both',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+          }}
+        />
+
+        {/* the band, dashed because it is the only uncertain part */}
+        <Box
+          component="path"
+          d={BAND}
+          sx={{
+            fill: 'none',
+            stroke: '#FF8A2B',
+            strokeWidth: DIAL.w,
+            strokeDasharray: '3 7',
+            strokeLinecap: 'butt',
+            animation: 'fadeBand .5s ease 1.1s both',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+          }}
+        />
+
+        {/* what a period that goes to plan returns */}
+        <Box
+          component="path"
+          d={PLAN}
+          sx={{
+            fill: 'none',
+            stroke: 'url(#planGrad)',
+            strokeWidth: DIAL.w,
+            strokeLinecap: 'round',
+            strokeDasharray: PLAN_LEN,
+            animation: 'drawPlan 1.1s cubic-bezier(.22,1,.36,1) .15s both',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+          }}
+        />
+
+        {/* and the stretch of it you are owed whatever happens */}
+        <Box
+          component="path"
+          d={FLOOR}
+          sx={{
+            fill: 'none',
+            stroke: INK,
+            strokeWidth: DIAL.w,
+            strokeLinecap: 'round',
+            strokeDasharray: FLOOR_LEN,
+            animation: 'drawFloor .55s cubic-bezier(.22,1,.36,1) both',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+          }}
+        />
+
+        {/* where the owed part ends */}
+        <line
+          x1={point(deg(PLOT.floor))[0] - Math.cos(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 3)}
+          y1={point(deg(PLOT.floor))[1] + Math.sin(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 3)}
+          x2={point(deg(PLOT.floor))[0] + Math.cos(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 11)}
+          y2={point(deg(PLOT.floor))[1] - Math.sin(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 11)}
+          stroke="rgba(11,15,26,0.4)"
+          strokeWidth="1.5"
+        />
+
+        {[
+          [0, 'start'],
+          [DIAL.max, 'end'],
+        ].map(([t, anchor]) => (
+          <text
+            key={`cap-${t}`}
+            x={point(deg(t))[0]}
+            y={DIAL.cy + 30}
+            textAnchor={anchor}
+            fontFamily={MONO}
+            fontSize="12"
+            letterSpacing="0.08em"
+            fill="rgba(11,15,26,0.38)"
+          >
+            {t}%
+          </text>
+        ))}
+
+        {[0, 10, 20, 30, 40, 50].map((t) => {
+          const d = deg(t);
+          const inner = DIAL.r + DIAL.w / 2 + 6;
+          const outer = inner + (t % 20 === 0 ? 8 : 5);
+          return (
+            <line
+              key={t}
+              x1={DIAL.cx + inner * Math.cos(rad(d))}
+              y1={DIAL.cy - inner * Math.sin(rad(d))}
+              x2={DIAL.cx + outer * Math.cos(rad(d))}
+              y2={DIAL.cy - outer * Math.sin(rad(d))}
+              stroke="rgba(11,15,26,0.24)"
+              strokeWidth="1.5"
+            />
+          );
+        })}
+      </Box>
+
+      {/* what the dial reads, in the middle of it */}
       <Box
-        aria-hidden="true"
         sx={{
           position: 'absolute',
-          top: 0,
+          left: 0,
           right: 0,
-          width: { xs: '38%', md: '30%' },
-          bottom: 0,
-          background:
-            'repeating-linear-gradient(135deg, rgba(255,102,0,0.16) 0 9px, rgba(255,102,0,0) 9px 18px)',
-          maskImage: 'linear-gradient(90deg, transparent 0%, #000 60%)',
-          WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 60%)',
-          pointerEvents: 'none',
+          bottom: { xs: '16%', md: '18%' },
+          mx: 'auto',
+          maxWidth: { xs: '66%', md: '62%' },
+          textAlign: 'center',
         }}
-      />
-
-      <Box sx={{ position: 'relative' }}>
-        <Label sx={{ color: 'var(--brand-accent)' }}>Aimed at, all in</Label>
+      >
+        <Label sx={{ color: 'var(--brand-accent)', fontSize: { xs: '0.5rem', md: '0.62rem' } }}>
+          Aimed at, all in
+        </Label>
         <Typography
           sx={{
             ...FIG,
-            mt: 1,
-            fontSize: { xs: '2.4rem', md: '3.4rem' },
+            mt: 0.9,
+            fontSize: { xs: '1.35rem', sm: '1.8rem', md: '2.1rem' },
             fontWeight: 600,
             letterSpacing: '-0.04em',
             lineHeight: 1,
+            whiteSpace: 'nowrap',
             color: 'var(--brand-accent)',
           }}
         >
           {RATES.total}
         </Typography>
-
         <Box
           sx={{
-            mt: { xs: 3, md: 4 },
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            alignItems: { md: 'center' },
-            gap: { xs: 2.5, md: 4 },
+            display: 'inline-flex',
+            alignItems: 'baseline',
+            gap: 1,
+            mt: { xs: 1.2, md: 1.6 },
+            px: 1.4,
+            py: 0.7,
+            borderRadius: '999px',
+            background: `linear-gradient(180deg, #212737 0%, ${INK} 100%)`,
+            boxShadow: '0 12px 26px -16px rgba(11,15,26,0.7)',
           }}
         >
-          {/* and the part of it you are owed either way */}
-          <Box
-            sx={{
-              flexShrink: 0,
-              borderRadius: '14px',
-              px: { xs: 2.5, md: 3 },
-              py: { xs: 2.2, md: 2.6 },
-              background: `linear-gradient(180deg, #212737 0%, ${INK} 100%)`,
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12), 0 18px 36px -22px rgba(11,15,26,0.7)',
-              animation: 'settleIn .7s cubic-bezier(.22,1,.36,1) .25s both',
-              '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-            }}
-          >
-            <Label onInk>Owed to you</Label>
-            <Typography
-              sx={{
-                ...FIG,
-                mt: 0.9,
-                fontSize: { xs: '2rem', md: '2.6rem' },
-                fontWeight: 600,
-                letterSpacing: '-0.04em',
-                lineHeight: 1,
-                color: '#FFFFFF',
-              }}
-            >
-              {RATES.base}
-            </Typography>
-            <Typography sx={{ mt: 1, fontSize: '0.78rem', lineHeight: 1.5, color: 'rgba(255,255,255,0.56)' }}>
-              Whatever the period did
-            </Typography>
-          </Box>
-
+          <Typography sx={{ ...FIG, fontSize: '0.88rem', fontWeight: 600, color: '#FFFFFF', lineHeight: 1 }}>
+            {RATES.base}
+          </Typography>
           <Typography
             sx={{
-              fontSize: { xs: '0.98rem', md: '1.06rem' },
-              lineHeight: 1.65,
-              color: '#8A4418',
-              maxWidth: '34ch',
-              textWrap: 'pretty',
+              fontFamily: MONO,
+              fontSize: '0.56rem',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.56)',
             }}
           >
-            The floor sits <Box component="strong" sx={{ color: '#6E3410', fontWeight: 700 }}>inside</Box> the
-            target, not on top of it. A period that goes to plan pays the band,
-            and the worst period there is still pays the floor.
+            owed
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>, either way</Box>
           </Typography>
         </Box>
       </Box>
@@ -956,15 +1064,77 @@ export default function StakePage() {
         </Reveal>
 
         <Reveal delay={80}>
-          <Box sx={{ ...PANEL, p: { xs: 2.5, md: 4 }, mb: { xs: 3.5, md: 4.5 } }}>
+          <Box
+            sx={{
+              ...PANEL,
+              p: { xs: 2.5, md: 4.5 },
+              mb: { xs: 3.5, md: 4.5 },
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'minmax(0,1.1fr) minmax(0,0.9fr)' },
+              gap: { xs: 3.5, md: 6 },
+              alignItems: 'center',
+            }}
+          >
             <Scale />
+
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: { xs: '1.14rem', md: '1.3rem' },
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.3,
+                  color: 'var(--text-heading)',
+                }}
+              >
+                The floor is part of the target, not a payment on top of it.
+              </Typography>
+              <Typography
+                sx={{
+                  mt: 1.6,
+                  fontSize: { xs: '0.98rem', md: '1.02rem' },
+                  lineHeight: 1.7,
+                  color: 'var(--text-secondary)',
+                  maxWidth: '38ch',
+                  textWrap: 'pretty',
+                }}
+              >
+                {C.yield.workedNote}
+              </Typography>
+
+              {/* the dial's key, two lines, where there is room for it */}
+              <Box sx={{ mt: { xs: 2.5, md: 3.5 }, pt: { xs: 2.5, md: 3 }, borderTop: `1px solid ${RULE}`, display: 'grid', gap: 1.4 }}>
+                {[
+                  [INK, 'solid', `${RATES.base} owed, whatever the period did`],
+                  ['var(--brand-accent)', 'hatched', `${RATES.total} all in, where the book is aimed`],
+                ].map(([colour, fill, text]) => (
+                  <Box key={text} sx={{ display: 'flex', alignItems: 'center', gap: 1.4 }}>
+                    <Box
+                      aria-hidden="true"
+                      sx={{
+                        width: 26,
+                        height: 10,
+                        borderRadius: '5px',
+                        flexShrink: 0,
+                        background:
+                          fill === 'solid'
+                            ? colour
+                            : 'repeating-linear-gradient(135deg, #FF8A2B 0 4px, rgba(255,138,43,0.25) 4px 8px)',
+                      }}
+                    />
+                    <Typography sx={{ fontSize: '0.86rem', lineHeight: 1.45, color: 'var(--text-secondary)' }}>
+                      {text}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
           </Box>
         </Reveal>
 
         <Reveal delay={160}>
           <Typography
             sx={{
-              mt: { xs: 2.5, md: 3 },
               fontFamily: MONO,
               fontSize: '0.76rem',
               lineHeight: 1.8,
