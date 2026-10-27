@@ -151,11 +151,42 @@ function Mark({ name, size = 20, sx }) {
         sx={{
           fill: 'none',
           stroke: 'currentColor',
-          strokeWidth: 1.4,
+          strokeWidth: 1.5,
           strokeLinecap: 'round',
           strokeLinejoin: 'round',
         }}
       />
+    </Box>
+  );
+}
+
+/* A mark floating at 40% opacity in a corner reads as a watermark. In a
+   tinted chip it reads as a label, which is what it is. */
+function Chip({ name, tone }) {
+  const ink = tone === 'ink';
+  const accent = tone === 'accent';
+  return (
+    <Box
+      sx={{
+        width: 38,
+        height: 38,
+        flexShrink: 0,
+        borderRadius: '11px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: ink ? 'var(--brand-accent)' : accent ? '#C2541A' : 'var(--text-heading)',
+        backgroundColor: ink
+          ? 'rgba(255,102,0,0.14)'
+          : accent
+          ? 'rgba(255,102,0,0.1)'
+          : 'rgba(11,15,26,0.045)',
+        border: `1px solid ${
+          ink ? 'rgba(255,102,0,0.3)' : accent ? 'rgba(255,102,0,0.24)' : 'rgba(11,15,26,0.08)'
+        }`,
+      }}
+    >
+      <Mark name={name} size={19} />
     </Box>
   );
 }
@@ -543,59 +574,112 @@ function Scale() {
 /* The architecture                                                    */
 /* ------------------------------------------------------------------ */
 
-const FLOW_DASH = 'rgba(15,23,42,0.34)';
+const LINE = 'rgba(15,23,42,0.2)';
+const RUN = 'rgba(255,102,0,0.9)';
 
-/* The three deployment cards are separate panels in a grid of equal rows, so
-   where each branch must land is arithmetic rather than a guess: three rows
-   of height H with two gaps of G put the centres at H/2, 1.5H+G, 2.5H+2G.
-   The fan is drawn against those, which is what keeps it on the cards when
-   the cards change height. */
+/* Three rows of height H and two gaps of G put the card centres at H/2,
+   1.5H+G and 2.5H+2G. The fan column is alignSelf stretch, so its height is
+   the row's height and those three numbers are where the branches have to
+   land. Arithmetic rather than eyeballing is what keeps them on the cards
+   when the cards change height. */
 const GAP = 14;
-const H = `((100% - ${GAP * 2}px) / 3)`;
-const CENTRES = [
-  `calc(${H} * 0.5)`,
-  `calc(${H} * 1.5 + ${GAP}px)`,
-  `calc(${H} * 2.5 + ${GAP * 2}px)`,
-];
 
-const DASH_H = { borderTop: `1.5px dashed ${FLOW_DASH}`, height: 0 };
-const DASH_V = { borderLeft: `1.5px dashed ${FLOW_DASH}`, width: 0 };
-
-function Tip({ sx }) {
-  return (
-    <Box
-      aria-hidden="true"
-      sx={{
-        position: 'absolute',
-        width: 0,
-        height: 0,
-        borderTop: '4.5px solid transparent',
-        borderBottom: '4.5px solid transparent',
-        borderLeft: `7px solid ${FLOW_DASH}`,
-        ...sx,
-      }}
-    />
-  );
+/* An elbow with rounded corners: out along the middle, down or up the spine,
+   then out again. A straight run when there is no corner to turn. */
+function elbow(w, from, to) {
+  const x = w / 2;
+  const r = Math.min(9, Math.abs(to - from) / 2);
+  if (r < 1) return `M0 ${from} H${w}`;
+  const dir = to > from ? 1 : -1;
+  return [
+    `M0 ${from}`,
+    `H${x - r}`,
+    `Q${x} ${from} ${x} ${from + r * dir}`,
+    `V${to - r * dir}`,
+    `Q${x} ${to} ${x + r} ${to}`,
+    `H${w}`,
+  ].join(' ');
 }
 
-/** One node splitting into three, or three converging into one. */
+/**
+ * One node splitting into three, or three converging into one.
+ *
+ * Drawn as SVG rather than as CSS borders, for two reasons. Corners can be
+ * turned with a curve instead of a right angle, and a dash can be made to
+ * travel: the second path over each route is dashed and its offset animates,
+ * which is the stake visibly moving along the route rather than a diagram of
+ * it having moved. Held still for anyone who asked not to see motion.
+ */
 function Fan({ dir }) {
+  const ref = React.useRef(null);
+  const [h, setH] = React.useState(300);
+  const W = 64;
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const measure = () => setH(el.clientHeight || 300);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const rowH = (h - GAP * 2) / 3;
+  const centres = [rowH * 0.5, rowH * 1.5 + GAP, rowH * 2.5 + GAP * 2];
+  const mid = h / 2;
   const out = dir === 'out';
+
+  const routes = out
+    ? centres.map((c) => elbow(W, mid, c))
+    : centres.map((c) => elbow(W, c, mid));
 
   return (
     <Box
+      ref={ref}
       aria-hidden="true"
-      sx={{ display: { xs: 'none', lg: 'block' }, position: 'relative', width: 58, alignSelf: 'stretch' }}
+      sx={{ display: { xs: 'none', lg: 'block' }, position: 'relative', width: W, alignSelf: 'stretch' }}
     >
-      <Box sx={{ position: 'absolute', top: '50%', left: out ? 0 : '50%', width: '50%', ...DASH_H }} />
-      <Box sx={{ position: 'absolute', left: '50%', top: CENTRES[0], height: `calc(${H} * 2 + ${GAP * 2}px)`, ...DASH_V }} />
-      {CENTRES.map((c, i) => (
-        <React.Fragment key={i}>
-          <Box sx={{ position: 'absolute', top: c, left: out ? '50%' : 0, width: '50%', ...DASH_H }} />
-          {out && <Tip sx={{ top: `calc(${c} - 4.5px)`, right: '-1px' }} />}
-        </React.Fragment>
-      ))}
-      {!out && <Tip sx={{ top: 'calc(50% - 4.5px)', right: '-1px' }} />}
+      <Box
+        component="svg"
+        width={W}
+        height={h}
+        viewBox={`0 0 ${W} ${h}`}
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'visible',
+          '@keyframes runAlong': { to: { strokeDashoffset: -18 } },
+        }}
+      >
+        <defs>
+          <marker id={`tip-${dir}`} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill={LINE} />
+          </marker>
+        </defs>
+
+        {routes.map((d, i) => (
+          <g key={i}>
+            {/* the route */}
+            <path d={d} fill="none" stroke={LINE} strokeWidth="1.5" markerEnd={`url(#tip-${dir})`} />
+            {/* and what is moving along it */}
+            <Box
+              component="path"
+              d={d}
+              sx={{
+                fill: 'none',
+                stroke: RUN,
+                strokeWidth: 1.8,
+                strokeLinecap: 'round',
+                strokeDasharray: '5 13',
+                animation: 'runAlong 1.1s linear infinite',
+                animationDelay: `${i * 0.18}s`,
+                '@media (prefers-reduced-motion: reduce)': { animation: 'none', opacity: 0.45 },
+              }}
+            />
+          </g>
+        ))}
+      </Box>
     </Box>
   );
 }
@@ -605,22 +689,44 @@ function Down() {
   return (
     <Box
       aria-hidden="true"
-      sx={{ display: { xs: 'flex', lg: 'none' }, flexDirection: 'column', alignItems: 'center', py: 1.3 }}
+      sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', justifyContent: 'center', py: 1.2 }}
     >
-      <Box sx={{ height: 16, ...DASH_V }} />
       <Box
-        sx={{
-          width: 0,
-          height: 0,
-          borderLeft: '5px solid transparent',
-          borderRight: '5px solid transparent',
-          borderTop: `7px solid ${FLOW_DASH}`,
-        }}
-      />
+        component="svg"
+        width="12"
+        height="34"
+        viewBox="0 0 12 34"
+        /* A flex child with align-items stretch ignores the width and height
+           attributes and fills the row, which turned a 12 by 34 connector
+           into a bar the height of the gap. */
+        sx={{ width: 12, height: 34, flexShrink: 0, '@keyframes runDown': { to: { strokeDashoffset: -18 } } }}
+      >
+        <path d="M6 0 V27" fill="none" stroke={LINE} strokeWidth="1.5" />
+        <path d="M1.5 26 L6 33 L10.5 26 z" fill={LINE} />
+        <Box
+          component="path"
+          d="M6 0 V27"
+          sx={{
+            fill: 'none',
+            stroke: RUN,
+            strokeWidth: 1.8,
+            strokeLinecap: 'round',
+            strokeDasharray: '5 13',
+            animation: 'runDown 1.1s linear infinite',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none', opacity: 0.45 },
+          }}
+        />
+      </Box>
     </Box>
   );
 }
 
+/**
+ * A node on the diagram.
+ *
+ * The mark moved out of the far corner and into a chip beside the text,
+ * which is the difference between a watermark and a label.
+ */
 function Node({ tag, k, s, mark, tone, big, sx }) {
   const ink = tone === 'ink';
   const accent = tone === 'accent';
@@ -634,17 +740,21 @@ function Node({ tag, k, s, mark, tone, big, sx }) {
         ...surface,
         overflow: 'hidden',
         px: { xs: 2, md: 2.3 },
-        py: { xs: 1.8, md: 2 },
+        py: { xs: 1.9, md: 2.1 },
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        transition: 'border-color .18s ease, transform .18s ease',
-        '&:hover': { transform: 'translateY(-1px)' },
+        alignItems: 'flex-start',
+        gap: 1.8,
+        transition: 'transform .18s ease, box-shadow .18s ease',
+        '&:hover': { transform: 'translateY(-2px)' },
+        ...(ink
+          ? { boxShadow: `${surface.boxShadow}, 0 0 0 1px rgba(255,102,0,0.12)` }
+          : null),
         ...sx,
       }}
     >
-      {tag && <Label onInk={ink} sx={{ mb: 1 }}>{tag}</Label>}
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1.2 }}>
+      {mark && <Chip name={mark} tone={tone} />}
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        {tag && <Label onInk={ink} sx={{ display: 'block', mb: 0.8 }}>{tag}</Label>}
         <Typography
           sx={{
             ...(big ? FIG : null),
@@ -657,9 +767,8 @@ function Node({ tag, k, s, mark, tone, big, sx }) {
         >
           {k}
         </Typography>
-        {mark && <Mark name={mark} sx={{ color: head, opacity: ink ? 0.7 : 0.4, mt: '2px' }} />}
+        {s && <Typography sx={{ mt: 0.8, fontSize: '0.84rem', lineHeight: 1.55, color: body }}>{s}</Typography>}
       </Box>
-      {s && <Typography sx={{ mt: 0.8, fontSize: '0.84rem', lineHeight: 1.55, color: body }}>{s}</Typography>}
     </Box>
   );
 }
