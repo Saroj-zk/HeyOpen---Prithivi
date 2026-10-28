@@ -823,23 +823,33 @@ function WhiteLabel() {
           </Label>
         </Box>
 
-        {/* The buyer's chrome, and inside it the screen their customer sees. */}
-        <Box
-          sx={{
-            borderRadius: '18px',
-            border: `1px solid ${RULE}`,
-            backgroundColor: 'rgba(11,15,26,0.035)',
-            p: { xs: 1.3, md: 1.7 },
-          }}
-        >
-          <Label sx={{ display: 'block', mb: 1.1, ml: '6px' }}>{item.chrome}</Label>
+        {/* The buyer's window. The bar carries their name; the screen is ours. */}
+        <Box sx={{ ...PANEL_INK, overflow: 'hidden' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.6,
+              px: { xs: 1.8, md: 2.2 },
+              py: { xs: 1.1, md: 1.2 },
+              borderBottom: `1px solid ${RULE_ON_INK}`,
+              backgroundColor: 'rgba(255,255,255,0.045)',
+            }}
+          >
+            <Box aria-hidden="true" sx={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+              {[0, 1, 2].map((d) => (
+                <Box key={d} sx={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.22)' }} />
+              ))}
+            </Box>
+            <Label onInk sx={{ minWidth: 0 }}>{item.chrome}</Label>
+          </Box>
+
           <Box
             key={item.id}
             sx={{
-              ...PANEL_INK,
               px: { xs: 2.2, md: 3 },
-              py: { xs: 2.4, md: 2.8 },
-              minHeight: { xs: 104, md: 110 },
+              py: { xs: 2.6, md: 3 },
+              minHeight: { xs: 96, md: 104 },
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -912,6 +922,36 @@ function usd(n) {
   return `$${n.toFixed(2)}`;
 }
 
+/* On ink the rail has to come up and the thumb has to fill with the ground
+   behind it, or it reads as a hole punched in the panel. */
+const SLIDER_INK = {
+  color: 'var(--brand-accent)',
+  height: 6,
+  padding: '14px 0',
+  '& .MuiSlider-rail': { opacity: 1, backgroundColor: 'rgba(255,255,255,0.17)' },
+  '& .MuiSlider-track': { border: 'none' },
+  '& .MuiSlider-thumb': {
+    width: 20,
+    height: 20,
+    backgroundColor: INK,
+    border: '2px solid var(--brand-accent)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
+    '&:hover, &.Mui-focusVisible': { boxShadow: '0 0 0 7px rgba(255,102,0,0.2)' },
+    '&.Mui-active': { boxShadow: '0 0 0 11px rgba(255,102,0,0.24)' },
+  },
+};
+
+/* The instrument's own surface. Not a white card painted dark: a pane of
+   slightly lifted ground, held by one rim, so the figure inside it looks lit
+   rather than printed. */
+const GLASS_INK = {
+  position: 'relative',
+  borderRadius: '20px',
+  border: `1px solid ${RULE_ON_INK}`,
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 100%)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
+};
+
 const SLIDER_SX = {
   color: 'var(--brand-accent)',
   height: 6,
@@ -930,14 +970,20 @@ const SLIDER_SX = {
 };
 
 /* A label above a control, with the value it currently reads. */
-function Dial({ label, value, children }) {
+function Dial({ label, value, onInk, children }) {
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2 }}>
-        <Label>{label}</Label>
+        <Label onInk={onInk}>{label}</Label>
         <Typography
           component="span"
-          sx={{ ...FIG, fontSize: { xs: '1.02rem', md: '1.12rem' }, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}
+          sx={{
+            ...FIG,
+            fontSize: { xs: '1.02rem', md: '1.12rem' },
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            color: onInk ? '#FFFFFF' : 'var(--text-heading)',
+          }}
         >
           {value}
         </Typography>
@@ -985,24 +1031,23 @@ function seriesPath(values) {
 /**
  * What happens when GPU prices rise.
  *
- * The two lines are the argument and they are drawn in the same language the
- * compute market figure on the home page uses: slate is the price the market
- * does to you, orange is the part we do something about. No third hue is
- * introduced for the sake of a legend.
+ * This one is lit rather than printed. Three sections in a row were the same
+ * white rounded panel, and of the three this is the one that is literally a
+ * readout of a moving number, so it is the one that becomes an instrument:
+ * ink ground, one pane of lifted glass, and the two lines glowing on it.
  *
- * The orange line goes flat the moment the slate one crosses the strike.
- * That flattening is the product. A reader who drags the handle up watches
- * the gap open by itself, which is a thing no sentence does as well.
+ * The colours carry over from the compute market figure on the home page,
+ * inverted for the dark. The pale line is the price the market does to you,
+ * orange is the part we do something about, and no third hue is introduced
+ * for the sake of a legend.
  *
- * Drag it down instead and the orange line sits ABOVE the slate one, because
+ * The orange line goes flat the moment the pale one crosses the strike. That
+ * flattening is the product, and a reader who drags the handle watches the
+ * gap open by itself, which is a thing no sentence does as well.
+ *
+ * Drag it down instead and the orange line sits ABOVE the pale one, because
  * below the strike the premium is money spent for nothing. That is left in
  * deliberately. A figure that only ever flatters the hedge is a sales chart.
- *
- * Figure left, readout right. Drawn full width the chart was 470px tall on a
- * desktop, because an SVG with a viewBox grows with its column, and the
- * section came out at 1402 against a page where every other one is 900.
- * Halving the column halves the drawing and puts the two numbers next to the
- * lines they come from, which is where they were always wanted.
  */
 function Protection() {
   const [market, setMarket] = React.useState(MKT.start);
@@ -1012,25 +1057,9 @@ function Protection() {
   const now = hedged(market);
 
   return (
-    <Box sx={{ ...PANEL, px: { xs: 2, md: 3.2 }, py: { xs: 2.4, md: 2.8 } }}>
-      <Typography
-        sx={{
-          fontSize: { xs: '1.08rem', md: '1.22rem' },
-          fontWeight: 750,
-          letterSpacing: '-0.025em',
-          lineHeight: 1.25,
-          color: 'var(--text-heading)',
-        }}
-      >
-        What happens when GPU prices rise?
-      </Typography>
-      <Typography sx={{ mt: 0.7, fontSize: '0.86rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
-        One compute option, covering an equivalent number of GPU-hours. Drag the price.
-      </Typography>
-
+    <Box sx={{ ...GLASS_INK, px: { xs: 2, md: 3.2 }, py: { xs: 2.4, md: 2.6 } }}>
       <Box
         sx={{
-          mt: { xs: 2, md: 2.2 },
           display: 'flex',
           flexDirection: { xs: 'column', lg: 'row' },
           alignItems: 'stretch',
@@ -1038,10 +1067,10 @@ function Protection() {
         }}
       >
         {/* ---- the figure ---- */}
-        <Box sx={{ flex: { lg: '1 1 58%' }, minWidth: 0 }}>
-          <Dial label="Simulated market price" value={`${usd(market)}/hr`}>
+        <Box sx={{ flex: { lg: '1 1 60%' }, minWidth: 0 }}>
+          <Dial onInk label="Simulated market price" value={`${usd(market)}/hr`}>
             <Slider
-              sx={SLIDER_SX}
+              sx={SLIDER_INK}
               value={market}
               onChange={(e, v) => setMarket(v)}
               min={MKT.min}
@@ -1052,6 +1081,13 @@ function Protection() {
           </Dial>
 
           <Box component="svg" viewBox="0 6 340 114" sx={{ width: '100%', display: 'block', mt: 0.4 }}>
+            <defs>
+              <linearGradient id="hedgeGlow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="rgba(255,102,0,0.26)" />
+                <stop offset="100%" stopColor="rgba(255,102,0,0)" />
+              </linearGradient>
+            </defs>
+
             {[3, 4, 5].map((g) => (
               <line
                 key={g}
@@ -1059,7 +1095,7 @@ function Protection() {
                 y1={yOf(g)}
                 x2={PLOT.x1}
                 y2={yOf(g)}
-                stroke="rgba(15,23,42,0.08)"
+                stroke="rgba(255,255,255,0.07)"
                 strokeWidth="1"
                 vectorEffect="non-scaling-stroke"
               />
@@ -1071,16 +1107,19 @@ function Protection() {
               y1={yOf(CONTRACTED)}
               x2={PLOT.x1}
               y2={yOf(CONTRACTED)}
-              stroke="rgba(71,85,105,0.55)"
+              stroke="rgba(255,255,255,0.32)"
               strokeWidth="1.3"
               strokeDasharray="5 4"
               vectorEffect="non-scaling-stroke"
             />
 
+            {/* what the hedge is holding down, filled so it reads at a glance */}
+            <path d={`${seriesPath(hdg)} L${PLOT.x1} ${PLOT.y1} L${PLOT.x0} ${PLOT.y1} Z`} fill="url(#hedgeGlow)" />
+
             <path
               d={seriesPath(mkt)}
               fill="none"
-              stroke="#334155"
+              stroke="#94A3B8"
               strokeWidth="2"
               strokeLinejoin="round"
               strokeLinecap="round"
@@ -1096,28 +1135,27 @@ function Protection() {
               vectorEffect="non-scaling-stroke"
             />
 
-            {/* and where the reader is holding it */}
-            <circle cx={PLOT.x1} cy={yOf(market)} r="3.4" fill="#FFFFFF" stroke="#334155" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-            <circle cx={PLOT.x1} cy={yOf(now)} r="3.4" fill="#FFFFFF" stroke="var(--brand-accent)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+            <circle cx={PLOT.x1} cy={yOf(market)} r="3.4" fill={INK} stroke="#94A3B8" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+            <circle cx={PLOT.x1} cy={yOf(now)} r="3.4" fill={INK} stroke="var(--brand-accent)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Label>Earlier</Label>
-            <Label>Now</Label>
+            <Label onInk>Earlier</Label>
+            <Label onInk>Now</Label>
           </Box>
 
           <Box sx={{ mt: 1.6, display: 'flex', flexWrap: 'wrap', gap: { xs: 1.4, md: 2.2 } }}>
             {[
-              ['Market cost', '#334155', false],
+              ['Market cost', '#94A3B8', false],
               ['Hedged cost', 'var(--brand-accent)', false],
-              ['Enterprise rate', 'rgba(71,85,105,0.55)', true],
+              ['Enterprise rate', 'rgba(255,255,255,0.32)', true],
             ].map(([k, c, dash]) => (
               <Box key={k} sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
                 <Box
                   aria-hidden="true"
                   sx={{ width: '16px', height: '0px', flexShrink: 0, borderTop: `2px ${dash ? 'dashed' : 'solid'} ${c}` }}
                 />
-                <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{k}</Typography>
+                <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: 'rgba(255,255,255,0.66)' }}>{k}</Typography>
               </Box>
             ))}
           </Box>
@@ -1126,15 +1164,15 @@ function Protection() {
         {/* ---- what it costs you either way ---- */}
         <Box
           sx={{
-            flex: { lg: '1 1 42%' },
+            flex: { lg: '1 1 40%' },
             minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
-            borderLeft: { lg: `1px solid ${RULE}` },
+            borderLeft: { lg: `1px solid ${RULE_ON_INK}` },
             pl: { lg: 3.4 },
           }}
         >
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: { xs: 1.3, md: 1.5 } }}>
+          <Box sx={{ display: 'grid', gap: { xs: 1.3, md: 1.5 } }}>
             {[
               ['Without protection', usd(market), 'Market cost per hour', false],
               ['With protection', usd(now), 'Hedged cost per hour', true],
@@ -1142,27 +1180,28 @@ function Protection() {
               <Box
                 key={tag}
                 sx={{
-                  ...(lead ? ACCENT : PANEL),
-                  boxShadow: 'none',
-                  px: { xs: 1.6, md: 1.8 },
+                  borderRadius: '14px',
+                  border: `1px solid ${lead ? 'rgba(255,102,0,0.4)' : RULE_ON_INK}`,
+                  background: lead ? 'rgba(255,102,0,0.11)' : 'rgba(255,255,255,0.028)',
+                  px: { xs: 1.6, md: 1.9 },
                   py: { xs: 1.5, md: 1.7 },
                 }}
               >
-                <Label sx={{ color: lead ? '#9A3C00' : undefined }}>{tag}</Label>
+                <Label sx={{ color: lead ? '#FFB071' : 'rgba(255,255,255,0.5)' }}>{tag}</Label>
                 <Typography
                   sx={{
                     ...FIG,
                     mt: 0.7,
-                    fontSize: { xs: '1.6rem', md: '1.85rem' },
+                    fontSize: { xs: '1.7rem', md: '2rem' },
                     fontWeight: 600,
                     letterSpacing: '-0.03em',
                     lineHeight: 1,
-                    color: lead ? '#9A3C00' : 'var(--text-heading)',
+                    color: lead ? '#FF8A2B' : '#FFFFFF',
                   }}
                 >
                   {fig}
                 </Typography>
-                <Typography sx={{ mt: 0.6, fontSize: '0.8rem', lineHeight: 1.4, color: lead ? 'rgba(154,60,0,0.8)' : 'var(--text-secondary)' }}>
+                <Typography sx={{ mt: 0.6, fontSize: '0.8rem', lineHeight: 1.4, color: 'rgba(255,255,255,0.5)' }}>
                   {note}
                 </Typography>
               </Box>
@@ -1173,10 +1212,10 @@ function Protection() {
             sx={{
               mt: { xs: 1.6, md: 'auto' },
               pt: { xs: 1.5, md: 1.7 },
-              borderTop: `1px solid ${RULE}`,
-              fontSize: '0.78rem',
+              borderTop: `1px solid ${RULE_ON_INK}`,
+              fontSize: '0.76rem',
               lineHeight: 1.55,
-              color: 'var(--text-muted)',
+              color: 'rgba(255,255,255,0.44)',
             }}
           >
             Illustrative only: {usd(STRIKE)} option strike, {usd(PREMIUM)} premium per covered
@@ -1196,7 +1235,13 @@ const REV_DIAL = { min: 10000, max: 1000000, step: 10000, start: 100000 };
 const ALLOC_DIAL = { min: 40, max: 50, step: 1, start: 45 };
 
 /**
- * The two things $OPEN is for, side by side because they are two things.
+ * The two things $OPEN is for, as a sheet rather than a card.
+ *
+ * The allocation is arithmetic, so it is set out the way arithmetic is set
+ * out: ruled rows, the figures in the same column, a double rule, and a
+ * total underneath it. That is a form a reader already knows how to read,
+ * and it is the one thing on this stretch of page that could not be mistaken
+ * for either of the two sections above it.
  *
  * Left is utility and it deliberately prints no rate. Credits per staked
  * token are not settled anywhere in this repo, so the control reports the
@@ -1204,13 +1249,9 @@ const ALLOC_DIAL = { min: 40, max: 50, step: 1, start: 45 };
  * invented a credit figure would be the yield calculator again under a new
  * name.
  *
- * Right is the allocation, and it is the one place on the page where the 40
- * to 50 band is shown doing what it actually does: a share of eligible net
- * revenue, spent buying $OPEN, multiplied out in front of the reader.
- *
- * THIS CONTRADICTS THE REST OF THE PAGE, which still presents the same band
- * as a return the treasury is run to. One of the two is wrong, and until
- * that is settled this section is the conservative one.
+ * THE RIGHT HALF CONTRADICTS THE REST OF THE PAGE, which still presents the
+ * same 40 to 50 band as a return the treasury is run to. One of the two is
+ * wrong, and until that is settled this is the conservative one.
  */
 function OpenUtility() {
   const [stake, setStake] = React.useState(STAKE_DIAL.start);
@@ -1220,36 +1261,35 @@ function OpenUtility() {
   const budget = revenue * (alloc / 100);
 
   return (
-    <Box sx={{ ...PANEL, px: { xs: 2, md: 3.2 }, py: { xs: 2.4, md: 1.9 } }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1.5, mb: { xs: 1.8, md: 1.8 } }}>
-        <Typography
-          sx={{
-            flex: '1 1 auto',
-            minWidth: '150px',
-            fontSize: { xs: '1.08rem', md: '1.22rem' },
-            fontWeight: 750,
-            letterSpacing: '-0.025em',
-            lineHeight: 1.25,
-            color: 'var(--text-heading)',
-          }}
-        >
-          Explore $OPEN utility
-        </Typography>
-        <Label sx={{ ml: 'auto', flexShrink: 0, px: '11px', py: '5px', borderRadius: '999px', border: `1px solid ${RULE}`, backgroundColor: 'var(--bg-card)' }}>
-          Illustrative
-        </Label>
-      </Box>
-
+    <Box sx={{ border: `1px solid ${RULE}`, borderRadius: '18px', backgroundColor: 'var(--bg-card)', overflow: 'hidden' }}>
+      {/* the sheet's masthead */}
       <Box
         sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', lg: 'row' },
-          alignItems: 'stretch',
-          gap: { xs: 2.4, lg: 3.4 },
+          alignItems: 'center',
+          gap: 1.5,
+          px: { xs: 2, md: 3 },
+          py: { xs: 1.3, md: 1.5 },
+          borderBottom: `1px solid ${RULE}`,
+          backgroundColor: 'rgba(11,15,26,0.025)',
         }}
       >
+        <Label sx={{ color: 'var(--text-heading)' }}>Explore $OPEN utility</Label>
+        <Label sx={{ ml: 'auto' }}>Illustrative</Label>
+      </Box>
+
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' } }}>
         {/* ---- what the stake reaches ---- */}
-        <Box sx={{ flex: { lg: '1 1 44%' }, minWidth: 0 }}>
+        <Box
+          sx={{
+            flex: { lg: '1 1 40%' },
+            minWidth: 0,
+            px: { xs: 2, md: 3 },
+            py: { xs: 2, md: 2.4 },
+            borderRight: { lg: `1px solid ${RULE}` },
+            borderBottom: { xs: `1px solid ${RULE}`, lg: 'none' },
+          }}
+        >
           <Dial label="Your $OPEN stake" value={`${comma(stake)} $OPEN`}>
             <Slider
               sx={SLIDER_SX}
@@ -1276,20 +1316,11 @@ function OpenUtility() {
           </Box>
         </Box>
 
-        {/* ---- and what the business does with its own money ---- */}
-        <Box
-          sx={{
-            flex: { lg: '1 1 56%' },
-            minWidth: 0,
-            borderLeft: { lg: `1px solid ${RULE}` },
-            borderTop: { xs: `1px solid ${RULE}`, lg: 'none' },
-            pl: { lg: 3.4 },
-            pt: { xs: 2.2, lg: 0 },
-          }}
-        >
+        {/* ---- and the sum the business proposes to do ---- */}
+        <Box sx={{ flex: { lg: '1 1 60%' }, minWidth: 0, px: { xs: 2, md: 3 }, py: { xs: 2, md: 2.4 } }}>
           <Typography
             sx={{
-              fontSize: { xs: '1.04rem', md: '1.14rem' },
+              fontSize: { xs: '1.04rem', md: '1.12rem' },
               fontWeight: 750,
               letterSpacing: '-0.025em',
               lineHeight: 1.25,
@@ -1298,75 +1329,106 @@ function OpenUtility() {
           >
             Understand the {RATES.total} allocation
           </Typography>
-          <Typography sx={{ mt: 0.6, fontSize: '0.86rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-            A share of eligible net revenue, spent buying $OPEN. A proposed policy, not a staking
-            rate and not a promised return.
+          <Typography sx={{ mt: 0.5, fontSize: '0.84rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
+            A proposed policy, not a staking rate and not a promised return.
           </Typography>
 
-          <Box sx={{ mt: { xs: 1.6, md: 1.2 }, display: 'grid', gap: { xs: 1.2, md: 0.9 } }}>
-            <Dial label="Illustrative eligible net revenue" value={`$${comma(revenue)}`}>
-              <Slider
-                sx={SLIDER_SX}
-                value={revenue}
-                onChange={(e, v) => setRevenue(v)}
-                min={REV_DIAL.min}
-                max={REV_DIAL.max}
-                step={REV_DIAL.step}
-                aria-label="Illustrative eligible net revenue"
-              />
-            </Dial>
+          <Box sx={{ mt: { xs: 1.6, md: 1.8 } }}>
+            {[
+              {
+                k: 'Eligible net revenue',
+                v: `$${comma(revenue)}`,
+                slider: (
+                  <Slider
+                    sx={SLIDER_SX}
+                    value={revenue}
+                    onChange={(e, v) => setRevenue(v)}
+                    min={REV_DIAL.min}
+                    max={REV_DIAL.max}
+                    step={REV_DIAL.step}
+                    aria-label="Illustrative eligible net revenue"
+                  />
+                ),
+              },
+              {
+                k: 'Buyback allocation',
+                v: `${alloc}%`,
+                op: 'x',
+                slider: (
+                  <Slider
+                    sx={SLIDER_SX}
+                    value={alloc}
+                    onChange={(e, v) => setAlloc(v)}
+                    min={ALLOC_DIAL.min}
+                    max={ALLOC_DIAL.max}
+                    step={ALLOC_DIAL.step}
+                    aria-label="Buyback allocation percentage"
+                  />
+                ),
+              },
+            ].map((row, i) => (
+              <Box key={row.k} sx={{ pt: i ? 1.1 : 0, borderTop: i ? `1px solid ${RULE}` : 'none', mt: i ? 1.1 : 0 }}>
+                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5 }}>
+                  <Typography
+                    component="span"
+                    aria-hidden="true"
+                    sx={{ ...FIG, width: '14px', flexShrink: 0, fontSize: '0.95rem', color: 'var(--text-muted)' }}
+                  >
+                    {row.op === 'x' ? '\u00d7' : ''}
+                  </Typography>
+                  <Typography sx={{ flex: 1, minWidth: 0, fontSize: '0.92rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                    {row.k}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    sx={{ ...FIG, fontSize: { xs: '1.02rem', md: '1.1rem' }, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}
+                  >
+                    {row.v}
+                  </Typography>
+                </Box>
+                <Box sx={{ pl: { xs: 0, sm: '30px' } }}>{row.slider}</Box>
+              </Box>
+            ))}
 
-            <Dial label="Buyback allocation" value={`${alloc}%`}>
-              <Slider
-                sx={SLIDER_SX}
-                value={alloc}
-                onChange={(e, v) => setAlloc(v)}
-                min={ALLOC_DIAL.min}
-                max={ALLOC_DIAL.max}
-                step={ALLOC_DIAL.step}
-                aria-label="Buyback allocation percentage"
-              />
-            </Dial>
-          </Box>
-
-          <Box
-            sx={{
-              ...ACCENT,
-              boxShadow: 'none',
-              mt: { xs: 1.6, md: 1.4 },
-              px: { xs: 1.8, md: 2.1 },
-              py: { xs: 1.6, md: 1.4 },
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'baseline',
-              justifyContent: 'space-between',
-              gap: 1.2,
-            }}
-          >
-            <Box sx={{ minWidth: 0 }}>
-              <Label sx={{ color: '#9A3C00' }}>Illustrative buyback budget</Label>
-              <Typography sx={{ mt: 0.5, fontSize: '0.8rem', lineHeight: 1.4, color: 'rgba(154,60,0,0.8)' }}>
-                Eligible net revenue times the allocation.
-              </Typography>
-            </Box>
-            <Typography
+            {/* the total, ruled the way a total is ruled */}
+            <Box
               sx={{
-                ...FIG,
-                ml: 'auto',
-                fontSize: { xs: '1.9rem', md: '2.2rem' },
-                fontWeight: 600,
-                letterSpacing: '-0.035em',
-                lineHeight: 1,
-                color: '#9A3C00',
+                mt: 0.6,
+                pt: { xs: 1.4, md: 1.6 },
+                borderTop: '3px double rgba(11,15,26,0.2)',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: 1.5,
               }}
             >
-              ${comma(budget)}
-            </Typography>
+              <Typography
+                component="span"
+                aria-hidden="true"
+                sx={{ ...FIG, width: '14px', flexShrink: 0, fontSize: '0.95rem', color: 'var(--brand-accent)' }}
+              >
+                =
+              </Typography>
+              <Typography sx={{ flex: 1, minWidth: 0, fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-heading)' }}>
+                Illustrative buyback budget
+              </Typography>
+              <Typography
+                sx={{
+                  ...FIG,
+                  fontSize: { xs: '1.7rem', md: '2rem' },
+                  fontWeight: 600,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1,
+                  color: 'var(--brand-accent)',
+                }}
+              >
+                ${comma(budget)}
+              </Typography>
+            </Box>
           </Box>
 
-          <Typography sx={{ mt: { xs: 1.4, md: 1.2 }, fontSize: '0.78rem', lineHeight: 1.55, color: 'var(--text-muted)' }}>
-            A final policy still has to state the percentage, what counts as eligible revenue,
-            the timing, reserve treatment, and where the buybacks can be verified.
+          <Typography sx={{ mt: { xs: 1.4, md: 1.5 }, fontSize: '0.76rem', lineHeight: 1.55, color: 'var(--text-muted)' }}>
+            A final policy still has to state the percentage, what counts as eligible revenue, the
+            timing, reserve treatment, and where the buybacks can be verified.
           </Typography>
         </Box>
       </Box>
@@ -1598,14 +1660,20 @@ export default function StakePage() {
             sx={{
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 2.6, md: 5 },
-              mt: { xs: 3, md: 3 },
-              pt: { xs: 3, md: 3 },
+              gap: { xs: 2.2, md: 0 },
+              mt: { xs: 3, md: 2.5 },
+              pt: { xs: 3, md: 2.5 },
               borderTop: `1px solid ${RULE}`,
             }}
           >
-            {STACK_PROOF.map(([title, body]) => (
-              <Box key={title}>
+            {STACK_PROOF.map(([title, body], i) => (
+              <Box
+                key={title}
+                sx={{
+                  pl: { md: i === 0 ? 0 : 3.4 },
+                  borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE}` },
+                }}
+              >
                 <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
                   {title}
                 </Typography>
@@ -1638,15 +1706,18 @@ export default function StakePage() {
           the only reason that promise can be made, so it follows directly.
           Plain ground, between two tinted ones, because the figure in it is
           the loudest object on the page and does not need help. */}
-      <Section sx={{ py: { xs: 7, md: 5 } }}>
+      <Section ground="ink" sx={{ py: { xs: 7, md: 5 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 3, md: 2.5 } }}>
             <SectionHead
               tier="minor"
+              onInk
               title={
                 <>
                   <Box component="span" sx={{ display: 'block' }}>Compute prices move.</Box>
-                  <Box component="span" sx={{ display: 'block' }}>We manage the exposure.</Box>
+                  <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
+                    We manage the exposure.
+                  </Box>
                 </>
               }
               lede="GPU prices move, and a business that simply pays them cannot quote anyone a stable rate. Compute is bought and its price exposure hedged, which is what makes a contracted rate possible."
@@ -1663,18 +1734,32 @@ export default function StakePage() {
             sx={{
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 2.4, md: 5 },
-              mt: { xs: 3, md: 1.5 },
-              pt: { xs: 3, md: 1.5 },
-              borderTop: `1px solid ${RULE}`,
+              gap: { xs: 2.2, md: 0 },
+              mt: { xs: 3, md: 2 },
+              pt: { xs: 3, md: 2 },
+              borderTop: `1px solid ${RULE_ON_INK}`,
             }}
           >
-            {HEDGE_PROOF.map(([title, body]) => (
-              <Box key={title}>
-                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
-                  {title}
-                </Typography>
-                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
+            {HEDGE_PROOF.map(([title, body], i) => (
+              <Box
+                key={title}
+                sx={{
+                  pl: { md: i === 0 ? 0 : 3.4 },
+                  borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}` },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.1, mb: 0.7 }}>
+                  <Typography
+                    component="span"
+                    sx={{ ...FIG, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--brand-accent)' }}
+                  >
+                    {`0${i + 1}`}
+                  </Typography>
+                  <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
+                    {title}
+                  </Typography>
+                </Box>
+                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.6)' }}>{body}</Typography>
               </Box>
             ))}
           </Box>
@@ -1689,7 +1774,7 @@ export default function StakePage() {
               fontWeight: 700,
               letterSpacing: '-0.025em',
               lineHeight: 1.45,
-              color: 'var(--text-heading)',
+              color: '#FFFFFF',
               textWrap: 'pretty',
             }}
           >
@@ -1702,10 +1787,7 @@ export default function StakePage() {
           The close of the business block, and the only place the allocation
           band is shown doing arithmetic instead of being quoted. Tinted, to
           bookend the enterprise section at the other end. */}
-      <Section
-        ground="linear-gradient(180deg, #EFF3F7 0%, #EBF0F5 46%, #F2F5F9 100%)"
-        sx={{ py: { xs: 7, md: 5 } }}
-      >
+      <Section sx={{ py: { xs: 7, md: 5 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 3, md: 2.5 } }}>
             <SectionHead
@@ -1728,21 +1810,38 @@ export default function StakePage() {
         <Reveal delay={60}>
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 2.4, md: 5 },
-              mt: { xs: 3, md: 1.5 },
-              pt: { xs: 3, md: 1.5 },
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'flex-start',
+              gap: { xs: 2.2, md: 0 },
+              mt: { xs: 3, md: 2 },
+              pt: { xs: 3, md: 2 },
               borderTop: `1px solid ${RULE}`,
             }}
           >
-            {TOKEN_PROOF.map(([title, body]) => (
-              <Box key={title}>
-                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
-                  {title}
-                </Typography>
-                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
-              </Box>
+            {TOKEN_PROOF.map(([title, body], i) => (
+              <React.Fragment key={title}>
+                {i > 0 && (
+                  <Box
+                    aria-hidden="true"
+                    sx={{
+                      display: { xs: 'none', md: 'block' },
+                      alignSelf: 'center',
+                      width: '30px',
+                      height: '1px',
+                      flexShrink: 0,
+                      mx: 2.4,
+                      backgroundColor: 'rgba(11,15,26,0.22)',
+                    }}
+                  />
+                )}
+                <Box sx={{ flex: '1 1 200px', minWidth: 0 }}>
+                  <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
+                    {title}
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
+                </Box>
+              </React.Fragment>
             ))}
           </Box>
         </Reveal>
