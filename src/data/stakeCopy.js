@@ -258,10 +258,9 @@ export const VERSIONS = [
 
     hero: {
       eyebrow: 'Staking',
-      title: 'Gateway for unrestricted AI',
-      intro: 'Hey Open is the platform for private and uncensored AI.',
+      title: 'The Gateway for Unrestricted AI',
       lede:
-        '$OPEN is the capital asset of this platform. Stake it to earn yield, unlock the app, and mint $HEY. Revenue buys $OPEN and burns it.',
+        '$OPEN is the capital asset of Hey Open. Stake it to earn yield, unlock the app, and mint $HEY. Revenue buys $OPEN and burns it.',
     },
 
     howTitle: 'Three moves, then it works for you.',

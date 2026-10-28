@@ -137,43 +137,6 @@ const PATHS = {
   coins: 'M12.5 6.5a4.5 2.5 0 1 1-9 0 4.5 2.5 0 0 1 9 0ZM3.5 6.5v4c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4M7.5 13.3v1.2c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4c0-1-1-1.9-2.6-2.3',
 };
 
-/**
- * The token, as a mark.
- *
- * The hero is centred on one object now, so it needs one. A wordmark would
- * repeat the header two rows above it, so this is the asset itself: the
- * diamond already used for $OPEN in the two token cards, inside a struck rim.
- * No letters, because the headline underneath is doing the talking.
- */
-function CoinMark() {
-  return (
-    <Box
-      component="svg"
-      aria-hidden="true"
-      viewBox="0 0 80 80"
-      sx={{ width: { xs: 62, md: 74 }, height: { xs: 62, md: 74 }, display: 'block', mx: 'auto' }}
-    >
-      <defs>
-        <linearGradient id="coinRim" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#FFB071" />
-          <stop offset="100%" stopColor="#E85900" />
-        </linearGradient>
-      </defs>
-      <circle cx="40" cy="40" r="38" fill="none" stroke="url(#coinRim)" strokeWidth="1.5" />
-      <circle cx="40" cy="40" r="31" fill="rgba(255,102,0,0.07)" />
-      <path
-        d="M40 21 L59 40 L40 59 L21 40 Z"
-        fill="none"
-        stroke="var(--brand-accent)"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-        opacity="0.55"
-      />
-      <path d="M40 30 L50 40 L40 50 L30 40 Z" fill="var(--brand-accent)" />
-    </Box>
-  );
-}
-
 /** Market data and the contract, wherever they are least in the way. */
 function LinkChips() {
   return (
@@ -1054,17 +1017,17 @@ export default function StakePage() {
       {/* ── 1. What this is ───────────────────────────────────────── */}
       <Section sx={{ pt: { xs: 8, md: 13 }, pb: { xs: 8, md: 11 } }}>
         <Reveal>
-          <Box sx={{ maxWidth: 820, mx: 'auto', textAlign: 'center' }}>
-            <CoinMark />
-
+          <Box sx={{ maxWidth: 880, mx: 'auto', textAlign: 'center' }}>
+            {/* Sized to hold one line on a desktop. It is the page's only
+                headline and it is a name, so breaking it across two rows made
+                it read as a sentence that had run on. */}
             <Typography
               component="h1"
               sx={{
-                mt: { xs: 4, md: 5 },
-                fontSize: { xs: '2.6rem', sm: '3.4rem', md: '4.3rem' },
+                fontSize: { xs: '2.1rem', sm: '2.6rem', md: '3.1rem' },
                 fontWeight: 700,
-                letterSpacing: '-0.05em',
-                lineHeight: 1.02,
+                letterSpacing: '-0.04em',
+                lineHeight: 1.08,
                 color: 'var(--text-heading)',
                 textWrap: 'balance',
               }}
@@ -1074,21 +1037,7 @@ export default function StakePage() {
 
             <Typography
               sx={{
-                mt: { xs: 3, md: 4 },
-                fontSize: { xs: '1.05rem', md: '1.16rem' },
-                lineHeight: 1.65,
-                color: 'var(--text-secondary)',
-                maxWidth: '50ch',
-                mx: 'auto',
-                textWrap: 'pretty',
-              }}
-            >
-              {C.hero.intro}
-            </Typography>
-
-            <Typography
-              sx={{
-                mt: { xs: 2, md: 2.4 },
+                mt: { xs: 2.5, md: 3 },
                 fontSize: { xs: '1.05rem', md: '1.16rem' },
                 lineHeight: 1.65,
                 color: 'var(--text-secondary)',
