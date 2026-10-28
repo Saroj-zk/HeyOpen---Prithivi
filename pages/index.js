@@ -13,6 +13,7 @@ import ProductMatrixSection from '@/components/ProductMatrixSection';
 import BurnEnterpriseSection from '@/components/BurnEnterpriseSection';
 import ComputeMarketSection from '@/components/ComputeMarketSection';
 import PricingSection from '@/components/PricingSection';
+import HowYouPaySection from '@/components/HowYouPaySection';
 import TokenOptimizationSection from '@/components/TokenOptimizationSection';
 import EnterpriseSection from '@/components/EnterpriseSection';
 import ApiSection from '@/components/ApiSection';
@@ -39,6 +40,9 @@ export default function Home() {
             so the cost is answered while that case is still in mind rather
             than after four more sections of product. */}
         <PricingSection />
+        {/* And how you settle it, which is the question that follows the
+            price. Its own band of plain page between two tinted ones. */}
+        <HowYouPaySection />
         <SupportedModelsSection />
         <WhyAskMultipleModelsSection />
         <ProductMatrixSection />
