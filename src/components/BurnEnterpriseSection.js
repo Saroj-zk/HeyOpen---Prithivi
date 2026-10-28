@@ -143,9 +143,34 @@ const COSTS = [
   { k: 'Reserves', s: 'Held back, not spent' },
 ];
 
-const ENTERPRISE = [
-  { n: '01', k: 'Pay up front', s: 'One payment for the term' },
-  { n: '02', k: 'Reserve credits', s: 'In advance, before usage', lead: true },
+/* The credits, falling. Each pair is the x where a step begins and the
+   height the balance sits at along it, so the shape is uneven the way real
+   usage is rather than a straight line to zero. Nothing is to scale: there
+   are no figures for this and a smooth ramp would imply one. */
+const DRAW = [
+  [36, 34],
+  [77, 47],
+  [118, 68],
+  [159, 84],
+  [200, 108],
+  [241, 122],
+  [282, 142],
+];
+const FLOOR = 160;
+const END = 324;
+
+const KEY = [
+  {
+    k: 'Paid up front',
+    s: 'One payment, on day one',
+    swatch: ORANGE,
+  },
+  {
+    k: 'Credits in reserve',
+    s: 'Drawn down as the compute is used',
+    swatch: 'linear-gradient(180deg, rgba(255,102,0,0.34) 0%, rgba(255,102,0,0.06) 100%)',
+    rule: true,
+  },
 ];
 
 /* What the reduction does, in the order it does it. Cost is the only one
@@ -543,6 +568,97 @@ const Cost = React.forwardRef(function Cost(props, ref) {
   );
 });
 
+/**
+ * Enterprise money, on a timeline.
+ *
+ * The panel used to be a paragraph and two numbered lines, which is a lot of
+ * reading for a point that is entirely about *when*: the payment is one event
+ * at the start, the usage is spread across everything after it. That is a
+ * shape, so it is drawn as one.
+ *
+ * The form is the prepaid credit burn-down that billing platforms draw for
+ * exactly this, an inflow at day one and a balance that falls as usage is
+ * recognised against it. The steps are deliberately uneven, because usage is,
+ * and a smooth ramp to zero would look like a rate. There are no numbers on
+ * either axis and none are implied: the only claim is the order of events,
+ * which is the one in the headline above it.
+ */
+function Prepaid() {
+  /* The balance holds its level across a step, then drops to the next one. */
+  const steps = `${DRAW.slice(1).map(([x, y]) => `H${x} V${y}`).join(' ')} H${END}`;
+  const top = `M${DRAW[0][0]} ${DRAW[0][1]} ${steps}`;
+  const area = `M${DRAW[0][0]} ${FLOOR} V${DRAW[0][1]} ${steps} V${FLOOR} Z`;
+
+  return (
+    <Box sx={{ mt: { xs: 2.5, md: 3 } }}>
+      <Box component="svg" viewBox="0 0 340 186" sx={{ width: '100%', display: 'block' }}>
+        <defs>
+          <linearGradient id="creditFall" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255,102,0,0.3)" />
+            <stop offset="100%" stopColor="rgba(255,102,0,0.04)" />
+          </linearGradient>
+        </defs>
+
+        {/* what the credits are drawn down against */}
+        <line x1="16" y1={FLOOR} x2={END} y2={FLOOR} stroke="rgba(15,23,42,0.16)" strokeWidth="1" />
+
+        {/* one payment, at the start */}
+        <rect x="16" y={DRAW[0][1]} width="14" height={FLOOR - DRAW[0][1]} rx="4" fill={ORANGE} />
+
+        {/* and the balance it buys, coming down as the compute is used */}
+        <path d={area} fill="url(#creditFall)" />
+        <path d={top} fill="none" stroke={ORANGE} strokeOpacity="0.8" strokeWidth="1.5" strokeLinejoin="round" />
+
+        {/* the span the one payment covers */}
+        <g stroke="rgba(15,23,42,0.22)" strokeWidth="1">
+          <line x1="16" y1="170" x2="16" y2="178" />
+          <line x1="16" y1="174" x2={END} y2="174" />
+          <line x1={END} y1="170" x2={END} y2="178" />
+        </g>
+      </Box>
+
+      <Typography component="div" sx={{ ...LABEL, color: QUIET, textAlign: 'center', mt: 0.8 }}>
+        The term
+      </Typography>
+
+      <Box sx={{ mt: { xs: 2.2, md: 2.6 }, display: 'grid', gap: { xs: 1.4, md: 1.6 } }}>
+        {KEY.map((item) => (
+          <Box key={item.k} sx={{ display: 'flex', gap: 1.4 }}>
+            <Box
+              aria-hidden="true"
+              sx={{
+                width: 14,
+                height: 28,
+                mt: 0.3,
+                flexShrink: 0,
+                borderRadius: '4px',
+                background: item.swatch,
+                borderTop: item.rule ? `1.5px solid ${ORANGE}` : 'none',
+              }}
+            />
+            <Box sx={{ minWidth: 0 }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: '0.98rem', md: '1.02rem' },
+                  fontWeight: 750,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.3,
+                  color: '#0F172A',
+                }}
+              >
+                {item.k}
+              </Typography>
+              <Typography sx={{ mt: 0.3, fontSize: '0.84rem', lineHeight: 1.45, color: QUIET }}>
+                {item.s}
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 
 export default function BurnEnterpriseSection() {
@@ -704,45 +820,24 @@ export default function BurnEnterpriseSection() {
                 textWrap: 'pretty',
               }}
             >
-              Enterprise buys the term up front and holds credits in reserve. The money
-              arrives before the usage it pays for, and it is the first of the four
-              revenue lines in the funnel.
+              The term is bought in one payment and the credits sit in reserve until
+              there is compute to spend them on.
             </Typography>
 
-            <Box sx={{ mt: { xs: 2.5, md: 3 }, display: 'grid', gap: { xs: 1.4, md: 1.6 } }}>
-              {ENTERPRISE.map((item) => (
-                <Box
-                  key={item.n}
-                  sx={{
-                    display: 'flex',
-                    gap: 1.6,
-                    pl: 1.8,
-                    py: 0.4,
-                    borderLeft: `2px solid ${item.lead ? ORANGE : HAIR}`,
-                  }}
-                >
-                  <Typography component="div" sx={{ ...INDEX, mt: 0.4, color: item.lead ? ORANGE : QUIET }}>
-                    {item.n}
-                  </Typography>
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography
-                      sx={{
-                        fontSize: { xs: '0.98rem', md: '1.02rem' },
-                        fontWeight: 750,
-                        letterSpacing: '-0.02em',
-                        lineHeight: 1.3,
-                        color: '#0F172A',
-                      }}
-                    >
-                      {item.k}
-                    </Typography>
-                    <Typography sx={{ mt: 0.3, fontSize: '0.84rem', lineHeight: 1.45, color: QUIET }}>
-                      {item.s}
-                    </Typography>
-                  </Box>
-                </Box>
-              ))}
-            </Box>
+            <Prepaid />
+
+            <Typography
+              sx={{
+                mt: { xs: 2.2, md: 2.6 },
+                pt: { xs: 1.8, md: 2 },
+                borderTop: `1px solid ${HAIR}`,
+                fontSize: '0.84rem',
+                lineHeight: 1.5,
+                color: QUIET,
+              }}
+            >
+              It reaches the funnel as revenue line 01.
+            </Typography>
           </Box>
         </Box>
       </Box>
