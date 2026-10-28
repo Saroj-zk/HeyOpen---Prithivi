@@ -34,11 +34,17 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * network, equals the net, and the net is the one card tinted toward the
  * orange it feeds.
  *
- * The cost card says out loud that the operating cost is being reduced,
- * because that is the point of it, and then it says what the reader gets for
- * that, because a reader does not owe us the inference. Cost down, net up,
- * buyback up, burn up. The strip that carries it is the only tinted block
+ * The cost card states that the operating cost is reduced, and then says why
+ * that matters, because a reader does not owe us the inference. Cost down, net
+ * up, buyback up, burn up. The strip that carries it is the only tinted block
  * inside a card on the whole figure, which is the whole reason it is noticed.
+ *
+ * The voice is the condition, not the activity. "We are reducing the operating
+ * cost" put the company in the frame and asked to be taken on trust; "Reduced
+ * operating costs" states a property of the thing being described, which is
+ * what every other label on this figure does. The first person is gone from
+ * the whole section for the same reason: nothing here needs an "us" to be
+ * true, and a figure that keeps saying "we" is arguing rather than showing.
  *
  * ------------------------------------------------------------------
  * Two corrections to earlier versions of this file, both content.
@@ -124,7 +130,7 @@ const REVENUE = [
    shortest thing that is true, and flagged at the top of this file. */
 const COSTS = [
   { k: 'Inference', s: 'The compute behind every call' },
-  { k: 'Taxes', s: 'Paid where we operate' },
+  { k: 'Taxes', s: 'Due where the network runs' },
   { k: 'HEY credits', s: 'Compute already claimed' },
   { k: 'Reserves', s: 'Held back, not spent' },
 ];
@@ -423,7 +429,7 @@ const Cost = React.forwardRef(function Cost(props, ref) {
             textWrap: 'balance',
           }}
         >
-          We are reducing the operating cost.
+          Reduced operating costs
         </Typography>
       </Box>
 
@@ -474,7 +480,7 @@ const Cost = React.forwardRef(function Cost(props, ref) {
         }}
       >
         <Typography component="div" sx={{ ...LABEL, color: ORANGE, mb: 0.7 }}>
-          What that gets you
+          Why that matters
         </Typography>
         <Typography
           sx={{
@@ -486,8 +492,8 @@ const Cost = React.forwardRef(function Cost(props, ref) {
             textWrap: 'pretty',
           }}
         >
-          A lower cost leaves a bigger net, and every bit of the net buys OPEN and
-          burns it. The saving does not stop here, it carries down the funnel.
+          Lower costs leave a larger net, and the net buys OPEN and burns it. Every
+          cost taken out of this line ends up as supply gone for good.
         </Typography>
       </Box>
     </Box>
