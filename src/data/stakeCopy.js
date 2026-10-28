@@ -258,9 +258,10 @@ export const VERSIONS = [
 
     hero: {
       eyebrow: 'Staking',
-      title: '6% is the floor. We aim a long way higher.',
+      title: 'Gateway for unrestricted AI',
+      intro: 'Hey Open is the platform for private and uncensored AI.',
       lede:
-        "Stake $OPEN and the contract owes you 6%, whatever kind of year it has been. Above that we run the book toward 40% to 50%, all in. Your stake never leaves your wallet, and it mints $HEY, which pays for your compute.",
+        '$OPEN is the capital asset of this platform. Stake it to earn yield, unlock the app, and mint $HEY. Revenue buys $OPEN and burns it.',
     },
 
     howTitle: 'Three moves, then it works for you.',

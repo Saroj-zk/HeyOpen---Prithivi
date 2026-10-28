@@ -137,6 +137,79 @@ const PATHS = {
   coins: 'M12.5 6.5a4.5 2.5 0 1 1-9 0 4.5 2.5 0 0 1 9 0ZM3.5 6.5v4c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4M7.5 13.3v1.2c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4c0-1-1-1.9-2.6-2.3',
 };
 
+/**
+ * The token, as a mark.
+ *
+ * The hero is centred on one object now, so it needs one. A wordmark would
+ * repeat the header two rows above it, so this is the asset itself: the
+ * diamond already used for $OPEN in the two token cards, inside a struck rim.
+ * No letters, because the headline underneath is doing the talking.
+ */
+function CoinMark() {
+  return (
+    <Box
+      component="svg"
+      aria-hidden="true"
+      viewBox="0 0 80 80"
+      sx={{ width: { xs: 62, md: 74 }, height: { xs: 62, md: 74 }, display: 'block', mx: 'auto' }}
+    >
+      <defs>
+        <linearGradient id="coinRim" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#FFB071" />
+          <stop offset="100%" stopColor="#E85900" />
+        </linearGradient>
+      </defs>
+      <circle cx="40" cy="40" r="38" fill="none" stroke="url(#coinRim)" strokeWidth="1.5" />
+      <circle cx="40" cy="40" r="31" fill="rgba(255,102,0,0.07)" />
+      <path
+        d="M40 21 L59 40 L40 59 L21 40 Z"
+        fill="none"
+        stroke="var(--brand-accent)"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+        opacity="0.55"
+      />
+      <path d="M40 30 L50 40 L40 50 L30 40 Z" fill="var(--brand-accent)" />
+    </Box>
+  );
+}
+
+/** Market data and the contract, wherever they are least in the way. */
+function LinkChips() {
+  return (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+      {[['Market data', LINKS.marketCap], ['Contract', LINKS.explorer]].map(([label, href]) => (
+        <Box
+          key={label}
+          component="a"
+          href={href}
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '7px',
+            px: '13px',
+            py: '7px',
+            borderRadius: '999px',
+            border: `1px solid ${RULE}`,
+            backgroundColor: 'var(--bg-card)',
+            fontFamily: MONO,
+            fontSize: '0.68rem',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--text-muted)',
+            textDecoration: 'none',
+            transition: 'all .18s ease',
+            '&:hover': { color: 'var(--text-heading)', borderColor: 'rgba(255,102,0,0.45)' },
+          }}
+        >
+          {label}
+          <Box component="span" aria-hidden="true" sx={{ opacity: 0.55 }}>↗</Box>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
 function Mark({ name, size = 20, sx }) {
   return (
     <Box
@@ -972,87 +1045,79 @@ export default function StakePage() {
           maxWidth: 1500,
           height: 700,
           background:
-            'radial-gradient(ellipse 64% 56% at 70% 0%, rgba(255,102,0,0.16) 0%, rgba(255,80,0,0.04) 46%, transparent 74%)',
+            'radial-gradient(ellipse 62% 58% at 50% 0%, rgba(255,102,0,0.16) 0%, rgba(255,80,0,0.04) 46%, transparent 74%)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      {/* ── 1. The claim, and what it would pay you ───────────────── */}
-      <Section sx={{ pt: { xs: 7, md: 12 }, pb: { xs: 7, md: 10 } }}>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 0.9fr' },
-            gap: { xs: 5, md: 7 },
-            alignItems: 'center',
-          }}
-        >
-          <Reveal>
-            <Label sx={{ color: 'var(--brand-accent)' }}>{C.hero.eyebrow}</Label>
+      {/* ── 1. What this is ───────────────────────────────────────── */}
+      <Section sx={{ pt: { xs: 8, md: 13 }, pb: { xs: 8, md: 11 } }}>
+        <Reveal>
+          <Box sx={{ maxWidth: 820, mx: 'auto', textAlign: 'center' }}>
+            <CoinMark />
+
             <Typography
               component="h1"
               sx={{
-                mt: 2.5,
-                fontSize: { xs: '2.7rem', sm: '3.4rem', md: '4.2rem' },
+                mt: { xs: 4, md: 5 },
+                fontSize: { xs: '2.6rem', sm: '3.4rem', md: '4.3rem' },
                 fontWeight: 700,
                 letterSpacing: '-0.05em',
-                lineHeight: 0.98,
+                lineHeight: 1.02,
                 color: 'var(--text-heading)',
                 textWrap: 'balance',
               }}
             >
               {C.hero.title}
             </Typography>
+
             <Typography
-              sx={{ mt: 3, fontSize: { xs: '1.05rem', md: '1.14rem' }, lineHeight: 1.65, color: 'var(--text-secondary)', maxWidth: '48ch', textWrap: 'pretty' }}
+              sx={{
+                mt: { xs: 3, md: 4 },
+                fontSize: { xs: '1.05rem', md: '1.16rem' },
+                lineHeight: 1.65,
+                color: 'var(--text-secondary)',
+                maxWidth: '50ch',
+                mx: 'auto',
+                textWrap: 'pretty',
+              }}
+            >
+              {C.hero.intro}
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: { xs: 2, md: 2.4 },
+                fontSize: { xs: '1.05rem', md: '1.16rem' },
+                lineHeight: 1.65,
+                color: 'var(--text-secondary)',
+                maxWidth: '54ch',
+                mx: 'auto',
+                textWrap: 'pretty',
+              }}
             >
               {C.hero.lede}
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
-              <Button href={LINKS.stake} primary>
-                Stake $OPEN
-                <Box component="span" aria-hidden="true">→</Box>
-              </Button>
+
+            {/* Stacked rather than side by side: at this width a centred pair
+                reads as one column of choices instead of a primary and an
+                afterthought. */}
+            <Box
+              sx={{
+                mt: { xs: 4, md: 5 },
+                mx: 'auto',
+                maxWidth: 300,
+                display: 'grid',
+                gap: 1.3,
+                '& a': { width: '100%', justifyContent: 'center' },
+              }}
+            >
+              <Button href={LINKS.stake} primary>Stake $OPEN</Button>
               <Button href={LINKS.buy}>Buy $OPEN</Button>
             </Box>
-
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 3 }}>
-              {[['Market data', LINKS.marketCap], ['Contract', LINKS.explorer]].map(([label, href]) => (
-                <Box
-                  key={label}
-                  component="a"
-                  href={href}
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '7px',
-                    px: '13px',
-                    py: '7px',
-                    borderRadius: '999px',
-                    border: `1px solid ${RULE}`,
-                    backgroundColor: 'var(--bg-card)',
-                    fontFamily: MONO,
-                    fontSize: '0.68rem',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    color: 'var(--text-muted)',
-                    textDecoration: 'none',
-                    transition: 'all .18s ease',
-                    '&:hover': { color: 'var(--text-heading)', borderColor: 'rgba(255,102,0,0.45)' },
-                  }}
-                >
-                  {label}
-                  <Box component="span" aria-hidden="true" sx={{ opacity: 0.55 }}>↗</Box>
-                </Box>
-              ))}
-            </Box>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <Calculator />
-          </Reveal>
-        </Box>
+          </Box>
+        </Reveal>
       </Section>
 
       {/* ── 2. How much, and which half is owed ───────────────────── */}
@@ -1132,7 +1197,13 @@ export default function StakePage() {
           </Box>
         </Reveal>
 
-        <Reveal delay={160}>
+        <Reveal delay={140}>
+          <Box sx={{ maxWidth: 760, mx: 'auto', mb: { xs: 3.5, md: 4.5 } }}>
+            <Calculator />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={180}>
           <Typography
             sx={{
               fontFamily: MONO,
@@ -1422,8 +1493,9 @@ export default function StakePage() {
                 {C.supply.title}
               </Typography>
               <Typography sx={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{C.supply.body}</Typography>
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.6 }}>
                 <Button href="/token" small>Read the tokenomics</Button>
+                <LinkChips />
               </Box>
             </Box>
           </Box>
