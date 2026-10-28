@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
 import PaymentsRoundedIcon from '@mui/icons-material/PaymentsRounded';
+import TrendingDownRoundedIcon from '@mui/icons-material/TrendingDownRounded';
 import { useReveal, revealSx } from '@/utils/reveal';
 
 /**
@@ -24,6 +25,27 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * The taper is the argument, so the widths are deliberate rather than whatever
  * the content happens to need: every band is narrower than the one above it,
  * the orange narrower again, and the burn is the smallest thing on the page.
+ *
+ * The middle two steps are a subtraction, so they are drawn as one. Revenue
+ * comes in, the cost of running the network is taken out, and what remains is
+ * the net. An earlier version drew that as two more bands in the same shape as
+ * everything else, which hid the only arithmetic on the page inside a list of
+ * four words separated by dots. The signs are on the axis now, the costs are
+ * four named items rather than a run-on line, and the net is the one band
+ * tinted toward the orange path it feeds.
+ *
+ * The cost band says out loud that the operating cost is being reduced,
+ * because that is the point of it and a band titled only "what it costs to
+ * run" leaves the reader to infer it. The sentence is the company's own, and
+ * it is paired with the arithmetic rather than left on its own: taking cost
+ * out makes the net larger, which is true of the diagram whatever the figures
+ * turn out to be. No savings, no timeline and no percentages are claimed, and
+ * none should be added here without someone willing to stand behind them.
+ *
+ * THE FOUR COST DESCRIPTIONS NEED A CHECK. The names were supplied; the line
+ * under each one is mine, and each is a statement about where company money
+ * goes. They say as little as the layout allows and still nothing has been
+ * confirmed about reserves or how HEY credits are accounted for.
  *
  * No figures anywhere. None of these ratios are settled in the repo, and a
  * number here would read as a commitment.
@@ -65,6 +87,13 @@ const TONE = {
     label: QUIET,
     title: '#0F172A',
   },
+  net: {
+    background: 'linear-gradient(150deg, #FFF8F2 0%, #FFF1E5 58%, #FFE9D7 100%)',
+    boxShadow:
+      'inset 0 1px 0 rgba(255,255,255,0.95), 0 0 0 1px rgba(255,102,0,0.2), 0 1px 2px rgba(15,23,42,0.05), 0 18px 32px -22px rgba(232,89,0,0.38)',
+    label: '#B4531A',
+    title: '#0F172A',
+  },
   orange: {
     background: `linear-gradient(145deg, #FF8A2B 0%, ${ORANGE} 52%, #E85900 100%)`,
     boxShadow:
@@ -88,22 +117,60 @@ const REVENUE = [
   'Agents & compute marketplace',
 ];
 
-/* Listed as parts so a narrow screen breaks the line at a separator rather
-   than through the middle of "Inference costs". */
-const COSTS = ['Inference costs', 'Taxes', 'HEY credits', 'Reserves'];
+/* The names were given. The second line on each is a gloss, kept to the
+   shortest thing that is true, and flagged at the top of this file. */
+const COSTS = [
+  { k: 'Inference', s: 'The compute behind every call' },
+  { k: 'Taxes', s: 'Paid where we operate' },
+  { k: 'HEY credits', s: 'Compute already claimed' },
+  { k: 'Reserves', s: 'Held back, not spent' },
+];
 
 const ENTERPRISE = [
   { key: 'upfront', tone: 'plain', title: 'Pay up front', body: 'One payment for the term' },
   { key: 'reserve', tone: 'orange', title: 'Reserve credits', body: 'In advance, before usage' },
 ];
 
-function Arrow() {
+/**
+ * A connector, and on the two joints that matter, the operator.
+ *
+ * Putting the sign on the axis is the whole reason this reads as one
+ * subtraction rather than as four stacked announcements. It costs about thirty
+ * pixels of height at each of the two places it is used, and nowhere else.
+ */
+function Arrow({ op }) {
+  const stem = op ? { xs: 9, md: 11 } : { xs: 15, md: 17 };
+
   return (
     <Box
       aria-hidden="true"
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: { xs: 0.6, md: 0.7 } }}
     >
-      <Box sx={{ height: { xs: 15, md: 17 }, borderLeft: `1.5px dashed ${DASH}` }} />
+      <Box sx={{ height: stem, borderLeft: `1.5px dashed ${DASH}` }} />
+      {op && (
+        <>
+          <Box
+            sx={{
+              width: 30,
+              height: 30,
+              my: 0.6,
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.05rem',
+              fontWeight: 800,
+              lineHeight: 1,
+              color: '#0F172A',
+              background: TONE.plain.background,
+              boxShadow: LIFT,
+            }}
+          >
+            {op}
+          </Box>
+          <Box sx={{ height: stem, borderLeft: `1.5px dashed ${DASH}` }} />
+        </>
+      )}
       <Box
         sx={{
           width: 0,
@@ -117,8 +184,105 @@ function Arrow() {
   );
 }
 
+/** The cost of running the network, itemised, and what taking it down does. */
+function CostBand() {
+  return (
+    <Box
+      sx={{
+        width: { xs: '100%', md: '88%' },
+        mx: 'auto',
+        borderRadius: '18px',
+        px: { xs: 1.6, md: 2.6 },
+        py: { xs: 1.8, md: 2.1 },
+        background: TONE.plain.background,
+        boxShadow: LIFT,
+      }}
+    >
+      <Typography component="div" sx={{ ...LABEL, color: QUIET, textAlign: 'center' }}>
+        What it costs to run
+      </Typography>
+
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 1,
+          mt: 0.8,
+          mb: { xs: 1.8, md: 2 },
+        }}
+      >
+        <TrendingDownRoundedIcon sx={{ fontSize: '1.25rem', color: ORANGE, flexShrink: 0 }} />
+        <Typography
+          component="div"
+          sx={{
+            fontSize: { xs: '1rem', md: '1.12rem' },
+            fontWeight: 750,
+            letterSpacing: '-0.025em',
+            lineHeight: 1.3,
+            color: '#0F172A',
+            textWrap: 'balance',
+          }}
+        >
+          We are reducing the operating cost.
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' },
+          columnGap: { xs: 1.5, md: 0 },
+          rowGap: { xs: 1.6, md: 0 },
+        }}
+      >
+        {COSTS.map((cost, i) => (
+          <Box
+            key={cost.k}
+            sx={{
+              px: { md: 1.8 },
+              textAlign: 'center',
+              borderLeft: { md: i === 0 ? 'none' : '1px solid rgba(15,23,42,0.08)' },
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: { xs: '0.86rem', md: '0.92rem' },
+                fontWeight: 750,
+                letterSpacing: '-0.02em',
+                lineHeight: 1.3,
+                color: '#0F172A',
+              }}
+            >
+              {cost.k}
+            </Typography>
+            <Typography sx={{ mt: 0.4, fontSize: '0.73rem', lineHeight: 1.4, color: QUIET }}>
+              {cost.s}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+
+      <Typography
+        sx={{
+          mt: { xs: 1.8, md: 2 },
+          pt: { xs: 1.5, md: 1.7 },
+          borderTop: '1px solid rgba(15,23,42,0.07)',
+          fontSize: { xs: '0.82rem', md: '0.86rem' },
+          lineHeight: 1.55,
+          color: QUIET,
+          textAlign: 'center',
+          textWrap: 'pretty',
+        }}
+      >
+        Every cost we take out of running the network lands in the net below.
+      </Typography>
+    </Box>
+  );
+}
+
 /** One band of the funnel. */
-function Band({ width, label, tone = 'plain', icon, children }) {
+function Band({ width, label, tone = 'plain', icon, note, children }) {
   const t = TONE[tone];
 
   return (
@@ -150,6 +314,11 @@ function Band({ width, label, tone = 'plain', icon, children }) {
       >
         {children}
       </Typography>
+      {note && (
+        <Typography sx={{ mt: 0.6, fontSize: { xs: '0.78rem', md: '0.82rem' }, lineHeight: 1.45, color: t.label }}>
+          {note}
+        </Typography>
+      )}
     </Box>
   );
 }
@@ -177,8 +346,8 @@ export default function BurnEnterpriseSection() {
               textWrap: 'balance',
             }}
           >
-            Costs first.{' '}
-            <Box component="span" sx={{ color: ORANGE }}>Then buyback and burn.</Box>
+            Costs out first.{' '}
+            <Box component="span" sx={{ color: ORANGE }}>The net buys OPEN and burns it.</Box>
           </Typography>
         </Box>
 
@@ -239,34 +408,12 @@ export default function BurnEnterpriseSection() {
               ))}
             </Box>
 
-            <Arrow />
-            <Band width={{ xs: '100%', md: '80%' }} label="Taken out first">
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  columnGap: 1,
-                  rowGap: 0.2,
-                }}
-              >
-                {COSTS.map((cost, i) => (
-                  <React.Fragment key={cost}>
-                    {i > 0 && (
-                      <Box component="span" aria-hidden="true" sx={{ color: 'rgba(71,85,105,0.5)' }}>
-                        &middot;
-                      </Box>
-                    )}
-                    <Box component="span" sx={{ whiteSpace: 'nowrap' }}>{cost}</Box>
-                  </React.Fragment>
-                ))}
-              </Box>
-            </Band>
+            <Arrow op={'\u2212'} />
+            <CostBand />
 
-            <Arrow />
-            <Band width={{ xs: '90%', md: '58%' }} label="What is left">
-              Available surplus
+            <Arrow op="=" />
+            <Band width={{ xs: '92%', md: '56%' }} label="Net" tone="net" note="What the buyback runs on">
+              What is left after costs
             </Band>
 
             <Arrow />
@@ -276,7 +423,7 @@ export default function BurnEnterpriseSection() {
 
             <Arrow />
             <Band
-              width={{ xs: '78%', md: '34%' }}
+              width={{ xs: '76%', md: '32%' }}
               label="Burn"
               tone="ink"
               icon={
