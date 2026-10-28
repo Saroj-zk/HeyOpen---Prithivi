@@ -11,6 +11,7 @@ import ProductMatrixSection from '@/components/ProductMatrixSection';
    uncommenting these two lines. */
 // import TokenFlowSection from '@/components/TokenFlowSection';
 import BurnEnterpriseSection from '@/components/BurnEnterpriseSection';
+import ComputeMarketSection from '@/components/ComputeMarketSection';
 import PricingSection from '@/components/PricingSection';
 import TokenOptimizationSection from '@/components/TokenOptimizationSection';
 import EnterpriseSection from '@/components/EnterpriseSection';
@@ -45,6 +46,8 @@ export default function Home() {
         {/* What happens to the money that does get spent, and when enterprise
             pays for it. */}
         <BurnEnterpriseSection />
+        {/* Revenue line 04 above, opened up. Marked in development throughout. */}
+        <ComputeMarketSection />
         <TokenOptimizationSection />
         <ApiSection />
         <EnterpriseSection />
