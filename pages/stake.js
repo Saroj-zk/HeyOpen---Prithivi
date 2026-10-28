@@ -728,7 +728,7 @@ function WhiteLabel() {
   const item = STACK[active];
 
   return (
-    <Box sx={{ ...PANEL, p: { xs: 1.8, md: 2.8 } }}>
+    <Box>
       <Box
         role="tablist"
         aria-label="White-label products"
@@ -1031,21 +1031,18 @@ function seriesPath(values) {
 /**
  * What happens when GPU prices rise.
  *
- * This one is lit rather than printed. Three sections in a row were the same
- * white rounded panel, and of the three this is the one that is literally a
- * readout of a moving number, so it is the one that becomes an instrument:
- * ink ground, one pane of lifted glass, and the two lines glowing on it.
+ * The answer first. Two readouts across the top, the price you would pay
+ * and the price you do pay, and only then the chart that works it out. A
+ * figure that opens with its axes asks the reader to assemble the point;
+ * this one states it and then shows why.
  *
- * The colours carry over from the compute market figure on the home page,
- * inverted for the dark. The pale line is the price the market does to you,
- * orange is the part we do something about, and no third hue is introduced
- * for the sake of a legend.
+ * Lit rather than printed, because of the three sections in this block it is
+ * the one that is literally a readout of a moving number. One pane of glass
+ * on ink. The pale line is what the market does to you, orange is the part
+ * we do something about, and a wash under the orange so the gap the hedge
+ * opens reads before any of the words do.
  *
- * The orange line goes flat the moment the pale one crosses the strike. That
- * flattening is the product, and a reader who drags the handle watches the
- * gap open by itself, which is a thing no sentence does as well.
- *
- * Drag it down instead and the orange line sits ABOVE the pale one, because
+ * Drag the price down and the orange line sits ABOVE the pale one, because
  * below the strike the premium is money spent for nothing. That is left in
  * deliberately. A figure that only ever flatters the hedge is a sales chart.
  */
@@ -1057,94 +1054,124 @@ function Protection() {
   const now = hedged(market);
 
   return (
-    <Box sx={{ ...GLASS_INK, px: { xs: 2, md: 3.2 }, py: { xs: 2.4, md: 2.6 } }}>
+    <Box sx={{ ...GLASS_INK, overflow: 'hidden' }}>
+      {/* ---- the answer ---- */}
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', lg: 'row' },
-          alignItems: 'stretch',
-          gap: { xs: 2.2, lg: 3.4 },
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+          borderBottom: `1px solid ${RULE_ON_INK}`,
         }}
       >
-        {/* ---- the figure ---- */}
-        <Box sx={{ flex: { lg: '1 1 60%' }, minWidth: 0 }}>
-          <Dial onInk label="Simulated market price" value={`${usd(market)}/hr`}>
-            <Slider
-              sx={SLIDER_INK}
-              value={market}
-              onChange={(e, v) => setMarket(v)}
-              min={MKT.min}
-              max={MKT.max}
-              step={MKT.step}
-              aria-label="Simulated market price per GPU hour"
-            />
-          </Dial>
+        {[
+          ['Without protection', usd(market), 'What the market charges', false],
+          ['With protection', usd(now), 'What the hedge costs you', true],
+        ].map(([tag, fig, note, lead], i) => (
+          <Box
+            key={tag}
+            sx={{
+              px: { xs: 2.2, md: 3.2 },
+              py: { xs: 2, md: 1.8 },
+              borderLeft: { sm: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}` },
+              borderTop: { xs: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}`, sm: 'none' },
+              background: lead ? 'rgba(255,102,0,0.085)' : 'transparent',
+            }}
+          >
+            <Label sx={{ color: lead ? '#FFB071' : 'rgba(255,255,255,0.5)' }}>{tag}</Label>
+            <Typography
+              sx={{
+                ...FIG,
+                mt: 0.8,
+                fontSize: { xs: '2rem', md: '2.3rem' },
+                fontWeight: 600,
+                letterSpacing: '-0.04em',
+                lineHeight: 1,
+                color: lead ? '#FF8A2B' : '#FFFFFF',
+              }}
+            >
+              {fig}
+            </Typography>
+            <Typography sx={{ mt: 0.7, fontSize: '0.84rem', lineHeight: 1.4, color: 'rgba(255,255,255,0.5)' }}>
+              {note}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
 
-          <Box component="svg" viewBox="0 6 340 114" sx={{ width: '100%', display: 'block', mt: 0.4 }}>
-            <defs>
-              <linearGradient id="hedgeGlow" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="rgba(255,102,0,0.26)" />
-                <stop offset="100%" stopColor="rgba(255,102,0,0)" />
-              </linearGradient>
-            </defs>
+      {/* ---- and the working ---- */}
+      <Box sx={{ px: { xs: 2.2, md: 3.2 }, pt: { xs: 1.8, md: 2 }, pb: { xs: 1.6, md: 1.8 } }}>
+        <Dial onInk label="Simulated market price" value={`${usd(market)}/hr`}>
+          <Slider
+            sx={SLIDER_INK}
+            value={market}
+            onChange={(e, v) => setMarket(v)}
+            min={MKT.min}
+            max={MKT.max}
+            step={MKT.step}
+            aria-label="Simulated market price per GPU hour"
+          />
+        </Dial>
 
-            {[3, 4, 5].map((g) => (
-              <line
-                key={g}
-                x1={PLOT.x0}
-                y1={yOf(g)}
-                x2={PLOT.x1}
-                y2={yOf(g)}
-                stroke="rgba(255,255,255,0.07)"
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
+        <Box component="svg" viewBox="0 6 340 114" sx={{ width: '100%', display: 'block', mt: 0.4, height: { md: 138 } }}>
+          <defs>
+            <linearGradient id="hedgeGlow" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(255,102,0,0.28)" />
+              <stop offset="100%" stopColor="rgba(255,102,0,0)" />
+            </linearGradient>
+          </defs>
 
-            {/* the rate an enterprise is quoted, which does not move */}
+          {[3, 4, 5].map((g) => (
             <line
+              key={g}
               x1={PLOT.x0}
-              y1={yOf(CONTRACTED)}
+              y1={yOf(g)}
               x2={PLOT.x1}
-              y2={yOf(CONTRACTED)}
-              stroke="rgba(255,255,255,0.32)"
-              strokeWidth="1.3"
-              strokeDasharray="5 4"
+              y2={yOf(g)}
+              stroke="rgba(255,255,255,0.07)"
+              strokeWidth="1"
               vectorEffect="non-scaling-stroke"
             />
+          ))}
 
-            {/* what the hedge is holding down, filled so it reads at a glance */}
-            <path d={`${seriesPath(hdg)} L${PLOT.x1} ${PLOT.y1} L${PLOT.x0} ${PLOT.y1} Z`} fill="url(#hedgeGlow)" />
+          <line
+            x1={PLOT.x0}
+            y1={yOf(CONTRACTED)}
+            x2={PLOT.x1}
+            y2={yOf(CONTRACTED)}
+            stroke="rgba(255,255,255,0.32)"
+            strokeWidth="1.3"
+            strokeDasharray="5 4"
+            vectorEffect="non-scaling-stroke"
+          />
 
-            <path
-              d={seriesPath(mkt)}
-              fill="none"
-              stroke="#94A3B8"
-              strokeWidth="2"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-            />
-            <path
-              d={seriesPath(hdg)}
-              fill="none"
-              stroke="var(--brand-accent)"
-              strokeWidth="2.4"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-            />
+          <path d={`${seriesPath(hdg)} L${PLOT.x1} ${PLOT.y1} L${PLOT.x0} ${PLOT.y1} Z`} fill="url(#hedgeGlow)" />
 
-            <circle cx={PLOT.x1} cy={yOf(market)} r="3.4" fill={INK} stroke="#94A3B8" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-            <circle cx={PLOT.x1} cy={yOf(now)} r="3.4" fill={INK} stroke="var(--brand-accent)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-          </Box>
+          <path
+            d={seriesPath(mkt)}
+            fill="none"
+            stroke="#94A3B8"
+            strokeWidth="2"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            d={seriesPath(hdg)}
+            fill="none"
+            stroke="var(--brand-accent)"
+            strokeWidth="2.4"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Label onInk>Earlier</Label>
-            <Label onInk>Now</Label>
-          </Box>
+          <circle cx={PLOT.x1} cy={yOf(market)} r="3.4" fill={INK} stroke="#94A3B8" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+          <circle cx={PLOT.x1} cy={yOf(now)} r="3.4" fill={INK} stroke="var(--brand-accent)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+        </Box>
 
-          <Box sx={{ mt: 1.6, display: 'flex', flexWrap: 'wrap', gap: { xs: 1.4, md: 2.2 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Label onInk>Earlier</Label>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 1.4, md: 2.2 }, mx: 'auto' }}>
             {[
               ['Market cost', '#94A3B8', false],
               ['Hedged cost', 'var(--brand-accent)', false],
@@ -1159,71 +1186,61 @@ function Protection() {
               </Box>
             ))}
           </Box>
-        </Box>
-
-        {/* ---- what it costs you either way ---- */}
-        <Box
-          sx={{
-            flex: { lg: '1 1 40%' },
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            borderLeft: { lg: `1px solid ${RULE_ON_INK}` },
-            pl: { lg: 3.4 },
-          }}
-        >
-          <Box sx={{ display: 'grid', gap: { xs: 1.3, md: 1.5 } }}>
-            {[
-              ['Without protection', usd(market), 'Market cost per hour', false],
-              ['With protection', usd(now), 'Hedged cost per hour', true],
-            ].map(([tag, fig, note, lead]) => (
-              <Box
-                key={tag}
-                sx={{
-                  borderRadius: '14px',
-                  border: `1px solid ${lead ? 'rgba(255,102,0,0.4)' : RULE_ON_INK}`,
-                  background: lead ? 'rgba(255,102,0,0.11)' : 'rgba(255,255,255,0.028)',
-                  px: { xs: 1.6, md: 1.9 },
-                  py: { xs: 1.5, md: 1.7 },
-                }}
-              >
-                <Label sx={{ color: lead ? '#FFB071' : 'rgba(255,255,255,0.5)' }}>{tag}</Label>
-                <Typography
-                  sx={{
-                    ...FIG,
-                    mt: 0.7,
-                    fontSize: { xs: '1.7rem', md: '2rem' },
-                    fontWeight: 600,
-                    letterSpacing: '-0.03em',
-                    lineHeight: 1,
-                    color: lead ? '#FF8A2B' : '#FFFFFF',
-                  }}
-                >
-                  {fig}
-                </Typography>
-                <Typography sx={{ mt: 0.6, fontSize: '0.8rem', lineHeight: 1.4, color: 'rgba(255,255,255,0.5)' }}>
-                  {note}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-
-          <Typography
-            sx={{
-              mt: { xs: 1.6, md: 'auto' },
-              pt: { xs: 1.5, md: 1.7 },
-              borderTop: `1px solid ${RULE_ON_INK}`,
-              fontSize: '0.76rem',
-              lineHeight: 1.55,
-              color: 'rgba(255,255,255,0.44)',
-            }}
-          >
-            Illustrative only: {usd(STRIKE)} option strike, {usd(PREMIUM)} premium per covered
-            GPU-hour, matched price exposure. Actual costs and protection vary, and hedges do not
-            guarantee margins or compute availability.
-          </Typography>
+          <Label onInk>Now</Label>
         </Box>
       </Box>
+
+      {/* ---- how it is actually done, in order ---- */}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+          borderTop: `1px solid ${RULE_ON_INK}`,
+          backgroundColor: 'rgba(0,0,0,0.22)',
+        }}
+      >
+        {HEDGE_PROOF.map(([title, body], i) => (
+          <Box
+            key={title}
+            sx={{
+              px: { xs: 2.2, md: 3.2 },
+              py: { xs: 1.6, md: 1.4 },
+              borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}` },
+              borderTop: { xs: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}`, md: 'none' },
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.1 }}>
+              <Typography
+                component="span"
+                sx={{ ...FIG, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--brand-accent)' }}
+              >
+                {`0${i + 1}`}
+              </Typography>
+              <Typography sx={{ fontSize: '0.98rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
+                {title}
+              </Typography>
+            </Box>
+            <Typography sx={{ mt: 0.5, fontSize: '0.86rem', lineHeight: 1.55, color: 'rgba(255,255,255,0.58)' }}>
+              {body}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+
+      <Typography
+        sx={{
+          px: { xs: 2.2, md: 3.2 },
+          py: { xs: 1.4, md: 1.2 },
+          borderTop: `1px solid ${RULE_ON_INK}`,
+          fontSize: '0.75rem',
+          lineHeight: 1.55,
+          color: 'rgba(255,255,255,0.42)',
+        }}
+      >
+        Illustrative only: {usd(STRIKE)} option strike, {usd(PREMIUM)} premium per covered GPU-hour,
+        matched price exposure. Actual costs and protection vary, and hedges do not guarantee
+        margins or compute availability.
+      </Typography>
     </Box>
   );
 }
@@ -1235,13 +1252,17 @@ const REV_DIAL = { min: 10000, max: 1000000, step: 10000, start: 100000 };
 const ALLOC_DIAL = { min: 40, max: 50, step: 1, start: 45 };
 
 /**
- * The two things $OPEN is for, as a sheet rather than a card.
+ * The whole section as one sheet.
+ *
+ * The other two put a heading on top of a panel. This one has no heading on
+ * top of anything: the title is the sheet's masthead, the controls are its
+ * body and the chain and the ask are its footer. From across the room it is
+ * one rectangle where the others are a column of words and an object, which
+ * is the difference that was missing.
  *
  * The allocation is arithmetic, so it is set out the way arithmetic is set
- * out: ruled rows, the figures in the same column, a double rule, and a
- * total underneath it. That is a form a reader already knows how to read,
- * and it is the one thing on this stretch of page that could not be mistaken
- * for either of the two sections above it.
+ * out: ruled rows, figures in one column, operators in the gutter, a double
+ * rule and a total under it. A reader already knows how to read that form.
  *
  * Left is utility and it deliberately prints no rate. Credits per staked
  * token are not settled anywhere in this repo, so the control reports the
@@ -1261,21 +1282,48 @@ function OpenUtility() {
   const budget = revenue * (alloc / 100);
 
   return (
-    <Box sx={{ border: `1px solid ${RULE}`, borderRadius: '18px', backgroundColor: 'var(--bg-card)', overflow: 'hidden' }}>
-      {/* the sheet's masthead */}
+    <Box sx={{ border: `1px solid ${RULE}`, borderRadius: '20px', backgroundColor: 'var(--bg-card)', overflow: 'hidden' }}>
+      {/* ---- masthead: the section's heading lives here ---- */}
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
-          gap: 1.5,
-          px: { xs: 2, md: 3 },
-          py: { xs: 1.3, md: 1.5 },
+          flexWrap: 'wrap',
+          alignItems: 'flex-end',
+          gap: { xs: 1.5, md: 3 },
+          px: { xs: 2.2, md: 3.4 },
+          py: { xs: 2.4, md: 2.6 },
           borderBottom: `1px solid ${RULE}`,
-          backgroundColor: 'rgba(11,15,26,0.025)',
+          backgroundColor: 'rgba(11,15,26,0.022)',
         }}
       >
-        <Label sx={{ color: 'var(--text-heading)' }}>Explore $OPEN utility</Label>
-        <Label sx={{ ml: 'auto' }}>Illustrative</Label>
+        <Box sx={{ flex: '1 1 360px', minWidth: 0 }}>
+          <Typography
+            component="h2"
+            sx={{
+              fontSize: { xs: '1.7rem', sm: '2rem', md: '2.2rem' },
+              fontWeight: 700,
+              letterSpacing: '-0.035em',
+              lineHeight: 1.06,
+              color: 'var(--text-heading)',
+            }}
+          >
+            <Box component="span" sx={{ display: 'block' }}>A working AI economy.</Box>
+            <Box component="span" sx={{ display: 'block' }}>A role for $OPEN.</Box>
+          </Typography>
+        </Box>
+        <Typography
+          sx={{
+            flex: '1 1 320px',
+            minWidth: 0,
+            fontSize: '0.94rem',
+            lineHeight: 1.6,
+            color: 'var(--text-secondary)',
+            textWrap: 'pretty',
+          }}
+        >
+          Stake $OPEN to reach compute credits and the benefits that come with them. Behind it sits
+          the business above, and a proposed buyback and burn funded from its net revenue.
+        </Typography>
       </Box>
 
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' } }}>
@@ -1284,7 +1332,7 @@ function OpenUtility() {
           sx={{
             flex: { lg: '1 1 40%' },
             minWidth: 0,
-            px: { xs: 2, md: 3 },
+            px: { xs: 2.2, md: 3 },
             py: { xs: 2, md: 2.4 },
             borderRight: { lg: `1px solid ${RULE}` },
             borderBottom: { xs: `1px solid ${RULE}`, lg: 'none' },
@@ -1317,18 +1365,21 @@ function OpenUtility() {
         </Box>
 
         {/* ---- and the sum the business proposes to do ---- */}
-        <Box sx={{ flex: { lg: '1 1 60%' }, minWidth: 0, px: { xs: 2, md: 3 }, py: { xs: 2, md: 2.4 } }}>
-          <Typography
-            sx={{
-              fontSize: { xs: '1.04rem', md: '1.12rem' },
-              fontWeight: 750,
-              letterSpacing: '-0.025em',
-              lineHeight: 1.25,
-              color: 'var(--text-heading)',
-            }}
-          >
-            Understand the {RATES.total} allocation
-          </Typography>
+        <Box sx={{ flex: { lg: '1 1 60%' }, minWidth: 0, px: { xs: 2.2, md: 3 }, py: { xs: 2, md: 2.4 } }}>
+          <Box sx={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5 }}>
+            <Typography
+              sx={{
+                fontSize: { xs: '1.04rem', md: '1.12rem' },
+                fontWeight: 750,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.25,
+                color: 'var(--text-heading)',
+              }}
+            >
+              Understand the {RATES.total} allocation
+            </Typography>
+            <Label sx={{ ml: 'auto' }}>Illustrative</Label>
+          </Box>
           <Typography sx={{ mt: 0.5, fontSize: '0.84rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
             A proposed policy, not a staking rate and not a promised return.
           </Typography>
@@ -1390,7 +1441,6 @@ function OpenUtility() {
               </Box>
             ))}
 
-            {/* the total, ruled the way a total is ruled */}
             <Box
               sx={{
                 mt: 0.6,
@@ -1430,6 +1480,49 @@ function OpenUtility() {
             A final policy still has to state the percentage, what counts as eligible revenue, the
             timing, reserve treatment, and where the buybacks can be verified.
           </Typography>
+        </Box>
+      </Box>
+
+      {/* ---- footer: the chain, and the ask ---- */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: { xs: 2, md: 3 },
+          px: { xs: 2.2, md: 3.4 },
+          py: { xs: 2, md: 2.1 },
+          borderTop: `1px solid ${RULE}`,
+          backgroundColor: 'rgba(11,15,26,0.022)',
+        }}
+      >
+        <Box sx={{ flex: '1 1 420px', minWidth: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: { xs: 1.4, md: 0 } }}>
+          {TOKEN_PROOF.map(([title, body], i) => (
+            <React.Fragment key={title}>
+              {i > 0 && (
+                <Box
+                  aria-hidden="true"
+                  sx={{
+                    display: { xs: 'none', sm: 'block' },
+                    width: '22px',
+                    height: '1px',
+                    flexShrink: 0,
+                    mx: 1.8,
+                    backgroundColor: 'rgba(11,15,26,0.24)',
+                  }}
+                />
+              )}
+              <Box sx={{ flex: '1 1 150px', minWidth: 0 }}>
+                <Typography sx={{ fontSize: '0.94rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
+                  {title}
+                </Typography>
+                <Typography sx={{ mt: 0.3, fontSize: '0.82rem', lineHeight: 1.5, color: 'var(--text-secondary)' }}>{body}</Typography>
+              </Box>
+            </React.Fragment>
+          ))}
+        </Box>
+        <Box sx={{ ml: { md: 'auto' }, flexShrink: 0 }}>
+          <Button href={LINKS.stake} primary>Stake $OPEN</Button>
         </Box>
       </Box>
     </Box>
@@ -1621,97 +1714,109 @@ export default function StakePage() {
           The cards above name compute capital and AI infrastructure as two
           of the three places the stake is deployed. This is the demand on
           the other side of both, which is the part a staker otherwise has
-          no way to see. It sits here rather than later because it answers
-          the section it follows.
+          no way to see.
 
-          It is the one section on a ground of its own. On the page's flat
-          white everything here read as plain, and the white showcase panel
-          had nothing to sit against. The tint is the site's existing alt
-          background rather than a new colour: cool, where the page's only
-          other tint is the warm glow behind the hero, so the two cannot be
-          mistaken for each other.
+          Split, not stacked. The claim and the three things it rests on run
+          down the left and the product sits on the right at full size, so
+          this section is a column of words beside an object where the next
+          one is a column of words above an object and the one after that is
+          a single sheet. That is the difference a reader actually sees.
 
           No eyebrow, because no heading on this page has one. */}
       <Section
         ground="linear-gradient(180deg, #F2F5F9 0%, #EBF0F5 46%, #EFF3F7 100%)"
-        sx={{ py: { xs: 7, md: 10 } }}
+        sx={{ py: { xs: 7, md: 5 } }}
       >
         <Reveal>
-          <Box sx={{ mb: { xs: 3, md: 3.5 } }}>
-            <SectionHead
-              tier="minor"
-              title={
-                <>
-                  <Box component="span" sx={{ display: 'block' }}>Their brand.</Box>
-                  <Box component="span" sx={{ display: 'block' }}>Our infrastructure.</Box>
-                </>
-              }
-              lede="Hey Open powers white-label AI products for businesses. From inference APIs to complete AI applications, enterprises can launch under their own brand while we manage the infrastructure behind them."
-            />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <WhiteLabel />
-        </Reveal>
-
-        <Reveal delay={60}>
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 2.2, md: 0 },
-              mt: { xs: 3, md: 2.5 },
-              pt: { xs: 3, md: 2.5 },
-              borderTop: `1px solid ${RULE}`,
+              display: 'flex',
+              flexDirection: { xs: 'column', lg: 'row' },
+              alignItems: { lg: 'center' },
+              gap: { xs: 3.5, lg: 6 },
             }}
           >
-            {STACK_PROOF.map(([title, body], i) => (
-              <Box
-                key={title}
+            <Box sx={{ flex: { lg: '0 1 400px' }, minWidth: 0 }}>
+              <SectionHead
+                tier="minor"
+                maxWidth="100%"
+                title={
+                  <>
+                    <Box component="span" sx={{ display: 'block' }}>Their brand.</Box>
+                    <Box component="span" sx={{ display: 'block' }}>Our infrastructure.</Box>
+                  </>
+                }
+                lede="Hey Open powers white-label AI products for businesses. From inference APIs to complete applications, enterprises launch under their own brand while we run what is underneath."
+              />
+
+              <Box sx={{ mt: { xs: 2.6, md: 3 } }}>
+                {STACK_PROOF.map(([title, body], i) => (
+                  <Box
+                    key={title}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'baseline',
+                      gap: 2,
+                      pt: i ? 1.3 : 0,
+                      mt: i ? 1.3 : 0,
+                      borderTop: i ? `1px solid ${RULE}` : 'none',
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        flex: '0 0 128px',
+                        fontSize: '0.95rem',
+                        fontWeight: 700,
+                        letterSpacing: '-0.02em',
+                        color: 'var(--text-heading)',
+                      }}
+                    >
+                      {title}
+                    </Typography>
+                    <Typography sx={{ flex: 1, minWidth: 0, fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+                      {body}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+
+              <Typography
                 sx={{
-                  pl: { md: i === 0 ? 0 : 3.4 },
-                  borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE}` },
+                  mt: { xs: 2.6, md: 3 },
+                  fontSize: { xs: '1rem', md: '1.06rem' },
+                  fontWeight: 700,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.45,
+                  color: 'var(--text-heading)',
+                  textWrap: 'pretty',
                 }}
               >
-                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
-                  {title}
-                </Typography>
-                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
-              </Box>
-            ))}
-          </Box>
-        </Reveal>
+                Every deployment creates another channel for AI compute demand.
+              </Typography>
+            </Box>
 
-        <Reveal delay={60}>
-          <Typography
-            sx={{
-              mt: { xs: 2.5, md: 1.5 },
-              maxWidth: 620,
-              fontSize: { xs: '1.02rem', md: '1.12rem' },
-              fontWeight: 700,
-              letterSpacing: '-0.025em',
-              lineHeight: 1.45,
-              color: 'var(--text-heading)',
-              textWrap: 'pretty',
-            }}
-          >
-            Every deployment creates another channel for AI compute demand.
-          </Typography>
+            <Box sx={{ flex: { lg: '1 1 0' }, minWidth: 0, width: '100%' }}>
+              <WhiteLabel />
+            </Box>
+          </Box>
         </Reveal>
       </Section>
 
       {/* ── 5. How the cost of all that is held still ──────────
           The section above promises enterprises a contracted rate. This is
           the only reason that promise can be made, so it follows directly.
-          Plain ground, between two tinted ones, because the figure in it is
-          the loudest object on the page and does not need help. */}
+
+          Centred and narrow over one wide instrument, which is the opposite
+          shape to the section before it. Everything that used to sit under
+          the panel as a separate block is inside the panel now, so the
+          section is two things rather than five. */}
       <Section ground="ink" sx={{ py: { xs: 7, md: 5 } }}>
         <Reveal>
-          <Box sx={{ mb: { xs: 3, md: 2.5 } }}>
+          <Box sx={{ maxWidth: 620, mx: 'auto', textAlign: 'center', mb: { xs: 3, md: 2.4 } }}>
             <SectionHead
               tier="minor"
               onInk
+              maxWidth="100%"
               title={
                 <>
                   <Box component="span" sx={{ display: 'block' }}>Compute prices move.</Box>
@@ -1720,7 +1825,7 @@ export default function StakePage() {
                   </Box>
                 </>
               }
-              lede="GPU prices move, and a business that simply pays them cannot quote anyone a stable rate. Compute is bought and its price exposure hedged, which is what makes a contracted rate possible."
+              lede="A business that simply pays the market cannot quote anyone a stable rate. Compute is bought and its price exposure hedged, which is what makes a contracted rate possible."
             />
           </Box>
         </Reveal>
@@ -1730,46 +1835,10 @@ export default function StakePage() {
         </Reveal>
 
         <Reveal delay={60}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 2.2, md: 0 },
-              mt: { xs: 3, md: 2 },
-              pt: { xs: 3, md: 2 },
-              borderTop: `1px solid ${RULE_ON_INK}`,
-            }}
-          >
-            {HEDGE_PROOF.map(([title, body], i) => (
-              <Box
-                key={title}
-                sx={{
-                  pl: { md: i === 0 ? 0 : 3.4 },
-                  borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}` },
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.1, mb: 0.7 }}>
-                  <Typography
-                    component="span"
-                    sx={{ ...FIG, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--brand-accent)' }}
-                  >
-                    {`0${i + 1}`}
-                  </Typography>
-                  <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
-                    {title}
-                  </Typography>
-                </Box>
-                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.6)' }}>{body}</Typography>
-              </Box>
-            ))}
-          </Box>
-        </Reveal>
-
-        <Reveal delay={60}>
           <Typography
             sx={{
               mt: { xs: 2.5, md: 1.5 },
-              maxWidth: 620,
+              textAlign: 'center',
               fontSize: { xs: '1.02rem', md: '1.12rem' },
               fontWeight: 700,
               letterSpacing: '-0.025em',
@@ -1785,84 +1854,16 @@ export default function StakePage() {
 
       {/* ── 6. And what any of it has to do with the token ──────
           The close of the business block, and the only place the allocation
-          band is shown doing arithmetic instead of being quoted. Tinted, to
-          bookend the enterprise section at the other end. */}
+          band is shown doing arithmetic instead of being quoted.
+
+          One object, nothing stacked. The heading is the sheet's masthead
+          and the chain and the ask are its footer, so where the two sections
+          above are words-beside-a-thing and words-above-a-thing, this is a
+          single rectangle. Plain ground, because the sheet is the only thing
+          on it. */}
       <Section sx={{ py: { xs: 7, md: 5 } }}>
         <Reveal>
-          <Box sx={{ mb: { xs: 3, md: 2.5 } }}>
-            <SectionHead
-              tier="minor"
-              title={
-                <>
-                  <Box component="span" sx={{ display: 'block' }}>A working AI economy.</Box>
-                  <Box component="span" sx={{ display: 'block' }}>A role for $OPEN.</Box>
-                </>
-              }
-              lede="Stake $OPEN to reach compute credits and the benefits that come with them. Behind it sits the business above, and a proposed buyback and burn funded from its net revenue."
-            />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
           <OpenUtility />
-        </Reveal>
-
-        <Reveal delay={60}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start',
-              gap: { xs: 2.2, md: 0 },
-              mt: { xs: 3, md: 2 },
-              pt: { xs: 3, md: 2 },
-              borderTop: `1px solid ${RULE}`,
-            }}
-          >
-            {TOKEN_PROOF.map(([title, body], i) => (
-              <React.Fragment key={title}>
-                {i > 0 && (
-                  <Box
-                    aria-hidden="true"
-                    sx={{
-                      display: { xs: 'none', md: 'block' },
-                      alignSelf: 'center',
-                      width: '30px',
-                      height: '1px',
-                      flexShrink: 0,
-                      mx: 2.4,
-                      backgroundColor: 'rgba(11,15,26,0.22)',
-                    }}
-                  />
-                )}
-                <Box sx={{ flex: '1 1 200px', minWidth: 0 }}>
-                  <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
-                    {title}
-                  </Typography>
-                  <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
-                </Box>
-              </React.Fragment>
-            ))}
-          </Box>
-        </Reveal>
-
-        <Reveal delay={60}>
-          <Box sx={{ mt: { xs: 2.5, md: 1.5 }, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2 }}>
-            <Typography
-              sx={{
-                flex: '1 1 320px',
-                fontSize: { xs: '1.02rem', md: '1.12rem' },
-                fontWeight: 700,
-                letterSpacing: '-0.025em',
-                lineHeight: 1.45,
-                color: 'var(--text-heading)',
-                textWrap: 'pretty',
-              }}
-            >
-              Defined utility. Transparent economics. Verifiable activity.
-            </Typography>
-            <Button href={LINKS.stake} primary>Stake $OPEN</Button>
-          </Box>
         </Reveal>
       </Section>
 
