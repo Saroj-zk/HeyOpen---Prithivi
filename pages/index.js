@@ -11,7 +11,7 @@ import ProductMatrixSection from '@/components/ProductMatrixSection';
    uncommenting these two lines. */
 // import TokenFlowSection from '@/components/TokenFlowSection';
 import BurnEnterpriseSection from '@/components/BurnEnterpriseSection';
-import ComputeMarketSection from '@/components/ComputeMarketSection';
+// import ComputeMarketSection from '@/components/ComputeMarketSection';
 import PricingSection from '@/components/PricingSection';
 import HowYouPaySection from '@/components/HowYouPaySection';
 import TokenOptimizationSection from '@/components/TokenOptimizationSection';
@@ -50,8 +50,10 @@ export default function Home() {
         {/* What happens to the money that does get spent, and when enterprise
             pays for it. */}
         <BurnEnterpriseSection />
-        {/* Revenue line 04 above, opened up. Marked in development throughout. */}
-        <ComputeMarketSection />
+        {/* Hidden on request. The component is untouched, so putting it back
+            is uncommenting this line and its import. It opened up revenue line
+            04 of the funnel above and was marked in development throughout. */}
+        {/* <ComputeMarketSection /> */}
         <TokenOptimizationSection />
         <ApiSection />
         <EnterpriseSection />
