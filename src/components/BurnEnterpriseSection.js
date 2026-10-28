@@ -3,7 +3,8 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
-import TrendingDownRoundedIcon from '@mui/icons-material/TrendingDownRounded';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
+import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import { useReveal, revealSx } from '@/utils/reveal';
 
 /**
@@ -34,10 +35,17 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * network, equals the net, and the net is the one card tinted toward the
  * orange it feeds.
  *
- * The cost card states that the operating cost is reduced, and then says why
- * that matters, because a reader does not owe us the inference. Cost down, net
- * up, buyback up, burn up. The strip that carries it is the only tinted block
- * inside a card on the whole figure, which is the whole reason it is noticed.
+ * The cost card states that the operating cost is reduced, and then shows the
+ * knock-on instead of describing it. Two sentences about larger nets and
+ * supply gone for good became three readings, cost down, net up, OPEN burned
+ * up, which is the same argument at a glance and about a fifth of the words.
+ * It is the only tinted block inside a card on the whole figure, which is the
+ * whole reason it gets noticed.
+ *
+ * The flow now ends where it actually ends. Buying happens on the open market
+ * and burning leaves a supply that only moves one way, both of which the
+ * tokenomics copy elsewhere on the site already says. A funnel that stopped at
+ * the act of burning left the reader to work out the consequence.
  *
  * The voice is the condition, not the activity. "We are reducing the operating
  * cost" put the company in the frame and asked to be taken on trust; "Reduced
@@ -138,6 +146,14 @@ const COSTS = [
 const ENTERPRISE = [
   { n: '01', k: 'Pay up front', s: 'One payment for the term' },
   { n: '02', k: 'Reserve credits', s: 'In advance, before usage', lead: true },
+];
+
+/* What the reduction does, in the order it does it. Cost is the only one
+   that goes down, and the other two go up because of it. */
+const CHAIN = [
+  { dir: 'down', k: 'Cost' },
+  { dir: 'up', k: 'Net' },
+  { dir: 'up', k: 'OPEN burned' },
 ];
 
 const INDEX = {
@@ -404,34 +420,25 @@ const Cost = React.forwardRef(function Cost(props, ref) {
       }}
     >
       <Typography component="div" sx={{ ...LABEL, color: QUIET, textAlign: 'center' }}>
-        What it costs to run
+        Taken out of revenue
       </Typography>
 
-      <Box
+      <Typography
+        component="div"
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 1,
           mt: 0.8,
           mb: { xs: 1.8, md: 2 },
+          fontSize: { xs: '1rem', md: '1.15rem' },
+          fontWeight: 750,
+          letterSpacing: '-0.025em',
+          lineHeight: 1.3,
+          textAlign: 'center',
+          color: '#0F172A',
+          textWrap: 'balance',
         }}
       >
-        <TrendingDownRoundedIcon sx={{ fontSize: '1.25rem', color: ORANGE, flexShrink: 0 }} />
-        <Typography
-          component="div"
-          sx={{
-            fontSize: { xs: '1rem', md: '1.12rem' },
-            fontWeight: 750,
-            letterSpacing: '-0.025em',
-            lineHeight: 1.3,
-            color: '#0F172A',
-            textWrap: 'balance',
-          }}
-        >
-          Reduced operating costs
-        </Typography>
-      </Box>
+        Reduced operating costs
+      </Typography>
 
       <Box
         sx={{
@@ -474,27 +481,63 @@ const Cost = React.forwardRef(function Cost(props, ref) {
           borderRadius: '12px',
           border: '1px solid rgba(255,102,0,0.18)',
           background: 'rgba(255,102,0,0.055)',
-          px: { xs: 1.6, md: 2.2 },
-          py: { xs: 1.3, md: 1.5 },
-          textAlign: 'center',
+          px: { xs: 1.4, md: 2.2 },
+          py: { xs: 1.2, md: 1.4 },
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: { xs: 0.7, md: 1.6 },
         }}
       >
-        <Typography component="div" sx={{ ...LABEL, color: ORANGE, mb: 0.7 }}>
-          Why that matters
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: { xs: '0.88rem', md: '0.94rem' },
-            fontWeight: 600,
-            lineHeight: 1.55,
-            letterSpacing: '-0.01em',
-            color: '#0F172A',
-            textWrap: 'pretty',
-          }}
-        >
-          Lower costs leave a larger net, and the net buys OPEN and burns it. Every
-          cost taken out of this line ends up as supply gone for good.
-        </Typography>
+        {CHAIN.map((step, i) => (
+          <React.Fragment key={step.k}>
+            {i > 0 && (
+              <Box
+                aria-hidden="true"
+                sx={{
+                  width: { xs: 10, md: 28 },
+                  height: '1px',
+                  flexShrink: 0,
+                  backgroundColor: 'rgba(255,102,0,0.4)',
+                }}
+              />
+            )}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.7, md: 0.9 } }}>
+              <Box
+                sx={{
+                  width: { xs: 20, md: 24 },
+                  height: { xs: 20, md: 24 },
+                  flexShrink: 0,
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: '#FFFFFF',
+                  border: '1px solid rgba(255,102,0,0.32)',
+                }}
+              >
+                {step.dir === 'down' ? (
+                  <ArrowDownwardRoundedIcon sx={{ fontSize: { xs: '0.78rem', md: '0.9rem' }, color: ORANGE }} />
+                ) : (
+                  <ArrowUpwardRoundedIcon sx={{ fontSize: { xs: '0.78rem', md: '0.9rem' }, color: ORANGE }} />
+                )}
+              </Box>
+              <Typography
+                sx={{
+                  fontSize: { xs: '0.78rem', md: '0.9rem' },
+                  fontWeight: 750,
+                  letterSpacing: '-0.015em',
+                  lineHeight: 1.2,
+                  whiteSpace: 'nowrap',
+                  color: '#0F172A',
+                }}
+              >
+                {step.k}
+              </Typography>
+            </Box>
+          </React.Fragment>
+        ))}
       </Box>
     </Box>
   );
@@ -590,22 +633,29 @@ export default function BurnEnterpriseSection() {
                   width={{ xs: '92%', md: '56%' }}
                   label="Net"
                   tone="net"
-                  note="What the buyback runs on"
+                  note="All of it goes to the buyback"
                 >
-                  What is left after costs
+                  Revenue after costs
                 </Stage>
 
                 <Joint />
-                <Stage ref={setStage(3)} width={{ xs: '80%', md: '42%' }} label="Buyback" tone="orange">
+                <Stage
+                  ref={setStage(3)}
+                  width={{ xs: '82%', md: '44%' }}
+                  label="Buyback"
+                  tone="orange"
+                  note="On the open market"
+                >
                   Buy OPEN
                 </Stage>
 
                 <Joint />
                 <Stage
                   ref={setStage(4)}
-                  width={{ xs: '76%', md: '32%' }}
+                  width={{ xs: '80%', md: '38%' }}
                   label="Burn"
                   tone="ink"
+                  note="Supply has one direction"
                   icon={
                     <LocalFireDepartmentRoundedIcon
                       sx={{ fontSize: '1.2rem', color: ORANGE, display: 'block', mx: 'auto', mb: 0.4 }}
