@@ -11,6 +11,20 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * Where the money goes, and when enterprise pays for it.
  *
  * ------------------------------------------------------------------
+ * The heading is the reader's money, not the company's accounting.
+ *
+ * "Costs out first. The net buys $OPEN and burns it." is a true sentence
+ * written from inside the business, and it asks a reader to care about a line
+ * item before telling them why. "Your bill runs the network. The rest burns
+ * $OPEN." is the same two facts in the same order, except the subject is the
+ * thing the reader actually did, which is pay. The eyebrow does the same work:
+ * where your money goes, rather than the names of two sections.
+ *
+ * It stays accurate. The first clause is the whole cost card, the second is
+ * everything below the equals sign, and neither says a dollar is burned,
+ * because a dollar is not: what is left after costs is.
+ *
+ * ------------------------------------------------------------------
  * The funnel is drawn now, not implied.
  *
  * Every version before this was a stack of rounded white cards that got
@@ -672,7 +686,7 @@ export default function BurnEnterpriseSection() {
         {/* ---- heading ---- */}
         <Box ref={headRef} sx={{ maxWidth: 820, mb: { xs: 3.5, md: 4 }, ...revealSx(headShown) }}>
           <Typography sx={{ ...LABEL, fontSize: '0.75rem', letterSpacing: '0.1em', color: ORANGE, mb: 1.8 }}>
-            Burn &amp; enterprise
+            Where your money goes
           </Typography>
           <Typography
             variant="h3"
@@ -685,8 +699,8 @@ export default function BurnEnterpriseSection() {
               textWrap: 'balance',
             }}
           >
-            Costs out first.{' '}
-            <Box component="span" sx={{ color: ORANGE }}>The net buys $OPEN and burns it.</Box>
+            Your bill runs the network.{' '}
+            <Box component="span" sx={{ color: ORANGE }}>The rest burns $OPEN.</Box>
           </Typography>
         </Box>
 
