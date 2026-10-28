@@ -11,18 +11,20 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * Where the money goes, and when enterprise pays for it.
  *
  * ------------------------------------------------------------------
- * The heading is the reader's money, not the company's accounting.
+ * The heading is the reader, not the company's accounting.
  *
- * "Costs out first. The net buys $OPEN and burns it." is a true sentence
- * written from inside the business, and it asks a reader to care about a line
- * item before telling them why. "Your bill runs the network. The rest burns
- * $OPEN." is the same two facts in the same order, except the subject is the
- * thing the reader actually did, which is pay. The eyebrow does the same work:
- * where your money goes, rather than the names of two sections.
+ * "Costs out first. The net buys $OPEN and burns it." was a true sentence
+ * written from inside the business, opening on a line item and a balance sheet
+ * term. Five words do the same job: you use AI, $OPEN burns. Subject is the
+ * reader, verb is the thing they do, and the consequence is the only other
+ * word in the sentence. The eyebrow carries the frame, where your money goes,
+ * rather than the names of two sections.
  *
- * It stays accurate. The first clause is the whole cost card, the second is
- * everything below the equals sign, and neither says a dollar is burned,
- * because a dollar is not: what is left after costs is.
+ * It compresses, and the figure under it is what makes that safe. A headline
+ * cannot fit "after inference, tax, credits and reserves", so it does not try;
+ * the minus sign, the cost card and the equals sign are three inches below it
+ * and say exactly that. Nothing above the figure should ever claim a burn
+ * happens before those come out.
  *
  * ------------------------------------------------------------------
  * The funnel is drawn now, not implied.
@@ -699,8 +701,8 @@ export default function BurnEnterpriseSection() {
               textWrap: 'balance',
             }}
           >
-            Your bill runs the network.{' '}
-            <Box component="span" sx={{ color: ORANGE }}>The rest burns $OPEN.</Box>
+            You use AI.{' '}
+            <Box component="span" sx={{ color: ORANGE }}>$OPEN burns.</Box>
           </Typography>
         </Box>
 
