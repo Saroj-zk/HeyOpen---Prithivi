@@ -25,6 +25,7 @@ export default function PricingSection() {
      ancestor would cut it off from what it blends against. */
   const [leftRef, leftShown] = useReveal();
   const [rightRef, rightShown] = useReveal();
+  const [payRef, payShown] = useReveal();
 
   const [clipRef, clipInView] = useInView('1000px');
   const clipVideoRef = React.useRef(null);
@@ -161,70 +162,6 @@ export default function PricingSection() {
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>uncensored</Box>.
           </Typography>
 
-          {/* How you settle it.
-
-              This has been in two wrong places already. It had a section of
-              its own below, which was a panel's worth of furniture for a
-              reassurance; then it was a grey line at the very foot of this
-              one, which nobody reaches. Position is the cheapest prominence
-              there is, so it sits here instead: the sentence after the one
-              that says what it costs, which is exactly when a reader wants
-              it.
-
-              One tinted rule and one line of type, and no more than that. It
-              does not need a card, an icon or a figure to be read; it needed
-              to be where the eye already was. The stake half carries the
-              accent because it is the half nobody expects.
-
-              The hedge sits outside the band, small, because it qualifies
-              the claim rather than sharing its weight. IT HAS NOT BEEN
-              REVIEWED. No rate appears: what a stake earns is not settled in
-              this repo and a figure here would read as a promise. Nothing is
-              said about chains, custody or lock-up, because none of that was
-              given. */}
-          <Box
-            sx={{
-              mt: { xs: 3, md: 3.5 },
-              mx: 'auto',
-              maxWidth: 680,
-              px: { xs: 2.2, md: 3 },
-              py: { xs: 1.6, md: 1.9 },
-              borderRadius: '16px',
-              border: '1px solid rgba(255,102,0,0.24)',
-              backgroundColor: isDark ? 'rgba(255,102,0,0.09)' : 'rgba(255,102,0,0.06)',
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: { xs: '0.98rem', md: '1.08rem' },
-                fontWeight: 600,
-                lineHeight: 1.6,
-                letterSpacing: '-0.01em',
-                color: primaryText,
-                textWrap: 'balance',
-              }}
-            >
-              Pay by card or crypto. Or{' '}
-              <Box component="span" sx={{ color: '#ff6600', fontWeight: 800 }}>
-                stake USDC, ETH or BTC
-              </Box>{' '}
-              and let the yield cover your credits.
-            </Typography>
-          </Box>
-
-          <Typography
-            sx={{
-              mt: 1.3,
-              mx: 'auto',
-              maxWidth: 680,
-              fontSize: '0.75rem',
-              lineHeight: 1.6,
-              color: 'var(--text-muted)',
-            }}
-          >
-            What a stake earns moves with the market. Rates are not fixed and nothing here is a
-            guaranteed return.
-          </Typography>
         </Box>
 
         {/* COMPARISON LAYOUT (Flex Node Graph) */}
@@ -557,6 +494,78 @@ export default function PricingSection() {
           }}>
             Compare all tiers
           </Button>
+        </Box>
+
+        {/* How you settle it.
+
+            This has moved three times. A section of its own was a panel's
+            worth of furniture for a reassurance. A grey line at the foot of
+            this one was invisible. A tinted band under the price was seen,
+            but it shouted, and it sat in the middle of the one paragraph on
+            this page that is already carrying four highlighted figures.
+
+            A card at the foot does both jobs. It has the mass to be noticed
+            where a line had none, and it is in the same clothes as every
+            other card in this section, so it reads as part of the page
+            rather than as a notice stapled to it. One accent, on the half
+            nobody expects.
+
+            The hedge is inside the card and small, because it qualifies the
+            claim rather than sharing its weight. IT HAS NOT BEEN REVIEWED.
+            No rate appears: what a stake earns is not settled in this repo
+            and a figure here would read as a promise. Nothing is said about
+            chains, custody or lock-up, because none of that was given. */}
+        <Box
+          ref={payRef}
+          sx={{
+            maxWidth: 760,
+            mx: 'auto',
+            mt: { xs: 6, md: 8 },
+            borderRadius: '20px',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.08)'}`,
+            background: isDark ? 'rgba(255,255,255,0.03)' : '#FFFFFF',
+            boxShadow: isDark
+              ? 'none'
+              : '0 1px 2px rgba(15,23,42,0.04), 0 20px 40px -32px rgba(15,23,42,0.18)',
+            px: { xs: 2.6, md: 4 },
+            py: { xs: 2.8, md: 3.2 },
+            ...revealSx(payShown, 80),
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '0.68rem',
+              fontWeight: 800,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: secondaryText,
+              mb: 1.3,
+            }}
+          >
+            How you pay
+          </Typography>
+
+          <Typography
+            sx={{
+              fontSize: { xs: '1.02rem', md: '1.14rem' },
+              fontWeight: 650,
+              lineHeight: 1.55,
+              letterSpacing: '-0.015em',
+              color: primaryText,
+              textWrap: 'pretty',
+            }}
+          >
+            Pay by card or crypto. Or stake{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 800 }}>
+              USDC, ETH or BTC
+            </Box>{' '}
+            and let the yield cover your credits.
+          </Typography>
+
+          <Typography sx={{ mt: 1.4, fontSize: '0.76rem', lineHeight: 1.6, color: 'var(--text-muted)' }}>
+            What a stake earns moves with the market. Rates are not fixed and nothing here is a
+            guaranteed return.
+          </Typography>
         </Box>
 
       </Container>
