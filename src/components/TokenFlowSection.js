@@ -21,21 +21,21 @@ import { ORANGE, DASH_C, LABEL, CLEAR, AMBER, SMOKE } from '@/components/ui/glas
  */
 
 const NODES = [
-  { tone: 'amber', big: 'OPEN', title: 'Stake OPEN', sub: 'Lock it as collateral', link: 'mint' },
-  { tone: 'clear', big: 'HEY', title: 'Mint HEY', sub: 'Against the stake', link: 'stake' },
-  { tone: 'smoke', big: '$1', title: 'Earn credits', sub: 'Per staked HEY, every month' },
+  { tone: 'amber', big: '$OPEN', title: 'Stake $OPEN', sub: 'Lock it as collateral', link: 'mint' },
+  { tone: 'clear', big: '$HEY', title: 'Mint $HEY', sub: 'Against the stake', link: 'stake' },
+  { tone: 'smoke', big: '$1', title: 'Earn credits', sub: 'Per staked $HEY, every month' },
 ];
 
 const SUPPLY = [
-  { k: '1B', s: 'OPEN max supply' },
-  { k: '2.1M', s: 'HEY target supply' },
-  { k: '70M', s: 'OPEN locked at target' },
+  { k: '1B', s: '$OPEN max supply' },
+  { k: '2.1M', s: '$HEY target supply' },
+  { k: '70M', s: '$OPEN locked at target' },
 ];
 
 const PERKS = [
-  { big: '40%', unit: 'APY', s: 'Stake OPEN for 6 months', note: 'Compute-market rewards', Icon: ShowChartRoundedIcon },
+  { big: '40%', unit: 'APY', s: 'Stake $OPEN for 6 months', note: 'Compute-market rewards', Icon: ShowChartRoundedIcon },
   { big: '40%', unit: 'APY', s: 'Run proof of inference quality', note: 'Rewards for 6 months', Icon: VerifiedOutlinedIcon },
-  { big: '1,000', unit: 'OPEN', s: 'Unlock HeyChat Pro', note: 'Free uncensored models', Icon: ChatBubbleOutlineRoundedIcon },
+  { big: '1,000', unit: '$OPEN', s: 'Unlock HeyChat Pro', note: 'Free uncensored models', Icon: ChatBubbleOutlineRoundedIcon },
   { big: 'YT-AI', unit: '', s: 'Stake ETH, BTC or bStocks', note: 'Yield paid as AI credits', Icon: SavingsOutlinedIcon },
 ];
 
@@ -97,7 +97,7 @@ export default function TokenFlowSection() {
             variant="h3"
             sx={{ fontSize: { xs: '2.1rem', md: '3rem' }, fontWeight: 700, color: 'var(--text-primary)', mb: 2, letterSpacing: '-0.03em', lineHeight: 1.1, textWrap: 'balance' }}
           >
-            Stake OPEN. Mint HEY.{' '}
+            Stake $OPEN. Mint $HEY.{' '}
             <Box component="span" sx={{ color: ORANGE }}>Get AI credits monthly.</Box>
           </Typography>
         </Box>

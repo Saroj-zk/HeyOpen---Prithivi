@@ -452,7 +452,7 @@ function Calculator() {
           min={STAKE_SLIDER.min}
           max={STAKE_SLIDER.max}
           step={STAKE_SLIDER.step}
-          aria-label="Amount of OPEN staked"
+          aria-label="Amount of $OPEN staked"
           onChange={(e, v) => setStake(v)}
           valueLabelDisplay="off"
         />

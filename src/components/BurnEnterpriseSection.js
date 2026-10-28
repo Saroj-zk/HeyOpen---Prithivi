@@ -139,7 +139,7 @@ const REVENUE = [
 const COSTS = [
   { k: 'Inference', s: 'The compute behind every call' },
   { k: 'Taxes', s: 'Due where the network runs' },
-  { k: 'HEY credits', s: 'Compute already claimed' },
+  { k: '$HEY credits', s: 'Compute already claimed' },
   { k: 'Reserves', s: 'Held back, not spent' },
 ];
 
@@ -178,7 +178,7 @@ const KEY = [
 const CHAIN = [
   { dir: 'down', k: 'Cost' },
   { dir: 'up', k: 'Net' },
-  { dir: 'up', k: 'OPEN burned' },
+  { dir: 'up', k: '$OPEN burned' },
 ];
 
 const INDEX = {
@@ -686,7 +686,7 @@ export default function BurnEnterpriseSection() {
             }}
           >
             Costs out first.{' '}
-            <Box component="span" sx={{ color: ORANGE }}>The net buys OPEN and burns it.</Box>
+            <Box component="span" sx={{ color: ORANGE }}>The net buys $OPEN and burns it.</Box>
           </Typography>
         </Box>
 
@@ -762,7 +762,7 @@ export default function BurnEnterpriseSection() {
                   tone="orange"
                   note="On the open market"
                 >
-                  Buy OPEN
+                  Buy $OPEN
                 </Stage>
 
                 <Joint />
@@ -778,7 +778,7 @@ export default function BurnEnterpriseSection() {
                     />
                   }
                 >
-                  OPEN, gone for good
+                  $OPEN, gone for good
                 </Stage>
               </Box>
             </Box>
