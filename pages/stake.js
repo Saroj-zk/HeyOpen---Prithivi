@@ -703,7 +703,57 @@ export default function StakePage() {
       {/* ── 1. What this is ───────────────────────────────────────── */}
       <Section first sx={{ py: { xs: 6, md: 8 } }}>
         <Reveal>
-          <Box sx={{ maxWidth: 880, mx: 'auto', textAlign: 'center' }}>
+          <Box sx={{ position: 'relative', zIndex: 1, maxWidth: 880, mx: 'auto', textAlign: 'center' }}>
+            {/* The subject of the headline, said once, in the sky.
+
+                The sentence on this screen is "the gateway for unrestricted
+                AI" and it had no subject: a reader had to already know what
+                the page was about to know what was doing the gating. The
+                word sits behind and just above the line, soft enough to
+                belong to the painting rather than to the type, so the screen
+                reads $OPEN, the gateway for unrestricted AI, top to bottom.
+
+                Blurred rather than merely faint. A hard-edged ghost at this
+                size reads as a second headline someone forgot to delete; the
+                blur is what puts it behind the glass instead of on it.
+
+                Anchored to the headline, not to the section, and measured in
+                its own em. Hung off the section's centre it sat behind the
+                second line on a phone instead of above the first, because
+                the headline wraps there and the centre stops meaning the
+                same thing. `top: 0` is the top of the heading whatever the
+                heading does, the rise is a fraction of the word's own
+                height, and the blur is too, so the three stay in proportion
+                from 320px to a desktop. The size is capped against the
+                viewport for the same reason: at a fixed rem the word ran off
+                both edges of a phone and read as two orange smudges rather
+                than as a word.
+
+                Decorative, so it is hidden from the accessibility tree and
+                never takes a pointer. */}
+            <Box
+              component="span"
+              aria-hidden="true"
+              sx={{
+                position: 'absolute',
+                left: '50%',
+                top: 0,
+                transform: 'translate(-50%, -74%)',
+                zIndex: -1,
+                pointerEvents: 'none',
+                fontSize: 'min(20vw, 15rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.055em',
+                lineHeight: 1,
+                whiteSpace: 'nowrap',
+                color: 'var(--brand-accent)',
+                opacity: { xs: 0.2, md: 0.26 },
+                filter: 'blur(0.075em)',
+              }}
+            >
+              $OPEN
+            </Box>
+
             {/* Sized to hold one line on a desktop. It is the page's only
                 headline and it is a name, so breaking it across two rows made
                 it read as a sentence that had run on. */}
