@@ -7,7 +7,9 @@ import CoreFeaturesSection from '@/components/CoreFeaturesSection';
 import SupportedModelsSection from '@/components/SupportedModelsSection';
 import WhyAskMultipleModelsSection from '@/components/WhyAskMultipleModelsSection';
 import ProductMatrixSection from '@/components/ProductMatrixSection';
-import TokenFlowSection from '@/components/TokenFlowSection';
+/* Hidden on request. The component is untouched, so putting it back is
+   uncommenting these two lines. */
+// import TokenFlowSection from '@/components/TokenFlowSection';
 import BurnEnterpriseSection from '@/components/BurnEnterpriseSection';
 import PricingSection from '@/components/PricingSection';
 import TokenOptimizationSection from '@/components/TokenOptimizationSection';
@@ -39,9 +41,9 @@ export default function Home() {
         <SupportedModelsSection />
         <WhyAskMultipleModelsSection />
         <ProductMatrixSection />
-        <TokenFlowSection />
-        {/* Follows the two ways to pay with what happens to the money that
-            does get spent, and with the route that skips the loop. */}
+        {/* <TokenFlowSection /> */}
+        {/* What happens to the money that does get spent, and when enterprise
+            pays for it. */}
         <BurnEnterpriseSection />
         <TokenOptimizationSection />
         <ApiSection />
