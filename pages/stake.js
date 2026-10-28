@@ -727,7 +727,9 @@ export default function StakePage() {
                 from 320px to a desktop. The size is capped against the
                 viewport for the same reason: at a fixed rem the word ran off
                 both edges of a phone and read as two orange smudges rather
-                than as a word.
+                than as a word. It wants to be about half the measure, not
+                all of it: at 15rem it filled the column and stopped reading
+                as something behind the headline.
 
                 Decorative, so it is hidden from the accessibility tree and
                 never takes a pointer. */}
@@ -741,7 +743,7 @@ export default function StakePage() {
                 transform: 'translate(-50%, -74%)',
                 zIndex: -1,
                 pointerEvents: 'none',
-                fontSize: 'min(20vw, 15rem)',
+                fontSize: 'min(14vw, 9.5rem)',
                 fontWeight: 800,
                 letterSpacing: '-0.055em',
                 lineHeight: 1,
