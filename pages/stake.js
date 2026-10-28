@@ -323,13 +323,50 @@ const HEAD_STRIP = {
   borderBottom: `1px solid ${RULE}`,
 };
 
-function Section({ ground, children, sx }) {
+/**
+ * A section, one screen tall.
+ *
+ * Every section now holds at least a viewport and centres what it contains,
+ * so a reader lands on one thing at a time instead of catching the top of the
+ * next one under the bottom of this one.
+ *
+ * It is a floor, not a fixed height. The sections with three cards and a
+ * supply block in them are taller than a screen on a phone and are left to
+ * be; forcing those to a fixed height is how content gets clipped.
+ *
+ * svh rather than vh, because on a phone vh is the viewport with the browser
+ * chrome retracted, which is not the viewport you are looking at when the
+ * page loads. The vh line stays underneath it for anything that does not know
+ * svh yet.
+ *
+ * The first section takes the header's spacer off its height. That spacer is
+ * in the flow, so without the subtraction the opening screen is the header
+ * plus the top nine tenths of the hero, and everything after it is off by the
+ * same amount.
+ */
+const HEADER = { xs: '78px', md: '92px' };
+
+function Section({ ground, full = true, first, children, sx }) {
+  const tall = first
+    ? { xs: `calc(100vh - ${HEADER.xs})`, md: `calc(100vh - ${HEADER.md})` }
+    : '100vh';
+  const tallSmall = first
+    ? { xs: `calc(100svh - ${HEADER.xs})`, md: `calc(100svh - ${HEADER.md})` }
+    : '100svh';
   return (
     <Box
       component="section"
       sx={{
         position: 'relative',
         zIndex: 1,
+        ...(full
+          ? {
+              minHeight: tall,
+              '@supports (min-height: 100svh)': { minHeight: tallSmall },
+              display: 'flex',
+              alignItems: 'center',
+            }
+          : null),
         ...(ground === 'ink'
           ? { backgroundColor: INK }
           : ground
@@ -342,7 +379,9 @@ function Section({ ground, children, sx }) {
         ...sx,
       }}
     >
-      <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 } }}>{children}</Container>
+      <Container maxWidth="lg" sx={{ width: '100%', px: { xs: 2.5, sm: 4, md: 6 } }}>
+        {children}
+      </Container>
     </Box>
   );
 }
@@ -636,7 +675,7 @@ export default function StakePage() {
       />
 
       {/* ── 1. What this is ───────────────────────────────────────── */}
-      <Section sx={{ pt: { xs: 8, md: 13 }, pb: { xs: 8, md: 11 } }}>
+      <Section first sx={{ py: { xs: 6, md: 8 } }}>
         <Reveal>
           <Box sx={{ maxWidth: 880, mx: 'auto', textAlign: 'center' }}>
             {/* Sized to hold one line on a desktop. It is the page's only
@@ -973,7 +1012,7 @@ export default function StakePage() {
       </Section>
 
       {/* ── The ask ───────────────────────────────────────────────── */}
-      <Section sx={{ pt: { xs: 2, md: 3 }, pb: { xs: 9, md: 13 } }}>
+      <Section sx={{ py: { xs: 8, md: 11 } }}>
         <Reveal>
           <Box sx={{ textAlign: 'center' }}>
             <Typography
