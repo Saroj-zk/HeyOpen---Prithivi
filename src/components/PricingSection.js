@@ -25,6 +25,7 @@ export default function PricingSection() {
      ancestor would cut it off from what it blends against. */
   const [leftRef, leftShown] = useReveal();
   const [rightRef, rightShown] = useReveal();
+  const [payRef, payShown] = useReveal();
 
   const [clipRef, clipInView] = useInView('1000px');
   const clipVideoRef = React.useRef(null);
@@ -492,6 +493,48 @@ export default function PricingSection() {
           }}>
             Compare all tiers
           </Button>
+        </Box>
+
+        {/* How you settle it.
+
+            This had a section of its own under the price: two cards, a
+            drawn figure and a row of payment rails. That was a panel's worth
+            of furniture for a reassurance. Nobody arrives wondering whether
+            they can use a card, and the one genuinely new part, that a
+            staked position can cover the bill out of its yield, is a single
+            clause. It belongs at the foot of the price, where the question
+            is asked, said once and quietly.
+
+            The hedge stays at full size relative to the claim, because the
+            claim is about money. It is the shortest true thing that can be
+            said and IT HAS NOT BEEN REVIEWED. Nothing is said about chains,
+            custody or lock-up, because none of that was given, and no rate
+            appears anywhere: what a stake earns is not settled in this repo
+            and a figure here would read as a promise. */}
+        <Box
+          ref={payRef}
+          sx={{
+            maxWidth: 760,
+            mx: 'auto',
+            mt: { xs: 5, md: 7 },
+            pt: { xs: 3, md: 3.5 },
+            borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'}`,
+            textAlign: 'center',
+            ...revealSx(payShown, 80),
+          }}
+        >
+          <Typography sx={{ fontSize: { xs: '0.92rem', md: '0.98rem' }, lineHeight: 1.7, color: secondaryText, textWrap: 'pretty' }}>
+            Pay by{' '}
+            <Box component="span" sx={{ fontWeight: 700, color: primaryText }}>card or crypto</Box>
+            , whichever you already use. Or stake{' '}
+            <Box component="span" sx={{ fontWeight: 700, color: primaryText }}>USDC, ETH or BTC</Box>
+            {' '}and the yield arrives as credits, so the position you already hold covers what you
+            spend.
+          </Typography>
+          <Typography sx={{ mt: 1.2, fontSize: '0.75rem', lineHeight: 1.6, color: 'var(--text-muted)' }}>
+            What a stake earns moves with the market. Rates are not fixed and nothing here is a
+            guaranteed return.
+          </Typography>
         </Box>
 
       </Container>
