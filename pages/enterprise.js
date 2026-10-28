@@ -1151,18 +1151,28 @@ export default function EnterprisePage() {
 
       <PageHeader />
 
+      {/* The sky behind the opening screen.
+          It was a radial wash of brand orange, which is the one thing every
+          other crypto page opens with. The painting does the same job, warm
+          at the edges and open in the middle, and the headline sits in the
+          open middle by design: the plate is positioned so the pale centre
+          of the sky lands behind the type.
+          Two scrims, not one. The vertical pass lifts the whole plate toward
+          the page colour so dark text keeps its contrast on a light painting;
+          the lower stop goes fully opaque so the image ends in the page
+          rather than on a cut edge. Decorative, so aria-hidden, and it never
+          takes a pointer. */}
       <Box
         aria-hidden="true"
         sx={{
           position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: 1500,
-          height: 700,
-          background:
-            'radial-gradient(ellipse 62% 58% at 50% 0%, rgba(255,102,0,0.16) 0%, rgba(255,80,0,0.04) 46%, transparent 74%)',
+          inset: '0 0 auto 0',
+          height: { xs: 560, md: 820 },
+          backgroundImage:
+            'linear-gradient(180deg, rgba(248,249,250,0.42) 0%, rgba(248,249,250,0.5) 38%, rgba(248,249,250,0.86) 74%, var(--bg-page) 100%), url(/images/stake-sky.webp)',
+          backgroundSize: 'cover, cover',
+          backgroundPosition: 'center, center 32%',
+          backgroundRepeat: 'no-repeat',
           pointerEvents: 'none',
           zIndex: 0,
         }}

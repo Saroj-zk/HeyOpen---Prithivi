@@ -140,7 +140,7 @@ const PATHS = {
   spark: 'M10 2.5v15M2.5 10h15M5 5l10 10M15 5 5 15',
   coins: 'M12.5 6.5a4.5 2.5 0 1 1-9 0 4.5 2.5 0 0 1 9 0ZM3.5 6.5v4c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4M7.5 13.3v1.2c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4c0-1-1-1.9-2.6-2.3',
   building: 'M2.8 17.4h14.4M4.6 17.4V9.2M7.9 17.4V9.2M12.1 17.4V9.2M15.4 17.4V9.2M2.8 9.2h14.4L10 4.6z',
-  flame: 'M10 2.8c2.6 3 4.2 5.1 4.2 7.7a4.2 4.2 0 1 1-8.4 0c0-2.6 1.6-4.7 4.2-7.7Z',
+  flame: 'M10 2.6c3 3.4 4.6 5.7 4.6 8.2a4.6 4.6 0 0 1-9.2 0c0-2.5 1.6-4.8 4.6-8.2ZM10 10.4c1.1 1.3 1.7 2.1 1.7 3a1.7 1.7 0 0 1-3.4 0c0-.9.6-1.7 1.7-3Z',
 };
 
 /** Market data and the contract, wherever they are least in the way. */
@@ -673,18 +673,28 @@ export default function StakePage() {
 
       <PageHeader />
 
+      {/* The sky behind the opening screen.
+          It was a radial wash of brand orange, which is the one thing every
+          other crypto page opens with. The painting does the same job, warm
+          at the edges and open in the middle, and the headline sits in the
+          open middle by design: the plate is positioned so the pale centre
+          of the sky lands behind the type.
+          Two scrims, not one. The vertical pass lifts the whole plate toward
+          the page colour so dark text keeps its contrast on a light painting;
+          the lower stop goes fully opaque so the image ends in the page
+          rather than on a cut edge. Decorative, so aria-hidden, and it never
+          takes a pointer. */}
       <Box
         aria-hidden="true"
         sx={{
           position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: 1500,
-          height: 700,
-          background:
-            'radial-gradient(ellipse 62% 58% at 50% 0%, rgba(255,102,0,0.16) 0%, rgba(255,80,0,0.04) 46%, transparent 74%)',
+          inset: '0 0 auto 0',
+          height: { xs: 560, md: 820 },
+          backgroundImage:
+            'linear-gradient(180deg, rgba(248,249,250,0.42) 0%, rgba(248,249,250,0.5) 38%, rgba(248,249,250,0.86) 74%, var(--bg-page) 100%), url(/images/stake-sky.webp)',
+          backgroundSize: 'cover, cover',
+          backgroundPosition: 'center, center 32%',
+          backgroundRepeat: 'no-repeat',
           pointerEvents: 'none',
           zIndex: 0,
         }}
@@ -949,114 +959,201 @@ export default function StakePage() {
       </Section>
 
       {/* ── 6. The business, named and left at its own door ──────────
-          Three full sections used to sit here: the white-label products, the
-          hedging that holds their cost still, and the allocation that sends
-          what is left back to the token. All three are real and all three
-          were crowding a page whose subject is what staking does for the
-          reader, not how the company is run. They are /enterprise now, and
-          what stays is the claim, the three things it rests on, and a way
-          through.
+          Three full sections used to sit here and they were crowding a page
+          whose subject is what staking does for the reader. They are
+          /enterprise now; this is the claim, the three things it rests on,
+          and a way through.
 
-          The card is the one dark object in this half of the page. The
-          other band of ink is the Pro section above, far enough away that
-          the two do not read as a pair.
+          One object, and the most worked one on this half of the page,
+          because it is the only thing here asking a reader to leave. A
+          heading over a flat bar of three columns was accurate and
+          forgettable. The panel carries its own light, the three claims sit
+          in it as lifted glass rather than as cells of a table, and the way
+          out is a control at the foot of it instead of a line of text under
+          it.
+
+          It is a card, not a band. The page's other ink is the Pro section
+          two stops up and that one runs edge to edge; this one is held
+          inside the measure, so the two cannot be taken for a pair.
 
           No eyebrow. The supplied design had one, "THE ECONOMICS BEHIND
-          $OPEN", but no heading on this page has carried one since they
-          came off, and reintroducing it for a single section would make
-          that section look like it came from somewhere else. */}
+          $OPEN", but no heading on this page has carried one since they came
+          off, and bringing it back for a single section would make that
+          section look like it came from somewhere else. */}
       <Section
         ground="linear-gradient(180deg, #F2F5F9 0%, #EBF0F5 46%, #EFF3F7 100%)"
         sx={{ py: { xs: 7, md: 5 } }}
       >
         <Reveal>
-          <Box sx={{ maxWidth: 820 }}>
-            <SectionHead
-              tier="minor"
-              maxWidth="100%"
-              title={
-                <>
-                  <Box component="span" sx={{ display: 'block' }}>Real AI demand.</Box>
-                  <Box component="span" sx={{ display: 'block' }}>A stronger $OPEN economy.</Box>
-                </>
-              }
-              lede="Hey Open powers white-label AI products for enterprises, with compute protection designed to keep costs predictable. As the business grows, its revenue model connects real AI usage to $OPEN buybacks and burns."
-            />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
           <Box
             sx={{
               ...PANEL_INK,
-              mt: { xs: 3.2, md: 3.6 },
+              position: 'relative',
               overflow: 'hidden',
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+              borderRadius: '26px',
+              px: { xs: 2.6, md: 5 },
+              py: { xs: 3.6, md: 5 },
             }}
           >
-            {ECONOMY.map(([mark, title, body], i) => (
-              <Box
-                key={title}
+            {/* The panel's own light, thrown from the corner the eye lands
+                on last, so the three claims sit in the lit half. */}
+            <Box
+              aria-hidden="true"
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                pointerEvents: 'none',
+                background:
+                  'radial-gradient(ellipse 60% 78% at 86% 0%, rgba(255,102,0,0.2) 0%, rgba(255,102,0,0.05) 44%, transparent 70%)',
+              }}
+            />
+
+            <Box sx={{ position: 'relative', zIndex: 1 }}>
+              <Typography
+                component="h2"
                 sx={{
-                  px: { xs: 2.4, md: 3 },
-                  py: { xs: 2.4, md: 2.8 },
-                  borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}` },
-                  borderTop: { xs: i === 0 ? 'none' : `1px solid ${RULE_ON_INK}`, md: 'none' },
+                  maxWidth: 640,
+                  fontSize: { xs: '1.85rem', sm: '2.25rem', md: '2.7rem' },
+                  fontWeight: 700,
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1.06,
+                  color: '#FFFFFF',
                 }}
               >
-                <Box sx={{ color: 'var(--brand-accent)' }}>
-                  <Mark name={mark} size={22} />
+                <Box component="span" sx={{ display: 'block' }}>Real AI demand.</Box>
+                <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
+                  A stronger $OPEN economy.
                 </Box>
+              </Typography>
+
+              <Typography
+                sx={{
+                  mt: { xs: 2, md: 2.4 },
+                  maxWidth: 600,
+                  fontSize: { xs: '0.96rem', md: '1.02rem' },
+                  lineHeight: 1.7,
+                  color: 'rgba(255,255,255,0.62)',
+                  textWrap: 'pretty',
+                }}
+              >
+                Hey Open powers white-label AI products for enterprises, with compute protection
+                designed to keep costs predictable. As the business grows, its revenue model
+                connects real AI usage to $OPEN buybacks and burns.
+              </Typography>
+
+              <Box
+                sx={{
+                  mt: { xs: 3, md: 3.6 },
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                  gap: { xs: 1.6, md: 2 },
+                }}
+              >
+                {ECONOMY.map(([mark, title, body]) => (
+                  <Box
+                    key={title}
+                    sx={{
+                      borderRadius: '16px',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      background:
+                        'linear-gradient(180deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.022) 100%)',
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
+                      px: { xs: 2, md: 2.3 },
+                      py: { xs: 2, md: 2.3 },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'var(--brand-accent)',
+                        backgroundColor: 'rgba(255,102,0,0.13)',
+                        border: '1px solid rgba(255,102,0,0.3)',
+                      }}
+                    >
+                      <Mark name={mark} size={20} />
+                    </Box>
+                    <Typography
+                      sx={{
+                        mt: 1.8,
+                        fontSize: { xs: '1.02rem', md: '1.06rem' },
+                        fontWeight: 700,
+                        letterSpacing: '-0.025em',
+                        lineHeight: 1.25,
+                        color: '#FFFFFF',
+                      }}
+                    >
+                      {title}
+                    </Typography>
+                    <Typography sx={{ mt: 0.8, fontSize: '0.89rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.56)' }}>
+                      {body}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+
+              {/* The way out. A control, because it is the one thing in this
+                  panel a reader is meant to act on, and the only link on the
+                  page that asks for a click without asking for a stake. */}
+              <Box
+                sx={{
+                  mt: { xs: 2.8, md: 3.4 },
+                  pt: { xs: 2.2, md: 2.6 },
+                  borderTop: `1px solid ${RULE_ON_INK}`,
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  gap: 2,
+                }}
+              >
                 <Typography
                   sx={{
-                    mt: 1.6,
-                    fontSize: { xs: '1.04rem', md: '1.1rem' },
-                    fontWeight: 700,
-                    letterSpacing: '-0.025em',
-                    lineHeight: 1.25,
-                    color: '#FFFFFF',
+                    flex: '1 1 300px',
+                    minWidth: 0,
+                    fontSize: '0.9rem',
+                    lineHeight: 1.6,
+                    color: 'rgba(255,255,255,0.5)',
                   }}
                 >
-                  {title}
+                  How enterprise infrastructure, compute protection and token economics work
+                  together.
                 </Typography>
-                <Typography sx={{ mt: 0.8, fontSize: '0.9rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.62)' }}>
-                  {body}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        </Reveal>
 
-        <Reveal delay={60}>
-          <Box sx={{ mt: { xs: 2.8, md: 3 } }}>
-            {/* A link, not a button. Every button on this page asks for a
-                stake; this one only offers more reading, and dressing it
-                the same way would spend the ask early. */}
-            <Box
-              component="a"
-              href="/enterprise"
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '9px',
-                fontSize: { xs: '1.04rem', md: '1.12rem' },
-                fontWeight: 700,
-                letterSpacing: '-0.025em',
-                color: 'var(--text-heading)',
-                textDecoration: 'none',
-                borderBottom: '2px solid rgba(255,102,0,0.45)',
-                pb: '3px',
-                transition: 'color .18s ease, border-color .18s ease',
-                '&:hover': { color: 'var(--brand-accent)', borderColor: 'var(--brand-accent)' },
-              }}
-            >
-              Explore the $OPEN economy
-              <Box component="span" aria-hidden="true" sx={{ opacity: 0.6 }}>&#8599;</Box>
+                <Box
+                  component="a"
+                  href="/enterprise"
+                  sx={{
+                    flexShrink: 0,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    px: '22px',
+                    py: '13px',
+                    borderRadius: '999px',
+                    border: '1px solid rgba(255,255,255,0.24)',
+                    backgroundColor: 'rgba(255,255,255,0.06)',
+                    fontSize: '0.95rem',
+                    fontWeight: 700,
+                    letterSpacing: '-0.015em',
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    transition: 'background-color .18s ease, border-color .18s ease, transform .18s ease',
+                    '&:hover': {
+                      backgroundColor: 'var(--brand-accent)',
+                      borderColor: 'var(--brand-accent)',
+                      transform: 'translateY(-1px)',
+                    },
+                  }}
+                >
+                  Explore the $OPEN economy
+                  <Box component="span" aria-hidden="true" sx={{ opacity: 0.75 }}>&#8599;</Box>
+                </Box>
+              </Box>
             </Box>
-            <Typography sx={{ mt: 1.4, maxWidth: 620, fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-              How enterprise infrastructure, compute protection and token economics work together.
-            </Typography>
           </Box>
         </Reveal>
       </Section>
