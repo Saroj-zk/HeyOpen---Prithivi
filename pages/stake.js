@@ -3,7 +3,6 @@ import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Slider from '@mui/material/Slider';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
@@ -17,38 +16,47 @@ import { VERSIONS } from '@/data/stakeCopy';
  * ------------------------------------------------------------------
  * Light, because the rest of the site is.
  *
- * The page went dark to borrow the one component that was working, and the
- * borrowing worked: the fan diagram, the calculator and the scale all came
- * good on ink. But a token page in a different colour from every other page
- * is a different product, so they come back to paper and keep what they
- * learned. Ink is now one band rather than the whole page, spent on the
+ * The page went dark once to borrow the one component that was working, and
+ * the borrowing worked. But a token page in a different colour from every
+ * other page is a different product, so it came back to paper and kept what
+ * it learned. Ink is one band rather than the whole page, spent on the
  * section that asks you to stop paying for something.
  *
  * Four surfaces, in order of how often they appear:
  *
- *   PAPER   the page itself
+ *   PAPER   the page itself, and the only ground outside the ink band. A
+ *           warm tint used to sit behind one section; with the yield section
+ *           gone it landed directly under the hero and read as a stray band
+ *           of colour rather than as a change of pace, so it went.
  *   PANEL   white, a hairline, a long soft shadow. Holds almost everything.
  *   ACCENT  PANEL with an amber rim and a warm body. Spent twice: on the
  *           thing you are asked to do, and on the token you are asked to buy.
  *   INK     one full-bleed band, once.
  *
  * ------------------------------------------------------------------
- * Restructured, into six sections from seven.
+ * Five sections, and nothing that explains the rate.
  *
- *   1  the claim, and what it would pay you      hero, calculator
- *   2  how much, and which half is owed          the scale
- *   3  is any of it real                         architecture, proof
- *   4  there are two tokens                      $OPEN and $HEY
- *   5  and the app is free at a hundred          Pro, on ink
- *   6  so start                                  three moves, supply, close
+ *   hero  what $OPEN is, and what staking it gets you
+ *   1     where the stake actually goes       architecture, proof
+ *   2     there are two tokens                $OPEN and $HEY
+ *   3     the app is free at a hundred        Pro, on ink
+ *   4     how $OPEN works                     three moves, supply
+ *         so start                            close
  *
- * The scale moved above the architecture. A reader asks "how much" before
- * "is it real", and the old order answered them the other way round. Supply
- * and the three moves fold into the closing section, because by then they
- * are logistics rather than argument.
+ * The yield section is gone, and with it the dial and the calculator. Six
+ * drawings of the same two numbers were made for that section and none of
+ * them survived review; the figures themselves are still on the page, once
+ * each, in the returns pair and the $OPEN card. If a worked example ever
+ * comes back it should go somewhere a reader asks for it, not above the
+ * explanation of what the token is.
+ *
+ * Headings have no eyebrow. A numbered label above every section is useful
+ * when there are seven of them and a reader needs to know where they are;
+ * with four it is a second heading in smaller type saying the same thing.
+ * Size is the only hierarchy left, and that is enough.
  *
  * ------------------------------------------------------------------
- * The marks are drawn now.
+ * The marks are drawn.
  *
  * Every icon on the page was a unicode geometric shape, which renders
  * differently in every font and reads as a placeholder in all of them. They
@@ -58,15 +66,7 @@ import { VERSIONS } from '@/data/stakeCopy';
  * Each section says the two figures at most once, and most do not say them
  * at all. They were being printed eight and seven times across six of eight
  * sections, which is what made the page feel like it was saying one thing
- * over and over. The hero states them, the calculator computes them, the
- * scale plots both, the diagram labels one node, and the disclaimer repeats
- * them because that is what a disclaimer is for. Everywhere else says "the
- * floor" and "the band".
- *
- * The calculator never shows the target on its own. Every state prints the
- * floor and the band together and the total is a range from one to the
- * other, so no position of the sliders produces a single confident figure to
- * screenshot.
+ * over and over. Everywhere else says "the floor" and "the band".
  *
  * WORDING ON THE DEPLOYMENT CARDS NEEDS SIGN-OFF. What the treasury is
  * actually placed in is a representation about money. The three cards name
@@ -85,12 +85,6 @@ const RATES = {
   total: '40% to 50%',
   threshold: '100 $OPEN',
 };
-
-const PLOT = { max: 60, floor: 6, targetLow: 40, targetHigh: 50 };
-const RATE = { floor: 0.06, low: 0.4, high: 0.5 };
-
-const STAKE_SLIDER = { min: 100, max: 100000, step: 100, start: 10000 };
-const TERM_SLIDER = { min: 1, max: 36, step: 1, start: 12 };
 
 const PRO = [
   ['Text prompts', 'Unlimited'],
@@ -319,8 +313,6 @@ const PANEL_INK = {
   boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 26px 52px -34px rgba(11,15,26,0.6)',
 };
 
-const WARM = 'linear-gradient(180deg, #FFF9F5 0%, #FDF3EC 100%)';
-
 const HEAD_STRIP = {
   display: 'flex',
   alignItems: 'center',
@@ -358,42 +350,22 @@ function Section({ ground, children, sx }) {
 /**
  * A section heading.
  *
- * Two things here are the page's flow, and both were missing.
+ * It used to open with a numbered eyebrow, 01 through 05 with a rule and a
+ * label, so a reader could tell how far through the argument they were. That
+ * went with the yield section: four stops do not need signposting, and the
+ * labels were restating the headline underneath them in smaller type.
  *
- * The step number. Every section used to open the same way, so each one read
- * as the top of a new page rather than as the next move in one argument. A
- * reader could not tell whether they were three sections in or starting
- * over. Numbering says where you are.
- *
- * The tier. Five consecutive headings were set at the same 48px and the same
- * weight, which is a flat line, not a shape. The two sections that carry the
- * argument stay large; the three that support it step down. The page now
- * reads big, big, big, smaller, smaller, smaller, big, which is a rhythm a
- * reader can feel without being told.
+ * The tier stays, because it is the only thing left carrying shape. Five
+ * consecutive headings at the same size and weight is a flat line; the
+ * sections that carry the argument are large and the ones that support it
+ * step down.
  */
-function SectionHead({ n, eyebrow, title, lede, onInk, tier = 'major', maxWidth = 760 }) {
-  const rule = onInk ? 'rgba(255,255,255,0.28)' : 'rgba(11,15,26,0.18)';
-
+function SectionHead({ title, lede, onInk, tier = 'major', maxWidth = 760 }) {
   return (
     <Box sx={{ maxWidth }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.3 }}>
-        {n && (
-          <>
-            <Typography
-              component="span"
-              sx={{ ...FIG, fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.04em', color: 'var(--brand-accent)' }}
-            >
-              {n}
-            </Typography>
-            <Box aria-hidden="true" sx={{ width: 16, height: '1px', backgroundColor: rule, flexShrink: 0 }} />
-          </>
-        )}
-        <Label onInk={onInk} sx={{ color: 'var(--brand-accent)' }}>{eyebrow}</Label>
-      </Box>
       <Typography
         component="h2"
         sx={{
-          mt: 2,
           fontSize:
             tier === 'minor'
               ? { xs: '1.7rem', sm: '2rem', md: '2.2rem' }
@@ -420,357 +392,6 @@ function SectionHead({ n, eyebrow, title, lede, onInk, tier = 'major', maxWidth 
           {lede}
         </Typography>
       )}
-    </Box>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* The calculator                                                      */
-/* ------------------------------------------------------------------ */
-
-const money = (n) => Math.round(n).toLocaleString('en-US');
-
-const SLIDER_SX = {
-  color: 'var(--brand-accent)',
-  height: 5,
-  py: '14px',
-  '& .MuiSlider-rail': { opacity: 1, backgroundColor: 'rgba(11,15,26,0.1)' },
-  '& .MuiSlider-track': { border: 'none' },
-  '& .MuiSlider-thumb': {
-    width: 20,
-    height: 20,
-    backgroundColor: '#FFFFFF',
-    border: '2px solid var(--brand-accent)',
-    boxShadow: '0 2px 6px rgba(11,15,26,0.2)',
-    '&:hover, &.Mui-focusVisible': { boxShadow: '0 0 0 7px rgba(255,102,0,0.14)' },
-    '&.Mui-active': { boxShadow: '0 0 0 11px rgba(255,102,0,0.18)' },
-  },
-};
-
-function Control({ label, display, ...slider }) {
-  return (
-    <Box sx={{ mb: 1 }}>
-      <Box sx={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 2 }}>
-        <Label>{label}</Label>
-        <Typography
-          sx={{ ...FIG, fontSize: { xs: '1.02rem', md: '1.12rem' }, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}
-        >
-          {display}
-        </Typography>
-      </Box>
-      <Slider {...slider} sx={SLIDER_SX} />
-    </Box>
-  );
-}
-
-function Calculator() {
-  const [stake, setStake] = React.useState(STAKE_SLIDER.start);
-  const [months, setMonths] = React.useState(TERM_SLIDER.start);
-
-  const years = months / 12;
-  const floor = stake * RATE.floor * years;
-  const low = stake * RATE.low * years;
-  const high = stake * RATE.high * years;
-  const pro = stake >= 100;
-
-  return (
-    <Box sx={{ ...ACCENT, overflow: 'hidden' }}>
-      <Box sx={{ ...HEAD_STRIP, borderBottomColor: 'rgba(255,102,0,0.18)' }}>
-        <Label sx={{ color: 'var(--brand-accent)' }}>Work it out</Label>
-        <Label>Move the sliders</Label>
-      </Box>
-
-      <Box sx={{ px: { xs: 2.2, md: 2.6 }, pt: { xs: 2.2, md: 2.6 }, pb: 1 }}>
-        <Control
-          label="You stake"
-          display={`${money(stake)} $OPEN`}
-          value={stake}
-          min={STAKE_SLIDER.min}
-          max={STAKE_SLIDER.max}
-          step={STAKE_SLIDER.step}
-          aria-label="Amount of $OPEN staked"
-          onChange={(e, v) => setStake(v)}
-          valueLabelDisplay="off"
-        />
-        <Control
-          label="For"
-          display={months === 1 ? '1 month' : `${months} months`}
-          value={months}
-          min={TERM_SLIDER.min}
-          max={TERM_SLIDER.max}
-          step={TERM_SLIDER.step}
-          aria-label="Term in months"
-          onChange={(e, v) => setMonths(v)}
-          valueLabelDisplay="off"
-        />
-      </Box>
-
-      <Box sx={{ px: { xs: 2.2, md: 2.6 }, pt: 1, pb: { xs: 2.4, md: 2.8 }, borderTop: '1px solid rgba(255,102,0,0.18)' }}>
-        <Entry name="The floor pays" figure={`+${money(floor)}`} />
-        <Entry name="On plan, all in" figure={`+${money(low)} to +${money(high)}`} dashed />
-        <Entry name="You hold, all in" figure={`${money(stake + floor)} to ${money(stake + high)}`} total />
-
-        <Box
-          sx={{
-            mt: '14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            color: pro ? 'var(--brand-accent)' : 'var(--text-muted)',
-          }}
-        >
-          <Mark name="shield" size={15} />
-          <Typography sx={{ fontSize: '0.8rem', lineHeight: 1.5, color: 'inherit' }}>
-            {pro ? `Pro unlocked, ${RATES.threshold} is the threshold` : `Stake ${RATES.threshold} to unlock Pro`}
-          </Typography>
-        </Box>
-
-        <Typography sx={{ mt: '10px', fontSize: '0.76rem', lineHeight: 1.6, color: 'var(--text-muted)' }}>
-          Simple, not compounded, and pro-rata on the term. The floor is owed to
-          you; the band is what we run the book to and is not a promised rate.
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* The scale                                                           */
-/* ------------------------------------------------------------------ */
-
-/**
- * The yield as a dial.
- *
- * Four shapes have been tried on these two numbers. A split bar put them end
- * to end, which invites the one reading that is wrong, because 6% and 40% to
- * 50% do not add to 46% to 56%. A two row chart needed a key to three fills.
- * A nested card said containment but could not say distance.
- *
- * An arc says both at once. There is one sweep, it starts at nothing, the
- * first stretch of it is the part the contract owes you, and it carries on
- * into the band we run the book to. The floor is visibly inside the target
- * because it is the same arc, and the distance between them is visible
- * because it is the same arc.
- *
- * Geometry is computed, not drawn by hand. The scale is 0 to 50 across a
- * half turn, so a value maps to an angle at 3.6 degrees per point, and the
- * dash lengths that animate the sweep in are the real arc lengths, r times
- * theta. Change RATES and the dial follows.
- */
-const DIAL = { cx: 220, cy: 212, r: 158, w: 26, max: PLOT.targetHigh };
-
-const deg = (v) => 180 - (v / DIAL.max) * 180;
-const rad = (d) => (d * Math.PI) / 180;
-const len = (sweepDeg) => DIAL.r * rad(sweepDeg);
-
-function point(d) {
-  return [DIAL.cx + DIAL.r * Math.cos(rad(d)), DIAL.cy - DIAL.r * Math.sin(rad(d))];
-}
-
-/* Angles decrease as the value rises, so every sweep here is clockwise. */
-function arcPath(from, to) {
-  const [x1, y1] = point(from);
-  const [x2, y2] = point(to);
-  return `M${x1.toFixed(2)} ${y1.toFixed(2)} A${DIAL.r} ${DIAL.r} 0 ${Math.abs(to - from) > 180 ? 1 : 0} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
-}
-
-const TRACK = arcPath(deg(0), deg(DIAL.max));
-const PLAN = arcPath(deg(0), deg(PLOT.targetLow));
-const BAND = arcPath(deg(PLOT.targetLow), deg(DIAL.max));
-const FLOOR = arcPath(deg(0), deg(PLOT.floor));
-
-const PLAN_LEN = len(180 * (PLOT.targetLow / DIAL.max));
-const FLOOR_LEN = len(180 * (PLOT.floor / DIAL.max));
-
-function Scale() {
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: 520,
-        mx: 'auto',
-        '@keyframes drawPlan': { from: { strokeDashoffset: PLAN_LEN } },
-        '@keyframes drawFloor': { from: { strokeDashoffset: FLOOR_LEN } },
-        '@keyframes fadeBand': { from: { opacity: 0 } },
-      }}
-    >
-      <Box component="svg" viewBox="0 0 440 252" sx={{ width: '100%', display: 'block', overflow: 'visible' }}>
-        <defs>
-          <linearGradient id="planGrad" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stopColor="#FFB071" />
-            <stop offset="100%" stopColor="#FF7A1A" />
-          </linearGradient>
-        </defs>
-
-        {/* the scale itself */}
-        <path d={TRACK} fill="none" stroke="rgba(11,15,26,0.07)" strokeWidth={DIAL.w} strokeLinecap="round" />
-
-        {/* a soft fill under the band, so the sweep ends in one round cap
-            rather than in the grey of the track showing past the dashes */}
-        <Box
-          component="path"
-          d={BAND}
-          sx={{
-            fill: 'none',
-            stroke: 'rgba(255,138,43,0.22)',
-            strokeWidth: DIAL.w,
-            strokeLinecap: 'round',
-            animation: 'fadeBand .5s ease 1.1s both',
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-          }}
-        />
-
-        {/* the band, dashed because it is the only uncertain part */}
-        <Box
-          component="path"
-          d={BAND}
-          sx={{
-            fill: 'none',
-            stroke: '#FF8A2B',
-            strokeWidth: DIAL.w,
-            strokeDasharray: '3 7',
-            strokeLinecap: 'butt',
-            animation: 'fadeBand .5s ease 1.1s both',
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-          }}
-        />
-
-        {/* what a period that goes to plan returns */}
-        <Box
-          component="path"
-          d={PLAN}
-          sx={{
-            fill: 'none',
-            stroke: 'url(#planGrad)',
-            strokeWidth: DIAL.w,
-            strokeLinecap: 'round',
-            strokeDasharray: PLAN_LEN,
-            animation: 'drawPlan 1.1s cubic-bezier(.22,1,.36,1) .15s both',
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-          }}
-        />
-
-        {/* and the stretch of it you are owed whatever happens */}
-        <Box
-          component="path"
-          d={FLOOR}
-          sx={{
-            fill: 'none',
-            stroke: INK,
-            strokeWidth: DIAL.w,
-            strokeLinecap: 'round',
-            strokeDasharray: FLOOR_LEN,
-            animation: 'drawFloor .55s cubic-bezier(.22,1,.36,1) both',
-            '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
-          }}
-        />
-
-        {/* where the owed part ends */}
-        <line
-          x1={point(deg(PLOT.floor))[0] - Math.cos(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 3)}
-          y1={point(deg(PLOT.floor))[1] + Math.sin(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 3)}
-          x2={point(deg(PLOT.floor))[0] + Math.cos(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 11)}
-          y2={point(deg(PLOT.floor))[1] - Math.sin(rad(deg(PLOT.floor))) * (DIAL.w / 2 + 11)}
-          stroke="rgba(11,15,26,0.4)"
-          strokeWidth="1.5"
-        />
-
-        {[
-          [0, 'start'],
-          [DIAL.max, 'end'],
-        ].map(([t, anchor]) => (
-          <text
-            key={`cap-${t}`}
-            x={point(deg(t))[0]}
-            y={DIAL.cy + 30}
-            textAnchor={anchor}
-            fontFamily={MONO}
-            fontSize="12"
-            letterSpacing="0.08em"
-            fill="rgba(11,15,26,0.38)"
-          >
-            {t}%
-          </text>
-        ))}
-
-        {[0, 10, 20, 30, 40, 50].map((t) => {
-          const d = deg(t);
-          const inner = DIAL.r + DIAL.w / 2 + 6;
-          const outer = inner + (t % 20 === 0 ? 8 : 5);
-          return (
-            <line
-              key={t}
-              x1={DIAL.cx + inner * Math.cos(rad(d))}
-              y1={DIAL.cy - inner * Math.sin(rad(d))}
-              x2={DIAL.cx + outer * Math.cos(rad(d))}
-              y2={DIAL.cy - outer * Math.sin(rad(d))}
-              stroke="rgba(11,15,26,0.24)"
-              strokeWidth="1.5"
-            />
-          );
-        })}
-      </Box>
-
-      {/* what the dial reads, in the middle of it */}
-      <Box
-        sx={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: { xs: '16%', md: '18%' },
-          mx: 'auto',
-          maxWidth: { xs: '66%', md: '62%' },
-          textAlign: 'center',
-        }}
-      >
-        <Label sx={{ color: 'var(--brand-accent)', fontSize: { xs: '0.5rem', md: '0.62rem' } }}>
-          Aimed at, all in
-        </Label>
-        <Typography
-          sx={{
-            ...FIG,
-            mt: 0.9,
-            fontSize: { xs: '1.35rem', sm: '1.8rem', md: '2.1rem' },
-            fontWeight: 600,
-            letterSpacing: '-0.04em',
-            lineHeight: 1,
-            whiteSpace: 'nowrap',
-            color: 'var(--brand-accent)',
-          }}
-        >
-          {RATES.total}
-        </Typography>
-        <Box
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'baseline',
-            gap: 1,
-            mt: { xs: 1.2, md: 1.6 },
-            px: 1.4,
-            py: 0.7,
-            borderRadius: '999px',
-            background: `linear-gradient(180deg, #212737 0%, ${INK} 100%)`,
-            boxShadow: '0 12px 26px -16px rgba(11,15,26,0.7)',
-          }}
-        >
-          <Typography sx={{ ...FIG, fontSize: '0.88rem', fontWeight: 600, color: '#FFFFFF', lineHeight: 1 }}>
-            {RATES.base}
-          </Typography>
-          <Typography
-            sx={{
-              fontFamily: MONO,
-              fontSize: '0.56rem',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.56)',
-            }}
-          >
-            owed
-            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>, either way</Box>
-          </Typography>
-        </Box>
-      </Box>
     </Box>
   );
 }
@@ -1069,111 +690,11 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 2. How much, and which half is owed ───────────────────── */}
-      <Section sx={{ pb: { xs: 7, md: 10 } }}>
-        <Reveal>
-          <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead n="01" eyebrow={C.yield.eyebrow} title={C.yield.title} lede={C.yield.lede} />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <Box
-            sx={{
-              ...PANEL,
-              p: { xs: 2.5, md: 4.5 },
-              mb: { xs: 3.5, md: 4.5 },
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'minmax(0,1.1fr) minmax(0,0.9fr)' },
-              gap: { xs: 3.5, md: 6 },
-              alignItems: 'center',
-            }}
-          >
-            <Scale />
-
-            <Box>
-              <Typography
-                sx={{
-                  fontSize: { xs: '1.14rem', md: '1.3rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.3,
-                  color: 'var(--text-heading)',
-                }}
-              >
-                The floor is part of the target, not a payment on top of it.
-              </Typography>
-              <Typography
-                sx={{
-                  mt: 1.6,
-                  fontSize: { xs: '0.98rem', md: '1.02rem' },
-                  lineHeight: 1.7,
-                  color: 'var(--text-secondary)',
-                  maxWidth: '38ch',
-                  textWrap: 'pretty',
-                }}
-              >
-                {C.yield.workedNote}
-              </Typography>
-
-              {/* the dial's key, two lines, where there is room for it */}
-              <Box sx={{ mt: { xs: 2.5, md: 3.5 }, pt: { xs: 2.5, md: 3 }, borderTop: `1px solid ${RULE}`, display: 'grid', gap: 1.4 }}>
-                {[
-                  [INK, 'solid', `${RATES.base} owed, whatever the period did`],
-                  ['var(--brand-accent)', 'hatched', `${RATES.total} all in, where the book is aimed`],
-                ].map(([colour, fill, text]) => (
-                  <Box key={text} sx={{ display: 'flex', alignItems: 'center', gap: 1.4 }}>
-                    <Box
-                      aria-hidden="true"
-                      sx={{
-                        width: 26,
-                        height: 10,
-                        borderRadius: '5px',
-                        flexShrink: 0,
-                        background:
-                          fill === 'solid'
-                            ? colour
-                            : 'repeating-linear-gradient(135deg, #FF8A2B 0 4px, rgba(255,138,43,0.25) 4px 8px)',
-                      }}
-                    />
-                    <Typography sx={{ fontSize: '0.86rem', lineHeight: 1.45, color: 'var(--text-secondary)' }}>
-                      {text}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          </Box>
-        </Reveal>
-
-        <Reveal delay={140}>
-          <Box sx={{ maxWidth: 760, mx: 'auto', mb: { xs: 3.5, md: 4.5 } }}>
-            <Calculator />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={180}>
-          <Typography
-            sx={{
-              fontFamily: MONO,
-              fontSize: '0.76rem',
-              lineHeight: 1.8,
-              color: 'var(--text-muted)',
-              maxWidth: '66ch',
-            }}
-          >
-            Reported after a period closes, never promised before it opens.
-          </Typography>
-        </Reveal>
-      </Section>
-
-      {/* ── 3. Is any of it real ──────────────────────────────────── */}
-      <Section ground={WARM} sx={{ py: { xs: 7, md: 10 } }}>
+      {/* ── 2. Where the stake actually goes ───────────────────────── */}
+      <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
             <SectionHead
-              n="02"
-              eyebrow="Where the stake works"
               title="Where the work actually happens."
               lede="Your $OPEN does not leave your wallet. What it backs is deployed across three places, and two different kinds of thing come back: a rate the contract owes you either way, and whatever the book makes on top."
             />
@@ -1251,11 +772,11 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 4. There are two tokens ───────────────────────────────── */}
+      {/* ── 3. There are two tokens ───────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead n="03" tier="minor" eyebrow={C.stakes.eyebrow} title={C.stakes.title} lede={C.stakes.lede} />
+            <SectionHead tier="minor" title={C.stakes.title} lede={C.stakes.lede} />
           </Box>
         </Reveal>
 
@@ -1321,7 +842,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 5. And the app is free at a hundred. The one band of ink,
+      {/* ── 4. And the app is free at a hundred. The one band of ink,
              spent on the section that asks you to stop paying for
              something. ──────────────────────────────────────────── */}
       <Section ground="ink" sx={{ py: { xs: 8, md: 11 } }}>
@@ -1335,7 +856,7 @@ export default function StakePage() {
         >
           <Reveal>
             <Box>
-              <SectionHead n="04" tier="minor" onInk eyebrow={C.pro.eyebrow} title={C.pro.title} lede={C.pro.lede} maxWidth={480} />
+              <SectionHead tier="minor" onInk title={C.pro.title} lede={C.pro.lede} maxWidth={480} />
               <Box sx={{ mt: 4 }}>
                 <Button href={LINKS.stake} primary>
                   Stake $OPEN
@@ -1368,7 +889,7 @@ export default function StakePage() {
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead n="05" tier="minor" eyebrow="How $OPEN works" title={C.howTitle} />
+            <SectionHead tier="minor" title={C.howTitle} />
           </Box>
         </Reveal>
 
@@ -1484,9 +1005,8 @@ export default function StakePage() {
             >
               Staking rewards are not a guarantee. The {RATES.base} floor is fixed; the{' '}
               {RATES.total} is a target the treasury is run to, not a promised rate, and what
-              lands above the floor varies by period. The calculator is an illustration on the
-              figures above, not a quote. Nothing here is investment advice. Read the terms
-              before you stake.
+              lands above the floor varies by period. Nothing here is investment advice.
+              Read the terms before you stake.
             </Typography>
           </Box>
         </Reveal>
