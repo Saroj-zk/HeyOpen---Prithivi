@@ -25,7 +25,6 @@ export default function PricingSection() {
      ancestor would cut it off from what it blends against. */
   const [leftRef, leftShown] = useReveal();
   const [rightRef, rightShown] = useReveal();
-  const [payRef, payShown] = useReveal();
 
   const [clipRef, clipInView] = useInView('1000px');
   const clipVideoRef = React.useRef(null);
@@ -160,6 +159,71 @@ export default function PricingSection() {
             </Box>
             ,{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>uncensored</Box>.
+          </Typography>
+
+          {/* How you settle it.
+
+              This has been in two wrong places already. It had a section of
+              its own below, which was a panel's worth of furniture for a
+              reassurance; then it was a grey line at the very foot of this
+              one, which nobody reaches. Position is the cheapest prominence
+              there is, so it sits here instead: the sentence after the one
+              that says what it costs, which is exactly when a reader wants
+              it.
+
+              One tinted rule and one line of type, and no more than that. It
+              does not need a card, an icon or a figure to be read; it needed
+              to be where the eye already was. The stake half carries the
+              accent because it is the half nobody expects.
+
+              The hedge sits outside the band, small, because it qualifies
+              the claim rather than sharing its weight. IT HAS NOT BEEN
+              REVIEWED. No rate appears: what a stake earns is not settled in
+              this repo and a figure here would read as a promise. Nothing is
+              said about chains, custody or lock-up, because none of that was
+              given. */}
+          <Box
+            sx={{
+              mt: { xs: 3, md: 3.5 },
+              mx: 'auto',
+              maxWidth: 680,
+              px: { xs: 2.2, md: 3 },
+              py: { xs: 1.6, md: 1.9 },
+              borderRadius: '16px',
+              border: '1px solid rgba(255,102,0,0.24)',
+              backgroundColor: isDark ? 'rgba(255,102,0,0.09)' : 'rgba(255,102,0,0.06)',
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: { xs: '0.98rem', md: '1.08rem' },
+                fontWeight: 600,
+                lineHeight: 1.6,
+                letterSpacing: '-0.01em',
+                color: primaryText,
+                textWrap: 'balance',
+              }}
+            >
+              Pay by card or crypto. Or{' '}
+              <Box component="span" sx={{ color: '#ff6600', fontWeight: 800 }}>
+                stake USDC, ETH or BTC
+              </Box>{' '}
+              and let the yield cover your credits.
+            </Typography>
+          </Box>
+
+          <Typography
+            sx={{
+              mt: 1.3,
+              mx: 'auto',
+              maxWidth: 680,
+              fontSize: '0.75rem',
+              lineHeight: 1.6,
+              color: 'var(--text-muted)',
+            }}
+          >
+            What a stake earns moves with the market. Rates are not fixed and nothing here is a
+            guaranteed return.
           </Typography>
         </Box>
 
@@ -493,48 +557,6 @@ export default function PricingSection() {
           }}>
             Compare all tiers
           </Button>
-        </Box>
-
-        {/* How you settle it.
-
-            This had a section of its own under the price: two cards, a
-            drawn figure and a row of payment rails. That was a panel's worth
-            of furniture for a reassurance. Nobody arrives wondering whether
-            they can use a card, and the one genuinely new part, that a
-            staked position can cover the bill out of its yield, is a single
-            clause. It belongs at the foot of the price, where the question
-            is asked, said once and quietly.
-
-            The hedge stays at full size relative to the claim, because the
-            claim is about money. It is the shortest true thing that can be
-            said and IT HAS NOT BEEN REVIEWED. Nothing is said about chains,
-            custody or lock-up, because none of that was given, and no rate
-            appears anywhere: what a stake earns is not settled in this repo
-            and a figure here would read as a promise. */}
-        <Box
-          ref={payRef}
-          sx={{
-            maxWidth: 760,
-            mx: 'auto',
-            mt: { xs: 5, md: 7 },
-            pt: { xs: 3, md: 3.5 },
-            borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'}`,
-            textAlign: 'center',
-            ...revealSx(payShown, 80),
-          }}
-        >
-          <Typography sx={{ fontSize: { xs: '0.92rem', md: '0.98rem' }, lineHeight: 1.7, color: secondaryText, textWrap: 'pretty' }}>
-            Pay by{' '}
-            <Box component="span" sx={{ fontWeight: 700, color: primaryText }}>card or crypto</Box>
-            , whichever you already use. Or stake{' '}
-            <Box component="span" sx={{ fontWeight: 700, color: primaryText }}>USDC, ETH or BTC</Box>
-            {' '}and the yield arrives as credits, so the position you already hold covers what you
-            spend.
-          </Typography>
-          <Typography sx={{ mt: 1.2, fontSize: '0.75rem', lineHeight: 1.6, color: 'var(--text-muted)' }}>
-            What a stake earns moves with the market. Rates are not fixed and nothing here is a
-            guaranteed return.
-          </Typography>
         </Box>
 
       </Container>
