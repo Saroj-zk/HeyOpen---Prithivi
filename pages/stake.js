@@ -133,6 +133,7 @@ const PATHS = {
   chat: 'M10 3.5c4.1 0 7.5 2.4 7.5 5.4S14.1 14.3 10 14.3c-.7 0-1.4-.1-2.1-.2L4 16l1-3C3.4 12 2.5 10.6 2.5 8.9 2.5 5.9 5.9 3.5 10 3.5Z',
   code: 'M7.3 5.5 3 10l4.3 4.5M12.7 5.5 17 10l-4.3 4.5M11.3 4.2l-2.6 11.6',
   bot: 'M10 2.5v2.2M6.2 4.7h7.6A2.2 2.2 0 0 1 16 6.9v6.2a2.2 2.2 0 0 1-2.2 2.2H6.2A2.2 2.2 0 0 1 4 13.1V6.9a2.2 2.2 0 0 1 2.2-2.2ZM7.6 8.8v1.6M12.4 8.8v1.6M4 9.4H2.6M16 9.4h1.4',
+  bolt: 'M11.5 2 4.5 11.5H9l-.5 6.5 7-9.5H11z',
 };
 
 /** Market data and the contract, wherever they are least in the way. */
@@ -745,10 +746,10 @@ function WhiteLabel() {
                 cursor: 'pointer',
                 border: on ? '1px solid rgba(11,15,26,0.07)' : '1px solid transparent',
                 borderRadius: '999px',
-                px: { xs: 1, md: 2 },
+                px: { xs: 0.5, md: 2 },
                 py: { xs: 1, md: 1.15 },
                 fontFamily: 'inherit',
-                fontSize: { xs: '0.78rem', md: '0.9rem' },
+                fontSize: { xs: '0.76rem', md: '0.9rem' },
                 fontWeight: on ? 700 : 600,
                 letterSpacing: '-0.01em',
                 lineHeight: 1.2,
@@ -771,11 +772,20 @@ function WhiteLabel() {
         aria-labelledby={`stack-tab-${item.id}`}
         sx={{ mt: { xs: 2.2, md: 2.8 } }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: { xs: 1.6, md: 1.8 } }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 1.5,
+            mb: { xs: 1.6, md: 1.8 },
+          }}
+        >
           <Chip name={item.mark} />
           <Typography
             sx={{
-              minWidth: 0,
+              flex: '1 1 auto',
+              minWidth: '150px',
               fontSize: { xs: '1rem', md: '1.12rem' },
               fontWeight: 700,
               letterSpacing: '-0.025em',
@@ -816,7 +826,7 @@ function WhiteLabel() {
               ...PANEL_INK,
               px: { xs: 2.2, md: 3 },
               py: { xs: 2.4, md: 2.8 },
-              minHeight: { xs: 104, md: 118 },
+              minHeight: { xs: 104, md: 110 },
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -867,8 +877,8 @@ function WhiteLabel() {
             color: 'var(--text-muted)',
           }}
         >
-          <Mark name="spark" size={14} />
-          <Label>Powered by Hey Open infrastructure</Label>
+          <Mark name="bolt" size={14} />
+          <Label sx={{ textAlign: 'center' }}>Powered by Hey Open infrastructure</Label>
         </Box>
       </Box>
     </Box>
@@ -1063,10 +1073,20 @@ export default function StakePage() {
           no way to see. It sits here rather than later because it answers
           the section it follows.
 
+          It is the one section on a ground of its own. On the page's flat
+          white everything here read as plain, and the white showcase panel
+          had nothing to sit against. The tint is the site's existing alt
+          background rather than a new colour: cool, where the page's only
+          other tint is the warm glow behind the hero, so the two cannot be
+          mistaken for each other.
+
           No eyebrow, because no heading on this page has one. */}
-      <Section sx={{ py: { xs: 7, md: 10 } }}>
+      <Section
+        ground="linear-gradient(180deg, #F2F5F9 0%, #EBF0F5 46%, #EFF3F7 100%)"
+        sx={{ py: { xs: 7, md: 10 } }}
+      >
         <Reveal>
-          <Box sx={{ mb: { xs: 3.5, md: 4.5 } }}>
+          <Box sx={{ mb: { xs: 3, md: 3.5 } }}>
             <SectionHead
               tier="minor"
               title={
@@ -1090,8 +1110,8 @@ export default function StakePage() {
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
               gap: { xs: 2.6, md: 5 },
-              mt: { xs: 3.5, md: 4.5 },
-              pt: { xs: 3.5, md: 4 },
+              mt: { xs: 3, md: 3 },
+              pt: { xs: 3, md: 3 },
               borderTop: `1px solid ${RULE}`,
             }}
           >
@@ -1109,7 +1129,7 @@ export default function StakePage() {
         <Reveal delay={60}>
           <Typography
             sx={{
-              mt: { xs: 3, md: 3.5 },
+              mt: { xs: 2.5, md: 2.5 },
               maxWidth: 620,
               fontSize: { xs: '1.02rem', md: '1.12rem' },
               fontWeight: 700,
