@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
+import TokenFlowDiagram from '@/components/TokenFlowDiagram';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
 import { MONO, RULE, RULE_ON_INK, FIG, Label, Entry, Button } from '@/components/ui/Ledger';
@@ -346,7 +347,7 @@ const HEAD_STRIP = {
  */
 const HEADER = { xs: '78px', md: '92px' };
 
-function Section({ ground, full = true, first, children, sx }) {
+function Section({ ground, full = true, first, bare, children, sx }) {
   const tall = first
     ? { xs: `calc(100vh - ${HEADER.xs})`, md: `calc(100vh - ${HEADER.md})` }
     : '100vh';
@@ -379,9 +380,13 @@ function Section({ ground, full = true, first, children, sx }) {
         ...sx,
       }}
     >
-      <Container maxWidth="lg" sx={{ width: '100%', px: { xs: 2.5, sm: 4, md: 6 } }}>
-        {children}
-      </Container>
+      {bare ? (
+        children
+      ) : (
+        <Container maxWidth="lg" sx={{ width: '100%', px: { xs: 2.5, sm: 4, md: 6 } }}>
+          {children}
+        </Container>
+      )}
     </Box>
   );
 }
@@ -729,7 +734,15 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 2. Where the stake actually goes ───────────────────────── */}
+      {/* ── 2. The four moves ──────────────────────────────────────
+          The flowchart from before the merge that replaced it, recovered and
+          put where it belongs. It brings its own Container, hence `bare`.
+          No eyebrow, because no heading on this page has one. */}
+      <Section bare>
+        <TokenFlowDiagram />
+      </Section>
+
+      {/* ── 3. Where the stake actually goes ───────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
@@ -811,7 +824,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 3. There are two tokens ───────────────────────────────── */}
+      {/* ── 4. There are two tokens ───────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
@@ -881,7 +894,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 4. And the app is free at a hundred. The one band of ink,
+      {/* ── 5. And the app is free at a hundred. The one band of ink,
              spent on the section that asks you to stop paying for
              something. ──────────────────────────────────────────── */}
       <Section ground="ink" sx={{ py: { xs: 8, md: 11 } }}>
