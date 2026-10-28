@@ -130,6 +130,9 @@ const PATHS = {
   diamond: 'M10 2.5 17 10l-7 7.5L3 10z',
   spark: 'M10 2.5v15M2.5 10h15M5 5l10 10M15 5 5 15',
   coins: 'M12.5 6.5a4.5 2.5 0 1 1-9 0 4.5 2.5 0 0 1 9 0ZM3.5 6.5v4c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4M7.5 13.3v1.2c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4c0-1-1-1.9-2.6-2.3',
+  chat: 'M10 3.5c4.1 0 7.5 2.4 7.5 5.4S14.1 14.3 10 14.3c-.7 0-1.4-.1-2.1-.2L4 16l1-3C3.4 12 2.5 10.6 2.5 8.9 2.5 5.9 5.9 3.5 10 3.5Z',
+  code: 'M7.3 5.5 3 10l4.3 4.5M12.7 5.5 17 10l-4.3 4.5M11.3 4.2l-2.6 11.6',
+  bot: 'M10 2.5v2.2M6.2 4.7h7.6A2.2 2.2 0 0 1 16 6.9v6.2a2.2 2.2 0 0 1-2.2 2.2H6.2A2.2 2.2 0 0 1 4 13.1V6.9a2.2 2.2 0 0 1 2.2-2.2ZM7.6 8.8v1.6M12.4 8.8v1.6M4 9.4H2.6M16 9.4h1.4',
 };
 
 /** Market data and the contract, wherever they are least in the way. */
@@ -644,6 +647,235 @@ function Node({ tag, k, s, mark, tone, big, sx }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* What the enterprise side actually sells                             */
+/* ------------------------------------------------------------------ */
+
+/* Three products on one set of rails. The chrome line is what the buyer's
+   own customer sees; the line under it is what the product does. */
+const STACK = [
+  {
+    id: 'apps',
+    tab: 'AI Apps',
+    mark: 'chat',
+    name: 'Branded AI Workspace',
+    chrome: 'Your enterprise brand',
+    k: 'Ask your AI assistant',
+    s: 'Private workspace. Multiple models. Managed inference.',
+  },
+  {
+    id: 'api',
+    tab: 'Inference APIs',
+    mark: 'code',
+    name: 'Enterprise Model API',
+    chrome: 'Your enterprise API',
+    k: 'POST /v1/inference',
+    mono: true,
+    s: 'Model access. Usage metering. Scalable compute.',
+  },
+  {
+    id: 'agents',
+    tab: 'AI Agents',
+    mark: 'bot',
+    name: 'Enterprise Agent Platform',
+    chrome: 'Your enterprise agents',
+    k: 'Automate complex workflows',
+    s: 'AI agents. Tools. Managed execution.',
+  },
+];
+
+/* THE FIRST LINE IS NOT THE SUPPLIED ONE. "Their brand. Our technology."
+   was the same sentence as the headline three inches above it, which reads
+   as a copy bug rather than as a bookend. The other two are verbatim. */
+const STACK_PROOF = [
+  ['White-label', 'The product ships under their name.'],
+  ['Prepaid compute', 'Committed usage, clear billing.'],
+  ['Scalable inference', 'Infrastructure that grows with demand.'],
+];
+
+/**
+ * One platform, three businesses, shown rather than listed.
+ *
+ * The three products differ in one way only, which is what the buyer's own
+ * customer ends up looking at. A list of three bullet points hides that; a
+ * single device that changes what is on its screen is the whole argument in
+ * one object. So the frame, the chrome label and the footer never move, and
+ * only the screen swaps.
+ *
+ * The screen is the one piece of ink in this section, because it is a
+ * screen. Everything around it is the page's ordinary white panel, which is
+ * what keeps the dark card reading as a product rather than as a band.
+ *
+ * It holds a minimum height so the three do not resize the section as a
+ * reader clicks through them. Content that jumps on a tab change is the
+ * fastest way to make a control feel broken.
+ */
+function WhiteLabel() {
+  const [active, setActive] = React.useState(0);
+  const item = STACK[active];
+
+  return (
+    <Box sx={{ ...PANEL, p: { xs: 1.8, md: 2.8 } }}>
+      <Box
+        role="tablist"
+        aria-label="White-label products"
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '4px',
+          p: '4px',
+          borderRadius: '999px',
+          backgroundColor: 'rgba(11,15,26,0.045)',
+          border: `1px solid ${RULE}`,
+        }}
+      >
+        {STACK.map((p, i) => {
+          const on = i === active;
+          return (
+            <Box
+              key={p.id}
+              component="button"
+              type="button"
+              role="tab"
+              id={`stack-tab-${p.id}`}
+              aria-selected={on}
+              aria-controls={`stack-panel-${p.id}`}
+              onClick={() => setActive(i)}
+              sx={{
+                appearance: 'none',
+                cursor: 'pointer',
+                border: on ? '1px solid rgba(11,15,26,0.07)' : '1px solid transparent',
+                borderRadius: '999px',
+                px: { xs: 1, md: 2 },
+                py: { xs: 1, md: 1.15 },
+                fontFamily: 'inherit',
+                fontSize: { xs: '0.78rem', md: '0.9rem' },
+                fontWeight: on ? 700 : 600,
+                letterSpacing: '-0.01em',
+                lineHeight: 1.2,
+                color: on ? 'var(--text-heading)' : 'var(--text-muted)',
+                backgroundColor: on ? '#FFFFFF' : 'transparent',
+                boxShadow: on ? '0 1px 2px rgba(11,15,26,0.06)' : 'none',
+                transition: 'color .18s ease, background-color .18s ease',
+                '&:hover': { color: 'var(--text-heading)' },
+              }}
+            >
+              {p.tab}
+            </Box>
+          );
+        })}
+      </Box>
+
+      <Box
+        role="tabpanel"
+        id={`stack-panel-${item.id}`}
+        aria-labelledby={`stack-tab-${item.id}`}
+        sx={{ mt: { xs: 2.2, md: 2.8 } }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: { xs: 1.6, md: 1.8 } }}>
+          <Chip name={item.mark} />
+          <Typography
+            sx={{
+              minWidth: 0,
+              fontSize: { xs: '1rem', md: '1.12rem' },
+              fontWeight: 700,
+              letterSpacing: '-0.025em',
+              lineHeight: 1.2,
+              color: 'var(--text-heading)',
+            }}
+          >
+            {item.name}
+          </Typography>
+          <Label
+            sx={{
+              ml: 'auto',
+              flexShrink: 0,
+              px: '11px',
+              py: '5px',
+              borderRadius: '999px',
+              border: `1px solid ${RULE}`,
+              backgroundColor: 'var(--bg-card)',
+            }}
+          >
+            White-label
+          </Label>
+        </Box>
+
+        {/* The buyer's chrome, and inside it the screen their customer sees. */}
+        <Box
+          sx={{
+            borderRadius: '18px',
+            border: `1px solid ${RULE}`,
+            backgroundColor: 'rgba(11,15,26,0.035)',
+            p: { xs: 1.3, md: 1.7 },
+          }}
+        >
+          <Label sx={{ display: 'block', mb: 1.1, ml: '6px' }}>{item.chrome}</Label>
+          <Box
+            key={item.id}
+            sx={{
+              ...PANEL_INK,
+              px: { xs: 2.2, md: 3 },
+              py: { xs: 2.4, md: 2.8 },
+              minHeight: { xs: 104, md: 118 },
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              '@keyframes stackIn': {
+                from: { opacity: 0, transform: 'translateY(6px)' },
+                to: { opacity: 1, transform: 'none' },
+              },
+              animation: 'stackIn .3s cubic-bezier(0.16, 1, 0.3, 1)',
+              '@media (prefers-reduced-motion: reduce)': { animation: 'none' },
+            }}
+          >
+            <Typography
+              sx={{
+                fontFamily: item.mono ? MONO : undefined,
+                fontSize: item.mono
+                  ? { xs: '1.02rem', md: '1.2rem' }
+                  : { xs: '1.14rem', md: '1.4rem' },
+                fontWeight: item.mono ? 500 : 700,
+                letterSpacing: item.mono ? '-0.01em' : '-0.03em',
+                lineHeight: 1.2,
+                color: '#FFFFFF',
+              }}
+            >
+              {item.k}
+            </Typography>
+            <Typography
+              sx={{
+                mt: 1.1,
+                fontSize: { xs: '0.84rem', md: '0.88rem' },
+                lineHeight: 1.55,
+                color: 'rgba(255,255,255,0.62)',
+              }}
+            >
+              {item.s}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            mt: { xs: 1.8, md: 2.2 },
+            pt: { xs: 1.5, md: 1.8 },
+            borderTop: `1px solid ${RULE}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 1.1,
+            color: 'var(--text-muted)',
+          }}
+        >
+          <Mark name="spark" size={14} />
+          <Label>Powered by Hey Open infrastructure</Label>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 
 export default function StakePage() {
   /* Four versions of this page's words live in data/stakeCopy. D is the one
@@ -824,7 +1056,75 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 4. There are two tokens ───────────────────────────────── */}
+      {/* ── 4. And who all that compute is sold to ───────────
+          The cards above name compute capital and AI infrastructure as two
+          of the three places the stake is deployed. This is the demand on
+          the other side of both, which is the part a staker otherwise has
+          no way to see. It sits here rather than later because it answers
+          the section it follows.
+
+          No eyebrow, because no heading on this page has one. */}
+      <Section sx={{ py: { xs: 7, md: 10 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 3.5, md: 4.5 } }}>
+            <SectionHead
+              tier="minor"
+              title={
+                <>
+                  <Box component="span" sx={{ display: 'block' }}>Their brand.</Box>
+                  <Box component="span" sx={{ display: 'block' }}>Our infrastructure.</Box>
+                </>
+              }
+              lede="Hey Open powers white-label AI products for businesses. From inference APIs to complete AI applications, enterprises can launch under their own brand while we manage the infrastructure behind them."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <WhiteLabel />
+        </Reveal>
+
+        <Reveal delay={60}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+              gap: { xs: 2.6, md: 5 },
+              mt: { xs: 3.5, md: 4.5 },
+              pt: { xs: 3.5, md: 4 },
+              borderTop: `1px solid ${RULE}`,
+            }}
+          >
+            {STACK_PROOF.map(([title, body]) => (
+              <Box key={title}>
+                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 1.1 }}>
+                  {title}
+                </Typography>
+                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <Typography
+            sx={{
+              mt: { xs: 3, md: 3.5 },
+              maxWidth: 620,
+              fontSize: { xs: '1.02rem', md: '1.12rem' },
+              fontWeight: 700,
+              letterSpacing: '-0.025em',
+              lineHeight: 1.45,
+              color: 'var(--text-heading)',
+              textWrap: 'pretty',
+            }}
+          >
+            Every deployment creates another channel for AI compute demand.
+          </Typography>
+        </Reveal>
+      </Section>
+
+      {/* ── 5. There are two tokens ───────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
@@ -894,7 +1194,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 5. And the app is free at a hundred. The one band of ink,
+      {/* ── 6. And the app is free at a hundred. The one band of ink,
              spent on the section that asks you to stop paying for
              something. ──────────────────────────────────────────── */}
       <Section ground="ink" sx={{ py: { xs: 8, md: 11 } }}>
@@ -937,7 +1237,7 @@ export default function StakePage() {
         </Box>
       </Section>
 
-      {/* ── 6. So start ───────────────────────────────────────────── */}
+      {/* ── 7. So start ───────────────────────────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4, md: 5 } }}>
