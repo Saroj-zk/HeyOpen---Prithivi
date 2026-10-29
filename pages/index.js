@@ -11,6 +11,7 @@ import ProductMatrixSection from '@/components/ProductMatrixSection';
    uncommenting these two lines. */
 // import TokenFlowSection from '@/components/TokenFlowSection';
 import BurnEnterpriseSection from '@/components/BurnEnterpriseSection';
+import ComputeOptionsSection from '@/components/ComputeOptionsSection';
 // import ComputeMarketSection from '@/components/ComputeMarketSection';
 import PricingSection from '@/components/PricingSection';
 import HowYouPaySection from '@/components/HowYouPaySection';
@@ -50,6 +51,11 @@ export default function Home() {
         {/* What happens to the money that does get spent, and when enterprise
             pays for it. */}
         <BurnEnterpriseSection />
+        {/* One of the things producing the funnel's first revenue line, so
+            it follows directly. Not to be confused with the hidden compute
+            market section below: that one was about building a venue for
+            these contracts, this one is about selling them. */}
+        <ComputeOptionsSection />
         {/* Hidden on request. The component is untouched, so putting it back
             is uncommenting this line and its import. It opened up revenue line
             04 of the funnel above and was marked in development throughout. */}
