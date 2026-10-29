@@ -123,6 +123,43 @@ const BENEFITS = [
   },
 ];
 
+/* 03a. Six lines of revenue, each with the kind of revenue it is. The
+   second line is the one doing the work: "subscriptions" and "commission
+   on paid agents" are different businesses, and naming the kind is what
+   stops the six reading as six words for the same thing. */
+const REVENUE = [
+  [
+    'Hey Open subscriptions',
+    'Monthly and annual plans for private multi-model AI, expanded usage and premium features.',
+    'Consumer recurring revenue',
+  ],
+  [
+    'Developer AI APIs',
+    'Inference usage through one API layer, with margin on model routing and access.',
+    'Usage-based API margin',
+  ],
+  [
+    'Enterprise private AI',
+    'Private inference, managed deployments, governance controls and white-label contracts.',
+    'Enterprise contracts',
+  ],
+  [
+    'Compute options fees',
+    'Hedging, structuring, transaction and settlement services for GPU and cloud-price risk.',
+    'Financial marketplace fees',
+  ],
+  [
+    'Agent marketplace',
+    'Commission on paid agents, workflow tools and agent subscriptions.',
+    'Marketplace take rate',
+  ],
+  [
+    'Agent and memory infrastructure',
+    'Hosting, secure memory, developer services and advanced privacy infrastructure.',
+    'Infrastructure services',
+  ],
+];
+
 /* 03. What a qualifying stake turns on. Title and line, not name and
    figure, because none of these four are quantities. */
 const PRO = [
@@ -1004,7 +1041,98 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 3. And what it unlocks. HIDDEN ────────────
+      {/* ── 3. Where the money actually comes from ───────
+          The section above lists what a holder gets. This is the other half
+          of that promise: the businesses the gets are paid out of. It
+          follows immediately because a reader who has just been shown a
+          rate and a buyback is owed the answer to "funded by what".
+
+          Light, because the section above it is ink. Six cards in three
+          columns, which is the only arrangement where six of anything reads
+          as a set rather than a list.
+
+          No icons. The section above had them and lost them, and six
+          decorative tiles here would put the page straight back where it
+          was. The second line carries the colour instead, and it earns it:
+          it names the kind of revenue, which is the part that makes six
+          different businesses legible as six different businesses.
+
+          The kind sits on a rule at the foot of every card, pushed there
+          rather than following the copy, so all six line up however long
+          the description above them runs. */}
+      <Section sx={{ py: { xs: 7, md: 9 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
+            <SectionHead
+              eyebrow="Revenue, not speculation"
+              maxWidth={820}
+              title={
+                <>
+                  Six ways to generate{' '}
+                  <Box component="span" sx={{ color: 'var(--brand-accent)' }}>real revenue.</Box>
+                </>
+              }
+              lede="Not all revenue needs to come from speculation. The ecosystem is designed around payments for useful products and financial services."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+              gap: { xs: 1.8, md: 2.2 },
+            }}
+          >
+            {REVENUE.map(([name, body, kind]) => (
+              <Box
+                key={name}
+                sx={{
+                  ...PANEL,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  px: { xs: 2.2, md: 2.6 },
+                  py: { xs: 2.4, md: 2.6 },
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: { xs: '1.06rem', md: '1.12rem' },
+                    fontWeight: 750,
+                    letterSpacing: '-0.025em',
+                    lineHeight: 1.3,
+                    color: 'var(--text-heading)',
+                  }}
+                >
+                  {name}
+                </Typography>
+
+                <Typography sx={{ mt: 1, fontSize: '0.92rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                  {body}
+                </Typography>
+
+                <Box sx={{ mt: 'auto', pt: { xs: 1.8, md: 2 } }}>
+                  <Typography
+                    sx={{
+                      pt: { xs: 1.4, md: 1.6 },
+                      borderTop: `1px solid ${RULE}`,
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      letterSpacing: '-0.01em',
+                      color: 'var(--brand-accent)',
+                    }}
+                  >
+                    {kind}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Reveal>
+      </Section>
+
+      {/* ── 4. And what it unlocks. HIDDEN ────────────
           Reverted to the design it had before the darker pass, then hidden.
           The ink band with the benefits in a panel and the threshold as a
           tinted strip at its foot, exactly as it was.
@@ -1095,7 +1223,7 @@ export default function StakePage() {
         </Section>
       )}
 
-      {/* ── 4. And what sits on top of the rate. HIDDEN ─────────────────────
+      {/* ── 5. And what sits on top of the rate. HIDDEN ─────────────────────
           Two figures, side by side, because that is the only honest way to
           show them: one is owed and the other is aimed at. They are set at
           the same size so neither looks like the headline, and the one that
@@ -1229,7 +1357,7 @@ export default function StakePage() {
         </Section>
       )}
 
-      {/* ── 5. Where the stake actually works ───────────────────────── */}
+      {/* ── 6. Where the stake actually works ───────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
@@ -1313,7 +1441,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 6. The business behind all of it ────────────────────────
+      {/* ── 7. The business behind all of it ────────────────────────
           One object, and the most worked one on this half of the page,
           because it is the only thing here asking a reader to leave. The
           panel carries its own light and the three claims sit in it as
@@ -1486,7 +1614,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 7. What that does to the supply ─────────────────────────
+      {/* ── 8. What that does to the supply ─────────────────────────
           The supply figure keeps the treatment it has always had and takes
           the accent, because it is the one number on this page that cannot
           move. The three mechanics run beside it as a list rather than as
@@ -1566,7 +1694,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 8. So start ────────────────────────────────────────────
+      {/* ── 9. So start ────────────────────────────────────────────
           Three cards, and the third has no button on purpose: the first two
           are things a reader does and the third is what happens as a
           result. A button there would promise a page that does not exist.
