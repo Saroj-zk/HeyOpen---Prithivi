@@ -31,6 +31,16 @@ import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Led
 
 const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' };
 
+/* The only real contact address in the repo; the legal pages use the same
+   one. IF ENTERPRISE ENQUIRIES SHOULD LAND SOMEWHERE ELSE, this is the one
+   line to change.
+
+   A mailto rather than the home page's Talk to Sales dialog, which is not
+   wired to anything: its submit handler clears the form, shows a toast
+   promising a reply within two business hours, and discards what was
+   typed. A second copy of that promise is not worth having. */
+const CONTACT = 'mailto:marketing@openledger.xyz?subject=Enterprise%20enquiry';
+
 /* The share of eligible net revenue spent buying $OPEN back. Not the return
    target quoted on the stake page: a different measure of a different thing,
    free to move apart from it. */
@@ -893,7 +903,7 @@ const ALLOCATED = [
   },
   {
     t: '$OPEN economy',
-    s: `Support proposed buybacks and burns under the ${ALLOC_BAND} allocation policy.`,
+    s: `Support proposed buybacks and burns under the policy.`,
     accent: true,
   },
 ];
@@ -1471,6 +1481,110 @@ export default function EnterprisePage() {
       <Section sx={{ py: { xs: 7, md: 5 } }}>
         <Reveal>
           <RevenueFlow />
+        </Reveal>
+      </Section>
+
+
+      {/* ── 4. The close ─────────────
+          The page opens by selling white-label AI to enterprises and then
+          spends three sections on the business behind it. Until now it
+          closed by asking the reader to stake a token, which is the right
+          ask for one of its two audiences and no ask at all for the other.
+          An enterprise reader could get to the bottom of the enterprise
+          page without ever being told how to start a conversation.
+
+          So: one ask, for the audience the page opened with.
+
+          Ink, which bookends the ink section in the middle and separates
+          the close from the white sheet above it. Centred and short, which
+          is a fourth composition on a page whose other three are
+          words-beside-a-thing, words-above-a-thing and one sheet.
+
+          The three products are named again underneath because this is the
+          end of the page and a reader arriving from the funnel above has
+          been reading about treasury policy for two screens. It is a
+          reminder of what is actually being bought, not a feature list. */}
+      <Section ground="ink" full={false} sx={{ py: { xs: 8, md: 11 } }}>
+        <Reveal>
+          <Box sx={{ maxWidth: 680, mx: 'auto', textAlign: 'center' }}>
+            <Label onInk sx={{ display: 'block', mb: 1.8, color: 'var(--brand-accent)' }}>
+              For enterprises
+            </Label>
+
+            <Typography
+              component="h2"
+              sx={{
+                fontSize: { xs: '2rem', sm: '2.4rem', md: '2.9rem' },
+                fontWeight: 700,
+                letterSpacing: '-0.035em',
+                lineHeight: 1.06,
+                color: '#FFFFFF',
+                textWrap: 'balance',
+              }}
+            >
+              Run it under your own name.
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 2.2,
+                fontSize: { xs: '1rem', md: '1.06rem' },
+                lineHeight: 1.7,
+                color: 'rgba(255,255,255,0.66)',
+                textWrap: 'pretty',
+              }}
+            >
+              Private deployments on managed infrastructure, with the compute behind them
+              hedged so the rate you are quoted is the rate you pay.
+            </Typography>
+
+            <Box sx={{ mt: { xs: 3.2, md: 3.6 }, display: 'flex', justifyContent: 'center' }}>
+              <Button href={CONTACT} primary>Talk to the team</Button>
+            </Box>
+
+            {/* Named from STACK rather than written out again, so the close
+                cannot drift from the three products the page actually
+                shows at the top of it. */}
+            <Box
+              sx={{
+                mt: { xs: 3.6, md: 4.2 },
+                pt: { xs: 2.4, md: 2.8 },
+                borderTop: `1px solid ${RULE_ON_INK}`,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: { xs: 1.4, md: 2.2 },
+              }}
+            >
+              {STACK.map((item, i) => (
+                <React.Fragment key={item.id}>
+                  {i > 0 && (
+                    <Box
+                      aria-hidden="true"
+                      sx={{
+                        width: '3px',
+                        height: '3px',
+                        flexShrink: 0,
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(255,255,255,0.28)',
+                      }}
+                    />
+                  )}
+                  <Typography
+                    sx={{
+                      fontSize: '0.9rem',
+                      fontWeight: 600,
+                      letterSpacing: '-0.01em',
+                      color: 'rgba(255,255,255,0.58)',
+                    }}
+                  >
+                    {item.tab}
+                  </Typography>
+                </React.Fragment>
+              ))}
+            </Box>
+          </Box>
         </Reveal>
       </Section>
 
