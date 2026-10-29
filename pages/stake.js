@@ -139,6 +139,18 @@ const BENEFITS = [
   },
 ];
 
+/* The two lines the token policy figure draws. Revenue climbs as a
+   curve, because it accrues continuously; supply comes down in steps,
+   because a burn is an event and not a drift. They cross, which is the
+   headline said without words.
+
+   No value axis on either, and none implied. What the business earns and
+   what it would buy back are not settled anywhere in this repo. */
+const POLICY_REVENUE = [
+  [14, 112], [66, 104], [118, 88], [170, 74], [222, 56], [274, 44], [326, 30],
+];
+const POLICY_SUPPLY = 'M14 36 H70 V48 H126 V62 H182 V78 H238 V92 H294 V108 H326';
+
 /* 03a. Six lines of revenue, each with the kind of revenue it is. The
    second line is the one doing the work: "subscriptions" and "commission
    on paid agents" are different businesses, and naming the kind is what
@@ -1462,180 +1474,332 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 7. The business behind all of it ────────────────────────
-          One object, and the most worked one on this half of the page,
-          because it is the only thing here asking a reader to leave. The
-          panel carries its own light and the three claims sit in it as
-          lifted glass rather than as cells of a table.
+      {/* ── 7. The business behind all of it. HIDDEN ──────────
+          The ink card with its own light, the three glass claims and the
+          way through to /enterprise. Replaced by the token policy section
+          below, which answers a question this one only gestured at.
 
-          It is a card, not a band. The page's other ink is the Pro section
-          two stops up and that one runs edge to edge; this one is held
-          inside the measure, so the two cannot be taken for a pair. */}
-      <Section sx={{ py: { xs: 7, md: 9 } }}>
-        <Reveal>
-          <Box
-            sx={{
-              ...PANEL_INK,
-              position: 'relative',
-              overflow: 'hidden',
-              borderRadius: '26px',
-              px: { xs: 2.6, md: 5 },
-              py: { xs: 3.6, md: 4.6 },
-            }}
-          >
+          HIDDEN ON REQUEST. Nothing is deleted and ECONOMY is still
+          defined, so bringing it back is deleting the two lines that wrap
+          it. A comment wrapper would not work here: the markup carries
+          comments of its own and those do not nest.
+
+          Note what leaves with it. This was the page's only link to
+          /enterprise, and that page is not in the navigation. With this
+          hidden, /enterprise is reachable only by typing the address. */}
+      {false && (
+        <Section sx={{ py: { xs: 7, md: 9 } }}>
+          <Reveal>
             <Box
-              aria-hidden="true"
               sx={{
-                position: 'absolute',
-                inset: 0,
-                pointerEvents: 'none',
-                background:
-                  'radial-gradient(ellipse 60% 78% at 86% 0%, rgba(255,102,0,0.2) 0%, rgba(255,102,0,0.05) 44%, transparent 70%)',
+                ...PANEL_INK,
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: '26px',
+                px: { xs: 2.6, md: 5 },
+                py: { xs: 3.6, md: 4.6 },
               }}
-            />
-
-            <Box sx={{ position: 'relative', zIndex: 1 }}>
-              <Label onInk sx={{ display: 'block', mb: 1.8, color: 'var(--brand-accent)' }}>
-                The business behind $OPEN
-              </Label>
-              <Typography
-                component="h2"
-                sx={{
-                  maxWidth: 640,
-                  fontSize: { xs: '1.85rem', sm: '2.25rem', md: '2.6rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.04em',
-                  lineHeight: 1.06,
-                  color: '#FFFFFF',
-                }}
-              >
-                <Box component="span" sx={{ display: 'block' }}>Real AI demand.</Box>
-                <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
-                  A stronger $OPEN economy.
-                </Box>
-              </Typography>
-
-              <Typography
-                sx={{
-                  mt: { xs: 2, md: 2.4 },
-                  maxWidth: 620,
-                  fontSize: { xs: '0.96rem', md: '1.02rem' },
-                  lineHeight: 1.7,
-                  color: 'rgba(255,255,255,0.62)',
-                  textWrap: 'pretty',
-                }}
-              >
-                Hey Open powers white-label AI products for enterprises while managing compute
-                costs through options-based strategies. As businesses scale, infrastructure usage
-                drives commercial activity across the ecosystem.
-              </Typography>
-
+            >
               <Box
+                aria-hidden="true"
                 sx={{
-                  mt: { xs: 3, md: 3.6 },
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-                  gap: { xs: 1.6, md: 2 },
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: 'none',
+                  background:
+                    'radial-gradient(ellipse 60% 78% at 86% 0%, rgba(255,102,0,0.2) 0%, rgba(255,102,0,0.05) 44%, transparent 70%)',
                 }}
-              >
-                {ECONOMY.map(([mark, name, body]) => (
+              />
+
+              <Box sx={{ position: 'relative', zIndex: 1 }}>
+                <Label onInk sx={{ display: 'block', mb: 1.8, color: 'var(--brand-accent)' }}>
+                  The business behind $OPEN
+                </Label>
+                <Typography
+                  component="h2"
+                  sx={{
+                    maxWidth: 640,
+                    fontSize: { xs: '1.85rem', sm: '2.25rem', md: '2.6rem' },
+                    fontWeight: 700,
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1.06,
+                    color: '#FFFFFF',
+                  }}
+                >
+                  <Box component="span" sx={{ display: 'block' }}>Real AI demand.</Box>
+                  <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
+                    A stronger $OPEN economy.
+                  </Box>
+                </Typography>
+
+                <Typography
+                  sx={{
+                    mt: { xs: 2, md: 2.4 },
+                    maxWidth: 620,
+                    fontSize: { xs: '0.96rem', md: '1.02rem' },
+                    lineHeight: 1.7,
+                    color: 'rgba(255,255,255,0.62)',
+                    textWrap: 'pretty',
+                  }}
+                >
+                  Hey Open powers white-label AI products for enterprises while managing compute
+                  costs through options-based strategies. As businesses scale, infrastructure usage
+                  drives commercial activity across the ecosystem.
+                </Typography>
+
+                <Box
+                  sx={{
+                    mt: { xs: 3, md: 3.6 },
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                    gap: { xs: 1.6, md: 2 },
+                  }}
+                >
+                  {ECONOMY.map(([mark, name, body]) => (
+                    <Box
+                      key={name}
+                      sx={{
+                        borderRadius: '16px',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        background:
+                          'linear-gradient(180deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.022) 100%)',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
+                        px: { xs: 2, md: 2.3 },
+                        py: { xs: 2, md: 2.3 },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'var(--brand-accent)',
+                          backgroundColor: 'rgba(255,102,0,0.13)',
+                          border: '1px solid rgba(255,102,0,0.3)',
+                        }}
+                      >
+                        <Mark name={mark} size={20} />
+                      </Box>
+                      <Typography
+                        sx={{
+                          mt: 1.8,
+                          fontSize: { xs: '1.02rem', md: '1.06rem' },
+                          fontWeight: 700,
+                          letterSpacing: '-0.025em',
+                          lineHeight: 1.25,
+                          color: '#FFFFFF',
+                        }}
+                      >
+                        {name}
+                      </Typography>
+                      <Typography sx={{ mt: 0.8, fontSize: '0.89rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.56)' }}>
+                        {body}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+
+                <Box
+                  sx={{
+                    mt: { xs: 2.8, md: 3.4 },
+                    pt: { xs: 2.2, md: 2.6 },
+                    borderTop: `1px solid ${RULE_ON_INK}`,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    gap: 2,
+                  }}
+                >
+                  <Typography sx={{ flex: '1 1 300px', minWidth: 0, fontSize: '0.9rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
+                    How enterprise revenue, compute protection and $OPEN economics work together.
+                  </Typography>
+
                   <Box
-                    key={name}
+                    component="a"
+                    href="/enterprise"
                     sx={{
-                      borderRadius: '16px',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      background:
-                        'linear-gradient(180deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.022) 100%)',
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
-                      px: { xs: 2, md: 2.3 },
-                      py: { xs: 2, md: 2.3 },
+                      flexShrink: 0,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      px: '22px',
+                      py: '13px',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(255,255,255,0.24)',
+                      backgroundColor: 'rgba(255,255,255,0.06)',
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      letterSpacing: '-0.015em',
+                      color: '#FFFFFF',
+                      textDecoration: 'none',
+                      transition: 'background-color .18s ease, border-color .18s ease, transform .18s ease',
+                      '&:hover': {
+                        backgroundColor: 'var(--brand-accent)',
+                        borderColor: 'var(--brand-accent)',
+                        transform: 'translateY(-1px)',
+                      },
                     }}
                   >
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--brand-accent)',
-                        backgroundColor: 'rgba(255,102,0,0.13)',
-                        border: '1px solid rgba(255,102,0,0.3)',
-                      }}
-                    >
-                      <Mark name={mark} size={20} />
+                    Explore the $OPEN economy
+                    <Box component="span" aria-hidden="true" sx={{ opacity: 0.75 }}>&#8599;</Box>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Reveal>
+        </Section>
+      )}
+
+      {/* ── 8. What the business would do with the surplus ────
+          Replaces the business card above it. That one said there was a
+          business and pointed at another page; this one answers the
+          question a holder actually has, which is what happens to the
+          money once the business has it.
+
+          Words left, figure right. The figure is the headline drawn:
+          revenue climbing as a curve because it accrues continuously,
+          supply coming down in steps because a burn is an event rather
+          than a drift. They cross in the middle, which is the whole claim
+          and needs no caption to land.
+
+          The four numbered policy steps from the reference are not here on
+          purpose. Each one is a commitment about treasury mechanics, and
+          none of them is settled in this repo.
+
+          No axis, no values, no figures anywhere. What the business earns
+          and what it would buy back are unknown, and a number here would
+          read as a projection. The badge says hypothetical and the note
+          under the card says nothing is guaranteed. NEITHER HAS BEEN
+          REVIEWED. */}
+      <Section sx={{ py: { xs: 7, md: 9 } }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', lg: 'row' },
+            alignItems: { lg: 'center' },
+            gap: { xs: 4, lg: 7 },
+          }}
+        >
+          <Reveal>
+            <Box sx={{ flex: { lg: '0 1 440px' }, minWidth: 0 }}>
+              <SectionHead
+                eyebrow="The proposed token policy"
+                maxWidth="100%"
+                title={
+                  <>
+                    <Box component="span" sx={{ display: 'block' }}>Revenue grows.</Box>
+                    <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
+                      Supply can shrink.
                     </Box>
-                    <Typography
-                      sx={{
-                        mt: 1.8,
-                        fontSize: { xs: '1.02rem', md: '1.06rem' },
-                        fontWeight: 700,
-                        letterSpacing: '-0.025em',
-                        lineHeight: 1.25,
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      {name}
-                    </Typography>
-                    <Typography sx={{ mt: 0.8, fontSize: '0.89rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.56)' }}>
-                      {body}
-                    </Typography>
+                  </>
+                }
+                lede="When the business generates eligible surplus cash, a treasury policy could fund $OPEN purchases and permanent on-chain burns."
+              />
+            </Box>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <Box
+              sx={{
+                flex: { lg: '1 1 0' },
+                minWidth: 0,
+                width: '100%',
+                ...PANEL,
+                px: { xs: 2.2, md: 3.2 },
+                py: { xs: 2.4, md: 2.8 },
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  px: '12px',
+                  py: '7px',
+                  borderRadius: '999px',
+                  border: `1px solid ${RULE}`,
+                  backgroundColor: 'rgba(11,15,26,0.03)',
+                }}
+              >
+                <Label>Hypothetical, not a forecast</Label>
+              </Box>
+
+              <Box component="svg" viewBox="0 10 340 128" sx={{ width: '100%', display: 'block', mt: { xs: 2, md: 2.4 } }}>
+                <defs>
+                  <linearGradient id="policyRise" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(255,102,0,0.22)" />
+                    <stop offset="100%" stopColor="rgba(255,102,0,0.02)" />
+                  </linearGradient>
+                </defs>
+
+                {/* what the revenue line is measured against */}
+                <line
+                  x1="14"
+                  y1="126"
+                  x2="326"
+                  y2="126"
+                  stroke="rgba(15,23,42,0.12)"
+                  strokeWidth="1"
+                  vectorEffect="non-scaling-stroke"
+                />
+
+                <path
+                  d={`M${POLICY_REVENUE.map(([x, y]) => `${x} ${y}`).join(' L')} L326 126 L14 126 Z`}
+                  fill="url(#policyRise)"
+                />
+
+                {/* supply, stepping down: a burn is an event, not a drift */}
+                <path
+                  d={POLICY_SUPPLY}
+                  fill="none"
+                  stroke="#334155"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                />
+
+                <path
+                  d={`M${POLICY_REVENUE.map(([x, y]) => `${x} ${y}`).join(' L')}`}
+                  fill="none"
+                  stroke="var(--brand-accent)"
+                  strokeWidth="2.4"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </Box>
+
+              <Box sx={{ mt: 1.4, display: 'flex', flexWrap: 'wrap', gap: { xs: 1.4, md: 2.4 } }}>
+                {[['Revenue', 'var(--brand-accent)'], ['Supply', '#334155']].map(([k, c]) => (
+                  <Box key={k} sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
+                    <Box aria-hidden="true" sx={{ width: '16px', height: '0px', flexShrink: 0, borderTop: `2px solid ${c}` }} />
+                    <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{k}</Typography>
                   </Box>
                 ))}
               </Box>
 
-              <Box
+              <Typography
                 sx={{
-                  mt: { xs: 2.8, md: 3.4 },
-                  pt: { xs: 2.2, md: 2.6 },
-                  borderTop: `1px solid ${RULE_ON_INK}`,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  gap: 2,
+                  mt: { xs: 1.8, md: 2 },
+                  pt: { xs: 1.6, md: 1.8 },
+                  borderTop: `1px solid ${RULE}`,
+                  fontSize: '0.78rem',
+                  lineHeight: 1.6,
+                  color: 'var(--text-muted)',
                 }}
               >
-                <Typography sx={{ flex: '1 1 300px', minWidth: 0, fontSize: '0.9rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
-                  How enterprise revenue, compute protection and $OPEN economics work together.
-                </Typography>
-
-                <Box
-                  component="a"
-                  href="/enterprise"
-                  sx={{
-                    flexShrink: 0,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    px: '22px',
-                    py: '13px',
-                    borderRadius: '999px',
-                    border: '1px solid rgba(255,255,255,0.24)',
-                    backgroundColor: 'rgba(255,255,255,0.06)',
-                    fontSize: '0.95rem',
-                    fontWeight: 700,
-                    letterSpacing: '-0.015em',
-                    color: '#FFFFFF',
-                    textDecoration: 'none',
-                    transition: 'background-color .18s ease, border-color .18s ease, transform .18s ease',
-                    '&:hover': {
-                      backgroundColor: 'var(--brand-accent)',
-                      borderColor: 'var(--brand-accent)',
-                      transform: 'translateY(-1px)',
-                    },
-                  }}
-                >
-                  Explore the $OPEN economy
-                  <Box component="span" aria-hidden="true" sx={{ opacity: 0.75 }}>&#8599;</Box>
-                </Box>
-              </Box>
+                Illustrative only. No revenue, purchase or burn is guaranteed, and tokens burned
+                would depend on actual execution price and market conditions.
+              </Typography>
             </Box>
-          </Box>
-        </Reveal>
+          </Reveal>
+        </Box>
       </Section>
 
-      {/* ── 8. What that does to the supply ─────────────────────────
+      {/* ── 9. What that does to the supply ─────────────────────────
           The supply figure keeps the treatment it has always had and takes
           the accent, because it is the one number on this page that cannot
           move. The three mechanics run beside it as a list rather than as
@@ -1715,7 +1879,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 9. So start ────────────────────────────────────────────
+      {/* ── 10. So start ────────────────────────────────────────────
           Three cards, and the third has no button on purpose: the first two
           are things a reader does and the third is what happens as a
           result. A button there would promise a page that does not exist.
