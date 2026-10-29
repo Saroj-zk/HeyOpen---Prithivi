@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
+import TokenFlowDiagram from '@/components/TokenFlowDiagram';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
 import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Ledger';
@@ -998,7 +999,22 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 6. What that does to the supply ─────────────────────────
+      {/* ── 6. The position, end to end ───────────────────
+          The sections above are each one end of the thing: what the stake
+          pays, what it unlocks, what business stands behind it. This is the
+          whole of it in one row.
+
+          Four tiles across: what you hold, what it becomes when staked,
+          what that mints, and what arrives because of it. It is the one
+          figure on the page that shows the whole position at once rather
+          than one end of it.
+
+          It brings its own Container and its own heading, hence `bare`. */}
+      <Section bare sx={{ py: { xs: 2, md: 3 } }}>
+        <TokenFlowDiagram />
+      </Section>
+
+      {/* ── 7. What that does to the supply ─────────────────────────
           The supply figure keeps the treatment it has always had and takes
           the accent, because it is the one number on this page that cannot
           move. The three mechanics run beside it as a list rather than as
@@ -1078,7 +1094,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 7. So start ────────────────────────────────────────────
+      {/* ── 8. So start ────────────────────────────────────────────
           Three cards, and the third has no button on purpose: the first two
           are things a reader does and the third is what happens as a
           result. A button there would promise a page that does not exist.
