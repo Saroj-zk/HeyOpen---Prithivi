@@ -9,28 +9,37 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * How you settle the bill.
  *
  * ------------------------------------------------------------------
- * There are two ways to pay and the card is built in two halves, because
+ * There are two ways to pay and the section is built in two halves, because
  * that is what the thing being described actually looks like. Run together
  * as one sentence it read as a single long qualification; split, a reader
  * can see at a glance that there is a choice and which side of it is the
  * unusual one.
  *
  * The halves are not equal and the layout says so. Paying directly needs no
- * selling: everyone assumes it, so it gets the narrower column and the
+ * selling: everyone assumes it, so it gets the narrower card and the
  * quieter heading. Staking an asset you already hold and spending only what
- * it earns is the part nobody expects, so it gets the wider column, the
- * accent on its heading and the sentence that closes the argument, that the
- * position stays yours.
+ * it earns is the part nobody expects, so it gets the wider card, the
+ * accent, and the sentence that closes the argument, that the position
+ * stays yours.
  *
- * One rule between them. A vertical hairline on a desktop, a horizontal one
- * on a phone where the halves stack, which is the whole of the ornament.
  * No icons, no chips, no figure: all three have been tried here and all
  * three turned a reassurance into a pitch.
  *
  * ------------------------------------------------------------------
- * It has moved five times before landing in a section of its own, and each
- * move was a real correction rather than a redecoration.
+ * IT IS A SECTION NOW, not a card that happens to sit on its own.
  *
+ * It spent a long time as one 880px card holding a six-word eyebrow, afloat
+ * in a container twice its width, with no heading of any kind. Every other
+ * section on this page opens with an eyebrow, a title and a lede, so the
+ * one that did not read as a notice someone had stapled on rather than as
+ * part of the argument.
+ *
+ * The heading is where the idea now lives. "Pay for it, or let your
+ * holdings pay for it" IS the proposition, and it was previously nowhere on
+ * the page: a reader had to assemble it from two card titles. The halves
+ * underneath are then free to be the detail rather than the pitch.
+ *
+ * Before that it moved five times, and each move was a real correction.
  * A section with two cards, a drawn figure and a row of payment rails was a
  * panel's worth of furniture for a reassurance. A grey line at the foot of
  * the pricing section was invisible, because nobody reaches the foot. A
@@ -40,13 +49,10 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * read correctly but belonged to a section whose subject is the comparison
  * above it.
  *
- * So: its own section, one card, nothing else in it. It follows the price
- * because "what does it cost" is immediately followed by "and how do I
- * pay", and it sits on the page ground while both neighbours sit on the
- * section ground, so a band of plain page is what separates it. The card
- * keeps the radius, hairline and soft lift every other card on this page
- * uses, so it reads as part of the site rather than as a notice stapled to
- * it.
+ * It still follows the price, because "what does it cost" is immediately
+ * followed by "and how do I pay", and it still sits on the page ground
+ * while both neighbours sit on the section ground, so a band of plain page
+ * is what separates it.
  *
  * ------------------------------------------------------------------
  * THE HEDGE HAS NOT BEEN REVIEWED. Staking an asset for a return is a
@@ -61,7 +67,7 @@ import { useReveal, revealSx } from '@/utils/reveal';
  *
  * Nothing is said about chains, custody or lock-up, because none of that
  * was given. If a stake is custodied, or there is a minimum term, it
- * belongs in the right-hand column.
+ * belongs in the right-hand card.
  * ------------------------------------------------------------------
  */
 
@@ -69,18 +75,43 @@ const ORANGE = '#ff6600';
 
 export default function HowYouPaySection() {
   const { isDark } = useThemeMode();
-  const [ref, shown] = useReveal();
+  const [headRef, headShown] = useReveal();
+  const [cardsRef, cardsShown] = useReveal();
 
   const hair = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.08)';
   const heading = isDark ? '#FFFFFF' : '#111111';
   const body = isDark ? '#9CA3AF' : '#667085';
 
-  const EYEBROW = {
-    fontSize: '0.68rem',
-    fontWeight: 800,
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-  };
+  /* The two cards share everything but their tint, so the accent is the
+     only thing a reader has to notice. */
+  const card = (accent) => ({
+    flex: accent ? { md: '1 1 62%' } : { md: '0 1 38%' },
+    minWidth: 0,
+    borderRadius: '20px',
+    border: `1px solid ${accent ? (isDark ? 'rgba(255,102,0,0.3)' : 'rgba(255,102,0,0.22)') : hair}`,
+    background: accent
+      ? isDark
+        ? 'linear-gradient(180deg, rgba(255,102,0,0.1) 0%, rgba(255,102,0,0.035) 100%)'
+        : 'linear-gradient(180deg, #FFF8F3 0%, #FFFFFF 100%)'
+      : isDark
+        ? 'rgba(255,255,255,0.03)'
+        : '#FFFFFF',
+    boxShadow: isDark
+      ? 'none'
+      : accent
+        ? '0 1px 2px rgba(15,23,42,0.04), 0 24px 48px -36px rgba(214,86,0,0.3)'
+        : '0 1px 2px rgba(15,23,42,0.04), 0 24px 48px -36px rgba(15,23,42,0.2)',
+    px: { xs: 2.6, md: 3.4 },
+    py: { xs: 2.8, md: 3.2 },
+  });
+
+  const cardTitle = (accent) => ({
+    fontSize: { xs: '1.14rem', md: '1.24rem' },
+    fontWeight: 750,
+    letterSpacing: '-0.028em',
+    lineHeight: 1.3,
+    color: accent ? ORANGE : heading,
+  });
 
   return (
     <Box
@@ -94,75 +125,75 @@ export default function HowYouPaySection() {
       }}
     >
       <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
-        <Box
-          ref={ref}
-          sx={{
-            maxWidth: 880,
-            mx: 'auto',
-            borderRadius: '22px',
-            border: `1px solid ${hair}`,
-            background: isDark ? 'rgba(255,255,255,0.03)' : '#FFFFFF',
-            boxShadow: isDark
-              ? 'none'
-              : '0 1px 2px rgba(15,23,42,0.04), 0 24px 48px -36px rgba(15,23,42,0.2)',
-            px: { xs: 2.6, md: 4 },
-            py: { xs: 3, md: 3.6 },
-            ...revealSx(shown),
-          }}
-        >
-          <Typography sx={{ ...EYEBROW, color: body, mb: { xs: 2.4, md: 2.8 } }}>
-            How you pay
-          </Typography>
+        <Box sx={{ maxWidth: 1180, mx: 'auto' }}>
+          {/* ---- the proposition, which used to be nowhere ---- */}
+          <Box ref={headRef} sx={{ maxWidth: 760, mb: { xs: 3.4, md: 4.2 }, ...revealSx(headShown) }}>
+            <Typography
+              sx={{
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: ORANGE,
+                mb: 1.8,
+              }}
+            >
+              How you pay
+            </Typography>
 
+            <Typography
+              variant="h3"
+              sx={{
+                fontSize: { xs: '2.1rem', md: '2.8rem' },
+                fontWeight: 700,
+                letterSpacing: '-0.03em',
+                lineHeight: 1.1,
+                color: heading,
+                textWrap: 'balance',
+              }}
+            >
+              <Box component="span" sx={{ display: 'block' }}>Pay for it.</Box>
+              <Box component="span" sx={{ display: 'block', color: ORANGE }}>
+                Or let your holdings pay for it.
+              </Box>
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: 2.2,
+                fontSize: { xs: '1rem', md: '1.06rem' },
+                lineHeight: 1.7,
+                color: body,
+                textWrap: 'pretty',
+              }}
+            >
+              Two ways to cover your credits, and one of them leaves what you hold untouched.
+            </Typography>
+          </Box>
+
+          {/* ---- and the two of them ---- */}
           <Box
+            ref={cardsRef}
             sx={{
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
               alignItems: 'stretch',
-              gap: { xs: 2.6, md: 4.5 },
+              gap: { xs: 2, md: 2.6 },
+              ...revealSx(cardsShown, 120),
             }}
           >
-            {/* ---- the half nobody needs convincing of ---- */}
-            <Box sx={{ flex: { md: '0 1 34%' }, minWidth: 0 }}>
-              <Typography
-                sx={{
-                  fontSize: { xs: '1.08rem', md: '1.14rem' },
-                  fontWeight: 750,
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1.3,
-                  color: heading,
-                }}
-              >
-                Pay directly
-              </Typography>
-              <Typography sx={{ mt: 1, fontSize: '0.92rem', lineHeight: 1.65, color: body }}>
+            {/* the half nobody needs convincing of */}
+            <Box sx={card(false)}>
+              <Typography sx={cardTitle(false)}>Pay directly</Typography>
+              <Typography sx={{ mt: 1.2, fontSize: '0.96rem', lineHeight: 1.7, color: body }}>
                 Card or crypto, whichever you already use. One bill either way.
               </Typography>
             </Box>
 
-            {/* ---- and the half that is the point ---- */}
-            <Box
-              sx={{
-                flex: { md: '1 1 66%' },
-                minWidth: 0,
-                borderLeft: { md: `1px solid ${hair}` },
-                borderTop: { xs: `1px solid ${hair}`, md: 'none' },
-                pl: { md: 4.5 },
-                pt: { xs: 2.6, md: 0 },
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: { xs: '1.08rem', md: '1.14rem' },
-                  fontWeight: 750,
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1.3,
-                  color: ORANGE,
-                }}
-              >
-                Or stake instead
-              </Typography>
-              <Typography sx={{ mt: 1, fontSize: '0.92rem', lineHeight: 1.65, color: body }}>
+            {/* and the half that is the point */}
+            <Box sx={card(true)}>
+              <Typography sx={cardTitle(true)}>Or stake instead</Typography>
+              <Typography sx={{ mt: 1.2, fontSize: '0.96rem', lineHeight: 1.7, color: body }}>
                 Stake{' '}
                 <Box component="span" sx={{ color: heading, fontWeight: 750 }}>
                   USDC, ETH or BTC
@@ -173,12 +204,13 @@ export default function HowYouPaySection() {
             </Box>
           </Box>
 
+          {/* Across the full width, under both, because it qualifies both. */}
           <Typography
             sx={{
-              mt: { xs: 2.6, md: 3 },
-              pt: { xs: 2, md: 2.2 },
+              mt: { xs: 2.4, md: 2.8 },
+              pt: { xs: 1.8, md: 2 },
               borderTop: `1px solid ${hair}`,
-              fontSize: '0.76rem',
+              fontSize: '0.78rem',
               lineHeight: 1.6,
               color: 'var(--text-muted)',
             }}
