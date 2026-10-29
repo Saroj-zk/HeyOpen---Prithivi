@@ -15,8 +15,13 @@ const NAV_ITEMS = [
   { label: 'Models', href: '/models' },
   { label: 'Memory', href: '/memory' },
   { label: 'Private AI', href: '/private' },
-  { label: 'Stake', href: '/stake' },
-  { label: '$HEY', href: '/hey' },
+  /* The staking page is about the token, so it is named after it. */
+  { label: '$OPEN', href: '/stake' },
+  { label: 'Enterprise', href: '/enterprise' },
+  /* $HEY is hidden from the nav on request. Nothing else in the site links
+     to /hey, so the page is now reachable only by typing the address.
+     Uncomment to put it back. */
+  // { label: '$HEY', href: '/hey' },
   { label: 'Consensus', href: '#consensus-mode' },
   { label: 'Pricing', href: '#pricing' },
 ];
@@ -200,7 +205,9 @@ export default function Header() {
             <Box
               sx={{
                 position: 'relative',
-                display: { xs: 'none', sm: 'inline-flex' },
+                /* Hidden on request. Restore by putting the display value
+                   back; the pill and its COMING SOON badge are untouched. */
+                display: 'none',
                 alignItems: 'center',
                 borderRadius: '9999px',
                 py: 0.6,
@@ -348,7 +355,9 @@ export default function Header() {
               <Box
                 sx={{
                   position: 'relative',
-                  display: 'inline-flex',
+                  /* Hidden on request. Restore by putting the display value
+                     back; the pill and its COMING SOON badge are untouched. */
+                  display: 'none',
                   alignItems: 'center',
                   borderRadius: '9999px',
                   py: 0.8,

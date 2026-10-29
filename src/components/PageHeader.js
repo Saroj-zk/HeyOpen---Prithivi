@@ -10,12 +10,19 @@ import { useThemeMode } from '@/context/ThemeContext';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
-  { label: 'Guide', href: '/docs' },
+  /* Guide is hidden from the nav on request. /docs is still reachable: the
+     footer carries it as "Product guide". Uncomment to put it back. */
+  // { label: 'Guide', href: '/docs' },
   { label: 'Models', href: '/models' },
   { label: 'Memory', href: '/memory' },
   { label: 'Private AI', href: '/private' },
-  { label: 'Stake', href: '/stake' },
-  { label: '$HEY', href: '/hey' },
+  /* The staking page is about the token, so it is named after it. */
+  { label: '$OPEN', href: '/stake' },
+  { label: 'Enterprise', href: '/enterprise' },
+  /* $HEY is hidden from the nav on request. Nothing else in the site links
+     to /hey, so the page is now reachable only by typing the address.
+     Uncomment to put it back. */
+  // { label: '$HEY', href: '/hey' },
 ];
 
 /* `spacer` pushes page content clear of the fixed header. Pages whose first
@@ -179,7 +186,9 @@ export default function PageHeader({ spacer = true }) {
             <Box
               sx={{
                 position: 'relative',
-                display: { xs: 'none', sm: 'inline-flex' },
+                /* Hidden on request. Restore by putting the display value
+                   back; the pill and its COMING SOON badge are untouched. */
+                display: 'none',
                 alignItems: 'center',
                 borderRadius: '9999px',
                 py: 0.6,
@@ -381,7 +390,9 @@ export default function PageHeader({ spacer = true }) {
               <Box
                 sx={{
                   position: 'relative',
-                  display: 'inline-flex',
+                  /* Hidden on request. Restore by putting the display value
+                     back; the pill and its COMING SOON badge are untouched. */
+                  display: 'none',
                   alignItems: 'center',
                   borderRadius: '9999px',
                   py: 0.8,
