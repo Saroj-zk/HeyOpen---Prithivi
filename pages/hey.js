@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
+import TokenFlowDiagram from '@/components/TokenFlowDiagram';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
 import { INK, MONO, RULE, RULE_ON_INK, FIG, Label, Entry, Button, Head2 } from '@/components/ui/Ledger';
@@ -308,6 +309,19 @@ export default function HeyPage() {
           </Reveal>
         </Box>
       </Container>
+
+      {/* ── Where a $HEY comes from ──────────────────────────
+          Moved here off the staking page. It draws the whole route: $OPEN
+          held, $OPEN staked, $HEY minted against it, credits arriving. This
+          is the page about the token in the middle of that, and on the
+          staking page it had become the only section that mentioned $HEY at
+          all, which made it the odd one out there.
+
+          It sits outside the measure above because it brings its own
+          Container, and after the three moves rather than before them: that
+          section is what you do with a $HEY once you hold one, this is
+          where one comes from. */}
+      <TokenFlowDiagram />
 
       {/* ── What it changes, and what it reaches ─────────────────── */}
       <Box component="section" sx={{ backgroundColor: INK, position: 'relative', zIndex: 1, overflow: 'hidden' }}>
