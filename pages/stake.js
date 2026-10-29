@@ -228,7 +228,7 @@ const PATHS = {
   shield: 'M10 2.5 3.5 5v5c0 3.6 2.7 6.6 6.5 7.5 3.8-.9 6.5-3.9 6.5-7.5V5zM7.2 10.2l2 2 3.6-3.9',
   rise: 'M3 15.5 7.8 10l3 2.6L17 5.5M17 5.5h-4M17 5.5v4',
   diamond: 'M10 2.5 17 10l-7 7.5L3 10z',
-  spark: 'M10 2.5v15M2.5 10h15M5 5l10 10M15 5 5 15',
+  spark: 'M10 2.2c.7 4.3 2.8 6.4 7.1 7.1-4.3.7-6.4 2.8-7.1 7.1-.7-4.3-2.8-6.4-7.1-7.1 4.3-.7 6.4-2.8 7.1-7.1Z',
   coins: 'M12.5 6.5a4.5 2.5 0 1 1-9 0 4.5 2.5 0 0 1 9 0ZM3.5 6.5v4c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4M7.5 13.3v1.2c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4c0-1-1-1.9-2.6-2.3',
   building: 'M2.8 17.4h14.4M4.6 17.4V9.2M7.9 17.4V9.2M12.1 17.4V9.2M15.4 17.4V9.2M2.8 9.2h14.4L10 4.6z',
   flame: 'M10 2.6c3 3.4 4.6 5.7 4.6 8.2a4.6 4.6 0 0 1-9.2 0c0-2.5 1.6-4.8 4.6-8.2ZM10 10.4c1.1 1.3 1.7 2.1 1.7 3a1.7 1.7 0 0 1-3.4 0c0-.9.6-1.7 1.7-3Z',
@@ -345,6 +345,32 @@ const ACCENT = {
   background: 'linear-gradient(180deg, #FFF8F3 0%, #FFEFE2 100%)',
   boxShadow:
     'inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(11,15,26,0.04), 0 26px 52px -34px rgba(214,86,0,0.38)',
+};
+
+/* A pane of glass on ink. The rim is two lines, not one: a bright inset
+   along the top edge where light would catch, and a hairline all round.
+   `saturate` on the backdrop is what keeps the bloom underneath coloured
+   rather than washing it to grey. */
+const GLASS = {
+  position: 'relative',
+  borderRadius: '18px',
+  border: '1px solid rgba(255,255,255,0.12)',
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.035) 100%)',
+  backdropFilter: 'blur(22px) saturate(150%)',
+  WebkitBackdropFilter: 'blur(22px) saturate(150%)',
+  boxShadow:
+    'inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(255,255,255,0.05), 0 22px 44px -28px rgba(0,0,0,0.9)',
+};
+
+/* The same material at tile size. Under about 48px the large pane's rim
+   disappears, so this one is brighter and tighter. */
+const GLASS_TILE = {
+  borderRadius: '14px',
+  border: '1px solid rgba(255,255,255,0.16)',
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 100%)',
+  backdropFilter: 'blur(14px) saturate(150%)',
+  WebkitBackdropFilter: 'blur(14px) saturate(150%)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3), 0 8px 18px -10px rgba(0,0,0,0.8)',
 };
 
 const PANEL_INK = {
@@ -833,27 +859,34 @@ export default function StakePage() {
       </Section>
 
       {/* ── 2. What one token does ───────────
-          First of two sections rebuilt on a darker, more spent system. The
-          page had seven card vocabularies across four corner radii, five
-          identical asks and the same heading-over-grid silhouette seven
-          times running. This pair sets the replacement.
+          Four square cards in a row, read left to right.
 
-          Ink here and light in the section below, deliberately, so the two
-          grounds alternate down the page instead of dark objects turning up
-          wherever a section wanted emphasis.
-
-          No cards at all. The four benefits are a two by two grid separated
-          by hairlines, which is the same information with none of the
-          chrome, and it lets each figure be twice the size it was. Big
-          figures on ink are the whole of the decoration; a mark in brand
-          orange above each is the only other colour.
-
-          The heading steps up from minor to major. At 2.2rem every section
-          on this page opened at the same pitch, which is what made nine
-          different arguments read as one long list. */}
+          Two earlier attempts are worth not repeating. A scroll-stack
+          needed opaque cards, two and a half screens of travel to happen
+          in, and it still only worked with a cursor. Four wide rows stacked
+          downward read as a list and left the section with nothing to look
+          at. A row of squares is the one arrangement where all four are
+          taken in at once, which is what a set of benefits wants. */}
       <Section ground="ink" sx={{ py: { xs: 8, md: 9.5 } }}>
+        {/* What the glass has to blur. Two blooms, warm and off-centre, so
+            the four panes do not all pick up the same flat tone. Behind the
+            content at z-index -1, which still paints above the section's own
+            background. Decorative, so it is hidden and takes no pointer. */}
+        <Box
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: -1,
+            pointerEvents: 'none',
+            background:
+              'radial-gradient(44% 58% at 80% 14%, rgba(255,102,0,0.26) 0%, rgba(255,102,0,0.05) 46%, transparent 72%),' +
+              'radial-gradient(40% 54% at 14% 88%, rgba(255,140,60,0.14) 0%, transparent 70%)',
+          }}
+        />
+
         <Reveal>
-          <Box sx={{ mb: { xs: 4, md: 4 } }}>
+          <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
             <SectionHead
               eyebrow="Stake $OPEN"
               onInk
@@ -870,29 +903,62 @@ export default function StakePage() {
         </Reveal>
 
         <Reveal delay={80}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' } }}>
-            {BENEFITS.map((b, i) => (
+          {/* Four squares in a row, left to right. The square is doing
+              work: the mark sits in the top corner, the figures sit level
+              across all four so the eye can run along them, and whatever
+              slack the copy leaves falls to the bottom, where it lines up
+              against nothing. Content longer than the
+              square simply grows it, since aspect-ratio yields rather than
+              clips. */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+              gap: { xs: 1.6, md: 2 },
+            }}
+          >
+            {BENEFITS.map((b) => (
               <Box
                 key={b.t}
                 sx={{
-                  py: { xs: 2.6, md: 2.6 },
-                  pl: { sm: i % 2 === 1 ? 5 : 0 },
-                  pr: { sm: i % 2 === 0 ? 5 : 0 },
-                  borderTop: `1px solid ${RULE_ON_INK}`,
-                  borderLeft: { sm: i % 2 === 1 ? `1px solid ${RULE_ON_INK}` : 'none' },
+                  ...GLASS,
+                  aspectRatio: { md: '1' },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  px: { xs: 2.2, md: 2.6 },
+                  py: { xs: 2.2, md: 2.6 },
+                  transition: 'transform .22s ease, box-shadow .22s ease',
+                  '&:hover': {
+                    transform: 'translateY(-3px)',
+                    boxShadow:
+                      'inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(255,255,255,0.06), 0 30px 56px -28px rgba(0,0,0,0.95)',
+                  },
                 }}
               >
-                <Box sx={{ color: 'var(--brand-accent)', mb: { xs: 1.6, md: 1.4 } }}>
-                  <Mark name={b.mark} size={22} />
+                <Box
+                  sx={{
+                    ...GLASS_TILE,
+                    width: 46,
+                    height: 46,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'var(--brand-accent)',
+                  }}
+                >
+                  <Mark name={b.mark} size={23} />
                 </Box>
+
+                <Box sx={{ height: { xs: '18px', md: '22px' } }} />
 
                 <Typography
                   sx={{
-                    fontSize: { xs: '2.4rem', md: '3.2rem' },
+                    fontSize: { xs: '1.9rem', md: '1.7rem' },
                     fontWeight: 700,
-                    letterSpacing: '-0.045em',
-                    lineHeight: 1,
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1.05,
                     color: '#FFFFFF',
+                    textWrap: 'balance',
                   }}
                 >
                   {b.k}
@@ -900,19 +966,22 @@ export default function StakePage() {
 
                 <Typography
                   sx={{
-                    mt: { xs: 1.4, md: 1.6 },
-                    fontSize: '1rem',
+                    mt: 1.2,
+                    fontSize: '0.98rem',
                     fontWeight: 700,
                     letterSpacing: '-0.02em',
+                    lineHeight: 1.3,
                     color: '#FFFFFF',
                   }}
                 >
                   {b.t}
                 </Typography>
 
-                <Typography sx={{ mt: 0.7, fontSize: '0.92rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.56)' }}>
+                <Typography sx={{ mt: 0.7, fontSize: '0.88rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.56)' }}>
                   {b.s}
                 </Typography>
+
+                <Box sx={{ flex: 1 }} />
               </Box>
             ))}
           </Box>
@@ -921,8 +990,8 @@ export default function StakePage() {
         <Reveal delay={60}>
           <Box
             sx={{
-              mt: { xs: 3, md: 2.8 },
-              pt: { xs: 2.6, md: 2.6 },
+              mt: { xs: 3, md: 3.4 },
+              pt: { xs: 2.6, md: 3 },
               borderTop: `1px solid ${RULE_ON_INK}`,
               display: 'flex',
               flexWrap: 'wrap',
