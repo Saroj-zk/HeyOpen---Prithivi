@@ -121,6 +121,22 @@ const BENEFITS = [
     t: 'Buybacks and burns',
     s: 'A proposed net revenue model designed to buy back and burn $OPEN.',
   },
+  {
+    t: 'Compute-credit collateral',
+    s: 'Proposed OIU credits are issued against $OPEN locked under defined protocol rules.',
+  },
+  {
+    t: 'AI agent access',
+    s: 'Access premium agents, developer tools and potential agent marketplace payment flows.',
+  },
+  {
+    t: 'Member advantages',
+    s: 'Proposed discounts, priority routing, advanced memory and higher service tiers.',
+  },
+  {
+    t: 'Community voting',
+    s: 'Vote on protocol rules, incentives and ecosystem direction. New features are released based on what the community votes for.',
+  },
 ];
 
 /* 03a. Six lines of revenue, each with the kind of revenue it is. The
@@ -903,7 +919,7 @@ export default function StakePage() {
         />
 
         <Reveal>
-          <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
+          <Box sx={{ mb: { xs: 3.5, md: 3 } }}>
             <SectionHead
               eyebrow="The utility of $OPEN"
               onInk
@@ -920,8 +936,11 @@ export default function StakePage() {
         </Reveal>
 
         <Reveal delay={80}>
-          {/* Four in a row, read left to right, so the whole set is taken
-              in at once rather than in two passes.
+          {/* Four across, two rows. The top row is what the stake pays in
+              figures, the bottom is what it gives access to, and the figure
+              slot is empty on the second row because there is nothing to
+              put in it. Inventing one would have been four more words
+              pretending to be numbers.
 
               Nothing is accented. The moment one card is, the other three
               read as consolation.
@@ -944,8 +963,8 @@ export default function StakePage() {
                 key={b.t}
                 sx={{
                   ...GLASS,
-                  px: { xs: 2.4, md: 2.6 },
-                  py: { xs: 2.6, md: 2.8 },
+                  px: { xs: 2.4, md: 2.4 },
+                  py: { xs: 2.6, md: 2.2 },
                   transition: 'transform .22s ease, box-shadow .22s ease',
                   '&:hover': {
                     transform: 'translateY(-3px)',
@@ -954,22 +973,24 @@ export default function StakePage() {
                   },
                 }}
               >
-                <Typography
-                  sx={{
-                    fontSize: { xs: '1.9rem', md: '1.7rem' },
-                    fontWeight: 700,
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1.05,
-                    color: '#FFFFFF',
-                    whiteSpace: { md: 'nowrap' },
-                  }}
-                >
-                  {b.k}
-                </Typography>
+                {b.k && (
+                  <Typography
+                    sx={{
+                      fontSize: { xs: '1.9rem', md: '1.7rem' },
+                      fontWeight: 700,
+                      letterSpacing: '-0.04em',
+                      lineHeight: 1.05,
+                      color: '#FFFFFF',
+                      whiteSpace: { md: 'nowrap' },
+                      mb: { xs: 1.4, md: 1.6 },
+                    }}
+                  >
+                    {b.k}
+                  </Typography>
+                )}
 
                 <Typography
                   sx={{
-                    mt: { xs: 1.4, md: 1.6 },
                     fontSize: '1rem',
                     fontWeight: 700,
                     letterSpacing: '-0.02em',
@@ -991,8 +1012,8 @@ export default function StakePage() {
         <Reveal delay={60}>
           <Box
             sx={{
-              mt: { xs: 3, md: 3.4 },
-              pt: { xs: 2.6, md: 3 },
+              mt: { xs: 3, md: 2.2 },
+              pt: { xs: 2.6, md: 2.2 },
               borderTop: `1px solid ${RULE_ON_INK}`,
               display: 'flex',
               flexWrap: 'wrap',
