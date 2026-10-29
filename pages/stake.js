@@ -97,12 +97,39 @@ const APP = 'https://ais.openledger.xyz/chat';
 /* What each section says                                              */
 /* ------------------------------------------------------------------ */
 
-/* 02. Three readings of the same offer: the rate, the asset, and the fact
-   that the rate is not all of it. */
-const REWARDS = [
-  { mark: 'rise', k: RATES.base_short, s: 'Annual staking rewards', lead: true },
-  { mark: 'coins', k: '$OPEN', s: 'Stake and earn' },
-  { mark: 'spark', k: 'More benefits', s: 'Beyond staking' },
+/* 02. Four things one token does, each with the figure or the name a
+   reader would repeat, the category under it, and a line of detail.
+
+   The 40 to 50 band appears here labelled as compute strategy returns.
+   That matters: the section that used to carry the distinction between it
+   and the 6% staking rate is hidden, which had left the closing disclaimer
+   as the only place a reader met it. This puts it back above the fold, in
+   a card that names what it is. */
+const BENEFITS = [
+  {
+    mark: 'rise',
+    k: RATES.base_short,
+    t: 'Annual staking rewards',
+    s: 'Earn 6% annual rewards on your eligible staked $OPEN.',
+  },
+  {
+    mark: 'spark',
+    k: 'Hey Open Pro',
+    t: 'Premium AI access',
+    s: 'Unlock unlimited text and image models with a qualifying $OPEN stake.',
+  },
+  {
+    mark: 'chip',
+    k: RATES.total,
+    t: 'Compute strategy returns',
+    s: 'Explore additional return potential through enterprise compute and options-based strategies.',
+  },
+  {
+    mark: 'flame',
+    k: '$OPEN economy',
+    t: 'Buybacks and burns',
+    s: 'A proposed revenue-funded mechanism designed to buy back and permanently burn $OPEN.',
+  },
 ];
 
 /* 03. What a qualifying stake turns on. Title and line, not name and
@@ -805,73 +832,125 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 2. What it pays ─────────────────────────────────────────
-          The page opens on what this is; this says what it pays, which is
-          the next thing anyone wants. The claim and the ask sit together,
-          and under them the same offer read three ways. The rate takes the
-          accent because it is the only one of the three that is a number,
-          and a number is what a reader came for. */}
+      {/* ── 2. What one token does ────────────
+          Four cards in a square rather than three in a row. Three made the
+          rate look like one of a set of equals; two by two gives the grid a
+          reading order, down the left and down the right, and leaves each
+          card room for the line of detail that three across could not hold.
+
+          Every card is the same object. Nothing is accented, because the
+          moment one is, the other three read as consolation. The marks
+          carry the only colour.
+
+          Each card says the thing a reader would repeat first, then what
+          kind of thing it is, then the detail. A figure with no category
+          under it is a number without a noun. */}
       <Section sx={{ py: { xs: 7, md: 9 } }}>
         <Reveal>
-          <Box sx={{ mb: { xs: 4, md: 5 } }}>
+          <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
             <SectionHead
               eyebrow="Stake $OPEN"
               tier="minor"
-              title="Stake $OPEN. Earn 6% annually."
-              lede="Put your $OPEN to work with 6% annual staking rewards and unlock exclusive benefits across Hey Open."
+              title="One token. More ways to benefit."
+              lede="Stake $OPEN to earn annual rewards, unlock Hey Open Pro, and access additional opportunities through a growing AI economy."
             />
-            <Box sx={{ mt: { xs: 3, md: 3.5 } }}>
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+              gap: { xs: 2, md: 2.5 },
+            }}
+          >
+            {BENEFITS.map((b) => (
+              <Box
+                key={b.t}
+                sx={{ ...PANEL, px: { xs: 2.4, md: 3 }, py: { xs: 2.4, md: 2.8 } }}
+              >
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'var(--brand-accent)',
+                    backgroundColor: 'rgba(255,102,0,0.09)',
+                    border: '1px solid rgba(255,102,0,0.2)',
+                  }}
+                >
+                  <Mark name={b.mark} size={20} />
+                </Box>
+
+                <Typography
+                  sx={{
+                    mt: { xs: 1.8, md: 2 },
+                    fontSize: { xs: '1.7rem', md: '2rem' },
+                    fontWeight: 700,
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1.05,
+                    color: 'var(--text-heading)',
+                  }}
+                >
+                  {b.k}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    mt: 0.9,
+                    fontSize: '0.98rem',
+                    fontWeight: 700,
+                    letterSpacing: '-0.02em',
+                    color: 'var(--text-heading)',
+                  }}
+                >
+                  {b.t}
+                </Typography>
+
+                <Typography sx={{ mt: 0.7, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                  {b.s}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <Box
+            sx={{
+              mt: { xs: 3, md: 3.5 },
+              pt: { xs: 2.4, md: 2.8 },
+              borderTop: `1px solid ${RULE}`,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: { xs: 2, md: 3 },
+            }}
+          >
+            <Typography
+              sx={{
+                flex: '1 1 340px',
+                minWidth: 0,
+                fontSize: { xs: '1.02rem', md: '1.12rem' },
+                fontWeight: 700,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.45,
+                color: 'var(--text-heading)',
+                textWrap: 'pretty',
+              }}
+            >
+              Earn rewards. Unlock premium AI. Explore the compute economy.
+            </Typography>
+            <Box sx={{ flexShrink: 0 }}>
               <Button href={LINKS.stake} primary>
                 Stake $OPEN
                 <Box component="span" aria-hidden="true">→</Box>
               </Button>
             </Box>
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 2.5 } }}>
-            {REWARDS.map((r) => (
-              <Box
-                key={r.k}
-                sx={{ ...(r.lead ? ACCENT : PANEL), px: { xs: 2.4, md: 2.8 }, py: { xs: 2.6, md: 3 } }}
-              >
-                <Box
-                  sx={{
-                    width: 42,
-                    height: 42,
-                    borderRadius: '13px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: r.lead ? '#9A3C00' : 'var(--brand-accent)',
-                    backgroundColor: r.lead ? 'rgba(255,102,0,0.14)' : 'rgba(255,102,0,0.08)',
-                    border: `1px solid ${r.lead ? 'rgba(255,102,0,0.32)' : 'rgba(255,102,0,0.2)'}`,
-                  }}
-                >
-                  <Mark name={r.mark} size={21} />
-                </Box>
-                <Typography
-                  sx={{
-                    ...FIG,
-                    mt: 2.2,
-                    fontSize: { xs: '1.9rem', md: '2.2rem' },
-                    fontWeight: 600,
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1.05,
-                    color: r.lead ? '#9A3C00' : 'var(--text-heading)',
-                    textWrap: 'balance',
-                  }}
-                >
-                  {r.k}
-                </Typography>
-                <Typography
-                  sx={{ mt: 1, fontSize: '0.92rem', lineHeight: 1.6, color: r.lead ? 'rgba(154,60,0,0.82)' : 'var(--text-secondary)' }}
-                >
-                  {r.s}
-                </Typography>
-              </Box>
-            ))}
           </Box>
         </Reveal>
       </Section>
