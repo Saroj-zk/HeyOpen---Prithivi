@@ -967,8 +967,12 @@ export default function StakePage() {
           HIDDEN ON REQUEST. Nothing is deleted: the markup below is behind
           a false branch, and STRATEGY and RATES.base_short are still
           defined above, so bringing it back is deleting the two lines that
-          wrap it. A `{/* */}` would not do here, because the section has
-          comments of its own and JSX comments do not nest.
+          wrap it. Commenting the block out would not work: the section
+          carries JSX comments of its own and those do not nest, so the
+          first inner terminator would close the wrapper and spill the rest
+          of the file onto the page as text. Do not write a comment
+          terminator inside a comment, which is how this very note shipped
+          itself to production once already.
 
           Note what leaves with it. This was the only place the page set the
           6% against the 40 to 50 band and said in as many words that the
