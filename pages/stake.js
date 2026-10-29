@@ -832,68 +832,67 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 2. What one token does ────────────
-          Four cards in a square rather than three in a row. Three made the
-          rate look like one of a set of equals; two by two gives the grid a
-          reading order, down the left and down the right, and leaves each
-          card room for the line of detail that three across could not hold.
+      {/* ── 2. What one token does ───────────
+          First of two sections rebuilt on a darker, more spent system. The
+          page had seven card vocabularies across four corner radii, five
+          identical asks and the same heading-over-grid silhouette seven
+          times running. This pair sets the replacement.
 
-          Every card is the same object. Nothing is accented, because the
-          moment one is, the other three read as consolation. The marks
-          carry the only colour.
+          Ink here and light in the section below, deliberately, so the two
+          grounds alternate down the page instead of dark objects turning up
+          wherever a section wanted emphasis.
 
-          Each card says the thing a reader would repeat first, then what
-          kind of thing it is, then the detail. A figure with no category
-          under it is a number without a noun. */}
-      <Section sx={{ py: { xs: 7, md: 9 } }}>
+          No cards at all. The four benefits are a two by two grid separated
+          by hairlines, which is the same information with none of the
+          chrome, and it lets each figure be twice the size it was. Big
+          figures on ink are the whole of the decoration; a mark in brand
+          orange above each is the only other colour.
+
+          The heading steps up from minor to major. At 2.2rem every section
+          on this page opened at the same pitch, which is what made nine
+          different arguments read as one long list. */}
+      <Section ground="ink" sx={{ py: { xs: 8, md: 9.5 } }}>
         <Reveal>
-          <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
+          <Box sx={{ mb: { xs: 4, md: 4 } }}>
             <SectionHead
               eyebrow="Stake $OPEN"
-              tier="minor"
-              title="One token. More ways to benefit."
+              onInk
+              maxWidth={820}
+              title={
+                <>
+                  <Box component="span" sx={{ display: 'block' }}>One token.</Box>
+                  <Box component="span" sx={{ display: 'block' }}>More ways to benefit.</Box>
+                </>
+              }
               lede="Stake $OPEN to earn annual rewards, unlock Hey Open Pro, and access additional opportunities through a growing AI economy."
             />
           </Box>
         </Reveal>
 
         <Reveal delay={80}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
-              gap: { xs: 2, md: 2.5 },
-            }}
-          >
-            {BENEFITS.map((b) => (
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' } }}>
+            {BENEFITS.map((b, i) => (
               <Box
                 key={b.t}
-                sx={{ ...PANEL, px: { xs: 2.4, md: 3 }, py: { xs: 2.4, md: 2.8 } }}
+                sx={{
+                  py: { xs: 2.6, md: 2.6 },
+                  pl: { sm: i % 2 === 1 ? 5 : 0 },
+                  pr: { sm: i % 2 === 0 ? 5 : 0 },
+                  borderTop: `1px solid ${RULE_ON_INK}`,
+                  borderLeft: { sm: i % 2 === 1 ? `1px solid ${RULE_ON_INK}` : 'none' },
+                }}
               >
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--brand-accent)',
-                    backgroundColor: 'rgba(255,102,0,0.09)',
-                    border: '1px solid rgba(255,102,0,0.2)',
-                  }}
-                >
-                  <Mark name={b.mark} size={20} />
+                <Box sx={{ color: 'var(--brand-accent)', mb: { xs: 1.6, md: 1.4 } }}>
+                  <Mark name={b.mark} size={22} />
                 </Box>
 
                 <Typography
                   sx={{
-                    mt: { xs: 1.8, md: 2 },
-                    fontSize: { xs: '1.7rem', md: '2rem' },
+                    fontSize: { xs: '2.4rem', md: '3.2rem' },
                     fontWeight: 700,
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1.05,
-                    color: 'var(--text-heading)',
+                    letterSpacing: '-0.045em',
+                    lineHeight: 1,
+                    color: '#FFFFFF',
                   }}
                 >
                   {b.k}
@@ -901,17 +900,17 @@ export default function StakePage() {
 
                 <Typography
                   sx={{
-                    mt: 0.9,
-                    fontSize: '0.98rem',
+                    mt: { xs: 1.4, md: 1.6 },
+                    fontSize: '1rem',
                     fontWeight: 700,
                     letterSpacing: '-0.02em',
-                    color: 'var(--text-heading)',
+                    color: '#FFFFFF',
                   }}
                 >
                   {b.t}
                 </Typography>
 
-                <Typography sx={{ mt: 0.7, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                <Typography sx={{ mt: 0.7, fontSize: '0.92rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.56)' }}>
                   {b.s}
                 </Typography>
               </Box>
@@ -922,9 +921,9 @@ export default function StakePage() {
         <Reveal delay={60}>
           <Box
             sx={{
-              mt: { xs: 3, md: 3.5 },
-              pt: { xs: 2.4, md: 2.8 },
-              borderTop: `1px solid ${RULE}`,
+              mt: { xs: 3, md: 2.8 },
+              pt: { xs: 2.6, md: 2.6 },
+              borderTop: `1px solid ${RULE_ON_INK}`,
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
@@ -935,11 +934,11 @@ export default function StakePage() {
               sx={{
                 flex: '1 1 340px',
                 minWidth: 0,
-                fontSize: { xs: '1.02rem', md: '1.12rem' },
+                fontSize: { xs: '1.04rem', md: '1.16rem' },
                 fontWeight: 700,
                 letterSpacing: '-0.025em',
                 lineHeight: 1.45,
-                color: 'var(--text-heading)',
+                color: '#FFFFFF',
                 textWrap: 'pretty',
               }}
             >
@@ -955,82 +954,105 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 3. And what it unlocks ─────────────────────────────────
-          The page's one band of ink, spent on the section that asks a
-          reader to stop paying for something. The threshold is set as an
-          equation at the foot of the panel rather than buried in the prose,
-          because it is the single condition everything else here turns on.
-          ──────────────────────────────────────────────────────── */}
-      <Section ground="ink" sx={{ py: { xs: 8, md: 10 } }}>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-            gap: { xs: 4, md: 8 },
-            alignItems: 'center',
-          }}
-        >
-          <Reveal>
+      {/* ── 3. And what it unlocks ───────────
+          Second of the pair, and light, because the section above it is
+          ink. The alternation is the point: a reader should be able to tell
+          the sections apart with the page at arm's length.
+
+          The condition is the biggest thing on the screen. It used to be a
+          tinted strip at the foot of a panel; everything here turns on it,
+          so it is set at the size of a headline and the four benefits run
+          beside it as a ruled list rather than as a second stack of cards.
+
+          Still no cards in either section. Rules and space do the work. */}
+      <Section sx={{ py: { xs: 8, md: 10 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 4, md: 5 } }}>
+            <SectionHead
+              eyebrow="Exclusive staking benefits"
+              maxWidth={820}
+              title={
+                <>
+                  <Box component="span" sx={{ display: 'block' }}>Stake $OPEN.</Box>
+                  <Box component="span" sx={{ display: 'block' }}>Unlock Hey Open Pro.</Box>
+                </>
+              }
+              lede="Stake 100 $OPEN to unlock Hey Open Pro. Unlimited access to supported text and image models, premium AI features, and no separate subscription fee."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '0.85fr 1.15fr' },
+              gap: { xs: 3.5, md: 6 },
+              pt: { xs: 3, md: 3.6 },
+              borderTop: `1px solid ${RULE}`,
+            }}
+          >
+            {/* the one condition everything here turns on */}
             <Box>
-              <SectionHead
-                eyebrow="Exclusive staking benefits"
-                tier="minor"
-                onInk
-                maxWidth={480}
-                title="Stake $OPEN. Unlock Hey Open Pro."
-                lede="Stake 100 $OPEN to unlock Hey Open Pro. Unlimited access to supported text and image models, premium AI features, and no separate subscription fee."
-              />
-              <Box sx={{ mt: 4 }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: '3.2rem', md: '4.2rem' },
+                  fontWeight: 700,
+                  letterSpacing: '-0.05em',
+                  lineHeight: 0.95,
+                  color: 'var(--brand-accent)',
+                }}
+              >
+                {RATES.threshold}
+              </Typography>
+              <Typography
+                sx={{
+                  mt: { xs: 1.4, md: 1.6 },
+                  fontSize: { xs: '1.06rem', md: '1.14rem' },
+                  fontWeight: 700,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.35,
+                  color: 'var(--text-heading)',
+                }}
+              >
+                staked unlocks Hey Open Pro.
+              </Typography>
+              <Typography sx={{ mt: 1.4, fontSize: '0.86rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
+                Access remains active while staking requirements and applicable usage policies are
+                met.
+              </Typography>
+              <Box sx={{ mt: { xs: 2.6, md: 3 } }}>
                 <Button href={LINKS.stake} primary>
                   Stake $OPEN
                   <Box component="span" aria-hidden="true">→</Box>
                 </Button>
               </Box>
             </Box>
-          </Reveal>
 
-          <Reveal delay={100}>
+            {/* and what it turns on */}
             <Box>
-              <Box sx={{ ...PANEL_INK, overflow: 'hidden' }}>
-                <Box sx={{ px: { xs: 2.5, md: 3.2 }, py: { xs: 2.4, md: 2.8 } }}>
-                  {PRO.map(([name, body], i) => (
-                    <Box
-                      key={name}
-                      sx={{ pt: i ? 1.8 : 0, mt: i ? 1.8 : 0, borderTop: i ? `1px solid ${RULE_ON_INK}` : 'none' }}
-                    >
-                      <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
-                        {name}
-                      </Typography>
-                      <Typography sx={{ mt: 0.5, fontSize: '0.88rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.58)' }}>
-                        {body}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-
+              {PRO.map(([name, body], i) => (
                 <Box
+                  key={name}
                   sx={{
-                    px: { xs: 2.5, md: 3.2 },
-                    py: { xs: 1.8, md: 2 },
-                    borderTop: `1px solid ${RULE_ON_INK}`,
-                    backgroundColor: 'rgba(255,102,0,0.11)',
+                    pt: i ? { xs: 2, md: 2.2 } : 0,
+                    mt: i ? { xs: 2, md: 2.2 } : 0,
+                    borderTop: i ? `1px solid ${RULE}` : 'none',
                   }}
                 >
                   <Typography
-                    sx={{ ...FIG, fontSize: { xs: '0.92rem', md: '1rem' }, fontWeight: 600, letterSpacing: '-0.005em', color: '#FFB071' }}
+                    sx={{ fontSize: { xs: '1.06rem', md: '1.14rem' }, fontWeight: 700, letterSpacing: '-0.025em', color: 'var(--text-heading)' }}
                   >
-                    {RATES.threshold} staked = Hey Open Pro unlocked
+                    {name}
+                  </Typography>
+                  <Typography sx={{ mt: 0.6, fontSize: '0.92rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                    {body}
                   </Typography>
                 </Box>
-              </Box>
-
-              <Typography sx={{ mt: 1.8, fontSize: '0.8rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.46)' }}>
-                Access remains active while staking requirements and applicable usage policies are
-                met.
-              </Typography>
+              ))}
             </Box>
-          </Reveal>
-        </Box>
+          </Box>
+        </Reveal>
       </Section>
 
       {/* ── 4. And what sits on top of the rate. HIDDEN ─────────────────────
