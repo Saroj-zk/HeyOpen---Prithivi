@@ -11,7 +11,7 @@ import ProductMatrixSection from '@/components/ProductMatrixSection';
    uncommenting these two lines. */
 // import TokenFlowSection from '@/components/TokenFlowSection';
 import BurnEnterpriseSection from '@/components/BurnEnterpriseSection';
-import ComputeOptionsSection from '@/components/ComputeOptionsSection';
+// import ComputeOptionsSection from '@/components/ComputeOptionsSection';
 // import ComputeMarketSection from '@/components/ComputeMarketSection';
 import PricingSection from '@/components/PricingSection';
 import HowYouPaySection from '@/components/HowYouPaySection';
@@ -51,11 +51,16 @@ export default function Home() {
         {/* What happens to the money that does get spent, and when enterprise
             pays for it. */}
         <BurnEnterpriseSection />
-        {/* One of the things producing the funnel's first revenue line, so
-            it follows directly. Not to be confused with the hidden compute
-            market section below: that one was about building a venue for
-            these contracts, this one is about selling them. */}
-        <ComputeOptionsSection />
+        {/* Compute options moved INTO the burn section above, as the right
+            column beside the funnel, which is the slot the prepaid
+            enterprise card used to hold. It was always one of the things
+            producing the funnel's first revenue line, and beside it the
+            pair reads as a source and a destination.
+
+            The component is untouched and still exports the section whole,
+            so putting it back here is uncommenting this line and its
+            import — but then the figure would be on the page twice. */}
+        {/* <ComputeOptionsSection /> */}
         {/* Hidden on request. The component is untouched, so putting it back
             is uncommenting this line and its import. It opened up revenue line
             04 of the funnel above and was marked in development throughout. */}

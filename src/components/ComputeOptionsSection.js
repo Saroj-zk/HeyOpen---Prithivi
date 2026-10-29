@@ -8,12 +8,24 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * Compute options, and what the business earns from them.
  *
  * ------------------------------------------------------------------
- * It follows the burn funnel because the funnel's first line is revenue
- * and this is one of the things producing it. The claim it has to land is
- * the one in the lede: this is a financial product written against compute
- * prices, not a place to rent a GPU. Everything else here is in service of
- * that distinction, which is why the figure is a price chart rather than a
- * rack of hardware.
+ * IT NO LONGER RENDERS AS A SECTION OF ITS OWN.
+ *
+ * The drawing and the claim moved into the right-hand column of the burn
+ * funnel, which is the slot the prepaid enterprise card used to hold. They
+ * were adjacent on the page anyway — this is one of the things producing
+ * the funnel's first revenue line — and side by side the funnel reads as
+ * where the money goes and this reads as one of the places it comes from.
+ *
+ * What survives here is ComputeOptionsFigure, the chart and everything
+ * attached to it, exported so the geometry below has ONE definition. The
+ * default export is kept whole so the section can be put back as a section
+ * without rebuilding it; it is simply not mounted on the home page.
+ *
+ * ------------------------------------------------------------------
+ * The claim it has to land is the one in the lede: this is a financial
+ * product written against compute prices, not a place to rent a GPU.
+ * Everything else here is in service of that distinction, which is why the
+ * figure is a price chart rather than a rack of hardware.
  *
  * ------------------------------------------------------------------
  * The colours are the site's, not the reference's.
@@ -22,7 +34,7 @@ import { useReveal, revealSx } from '@/utils/reveal';
  * hues, ink and brand orange, and a third introduced for one section would
  * read as a different site. So slate is the price the market does to you
  * and orange is the part the option holds down, which is the same language
- * the burn funnel above it uses.
+ * the burn funnel beside it uses.
  *
  * The fill between the ceiling and the price is the product. A reader does
  * not have to know what an option is to see that the shaded part is the
@@ -100,6 +112,179 @@ const coveredPath = `M${CROSS} ${CEILING} ${above
 
 /* ------------------------------------------------------------------ */
 
+/**
+ * The chart and everything attached to it, without a container.
+ *
+ * Exported bare so the caller supplies the card. It is drawn at roughly 700
+ * points wide inside its old section and at roughly 420 in the funnel's
+ * side column, which is why every stroke is pinned in pixels and the
+ * ceiling label is positioned by a percentage worked out from the crop.
+ * Nothing here is allowed to scale with the box.
+ */
+export function ComputeOptionsFigure() {
+  return (
+    <>
+      {/* Wraps, because in a side column the title and the badge do not
+          both fit on one line and space-between alone would have let them
+          collide rather than stack. */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 1.2,
+        }}
+      >
+        <Typography component="div" sx={{ ...LABEL, color: QUIET }}>
+          Cloud price index
+        </Typography>
+
+        <Box
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '7px',
+            px: '11px',
+            py: '6px',
+            borderRadius: '999px',
+            border: '1px solid rgba(255,102,0,0.26)',
+            backgroundColor: 'rgba(255,102,0,0.07)',
+            flexShrink: 0,
+          }}
+        >
+          <Box
+            component="svg"
+            aria-hidden="true"
+            viewBox="0 0 20 20"
+            sx={{ width: 13, height: 13, display: 'block', color: ORANGE }}
+          >
+            <Box
+              component="path"
+              d="M10 16V4M10 4 5 9M10 4l5 5"
+              sx={{ fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }}
+            />
+          </Box>
+          <Typography component="span" sx={{ ...LABEL, color: '#B4531A' }}>
+            Protected
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* The drawing. Strokes are fixed in pixels, because this chart is
+          about 300px wide on a phone and 700 on a desktop and anything
+          measured in user units doubles across that range. The ceiling
+          label is HTML over the top for the same reason, placed by a
+          percentage worked out from the crop so the two cannot drift. */}
+      <Box sx={{ position: 'relative', mt: { xs: 2.2, md: 2.6 } }}>
+        <Box
+          component="svg"
+          viewBox={`0 ${VIEW_TOP} 340 ${VIEW_H}`}
+          sx={{ width: '100%', display: 'block', height: { md: 210 } }}
+        >
+          <defs>
+            <linearGradient id="optionsFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(255,102,0,0.32)" />
+              <stop offset="100%" stopColor="rgba(255,102,0,0.06)" />
+            </linearGradient>
+          </defs>
+
+          {[3, 4, 5].map((g) => {
+            const y = 114 - (g - 2) * 25;
+            return (
+              <line
+                key={g}
+                x1="38"
+                y1={y}
+                x2="322"
+                y2={y}
+                stroke="rgba(15,23,42,0.07)"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+            );
+          })}
+
+          {/* everything above the ceiling is the option's problem */}
+          <path d={coveredPath} fill="url(#optionsFill)" />
+
+          <line
+            x1="38"
+            y1={CEILING}
+            x2="322"
+            y2={CEILING}
+            stroke={ORANGE}
+            strokeWidth="1.5"
+            strokeDasharray="5 4"
+            vectorEffect="non-scaling-stroke"
+          />
+
+          <path
+            d={pricePath}
+            fill="none"
+            stroke="#334155"
+            strokeWidth="2"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </Box>
+
+        <Typography
+          component="div"
+          sx={{
+            ...LABEL,
+            position: 'absolute',
+            left: '11.2%',
+            top: `${CEILING_PCT}%`,
+            transform: 'translateY(-100%)',
+            mt: '-5px',
+            color: ORANGE,
+            pointerEvents: 'none',
+          }}
+        >
+          Hedged ceiling
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          mt: { xs: 1.6, md: 1.8 },
+          pt: { xs: 1.5, md: 1.7 },
+          borderTop: `1px solid ${HAIR}`,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: { xs: 1.4, md: 2.4 },
+        }}
+      >
+        {[
+          ['Rental price', '#334155', false],
+          ['Hedged ceiling', ORANGE, true],
+        ].map(([k, c, dash]) => (
+          <Box key={k} sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
+            <Box
+              aria-hidden="true"
+              sx={{ width: '16px', height: '0px', flexShrink: 0, borderTop: `2px ${dash ? 'dashed' : 'solid'} ${c}` }}
+            />
+            <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: QUIET }}>{k}</Typography>
+          </Box>
+        ))}
+
+        <Typography sx={{ flex: '1 1 100%', mt: 0.6, fontSize: '0.76rem', lineHeight: 1.55, color: 'var(--text-muted)' }}>
+          Illustrative. No index level, premium or payout is quoted here.
+        </Typography>
+      </Box>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+/**
+ * The original standalone section. NOT MOUNTED on the home page: the
+ * figure above now lives in the burn funnel's side column. Kept whole so
+ * putting it back is importing it again, not rebuilding it.
+ */
 export default function ComputeOptionsSection() {
   const [headRef, headShown] = useReveal();
   const [figRef, figShown] = useReveal();
@@ -187,145 +372,7 @@ export default function ComputeOptionsSection() {
             ...revealSx(figShown, 120),
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
-            <Typography component="div" sx={{ ...LABEL, color: QUIET }}>
-              Cloud price index
-            </Typography>
-
-            <Box
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '7px',
-                px: '11px',
-                py: '6px',
-                borderRadius: '999px',
-                border: '1px solid rgba(255,102,0,0.26)',
-                backgroundColor: 'rgba(255,102,0,0.07)',
-                flexShrink: 0,
-              }}
-            >
-              <Box
-                component="svg"
-                aria-hidden="true"
-                viewBox="0 0 20 20"
-                sx={{ width: 13, height: 13, display: 'block', color: ORANGE }}
-              >
-                <Box
-                  component="path"
-                  d="M10 16V4M10 4 5 9M10 4l5 5"
-                  sx={{ fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }}
-                />
-              </Box>
-              <Typography component="span" sx={{ ...LABEL, color: '#B4531A' }}>
-                Protected
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* The drawing. Strokes are fixed in pixels, because this chart is
-              about 300px wide on a phone and 700 on a desktop and anything
-              measured in user units doubles across that range. The ceiling
-              label is HTML over the top for the same reason, placed by a
-              percentage worked out from the crop so the two cannot drift. */}
-          <Box sx={{ position: 'relative', mt: { xs: 2.2, md: 2.6 } }}>
-            <Box
-              component="svg"
-              viewBox={`0 ${VIEW_TOP} 340 ${VIEW_H}`}
-              sx={{ width: '100%', display: 'block', height: { md: 210 } }}
-            >
-              <defs>
-                <linearGradient id="optionsFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(255,102,0,0.32)" />
-                  <stop offset="100%" stopColor="rgba(255,102,0,0.06)" />
-                </linearGradient>
-              </defs>
-
-              {[3, 4, 5].map((g) => {
-                const y = 114 - (g - 2) * 25;
-                return (
-                  <line
-                    key={g}
-                    x1="38"
-                    y1={y}
-                    x2="322"
-                    y2={y}
-                    stroke="rgba(15,23,42,0.07)"
-                    strokeWidth="1"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                );
-              })}
-
-              {/* everything above the ceiling is the option's problem */}
-              <path d={coveredPath} fill="url(#optionsFill)" />
-
-              <line
-                x1="38"
-                y1={CEILING}
-                x2="322"
-                y2={CEILING}
-                stroke={ORANGE}
-                strokeWidth="1.5"
-                strokeDasharray="5 4"
-                vectorEffect="non-scaling-stroke"
-              />
-
-              <path
-                d={pricePath}
-                fill="none"
-                stroke="#334155"
-                strokeWidth="2"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
-              />
-            </Box>
-
-            <Typography
-              component="div"
-              sx={{
-                ...LABEL,
-                position: 'absolute',
-                left: '11.2%',
-                top: `${CEILING_PCT}%`,
-                transform: 'translateY(-100%)',
-                mt: '-5px',
-                color: ORANGE,
-                pointerEvents: 'none',
-              }}
-            >
-              Hedged ceiling
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              mt: { xs: 1.6, md: 1.8 },
-              pt: { xs: 1.5, md: 1.7 },
-              borderTop: `1px solid ${HAIR}`,
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: { xs: 1.4, md: 2.4 },
-            }}
-          >
-            {[
-              ['Rental price', '#334155', false],
-              ['Hedged ceiling', ORANGE, true],
-            ].map(([k, c, dash]) => (
-              <Box key={k} sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
-                <Box
-                  aria-hidden="true"
-                  sx={{ width: '16px', height: '0px', flexShrink: 0, borderTop: `2px ${dash ? 'dashed' : 'solid'} ${c}` }}
-                />
-                <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: QUIET }}>{k}</Typography>
-              </Box>
-            ))}
-
-            <Typography sx={{ flex: '1 1 100%', mt: 0.6, fontSize: '0.76rem', lineHeight: 1.55, color: 'var(--text-muted)' }}>
-              Illustrative. No index level, premium or payout is quoted here.
-            </Typography>
-          </Box>
+          <ComputeOptionsFigure />
         </Box>
       </Box>
     </Container>

@@ -6,6 +6,11 @@ import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartm
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import { useReveal, revealSx } from '@/utils/reveal';
+/* The chart only. Its section is not mounted on the home page any more:
+   this column is where that content now lives, and importing the figure
+   rather than copying it keeps the price series and the crossing solve in
+   one place. */
+import { ComputeOptionsFigure } from '@/components/ComputeOptionsSection';
 
 /**
  * Where the money goes, and when enterprise pays for it.
@@ -147,7 +152,7 @@ const REVENUE = [
   'Enterprise inference & API',
   'Hey Open subscriptions',
   'Pay-as-you-go inference',
-  'Agents & compute marketplace',
+  'Compute Agent marketplace',
 ];
 
 /* The names were given. The second line on each is a gloss, kept to the
@@ -765,7 +770,7 @@ export default function BurnEnterpriseSection() {
                   width={{ xs: '92%', md: '56%' }}
                   label="Net"
                   tone="net"
-                  note="All of it goes to the buyback"
+                  note="A portion of it goes to the buyback"
                 >
                   Revenue after costs
                 </Stage>
@@ -800,7 +805,24 @@ export default function BurnEnterpriseSection() {
             </Box>
           </Box>
 
-          {/* ---- enterprise: the same money, paid earlier ---- */}
+          {/* ---- enterprise: one of the things producing line 01 ----
+
+              It took the prepaid card's slot. The two belong beside the
+              funnel for the same reason: the funnel is where the money
+              goes and this is one of the places it comes from, so the pair
+              reads as a source and a destination rather than as two
+              diagrams.
+
+              The heading and lede are the compute options section's own,
+              and the drawing is imported from it rather than copied, so
+              the price series and the crossing solve have one definition.
+
+              NO RATE, NO PREMIUM, NO INDEX LEVEL. What a compute-price
+              option costs or pays is not settled in this repo.
+
+              AZURE IS A THIRD-PARTY TRADEMARK, named as a price exposure
+              being hedged rather than as a partner. The sentence survives
+              losing it if legal wants it out. */}
           <Box
             sx={{
               flex: { lg: '1 1 calc(33.333% - 12px)' },
@@ -813,7 +835,7 @@ export default function BurnEnterpriseSection() {
               py: { xs: 3, md: 3.5 },
             }}
           >
-            <Typography sx={{ ...LABEL, color: QUIET }}>Enterprise</Typography>
+            <Typography sx={{ ...LABEL, color: ORANGE }}>Enterprise financial products</Typography>
             <Typography
               sx={{
                 mt: 1.4,
@@ -825,36 +847,99 @@ export default function BurnEnterpriseSection() {
                 textWrap: 'balance',
               }}
             >
-              Paid before the compute is used.
+              <Box component="span" sx={{ display: 'block' }}>Compute options.</Box>
+              <Box component="span" sx={{ display: 'block', color: ORANGE }}>Predictable AI costs.</Box>
             </Typography>
             <Typography
               sx={{
                 mt: 1.4,
+                mb: { xs: 2.4, md: 2.8 },
                 fontSize: { xs: '0.9rem', md: '0.94rem' },
                 lineHeight: 1.6,
                 color: QUIET,
                 textWrap: 'pretty',
               }}
             >
-              The term is bought in one payment and the credits sit in reserve until
-              there is compute to spend them on.
+              Enterprises can hedge future Azure and GPU rental price exposure using
+              compute-price options. Not another GPU rental platform.
             </Typography>
 
-            <Prepaid />
+            <ComputeOptionsFigure />
+          </Box>
 
-            <Typography
+          {/* ---- enterprise: the same money, paid earlier. HIDDEN ----
+
+              The prepaid card: the term bought in one payment, the step-down
+              drawdown figure, and the line tying it back to revenue line 01.
+
+              HIDDEN ON REQUEST, to be added back later. Nothing is deleted.
+              Prepaid() and its PREPAID data are still defined above, so
+              bringing it back is deleting the two lines that wrap it.
+
+              The funnel beside it already carries flex-grow, so with this
+              gone it fills the row on its own and no width needs changing.
+
+              Note what leaves with it. This was the only place on the page
+              that said enterprise compute is paid for BEFORE it is used,
+              which is the thing that makes revenue line 01 a real line
+              rather than a projection. The funnel still shows the line; it
+              no longer says why it arrives early. */}
+          {false && (
+            <Box
               sx={{
-                mt: { xs: 2.2, md: 2.6 },
-                pt: { xs: 1.8, md: 2 },
-                borderTop: `1px solid ${HAIR}`,
-                fontSize: '0.84rem',
-                lineHeight: 1.5,
-                color: QUIET,
+                flex: { lg: '1 1 calc(33.333% - 12px)' },
+                minWidth: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                ...PAPER,
+                px: { xs: 2.5, md: 3.5 },
+                py: { xs: 3, md: 3.5 },
               }}
             >
-              It reaches the funnel as revenue line 01.
-            </Typography>
-          </Box>
+              <Typography sx={{ ...LABEL, color: QUIET }}>Enterprise</Typography>
+              <Typography
+                sx={{
+                  mt: 1.4,
+                  fontSize: { xs: '1.3rem', md: '1.5rem' },
+                  fontWeight: 750,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.2,
+                  color: '#0F172A',
+                  textWrap: 'balance',
+                }}
+              >
+                Paid before the compute is used.
+              </Typography>
+              <Typography
+                sx={{
+                  mt: 1.4,
+                  fontSize: { xs: '0.9rem', md: '0.94rem' },
+                  lineHeight: 1.6,
+                  color: QUIET,
+                  textWrap: 'pretty',
+                }}
+              >
+                The term is bought in one payment and the credits sit in reserve until
+                there is compute to spend them on.
+              </Typography>
+
+              <Prepaid />
+
+              <Typography
+                sx={{
+                  mt: { xs: 2.2, md: 2.6 },
+                  pt: { xs: 1.8, md: 2 },
+                  borderTop: `1px solid ${HAIR}`,
+                  fontSize: '0.84rem',
+                  lineHeight: 1.5,
+                  color: QUIET,
+                }}
+              >
+                It reaches the funnel as revenue line 01.
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Container>
