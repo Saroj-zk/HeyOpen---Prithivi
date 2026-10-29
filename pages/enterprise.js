@@ -98,11 +98,10 @@ function Chip({ name, tone }) {
         backgroundColor: ink
           ? 'rgba(255,102,0,0.14)'
           : accent
-          ? 'rgba(255,102,0,0.1)'
-          : 'rgba(11,15,26,0.045)',
-        border: `1px solid ${
-          ink ? 'rgba(255,102,0,0.3)' : accent ? 'rgba(255,102,0,0.24)' : 'rgba(11,15,26,0.08)'
-        }`,
+            ? 'rgba(255,102,0,0.1)'
+            : 'rgba(11,15,26,0.045)',
+        border: `1px solid ${ink ? 'rgba(255,102,0,0.3)' : accent ? 'rgba(255,102,0,0.24)' : 'rgba(11,15,26,0.08)'
+          }`,
       }}
     >
       <Mark name={name} size={19} />
@@ -175,21 +174,21 @@ function Section({ ground, full = true, first, bare, children, sx }) {
         zIndex: 1,
         ...(full
           ? {
-              minHeight: tall,
-              '@supports (min-height: 100svh)': { minHeight: tallSmall },
-              display: 'flex',
-              alignItems: 'center',
-            }
+            minHeight: tall,
+            '@supports (min-height: 100svh)': { minHeight: tallSmall },
+            display: 'flex',
+            alignItems: 'center',
+          }
           : null),
         ...(ground === 'ink'
           ? { backgroundColor: INK }
           : ground
-          ? {
+            ? {
               background: ground,
               borderTop: '1px solid rgba(11,15,26,0.05)',
               borderBottom: '1px solid rgba(11,15,26,0.05)',
             }
-          : null),
+            : null),
         ...sx,
       }}
     >
@@ -306,7 +305,7 @@ const TOKEN_PROOF = [
 ];
 
 const STACK_PROOF = [
-  ['White-label', 'The product ships under their name.'],
+  ['Custom Branded', 'The product ships under their name.'],
   ['Prepaid compute', 'Committed usage, clear billing.'],
   ['Scalable inference', 'Infrastructure that grows with demand.'],
 ];
@@ -424,7 +423,7 @@ function WhiteLabel() {
               backgroundColor: 'var(--bg-card)',
             }}
           >
-            White-label
+            Custom Branded
           </Label>
         </Box>
 
@@ -519,10 +518,6 @@ function WhiteLabel() {
 
 /* Deterministic, because toLocaleString is not guaranteed to agree between
    Node and the browser and these numbers are server rendered first. */
-function comma(n) {
-  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
 function usd(n) {
   return `$${n.toFixed(2)}`;
 }
@@ -555,23 +550,6 @@ const GLASS_INK = {
   border: `1px solid ${RULE_ON_INK}`,
   background: 'linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 100%)',
   boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
-};
-
-const SLIDER_SX = {
-  color: 'var(--brand-accent)',
-  height: 6,
-  padding: '14px 0',
-  '& .MuiSlider-rail': { opacity: 1, backgroundColor: 'rgba(11,15,26,0.1)' },
-  '& .MuiSlider-track': { border: 'none' },
-  '& .MuiSlider-thumb': {
-    width: 20,
-    height: 20,
-    backgroundColor: '#FFFFFF',
-    border: '2px solid var(--brand-accent)',
-    boxShadow: '0 2px 6px rgba(11,15,26,0.18)',
-    '&:hover, &.Mui-focusVisible': { boxShadow: '0 0 0 7px rgba(255,102,0,0.14)' },
-    '&.Mui-active': { boxShadow: '0 0 0 11px rgba(255,102,0,0.16)' },
-  },
 };
 
 /* A label above a control, with the value it currently reads. */
@@ -852,40 +830,152 @@ function Protection() {
 
 /* ------------------------------------------------------------------ */
 
-const STAKE_DIAL = { min: 100, max: 100000, step: 100, start: 100 };
-const REV_DIAL = { min: 10000, max: 1000000, step: 10000, start: 100000 };
-const ALLOC_DIAL = { min: 40, max: 50, step: 1, start: 45 };
+/* Where enterprise revenue goes once it is earned.
+
+   Set out as a statement, not as a flow chart. The first attempt was boxes
+   joined by arrows, which is a picture of there being a process; it never
+   said the thing the section exists to say, which is that the token is
+   funded out of what is LEFT after the business has been run, not out of
+   the top line. Subtraction says that in a form every reader already knows
+   how to read, and it says it without a single box.
+
+   So: a source, two deductions, a double rule, a subtotal, and the two
+   places the subtotal goes. The double rule is the accounting convention
+   and it is doing the work three arrows and a centred card were doing.
+
+   No icons. Five decorative tiles would put the emphasis on the furniture,
+   and the operator gutter already tells a reader what each row is.
+
+   NO FIGURES, which is the one way this differs from a real statement. The
+   rows carry names and the arithmetic is structural. What the enterprise
+   side earns and what the compute costs are not settled in this repo, and a
+   column of numbers here would read as a disclosure. */
+const LEDGER = [
+  {
+    t: 'Enterprise revenue',
+    s: 'Custom-branded solutions and AI usage.',
+  },
+  {
+    op: '\u2212',
+    t: 'Compute capacity',
+    s: 'Fund the infrastructure serving enterprise workloads.',
+  },
+  {
+    op: '\u2212',
+    t: 'Options and protection',
+    s: 'Fund hedging premiums to manage price exposure.',
+  },
+  {
+    op: '=',
+    t: 'Available revenue after costs',
+    s: 'After service delivery, obligations and reserves.',
+    total: true,
+  },
+];
+
+/* THE ALLOCATION BAND IS NAMED HERE and nowhere else on the site now. The
+   reference says only "under the allocation policy"; left at that, the one
+   number this page exists to carry would have gone with the calculator. */
+const ALLOCATED = [
+  {
+    op: '\u2192',
+    t: 'Reinvest and scale',
+    s: 'Expand compute capacity to serve future demand.',
+  },
+  {
+    op: '\u2192',
+    t: '$OPEN economy',
+    s: `Support proposed buybacks and burns under the ${ALLOC_BAND} allocation policy.`,
+    accent: true,
+  },
+];
+
+/* One ruled row: operator, what it is, what it means.
+ *
+ * The name and the note are a wrapping pair rather than two fixed columns,
+ * so on a narrow screen the note drops under the name it belongs to instead
+ * of squeezing into a gutter three words wide. The operator keeps its own
+ * fixed column at every width, because the column of operators running down
+ * the left is the only thing making this read as arithmetic. */
+function Row({ op, t, s: body, total, accent, first }) {
+  const emphatic = total || accent;
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'baseline',
+        gap: { xs: 1.4, md: 2 },
+        py: { xs: 1.7, md: 1.9 },
+        ...(first
+          ? null
+          : total
+            ? { borderTop: '3px double rgba(11,15,26,0.26)' }
+            : { borderTop: `1px solid ${RULE}` }),
+      }}
+    >
+      <Typography
+        aria-hidden="true"
+        component="span"
+        sx={{
+          ...FIG,
+          width: '18px',
+          flexShrink: 0,
+          fontSize: '1.05rem',
+          lineHeight: 1,
+          color: accent ? 'var(--brand-accent)' : total ? 'var(--text-heading)' : 'var(--text-muted)',
+        }}
+      >
+        {op || ''}
+      </Typography>
+
+      <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexWrap: 'wrap', gap: { xs: 0.5, md: 2.4 } }}>
+        <Typography
+          sx={{
+            flex: '0 1 300px',
+            minWidth: 0,
+            fontSize: emphatic ? { xs: '1.1rem', md: '1.18rem' } : { xs: '1.02rem', md: '1.06rem' },
+            fontWeight: 750,
+            letterSpacing: '-0.025em',
+            lineHeight: 1.3,
+            color: accent ? 'var(--brand-accent)' : 'var(--text-heading)',
+          }}
+        >
+          {t}
+        </Typography>
+        <Typography
+          sx={{
+            flex: '1 1 280px',
+            minWidth: 0,
+            fontSize: '0.92rem',
+            lineHeight: 1.6,
+            color: 'var(--text-secondary)',
+          }}
+        >
+          {body}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
 /**
  * The whole section as one sheet.
  *
- * The other two put a heading on top of a panel. This one has no heading on
- * top of anything: the title is the sheet's masthead, the controls are its
- * body and the chain and the ask are its footer. From across the room it is
- * one rectangle where the others are a column of words and an object, which
- * is the difference that was missing.
+ * It replaces the staking calculator that closed this page. That one asked a
+ * reader to move three sliders to arrive at a figure nothing in this repo
+ * can stand behind, and the arithmetic it set out was the same band quoted
+ * four inches above it. This answers the question the sliders were standing
+ * in for, which is where the money goes once the business has earned it.
  *
- * The allocation is arithmetic, so it is set out the way arithmetic is set
- * out: ruled rows, figures in one column, operators in the gutter, a double
- * rule and a total under it. A reader already knows how to read that form.
+ * The composition is kept. The other two sections on this page are words
+ * beside a thing and words above a thing; this is still the one rectangle,
+ * with the heading as its masthead and the chain and the ask as its footer.
  *
- * Left is utility and it deliberately prints no rate. Credits per staked
- * token are not settled anywhere in this repo, so the control reports the
- * stake back and says where the real number will come from. A slider that
- * invented a credit figure would be the yield calculator again under a new
- * name.
- *
- * THE RIGHT HALF CONTRADICTS THE REST OF THE PAGE, which still presents the
- * same 40 to 50 band as a return the treasury is run to. One of the two is
- * wrong, and until that is settled this is the conservative one.
+ * THE STATEMENT IS A PROPOSAL, not a description of something running. The
+ * badge says proposed and the note under it says so again in a sentence.
+ * NEITHER HAS BEEN REVIEWED.
  */
-function OpenUtility() {
-  const [stake, setStake] = React.useState(STAKE_DIAL.start);
-  const [revenue, setRevenue] = React.useState(REV_DIAL.start);
-  const [alloc, setAlloc] = React.useState(ALLOC_DIAL.start);
-
-  const budget = revenue * (alloc / 100);
-
+function RevenueFlow() {
   return (
     <Box sx={{ border: `1px solid ${RULE}`, borderRadius: '20px', backgroundColor: 'var(--bg-card)', overflow: 'hidden' }}>
       {/* ---- masthead: the section's heading lives here ---- */}
@@ -901,193 +991,92 @@ function OpenUtility() {
           backgroundColor: 'rgba(11,15,26,0.022)',
         }}
       >
-        <Box sx={{ flex: '1 1 360px', minWidth: 0 }}>
-          <Typography
-            component="h2"
-            sx={{
-              fontSize: { xs: '1.7rem', sm: '2rem', md: '2.2rem' },
-              fontWeight: 700,
-              letterSpacing: '-0.035em',
-              lineHeight: 1.06,
-              color: 'var(--text-heading)',
-            }}
-          >
-            <Box component="span" sx={{ display: 'block' }}>A working AI economy.</Box>
-            <Box component="span" sx={{ display: 'block' }}>A role for $OPEN.</Box>
-          </Typography>
+        <Box sx={{ flex: '1 1 320px', minWidth: 0 }}>
+          <SectionHead
+            maxWidth="100%"
+            title={
+              <>
+                <Box component="span" sx={{ display: 'block' }}>Revenue earned.</Box>
+                <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
+                  Compute reinvested.
+                </Box>
+              </>
+            }
+          />
         </Box>
         <Typography
           sx={{
-            flex: '1 1 320px',
+            flex: '1 1 340px',
             minWidth: 0,
-            fontSize: '0.94rem',
-            lineHeight: 1.6,
+            fontSize: '0.98rem',
+            lineHeight: 1.65,
             color: 'var(--text-secondary)',
             textWrap: 'pretty',
           }}
         >
-          Stake $OPEN to reach compute credits and the benefits that come with them. Behind it sits
-          the business above, and a proposed buyback and burn funded from its net revenue.
+          Enterprise revenue powers more than AI services. Hey Open uses it to fund compute
+          capacity and price protection, helping deliver predictable costs while building
+          infrastructure for growing demand.
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' } }}>
-        {/* ---- what the stake reaches ---- */}
+      {/* ---- body: the statement ---- */}
+      <Box sx={{ px: { xs: 2.2, md: 3.4 }, py: { xs: 2.4, md: 2.8 } }}>
         <Box
           sx={{
-            flex: { lg: '1 1 40%' },
-            minWidth: 0,
-            px: { xs: 2.2, md: 3 },
-            py: { xs: 2, md: 2.4 },
-            borderRight: { lg: `1px solid ${RULE}` },
-            borderBottom: { xs: `1px solid ${RULE}`, lg: 'none' },
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 1.5,
+            pb: { xs: 0.6, md: 0.8 },
           }}
         >
-          <Dial label="Your $OPEN stake" value={`${comma(stake)} $OPEN`}>
-            <Slider
-              sx={SLIDER_SX}
-              value={stake}
-              onChange={(e, v) => setStake(v)}
-              min={STAKE_DIAL.min}
-              max={STAKE_DIAL.max}
-              step={STAKE_DIAL.step}
-              aria-label="Your $OPEN stake"
-            />
-          </Dial>
-
-          <Box sx={{ mt: 1.2, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
-            <Chip name="bolt" />
-            <Box sx={{ minWidth: 0 }}>
-              <Typography sx={{ fontSize: { xs: '1rem', md: '1.04rem' }, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
-                Compute credit access
-              </Typography>
-              <Typography sx={{ mt: 0.6, fontSize: '0.86rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-                Staking is what connects a holding to compute. What a stake is worth in credits
-                comes from the published schedule, not from this control.
-              </Typography>
-            </Box>
+          <Label>Where the revenue goes</Label>
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              px: '12px',
+              py: '7px',
+              borderRadius: '999px',
+              border: `1px solid ${RULE}`,
+              backgroundColor: 'rgba(11,15,26,0.03)',
+              flexShrink: 0,
+            }}
+          >
+            <Label>Proposed, not a forecast</Label>
           </Box>
         </Box>
 
-        {/* ---- and the sum the business proposes to do ---- */}
-        <Box sx={{ flex: { lg: '1 1 60%' }, minWidth: 0, px: { xs: 2.2, md: 3 }, py: { xs: 2, md: 2.4 } }}>
-          <Box sx={{ display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: 1.5 }}>
-            <Typography
-              sx={{
-                fontSize: { xs: '1.04rem', md: '1.12rem' },
-                fontWeight: 750,
-                letterSpacing: '-0.025em',
-                lineHeight: 1.25,
-                color: 'var(--text-heading)',
-              }}
-            >
-              Understand the {ALLOC_BAND} allocation
-            </Typography>
-            <Label sx={{ ml: 'auto' }}>Illustrative</Label>
-          </Box>
-          <Typography sx={{ mt: 0.5, fontSize: '0.84rem', lineHeight: 1.55, color: 'var(--text-secondary)' }}>
-            The share of net revenue spent buying $OPEN back. This is not the return target
-            quoted elsewhere on this page: it is a different measure of a different thing, and it
-            is a proposed policy rather than a promise.
-          </Typography>
+        {LEDGER.map((r, i) => (
+          <Row key={r.t} {...r} first={i === 0} />
+        ))}
 
-          <Box sx={{ mt: { xs: 1.6, md: 1.8 } }}>
-            {[
-              {
-                k: 'Eligible net revenue',
-                v: `$${comma(revenue)}`,
-                slider: (
-                  <Slider
-                    sx={SLIDER_SX}
-                    value={revenue}
-                    onChange={(e, v) => setRevenue(v)}
-                    min={REV_DIAL.min}
-                    max={REV_DIAL.max}
-                    step={REV_DIAL.step}
-                    aria-label="Illustrative eligible net revenue"
-                  />
-                ),
-              },
-              {
-                k: 'Buyback allocation',
-                v: `${alloc}%`,
-                op: 'x',
-                slider: (
-                  <Slider
-                    sx={SLIDER_SX}
-                    value={alloc}
-                    onChange={(e, v) => setAlloc(v)}
-                    min={ALLOC_DIAL.min}
-                    max={ALLOC_DIAL.max}
-                    step={ALLOC_DIAL.step}
-                    aria-label="Buyback allocation percentage"
-                  />
-                ),
-              },
-            ].map((row, i) => (
-              <Box key={row.k} sx={{ pt: i ? 1.1 : 0, borderTop: i ? `1px solid ${RULE}` : 'none', mt: i ? 1.1 : 0 }}>
-                <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5 }}>
-                  <Typography
-                    component="span"
-                    aria-hidden="true"
-                    sx={{ ...FIG, width: '14px', flexShrink: 0, fontSize: '0.95rem', color: 'var(--text-muted)' }}
-                  >
-                    {row.op === 'x' ? '\u00d7' : ''}
-                  </Typography>
-                  <Typography sx={{ flex: 1, minWidth: 0, fontSize: '0.92rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                    {row.k}
-                  </Typography>
-                  <Typography
-                    component="span"
-                    sx={{ ...FIG, fontSize: { xs: '1.02rem', md: '1.1rem' }, fontWeight: 600, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}
-                  >
-                    {row.v}
-                  </Typography>
-                </Box>
-                <Box sx={{ pl: { xs: 0, sm: '30px' } }}>{row.slider}</Box>
-              </Box>
-            ))}
-
-            <Box
-              sx={{
-                mt: 0.6,
-                pt: { xs: 1.4, md: 1.6 },
-                borderTop: '3px double rgba(11,15,26,0.2)',
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: 1.5,
-              }}
-            >
-              <Typography
-                component="span"
-                aria-hidden="true"
-                sx={{ ...FIG, width: '14px', flexShrink: 0, fontSize: '0.95rem', color: 'var(--brand-accent)' }}
-              >
-                =
-              </Typography>
-              <Typography sx={{ flex: 1, minWidth: 0, fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-heading)' }}>
-                Illustrative buyback budget
-              </Typography>
-              <Typography
-                sx={{
-                  ...FIG,
-                  fontSize: { xs: '1.7rem', md: '2rem' },
-                  fontWeight: 600,
-                  letterSpacing: '-0.03em',
-                  lineHeight: 1,
-                  color: 'var(--brand-accent)',
-                }}
-              >
-                ${comma(budget)}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Typography sx={{ mt: { xs: 1.4, md: 1.5 }, fontSize: '0.76rem', lineHeight: 1.55, color: 'var(--text-muted)' }}>
-            A final policy still has to state the percentage, what counts as eligible revenue, the
-            timing, reserve treatment, and where the buybacks can be verified.
-          </Typography>
+        {/* The subtotal is where the subtraction stops and the allocation
+            starts, so the second half is labelled rather than simply ruled.
+            Without it the two arrows read as two more deductions. */}
+        <Box sx={{ pt: { xs: 2.2, md: 2.4 }, pb: { xs: 0.4, md: 0.6 } }}>
+          <Label>Allocated to</Label>
         </Box>
+
+        {ALLOCATED.map((r, i) => (
+          <Row key={r.t} {...r} first={i === 0} />
+        ))}
+
+        <Typography
+          sx={{
+            mt: { xs: 2.2, md: 2.4 },
+            pt: { xs: 1.8, md: 2 },
+            borderTop: `1px solid ${RULE}`,
+            fontSize: '0.78rem',
+            lineHeight: 1.6,
+            color: 'var(--text-muted)',
+          }}
+        >
+          Illustrative. No revenue, cost, buyback or burn is quoted or guaranteed here, and the
+          allocation above is a proposed policy range rather than a commitment.
+        </Typography>
       </Box>
 
       {/* ---- footer: the chain, and the ask ---- */}
@@ -1145,7 +1134,7 @@ export default function EnterprisePage() {
         <title>The economics behind $OPEN | Hey Open</title>
         <meta
           name="description"
-          content="Hey Open powers white-label AI products for enterprises, with compute protection designed to keep costs predictable. As the business grows, its revenue connects real AI usage to $OPEN buybacks and burns."
+          content="Hey Open powers Custom branded AI products for enterprises, with compute protection designed to keep costs predictable. As the business grows, its revenue connects real AI usage to $OPEN buybacks and burns."
         />
       </Head>
 
@@ -1255,7 +1244,7 @@ export default function EnterprisePage() {
                     <Box component="span" sx={{ display: 'block' }}>Our infrastructure.</Box>
                   </>
                 }
-                lede="Hey Open powers white-label AI products for businesses. From inference APIs to complete applications, enterprises launch under their own brand while we run what is underneath."
+                lede="Hey Open powers Custom Branded AI products for businesses. From inference APIs to complete applications, enterprises launch under their own brand while we run what is underneath."
               />
 
               <Box sx={{ mt: { xs: 2.6, md: 3 } }}>
@@ -1361,18 +1350,25 @@ export default function EnterprisePage() {
         </Reveal>
       </Section>
 
-      {/* ── 3. And what it has to do with the token ──────
-          The close of the business block, and the only place the allocation
-          band is shown doing arithmetic instead of being quoted.
+      {/* ── 3. And where the revenue goes ──────────
+          The close of the business block. The two sections above sell the
+          enterprise side and then show what it costs to run; this is what
+          happens to the money afterwards, which is the only part of the
+          three that a token holder is actually buying into.
+
+          It replaces the staking calculator. That asked for three slider
+          moves to reach a figure nothing here can stand behind, and this
+          page is the one place the allocation band is supposed to be stated
+          plainly rather than computed.
 
           One object, nothing stacked. The heading is the sheet's masthead
           and the chain and the ask are its footer, so where the two sections
           above are words-beside-a-thing and words-above-a-thing, this is a
           single rectangle. Plain ground, because the sheet is the only thing
-          on it. */}
+          on it, and because the section above it is ink. */}
       <Section sx={{ py: { xs: 7, md: 5 } }}>
         <Reveal>
-          <OpenUtility />
+          <RevenueFlow />
         </Reveal>
       </Section>
 
