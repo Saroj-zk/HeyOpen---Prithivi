@@ -832,29 +832,40 @@ function Protection() {
 
 /* Where enterprise revenue goes once it is earned.
 
-   Set out as a statement, not as a flow chart. The first attempt was boxes
+   Set out as a statement, not as a flow chart. An earlier attempt was boxes
    joined by arrows, which is a picture of there being a process; it never
    said the thing the section exists to say, which is that the token is
    funded out of what is LEFT after the business has been run, not out of
-   the top line. Subtraction says that in a form every reader already knows
-   how to read, and it says it without a single box.
+   the top line. Subtraction says that in a form a reader already knows how
+   to read, and it says it without a single arrow.
 
-   So: a source, two deductions, a double rule, a subtotal, and the two
-   places the subtotal goes. The double rule is the accounting convention
-   and it is doing the work three arrows and a centred card were doing.
+   THREE MOVEMENTS, not six rows. The first version of the statement was
+   right and looked like a spreadsheet: six rules, six identical rows, one
+   weight throughout, and a right half that trailed off into nothing. The
+   arithmetic has a shape and the layout now has the same one.
+
+     the top line and what comes off it   ruled rows, quiet
+     what is left                         a dark band, the pivot
+     where that goes                      two cards, the token accented
+
+   The band is the whole argument in one object: everything above it is the
+   business being run, everything below it is what the business being run
+   pays for. It is the only dark thing on a white sheet, so it is where the
+   eye lands, which is correct.
 
    No icons. Five decorative tiles would put the emphasis on the furniture,
    and the operator gutter already tells a reader what each row is.
 
-   NO FIGURES, which is the one way this differs from a real statement. The
-   rows carry names and the arithmetic is structural. What the enterprise
-   side earns and what the compute costs are not settled in this repo, and a
-   column of numbers here would read as a disclosure. */
-const LEDGER = [
-  {
-    t: 'Enterprise revenue',
-    s: 'Custom-branded solutions and AI usage.',
-  },
+   NO FIGURES, which is the one way this differs from a real statement, and
+   it is why none of this is drawn to scale. Bars or widths would be a claim
+   about proportion, and what the enterprise side earns and what the compute
+   costs are not settled in this repo. */
+const SOURCE = {
+  t: 'Enterprise revenue',
+  s: 'Custom-branded solutions and AI usage.',
+};
+
+const DEDUCTIONS = [
   {
     op: '\u2212',
     t: 'Compute capacity',
@@ -865,25 +876,22 @@ const LEDGER = [
     t: 'Options and protection',
     s: 'Fund hedging premiums to manage price exposure.',
   },
-  {
-    op: '=',
-    t: 'Available revenue after costs',
-    s: 'After service delivery, obligations and reserves.',
-    total: true,
-  },
 ];
+
+const REMAINDER = {
+  t: 'Available revenue after costs',
+  s: 'After service delivery, obligations and reserves.',
+};
 
 /* THE ALLOCATION BAND IS NAMED HERE and nowhere else on the site now. The
    reference says only "under the allocation policy"; left at that, the one
    number this page exists to carry would have gone with the calculator. */
 const ALLOCATED = [
   {
-    op: '\u2192',
     t: 'Reinvest and scale',
     s: 'Expand compute capacity to serve future demand.',
   },
   {
-    op: '\u2192',
     t: '$OPEN economy',
     s: `Support proposed buybacks and burns under the ${ALLOC_BAND} allocation policy.`,
     accent: true,
@@ -896,21 +904,19 @@ const ALLOCATED = [
  * so on a narrow screen the note drops under the name it belongs to instead
  * of squeezing into a gutter three words wide. The operator keeps its own
  * fixed column at every width, because the column of operators running down
- * the left is the only thing making this read as arithmetic. */
-function Row({ op, t, s: body, total, accent, first }) {
-  const emphatic = total || accent;
+ * the left is the only thing making this read as arithmetic.
+ *
+ * The gutter is narrow and close. Held out at arm's length from the title
+ * it read as an orphaned hyphen rather than as an operator. */
+function Row({ op, t, s: body, lead, first }) {
   return (
     <Box
       sx={{
         display: 'flex',
         alignItems: 'baseline',
-        gap: { xs: 1.4, md: 2 },
-        py: { xs: 1.7, md: 1.9 },
-        ...(first
-          ? null
-          : total
-            ? { borderTop: '3px double rgba(11,15,26,0.26)' }
-            : { borderTop: `1px solid ${RULE}` }),
+        gap: { xs: 1.2, md: 1.5 },
+        py: { xs: 1.5, md: 1.6 },
+        ...(first ? null : { borderTop: `1px solid ${RULE}` }),
       }}
     >
       <Typography
@@ -918,11 +924,11 @@ function Row({ op, t, s: body, total, accent, first }) {
         component="span"
         sx={{
           ...FIG,
-          width: '18px',
+          width: '16px',
           flexShrink: 0,
-          fontSize: '1.05rem',
+          fontSize: '1.2rem',
           lineHeight: 1,
-          color: accent ? 'var(--brand-accent)' : total ? 'var(--text-heading)' : 'var(--text-muted)',
+          color: 'var(--text-muted)',
         }}
       >
         {op || ''}
@@ -931,13 +937,13 @@ function Row({ op, t, s: body, total, accent, first }) {
       <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexWrap: 'wrap', gap: { xs: 0.5, md: 2.4 } }}>
         <Typography
           sx={{
-            flex: '0 1 300px',
+            flex: '0 1 290px',
             minWidth: 0,
-            fontSize: emphatic ? { xs: '1.1rem', md: '1.18rem' } : { xs: '1.02rem', md: '1.06rem' },
+            fontSize: lead ? { xs: '1.1rem', md: '1.16rem' } : { xs: '1.02rem', md: '1.06rem' },
             fontWeight: 750,
             letterSpacing: '-0.025em',
             lineHeight: 1.3,
-            color: accent ? 'var(--brand-accent)' : 'var(--text-heading)',
+            color: 'var(--text-heading)',
           }}
         >
           {t}
@@ -954,6 +960,39 @@ function Row({ op, t, s: body, total, accent, first }) {
           {body}
         </Typography>
       </Box>
+    </Box>
+  );
+}
+
+/* Where the remainder goes. Cards rather than two more rows, because these
+   are not another deduction: the statement has finished and this is what it
+   produced. The token half takes the accent, which is the half a reader of
+   this page came for. */
+function Destination({ t, s: body, accent }) {
+  return (
+    <Box
+      sx={{
+        ...(accent ? ACCENT : PANEL),
+        borderRadius: '14px',
+        boxShadow: 'none',
+        px: { xs: 2.2, md: 2.6 },
+        py: { xs: 2.2, md: 2.4 },
+      }}
+    >
+      <Typography
+        sx={{
+          fontSize: { xs: '1.1rem', md: '1.16rem' },
+          fontWeight: 750,
+          letterSpacing: '-0.025em',
+          lineHeight: 1.3,
+          color: accent ? 'var(--brand-accent)' : 'var(--text-heading)',
+        }}
+      >
+        {t}
+      </Typography>
+      <Typography sx={{ mt: 0.9, fontSize: '0.92rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+        {body}
+      </Typography>
     </Box>
   );
 }
@@ -1029,7 +1068,7 @@ function RevenueFlow() {
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: 1.5,
-            pb: { xs: 0.6, md: 0.8 },
+            pb: { xs: 0.4, md: 0.6 },
           }}
         >
           <Label>Where the revenue goes</Label>
@@ -1049,20 +1088,82 @@ function RevenueFlow() {
           </Box>
         </Box>
 
-        {LEDGER.map((r, i) => (
-          <Row key={r.t} {...r} first={i === 0} />
+        {/* movement one: the top line, and what comes off it */}
+        <Row {...SOURCE} lead first />
+        {DEDUCTIONS.map((r) => (
+          <Row key={r.t} {...r} />
         ))}
 
-        {/* The subtotal is where the subtraction stops and the allocation
-            starts, so the second half is labelled rather than simply ruled.
-            Without it the two arrows read as two more deductions. */}
-        <Box sx={{ pt: { xs: 2.2, md: 2.4 }, pb: { xs: 0.4, md: 0.6 } }}>
+        {/* movement two: the pivot. Everything above this band is the cost
+            of running the business, everything below it is what running the
+            business pays for, and it is the only dark object on the sheet
+            so that the division is impossible to miss. */}
+        <Box
+          sx={{
+            ...PANEL_INK,
+            mt: { xs: 2.2, md: 2.6 },
+            px: { xs: 2.2, md: 2.8 },
+            /* Deeper than a row on purpose. At row height it read as a
+               highlighted row rather than as the thing the rows add up to. */
+            py: { xs: 2.6, md: 3 },
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: { xs: 1.2, md: 1.5 },
+          }}
+        >
+          <Typography
+            aria-hidden="true"
+            component="span"
+            sx={{ ...FIG, width: '16px', flexShrink: 0, fontSize: '1.2rem', lineHeight: 1, color: 'var(--brand-accent)' }}
+          >
+            =
+          </Typography>
+          <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexWrap: 'wrap', gap: { xs: 0.6, md: 2.4 } }}>
+            <Typography
+              sx={{
+                flex: '0 1 290px',
+                minWidth: 0,
+                /* Not larger than this. The title is the longest string in
+                   the section and at 1.4rem it wraps, orphaning "costs". */
+                fontSize: { xs: '1.2rem', md: '1.34rem' },
+                fontWeight: 750,
+                letterSpacing: '-0.03em',
+                lineHeight: 1.25,
+                color: '#FFFFFF',
+              }}
+            >
+              {REMAINDER.t}
+            </Typography>
+            <Typography
+              sx={{
+                flex: '1 1 280px',
+                minWidth: 0,
+                fontSize: '0.92rem',
+                lineHeight: 1.6,
+                color: 'rgba(255,255,255,0.6)',
+              }}
+            >
+              {REMAINDER.s}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* movement three: where the remainder goes */}
+        <Box sx={{ pt: { xs: 2.4, md: 2.6 }, pb: { xs: 1.2, md: 1.4 } }}>
           <Label>Allocated to</Label>
         </Box>
 
-        {ALLOCATED.map((r, i) => (
-          <Row key={r.t} {...r} first={i === 0} />
-        ))}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' },
+            gap: { xs: 1.6, md: 2 },
+          }}
+        >
+          {ALLOCATED.map((c) => (
+            <Destination key={c.t} {...c} />
+          ))}
+        </Box>
 
         <Typography
           sx={{
@@ -1074,8 +1175,9 @@ function RevenueFlow() {
             color: 'var(--text-muted)',
           }}
         >
-          Illustrative. No revenue, cost, buyback or burn is quoted or guaranteed here, and the
-          allocation above is a proposed policy range rather than a commitment.
+          Illustrative and not drawn to scale. No revenue, cost, buyback or burn is quoted or
+          guaranteed here, and the allocation above is a proposed policy range rather than a
+          commitment.
         </Typography>
       </Box>
 
