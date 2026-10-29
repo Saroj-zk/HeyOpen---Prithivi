@@ -122,6 +122,46 @@ const STRATEGY = [
   ['chart', 'Managed economics', 'Contract pricing and cost management create opportunities for operating returns.'],
 ];
 
+const DEPLOY = [
+  { k: 'Compute capital', s: 'Capacity the network runs on', mark: 'chip' },
+  { k: 'Options', s: 'Positions run against the book', mark: 'chart' },
+  { k: 'AI infrastructure', s: 'The rails underneath the models', mark: 'layers' },
+];
+
+const RETURNS = [
+  {
+    tag: 'Owed to you',
+    k: RATES.base,
+    s: 'Paid from the staking contract whatever the period did. It does not wait on the book.',
+    mark: 'shield',
+    tone: 'ink',
+    big: true,
+  },
+  {
+    tag: 'Aimed at',
+    k: 'Everything above it',
+    s: 'What the book makes on top of it. Reported once a period has closed, never promised before.',
+    mark: 'rise',
+  },
+];
+
+/* Three readings of the same promise, under the figure that makes it. */
+const PROOF = [
+  [
+    'The floor is a contract rate',
+    'The floor is set in the staking contract. It pays on schedule, and anyone can read it without asking us.',
+  ],
+  [
+    'The stake stays yours',
+    'Staking does not sell your $OPEN or move it beyond your reach. You can unstake, and the balance is visible the whole time.',
+  ],
+  [
+    'The target is reported after',
+    'Each period ends with the figure that was actually returned, published against the band rather than compared with it later.',
+  ],
+];
+
+
 /* 06. Where the supply goes, and how anyone checks. */
 const TOKENOMICS = [
   ['coins', 'Revenue-funded buybacks', 'A defined allocation of net revenue funds $OPEN purchases.'],
@@ -405,6 +445,209 @@ function SectionHead({ eyebrow, title, lede, onInk, tier = 'major', maxWidth = 7
           {lede}
         </Typography>
       )}
+    </Box>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* The architecture                                                    */
+/* ------------------------------------------------------------------ */
+
+const LINE = 'rgba(15,23,42,0.2)';
+const RUN = 'rgba(255,102,0,0.9)';
+
+/* Three rows of height H and two gaps of G put the card centres at H/2,
+   1.5H+G and 2.5H+2G. The fan column is alignSelf stretch, so its height is
+   the row's height and those three numbers are where the branches have to
+   land. Arithmetic rather than eyeballing is what keeps them on the cards
+   when the cards change height. */
+const GAP = 14;
+
+/* An elbow with rounded corners: out along the middle, down or up the spine,
+   then out again. A straight run when there is no corner to turn. */
+function elbow(w, from, to) {
+  const x = w / 2;
+  const r = Math.min(9, Math.abs(to - from) / 2);
+  if (r < 1) return `M0 ${from} H${w}`;
+  const dir = to > from ? 1 : -1;
+  return [
+    `M0 ${from}`,
+    `H${x - r}`,
+    `Q${x} ${from} ${x} ${from + r * dir}`,
+    `V${to - r * dir}`,
+    `Q${x} ${to} ${x + r} ${to}`,
+    `H${w}`,
+  ].join(' ');
+}
+
+/**
+ * One node splitting into three, or three converging into one.
+ *
+ * Drawn as SVG rather than as CSS borders, for two reasons. Corners can be
+ * turned with a curve instead of a right angle, and a dash can be made to
+ * travel: the second path over each route is dashed and its offset animates,
+ * which is the stake visibly moving along the route rather than a diagram of
+ * it having moved. Held still for anyone who asked not to see motion.
+ */
+function Fan({ dir }) {
+  const ref = React.useRef(null);
+  const [h, setH] = React.useState(300);
+  const W = 64;
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const measure = () => setH(el.clientHeight || 300);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const rowH = (h - GAP * 2) / 3;
+  const centres = [rowH * 0.5, rowH * 1.5 + GAP, rowH * 2.5 + GAP * 2];
+  const mid = h / 2;
+  const out = dir === 'out';
+
+  const routes = out
+    ? centres.map((c) => elbow(W, mid, c))
+    : centres.map((c) => elbow(W, c, mid));
+
+  return (
+    <Box
+      ref={ref}
+      aria-hidden="true"
+      sx={{ display: { xs: 'none', lg: 'block' }, position: 'relative', width: W, alignSelf: 'stretch' }}
+    >
+      <Box
+        component="svg"
+        width={W}
+        height={h}
+        viewBox={`0 0 ${W} ${h}`}
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'visible',
+          '@keyframes runAlong': { to: { strokeDashoffset: -18 } },
+        }}
+      >
+        <defs>
+          <marker id={`tip-${dir}`} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill={LINE} />
+          </marker>
+        </defs>
+
+        {routes.map((d, i) => (
+          <g key={i}>
+            {/* the route */}
+            <path d={d} fill="none" stroke={LINE} strokeWidth="1.5" markerEnd={`url(#tip-${dir})`} />
+            {/* and what is moving along it */}
+            <Box
+              component="path"
+              d={d}
+              sx={{
+                fill: 'none',
+                stroke: RUN,
+                strokeWidth: 1.8,
+                strokeLinecap: 'round',
+                strokeDasharray: '5 13',
+                animation: 'runAlong 1.1s linear infinite',
+                animationDelay: `${i * 0.18}s`,
+                '@media (prefers-reduced-motion: reduce)': { animation: 'none', opacity: 0.45 },
+              }}
+            />
+          </g>
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
+/** What the fan collapses to below lg, where there is no room to branch. */
+function Down() {
+  return (
+    <Box
+      aria-hidden="true"
+      sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', justifyContent: 'center', py: 1.2 }}
+    >
+      <Box
+        component="svg"
+        width="12"
+        height="34"
+        viewBox="0 0 12 34"
+        /* A flex child with align-items stretch ignores the width and height
+           attributes and fills the row, which turned a 12 by 34 connector
+           into a bar the height of the gap. */
+        sx={{ width: 12, height: 34, flexShrink: 0, '@keyframes runDown': { to: { strokeDashoffset: -18 } } }}
+      >
+        <path d="M6 0 V27" fill="none" stroke={LINE} strokeWidth="1.5" />
+        <path d="M1.5 26 L6 33 L10.5 26 z" fill={LINE} />
+        <Box
+          component="path"
+          d="M6 0 V27"
+          sx={{
+            fill: 'none',
+            stroke: RUN,
+            strokeWidth: 1.8,
+            strokeLinecap: 'round',
+            strokeDasharray: '5 13',
+            animation: 'runDown 1.1s linear infinite',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none', opacity: 0.45 },
+          }}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+/**
+ * A node on the diagram.
+ *
+ * The mark moved out of the far corner and into a chip beside the text,
+ * which is the difference between a watermark and a label.
+ */
+function Node({ tag, k, s, mark, tone, big, sx }) {
+  const ink = tone === 'ink';
+  const accent = tone === 'accent';
+  const surface = ink ? PANEL_INK : accent ? ACCENT : PANEL;
+  const head = ink ? '#FFFFFF' : accent ? '#9A3C00' : 'var(--text-heading)';
+  const body = ink ? 'rgba(255,255,255,0.62)' : accent ? 'rgba(154,60,0,0.8)' : 'var(--text-secondary)';
+
+  return (
+    <Box
+      sx={{
+        ...surface,
+        overflow: 'hidden',
+        px: { xs: 2, md: 2.3 },
+        py: { xs: 1.9, md: 2.1 },
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 1.8,
+        transition: 'transform .18s ease, box-shadow .18s ease',
+        '&:hover': { transform: 'translateY(-2px)' },
+        ...(ink
+          ? { boxShadow: `${surface.boxShadow}, 0 0 0 1px rgba(255,102,0,0.12)` }
+          : null),
+        ...sx,
+      }}
+    >
+      {mark && <Chip name={mark} tone={tone} />}
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        {tag && <Label onInk={ink} sx={{ display: 'block', mb: 0.8 }}>{tag}</Label>}
+        <Typography
+          sx={{
+            ...(big ? FIG : null),
+            fontSize: big ? { xs: '1.7rem', md: '2rem' } : { xs: '1rem', md: '1.06rem' },
+            fontWeight: big ? 600 : 700,
+            letterSpacing: '-0.025em',
+            lineHeight: 1.15,
+            color: head,
+          }}
+        >
+          {k}
+        </Typography>
+        {s && <Typography sx={{ mt: 0.8, fontSize: '0.84rem', lineHeight: 1.55, color: body }}>{s}</Typography>}
+      </Box>
     </Box>
   );
 }
@@ -826,7 +1069,91 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 5. The business behind all of it ────────────────────────
+      {/* ── 5. Where the stake actually works ───────────────────────── */}
+      <Section sx={{ py: { xs: 7, md: 10 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
+            <SectionHead
+              eyebrow="Where the stake works"
+              tier="minor"
+              title="Where the work actually happens."
+              lede="Your $OPEN does not leave your wallet. What it backs is deployed across three places, and two different kinds of thing come back: the rate the staking contract owes you either way, and whatever the strategy makes on top of it."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, alignItems: 'stretch', mb: { xs: 5, md: 6 } }}>
+            <Box sx={{ display: 'flex', flex: { lg: '0 1 240px' }, minWidth: 0 }}>
+              <Node
+                tag="The stake"
+                k="Staked $OPEN"
+                s="Locked as collateral, still yours, visible the whole time. You can unstake."
+                mark="lock"
+                tone="accent"
+                sx={{ flex: 1 }}
+              />
+            </Box>
+
+            <Fan dir="out" />
+            <Down />
+
+            <Box
+              sx={{
+                flex: { lg: '1 1 0' },
+                minWidth: 0,
+                display: 'grid',
+                gridTemplateRows: { lg: 'repeat(3, 1fr)' },
+                gap: `${GAP}px`,
+              }}
+            >
+              {DEPLOY.map((d) => (
+                <Node key={d.k} k={d.k} s={d.s} mark={d.mark} />
+              ))}
+            </Box>
+
+            <Fan dir="in" />
+            <Down />
+
+            <Box
+              sx={{
+                flex: { lg: '1 1 0' },
+                minWidth: 0,
+                display: 'grid',
+                gridTemplateRows: { lg: 'repeat(2, 1fr)' },
+                gap: `${GAP}px`,
+              }}
+            >
+              {RETURNS.map((r) => (
+                <Node key={r.tag} tag={r.tag} k={r.k} s={r.s} mark={r.mark} tone={r.tone} big={r.big} />
+              ))}
+            </Box>
+          </Box>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+              gap: { xs: 3, md: 5 },
+              pt: { xs: 4, md: 5 },
+              borderTop: `1px solid ${RULE}`,
+            }}
+          >
+            {PROOF.map(([title, body]) => (
+              <Box key={title}>
+                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
+                  {title}
+                </Typography>
+                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Reveal>
+      </Section>
+
+      {/* ── 6. The business behind all of it ────────────────────────
           One object, and the most worked one on this half of the page,
           because it is the only thing here asking a reader to leave. The
           panel carries its own light and the three claims sit in it as
@@ -999,7 +1326,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 6. The position, end to end ───────────────────
+      {/* ── 7. The position, end to end ───────────────────
           The sections above are each one end of the thing: what the stake
           pays, what it unlocks, what business stands behind it. This is the
           whole of it in one row.
@@ -1014,7 +1341,7 @@ export default function StakePage() {
         <TokenFlowDiagram />
       </Section>
 
-      {/* ── 7. What that does to the supply ─────────────────────────
+      {/* ── 8. What that does to the supply ─────────────────────────
           The supply figure keeps the treatment it has always had and takes
           the accent, because it is the one number on this page that cannot
           move. The three mechanics run beside it as a list rather than as
@@ -1094,7 +1421,7 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 8. So start ────────────────────────────────────────────
+      {/* ── 9. So start ────────────────────────────────────────────
           Three cards, and the third has no button on purpose: the first two
           are things a reader does and the third is what happens as a
           result. A button there would promise a page that does not exist.
