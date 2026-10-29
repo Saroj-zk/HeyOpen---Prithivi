@@ -96,38 +96,30 @@ const APP = 'https://ais.openledger.xyz/chat';
 /* What each section says                                              */
 /* ------------------------------------------------------------------ */
 
-/* 02. Four things one token does, each with the figure or the name a
-   reader would repeat, the category under it, and a line of detail.
-
-   The 40 to 50 band appears here labelled as compute strategy returns.
-   That matters: the section that used to carry the distinction between it
-   and the 6% staking rate is hidden, which had left the closing disclaimer
-   as the only place a reader met it. This puts it back above the fold, in
-   a card that names what it is. */
+/* 02. Four things one token does, each as a figure, the category it
+   belongs to, and a line of detail. No mark: at this size an icon above
+   three lines of type is decoration sitting where the eye wants the
+   figure. */
 const BENEFITS = [
   {
-    mark: 'rise',
     k: RATES.base_short,
     t: 'Annual staking rewards',
-    s: 'Earn 6% annual rewards on your eligible staked $OPEN.',
+    s: 'Earn annual rewards on eligible staked $OPEN.',
   },
   {
-    mark: 'spark',
     k: 'Hey Open Pro',
     t: 'Premium AI access',
-    s: 'Unlock unlimited text and image models with a qualifying $OPEN stake.',
+    s: `Stake ${RATES.threshold} to unlock unlimited supported text and image models.`,
   },
   {
-    mark: 'chip',
     k: RATES.total,
-    t: 'Compute strategy returns',
-    s: 'Explore additional return potential through enterprise compute and options-based strategies.',
+    t: 'Compute strategy target',
+    s: 'Explore targeted returns through enterprise compute and options strategies.',
   },
   {
-    mark: 'flame',
     k: '$OPEN economy',
     t: 'Buybacks and burns',
-    s: 'A proposed revenue-funded mechanism designed to buy back and permanently burn $OPEN.',
+    s: 'A proposed net revenue model designed to buy back and burn $OPEN.',
   },
 ];
 
@@ -359,17 +351,6 @@ const GLASS = {
   WebkitBackdropFilter: 'blur(22px) saturate(150%)',
   boxShadow:
     'inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(255,255,255,0.05), 0 22px 44px -28px rgba(0,0,0,0.9)',
-};
-
-/* The same material at tile size. Under about 48px the large pane's rim
-   disappears, so this one is brighter and tighter. */
-const GLASS_TILE = {
-  borderRadius: '14px',
-  border: '1px solid rgba(255,255,255,0.16)',
-  background: 'linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 100%)',
-  backdropFilter: 'blur(14px) saturate(150%)',
-  WebkitBackdropFilter: 'blur(14px) saturate(150%)',
-  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3), 0 8px 18px -10px rgba(0,0,0,0.8)',
 };
 
 const PANEL_INK = {
@@ -887,7 +868,7 @@ export default function StakePage() {
         <Reveal>
           <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
             <SectionHead
-              eyebrow="Stake $OPEN"
+              eyebrow="The utility of $OPEN"
               onInk
               maxWidth={820}
               title={
@@ -896,19 +877,24 @@ export default function StakePage() {
                   <Box component="span" sx={{ display: 'block' }}>More ways to benefit.</Box>
                 </>
               }
-              lede="Stake $OPEN to earn annual rewards, unlock Hey Open Pro, and access additional opportunities through a growing AI economy."
+              lede="Stake $OPEN to earn annual rewards, unlock premium AI access, and explore additional opportunities in Hey Open's compute economy."
             />
           </Box>
         </Reveal>
 
         <Reveal delay={80}>
-          {/* Four squares in a row, left to right. The square is doing
-              work: the mark sits in the top corner, the figures sit level
-              across all four so the eye can run along them, and whatever
-              slack the copy leaves falls to the bottom, where it lines up
-              against nothing. Content longer than the
-              square simply grows it, since aspect-ratio yields rather than
-              clips. */}
+          {/* Four in a row, read left to right, so the whole set is taken
+              in at once rather than in two passes.
+
+              Nothing is accented. The moment one card is, the other three
+              read as consolation.
+
+              The figure, the category and the detail sit at the same three
+              heights in every card, because the grid gives each row one
+              height and each card starts its stack at the top. That is the
+              alignment the icons were breaking: an icon above the figure
+              pushed the figure down by its own height, and the four
+              figures stopped agreeing wherever a card's copy ran long. */}
           <Box
             sx={{
               display: 'grid',
@@ -921,11 +907,8 @@ export default function StakePage() {
                 key={b.t}
                 sx={{
                   ...GLASS,
-                  aspectRatio: { md: '1' },
-                  display: 'flex',
-                  flexDirection: 'column',
-                  px: { xs: 2.2, md: 2.6 },
-                  py: { xs: 2.2, md: 2.6 },
+                  px: { xs: 2.4, md: 2.6 },
+                  py: { xs: 2.6, md: 2.8 },
                   transition: 'transform .22s ease, box-shadow .22s ease',
                   '&:hover': {
                     transform: 'translateY(-3px)',
@@ -934,22 +917,6 @@ export default function StakePage() {
                   },
                 }}
               >
-                <Box
-                  sx={{
-                    ...GLASS_TILE,
-                    width: 46,
-                    height: 46,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--brand-accent)',
-                  }}
-                >
-                  <Mark name={b.mark} size={23} />
-                </Box>
-
-                <Box sx={{ height: { xs: '18px', md: '22px' } }} />
-
                 <Typography
                   sx={{
                     fontSize: { xs: '1.9rem', md: '1.7rem' },
@@ -957,7 +924,7 @@ export default function StakePage() {
                     letterSpacing: '-0.04em',
                     lineHeight: 1.05,
                     color: '#FFFFFF',
-                    textWrap: 'balance',
+                    whiteSpace: { md: 'nowrap' },
                   }}
                 >
                   {b.k}
@@ -965,8 +932,8 @@ export default function StakePage() {
 
                 <Typography
                   sx={{
-                    mt: 1.2,
-                    fontSize: '0.98rem',
+                    mt: { xs: 1.4, md: 1.6 },
+                    fontSize: '1rem',
                     fontWeight: 700,
                     letterSpacing: '-0.02em',
                     lineHeight: 1.3,
@@ -976,11 +943,9 @@ export default function StakePage() {
                   {b.t}
                 </Typography>
 
-                <Typography sx={{ mt: 0.7, fontSize: '0.88rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.56)' }}>
+                <Typography sx={{ mt: 0.9, fontSize: '0.92rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.56)' }}>
                   {b.s}
                 </Typography>
-
-                <Box sx={{ flex: 1 }} />
               </Box>
             ))}
           </Box>
@@ -1019,6 +984,23 @@ export default function StakePage() {
               </Button>
             </Box>
           </Box>
+
+          {/* The band is a target and the page has to say so somewhere a
+              reader reaches. It used to say it in the beyond-staking
+              section, which is hidden, leaving the closing disclaimer as
+              the only place. This is that line, under the card that prints
+              the figure. */}
+          <Typography
+            sx={{
+              mt: { xs: 2, md: 2.2 },
+              fontSize: '0.78rem',
+              lineHeight: 1.65,
+              color: 'rgba(255,255,255,0.42)',
+            }}
+          >
+            The {RATES.total} remains a strategy target, not a guaranteed additional staking
+            payout.
+          </Typography>
         </Reveal>
       </Section>
 
