@@ -1799,148 +1799,161 @@ export default function StakePage() {
         </Box>
       </Section>
 
-      {/* ── 9. What that does to the supply ─────────────────────────
-          The supply figure keeps the treatment it has always had and takes
-          the accent, because it is the one number on this page that cannot
-          move. The three mechanics run beside it as a list rather than as
-          cards: they are a sequence, not a set, and a reader should get
-          through them in one pass. */}
-      <Section sx={{ py: { xs: 7, md: 9 } }}>
-        <Reveal>
-          <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead
-              eyebrow="$OPEN tokenomics"
-              tier="minor"
-              title="Less supply. Built around real usage."
-              lede="Hey Open's proposed buyback-and-burn mechanism connects available net revenue to $OPEN purchases and permanent token burns."
-            />
-          </Box>
-        </Reveal>
+      {/* ── 9. What that does to the supply. HIDDEN ──────────
+          The fixed supply figure, the three buyback and burn mechanics and
+          the row of reference links.
 
-        <Reveal delay={80}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '0.8fr 1.2fr' },
-              gap: { xs: 3, md: 6 },
-              alignItems: 'center',
-            }}
-          >
-            <Box sx={{ ...ACCENT, px: { xs: 2.6, md: 3.2 }, py: { xs: 3, md: 3.6 } }}>
-              <Label sx={{ color: '#9A3C00' }}>Supply</Label>
-              <Typography
-                sx={{
-                  ...FIG,
-                  mt: 1.8,
-                  fontSize: { xs: '2.8rem', md: '3.4rem' },
-                  fontWeight: 600,
-                  lineHeight: 0.95,
-                  letterSpacing: '-0.04em',
-                  color: '#9A3C00',
-                }}
-              >
-                {RATES.supply}
-              </Typography>
-              <Typography sx={{ mt: 1.4, fontSize: '0.86rem', lineHeight: 1.55, color: 'rgba(154,60,0,0.8)' }}>
-                Fixed at launch. No inflation switch.
-              </Typography>
+          HIDDEN ON REQUEST. Nothing is deleted and TOKENOMICS, RATES.supply
+          and LinkChips are all still defined, so it is two lines to bring
+          back.
+
+          Note what leaves with it. The supply figure is stated nowhere else
+          on the page, and this section held the only links to /token, to
+          market data and to the contract. LinkChips is now unused. */}
+      {false && (
+        <Section sx={{ py: { xs: 7, md: 9 } }}>
+          <Reveal>
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              <SectionHead
+                eyebrow="$OPEN tokenomics"
+                tier="minor"
+                title="Less supply. Built around real usage."
+                lede="Hey Open's proposed buyback-and-burn mechanism connects available net revenue to $OPEN purchases and permanent token burns."
+              />
             </Box>
+          </Reveal>
 
-            <Box>
-              {TOKENOMICS.map(([mark, name, body], i) => (
-                <Box
-                  key={name}
+          <Reveal delay={80}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '0.8fr 1.2fr' },
+                gap: { xs: 3, md: 6 },
+                alignItems: 'center',
+              }}
+            >
+              <Box sx={{ ...ACCENT, px: { xs: 2.6, md: 3.2 }, py: { xs: 3, md: 3.6 } }}>
+                <Label sx={{ color: '#9A3C00' }}>Supply</Label>
+                <Typography
                   sx={{
-                    display: 'flex',
-                    gap: 2,
-                    pt: i ? 2.2 : 0,
-                    mt: i ? 2.2 : 0,
-                    borderTop: i ? `1px solid ${RULE}` : 'none',
+                    ...FIG,
+                    mt: 1.8,
+                    fontSize: { xs: '2.8rem', md: '3.4rem' },
+                    fontWeight: 600,
+                    lineHeight: 0.95,
+                    letterSpacing: '-0.04em',
+                    color: '#9A3C00',
                   }}
                 >
-                  <Chip name={mark} />
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography sx={{ fontSize: '1.02rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
-                      {name}
-                    </Typography>
-                    <Typography sx={{ mt: 0.5, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
-                      {body}
-                    </Typography>
-                  </Box>
-                </Box>
-              ))}
-
-              <Box sx={{ mt: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.6 }}>
-                <Button href="/token" small>Read the tokenomics</Button>
-                <LinkChips />
+                  {RATES.supply}
+                </Typography>
+                <Typography sx={{ mt: 1.4, fontSize: '0.86rem', lineHeight: 1.55, color: 'rgba(154,60,0,0.8)' }}>
+                  Fixed at launch. No inflation switch.
+                </Typography>
               </Box>
-            </Box>
-          </Box>
-        </Reveal>
-      </Section>
 
-      {/* ── 10. So start ────────────────────────────────────────────
-          Three cards, and the third has no button on purpose: the first two
-          are things a reader does and the third is what happens as a
-          result. A button there would promise a page that does not exist.
-          ──────────────────────────────────────────────────────── */}
-      <Section sx={{ py: { xs: 7, md: 9 } }}>
-        <Reveal>
-          <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead
-              eyebrow="Get started with $OPEN"
-              tier="minor"
-              title="Three moves. Put $OPEN to work."
-            />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 2.5 } }}>
-            {STEPS.map((step) => (
-              <Box
-                key={step.n}
-                sx={{ ...PANEL, display: 'flex', flexDirection: 'column', px: { xs: 2.4, md: 2.8 }, py: { xs: 2.8, md: 3.2 } }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2.4 }}>
+              <Box>
+                {TOKENOMICS.map(([mark, name, body], i) => (
                   <Box
+                    key={name}
                     sx={{
-                      ...FIG,
-                      width: 36,
-                      height: 36,
-                      borderRadius: '11px',
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.78rem',
-                      fontWeight: 700,
-                      color: 'var(--brand-accent)',
-                      backgroundColor: 'rgba(255,102,0,0.09)',
-                      border: '1px solid rgba(255,102,0,0.2)',
+                      gap: 2,
+                      pt: i ? 2.2 : 0,
+                      mt: i ? 2.2 : 0,
+                      borderTop: i ? `1px solid ${RULE}` : 'none',
                     }}
                   >
-                    {step.n}
+                    <Chip name={mark} />
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography sx={{ fontSize: '1.02rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
+                        {name}
+                      </Typography>
+                      <Typography sx={{ mt: 0.5, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                        {body}
+                      </Typography>
+                    </Box>
                   </Box>
-                  <Mark name={step.mark} sx={{ color: 'var(--text-heading)', opacity: 0.32 }} />
+                ))}
+
+                <Box sx={{ mt: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.6 }}>
+                  <Button href="/token" small>Read the tokenomics</Button>
+                  <LinkChips />
                 </Box>
-                <Typography
-                  sx={{ fontSize: { xs: '1.3rem', md: '1.45rem' }, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--text-heading)', mb: 1.2 }}
-                >
-                  {step.k}
-                </Typography>
-                <Typography sx={{ fontSize: '0.94rem', lineHeight: 1.7, color: 'var(--text-secondary)', flex: 1 }}>
-                  {step.s}
-                </Typography>
-                {step.cta && (
-                  <Box sx={{ mt: 3 }}>
-                    <Button href={step.href} small>{step.cta}</Button>
-                  </Box>
-                )}
               </Box>
-            ))}
-          </Box>
-        </Reveal>
-      </Section>
+            </Box>
+          </Reveal>
+        </Section>
+      )}
+
+      {/* ── 10. So start. HIDDEN ────────────
+          The three numbered cards: get it, stake it, unlock what it gives.
+
+          HIDDEN ON REQUEST. Nothing is deleted and STEPS is still defined.
+
+          Note what leaves with it. Nothing essential: the hero still
+          carries both Buy $OPEN and Stake $OPEN, and the ask carries Stake
+          $OPEN again, so both routes survive. What goes is the only place
+          the page set them out in order. */}
+      {false && (
+        <Section sx={{ py: { xs: 7, md: 9 } }}>
+          <Reveal>
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              <SectionHead
+                eyebrow="Get started with $OPEN"
+                tier="minor"
+                title="Three moves. Put $OPEN to work."
+              />
+            </Box>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 2.5 } }}>
+              {STEPS.map((step) => (
+                <Box
+                  key={step.n}
+                  sx={{ ...PANEL, display: 'flex', flexDirection: 'column', px: { xs: 2.4, md: 2.8 }, py: { xs: 2.8, md: 3.2 } }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2.4 }}>
+                    <Box
+                      sx={{
+                        ...FIG,
+                        width: 36,
+                        height: 36,
+                        borderRadius: '11px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        color: 'var(--brand-accent)',
+                        backgroundColor: 'rgba(255,102,0,0.09)',
+                        border: '1px solid rgba(255,102,0,0.2)',
+                      }}
+                    >
+                      {step.n}
+                    </Box>
+                    <Mark name={step.mark} sx={{ color: 'var(--text-heading)', opacity: 0.32 }} />
+                  </Box>
+                  <Typography
+                    sx={{ fontSize: { xs: '1.3rem', md: '1.45rem' }, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--text-heading)', mb: 1.2 }}
+                  >
+                    {step.k}
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.94rem', lineHeight: 1.7, color: 'var(--text-secondary)', flex: 1 }}>
+                    {step.s}
+                  </Typography>
+                  {step.cta && (
+                    <Box sx={{ mt: 3 }}>
+                      <Button href={step.href} small>{step.cta}</Button>
+                    </Box>
+                  )}
+                </Box>
+              ))}
+            </Box>
+          </Reveal>
+        </Section>
+      )}
 
       {/* ── The ask ───────────────────────────────────────────────── */}
       <Section sx={{ py: { xs: 8, md: 11 } }}>
