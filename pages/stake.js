@@ -1023,106 +1023,96 @@ export default function StakePage() {
         </Reveal>
       </Section>
 
-      {/* ── 3. And what it unlocks ───────────
-          Second of the pair, and light, because the section above it is
-          ink. The alternation is the point: a reader should be able to tell
-          the sections apart with the page at arm's length.
+      {/* ── 3. And what it unlocks. HIDDEN ────────────
+          Reverted to the design it had before the darker pass, then hidden.
+          The ink band with the benefits in a panel and the threshold as a
+          tinted strip at its foot, exactly as it was.
 
-          The condition is the biggest thing on the screen. It used to be a
-          tinted strip at the foot of a panel; everything here turns on it,
-          so it is set at the size of a headline and the four benefits run
-          beside it as a ruled list rather than as a second stack of cards.
+          HIDDEN ON REQUEST. Nothing is deleted. The markup sits behind a
+          false branch and PRO is still defined, so bringing it back is
+          deleting the two lines that wrap it, and what comes back is the
+          old design rather than the rebuilt one. Commenting it out would
+          not work: the markup carries comments of its own and those do not
+          nest, so the first inner terminator would close the wrapper and
+          spill the rest of the file onto the page as text.
 
-          Still no cards in either section. Rules and space do the work. */}
-      <Section sx={{ py: { xs: 8, md: 10 } }}>
-        <Reveal>
-          <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead
-              eyebrow="Exclusive staking benefits"
-              maxWidth={820}
-              title={
-                <>
-                  <Box component="span" sx={{ display: 'block' }}>Stake $OPEN.</Box>
-                  <Box component="span" sx={{ display: 'block' }}>Unlock Hey Open Pro.</Box>
-                </>
-              }
-              lede="Stake 100 $OPEN to unlock Hey Open Pro. Unlimited access to supported text and image models, premium AI features, and no separate subscription fee."
-            />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
+          Note what leaves with it. The hundred staked is the single
+          condition the Pro offer turns on, and section two now mentions Pro
+          only as one of four benefits. If this stays hidden, the threshold
+          is stated nowhere on the page. */}
+      {false && (
+        <Section ground="ink" sx={{ py: { xs: 8, md: 10 } }}>
           <Box
             sx={{
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '0.85fr 1.15fr' },
-              gap: { xs: 3.5, md: 6 },
-              pt: { xs: 3, md: 3.6 },
-              borderTop: `1px solid ${RULE}`,
+              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+              gap: { xs: 4, md: 8 },
+              alignItems: 'center',
             }}
           >
-            {/* the one condition everything here turns on */}
-            <Box>
-              <Typography
-                sx={{
-                  fontSize: { xs: '3.2rem', md: '4.2rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.05em',
-                  lineHeight: 0.95,
-                  color: 'var(--brand-accent)',
-                }}
-              >
-                {RATES.threshold}
-              </Typography>
-              <Typography
-                sx={{
-                  mt: { xs: 1.4, md: 1.6 },
-                  fontSize: { xs: '1.06rem', md: '1.14rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.025em',
-                  lineHeight: 1.35,
-                  color: 'var(--text-heading)',
-                }}
-              >
-                staked unlocks Hey Open Pro.
-              </Typography>
-              <Typography sx={{ mt: 1.4, fontSize: '0.86rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
-                Access remains active while staking requirements and applicable usage policies are
-                met.
-              </Typography>
-              <Box sx={{ mt: { xs: 2.6, md: 3 } }}>
-                <Button href={LINKS.stake} primary>
-                  Stake $OPEN
-                  <Box component="span" aria-hidden="true">→</Box>
-                </Button>
-              </Box>
-            </Box>
-
-            {/* and what it turns on */}
-            <Box>
-              {PRO.map(([name, body], i) => (
-                <Box
-                  key={name}
-                  sx={{
-                    pt: i ? { xs: 2, md: 2.2 } : 0,
-                    mt: i ? { xs: 2, md: 2.2 } : 0,
-                    borderTop: i ? `1px solid ${RULE}` : 'none',
-                  }}
-                >
-                  <Typography
-                    sx={{ fontSize: { xs: '1.06rem', md: '1.14rem' }, fontWeight: 700, letterSpacing: '-0.025em', color: 'var(--text-heading)' }}
-                  >
-                    {name}
-                  </Typography>
-                  <Typography sx={{ mt: 0.6, fontSize: '0.92rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
-                    {body}
-                  </Typography>
+            <Reveal>
+              <Box>
+                <SectionHead
+                  eyebrow="Exclusive staking benefits"
+                  tier="minor"
+                  onInk
+                  maxWidth={480}
+                  title="Stake $OPEN. Unlock Hey Open Pro."
+                  lede="Stake 100 $OPEN to unlock Hey Open Pro. Unlimited access to supported text and image models, premium AI features, and no separate subscription fee."
+                />
+                <Box sx={{ mt: 4 }}>
+                  <Button href={LINKS.stake} primary>
+                    Stake $OPEN
+                    <Box component="span" aria-hidden="true">→</Box>
+                  </Button>
                 </Box>
-              ))}
-            </Box>
+              </Box>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <Box>
+                <Box sx={{ ...PANEL_INK, overflow: 'hidden' }}>
+                  <Box sx={{ px: { xs: 2.5, md: 3.2 }, py: { xs: 2.4, md: 2.8 } }}>
+                    {PRO.map(([name, body], i) => (
+                      <Box
+                        key={name}
+                        sx={{ pt: i ? 1.8 : 0, mt: i ? 1.8 : 0, borderTop: i ? `1px solid ${RULE_ON_INK}` : 'none' }}
+                      >
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
+                          {name}
+                        </Typography>
+                        <Typography sx={{ mt: 0.5, fontSize: '0.88rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.58)' }}>
+                          {body}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+
+                  <Box
+                    sx={{
+                      px: { xs: 2.5, md: 3.2 },
+                      py: { xs: 1.8, md: 2 },
+                      borderTop: `1px solid ${RULE_ON_INK}`,
+                      backgroundColor: 'rgba(255,102,0,0.11)',
+                    }}
+                  >
+                    <Typography
+                      sx={{ ...FIG, fontSize: { xs: '0.92rem', md: '1rem' }, fontWeight: 600, letterSpacing: '-0.005em', color: '#FFB071' }}
+                    >
+                      {RATES.threshold} staked = Hey Open Pro unlocked
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Typography sx={{ mt: 1.8, fontSize: '0.8rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.46)' }}>
+                  Access remains active while staking requirements and applicable usage policies are
+                  met.
+                </Typography>
+              </Box>
+            </Reveal>
           </Box>
-        </Reveal>
-      </Section>
+        </Section>
+      )}
 
       {/* ── 4. And what sits on top of the rate. HIDDEN ─────────────────────
           Two figures, side by side, because that is the only honest way to
