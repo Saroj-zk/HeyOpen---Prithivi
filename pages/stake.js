@@ -815,202 +815,7 @@ export default function StakePage() {
         <TokenFlowDiagram />
       </Section>
 
-      {/* ── 3. There are two tokens ───────────────────────────────── */}
-      <Section sx={{ py: { xs: 7, md: 10 } }}>
-        <Reveal>
-          <Box sx={{ mb: { xs: 4, md: 5 } }}>
-            <SectionHead tier="minor" title={C.stakes.title} lede={C.stakes.lede} />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 2.5, md: 3 }, alignItems: 'stretch' }}>
-            {STAKES.map((s, i) => {
-              const lead = Boolean(s.lead);
-              return (
-                <Box key={s.token} sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', ...(lead ? ACCENT : PANEL) }}>
-                  <Box sx={{ ...HEAD_STRIP, borderBottomColor: lead ? 'rgba(255,102,0,0.18)' : RULE }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
-                      <Box
-                        sx={{
-                          width: 30,
-                          height: 30,
-                          borderRadius: '9px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: lead ? 'var(--brand-accent)' : 'var(--text-heading)',
-                          backgroundColor: lead ? 'rgba(255,102,0,0.1)' : 'rgba(11,15,26,0.04)',
-                          border: `1px solid ${lead ? 'rgba(255,102,0,0.26)' : RULE}`,
-                        }}
-                      >
-                        <Mark name={s.mark} size={16} />
-                      </Box>
-                      <Typography sx={{ ...FIG, fontSize: '1.05rem', fontWeight: 600, color: lead ? 'var(--brand-accent)' : 'var(--text-heading)' }}>
-                        {s.token}
-                      </Typography>
-                    </Box>
-                    <Label>{s.kind}</Label>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, px: { xs: 2.5, md: 3 }, pt: { xs: 2.4, md: 2.8 }, pb: { xs: 2.6, md: 3 } }}>
-                    <Label>Paid in</Label>
-                    <Typography
-                      sx={{ mt: 1.3, mb: 2.2, fontSize: { xs: '1.5rem', md: '1.8rem' }, fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, color: 'var(--text-heading)' }}
-                    >
-                      {s.paidIn}
-                    </Typography>
-                    <Typography sx={{ fontSize: '0.96rem', lineHeight: 1.7, color: 'var(--text-secondary)', mb: 2.6, flex: 1 }}>
-                      {i === 0 ? C.stakes.openBody : C.stakes.heyBody}
-                    </Typography>
-                    <Box sx={{ borderTop: `1px solid ${lead ? 'rgba(255,102,0,0.18)' : RULE}`, pt: 0.6 }}>
-                      {s.rows.map(([name, figure]) => (
-                        <Entry key={name} name={name} figure={figure} />
-                      ))}
-                    </Box>
-                    <Box sx={{ mt: 2.8 }}>
-                      <Button href={s.href} primary={lead} small>{s.cta}</Button>
-                    </Box>
-                  </Box>
-                </Box>
-              );
-            })}
-          </Box>
-        </Reveal>
-
-        <Reveal delay={140}>
-          <Typography sx={{ mt: { xs: 3, md: 3.5 }, fontFamily: MONO, fontSize: '0.74rem', lineHeight: 1.8, color: 'var(--text-muted)', maxWidth: '76ch' }}>
-            {C.stakes.foot}
-          </Typography>
-        </Reveal>
-      </Section>
-
-      {/* ── 4. And the app is free at a hundred. The first band of ink,
-             spent on the section that asks you to stop paying for
-             something. ──────────────────────────────────────────── */}
-      <Section ground="ink" sx={{ py: { xs: 8, md: 11 } }}>
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-            gap: { xs: 4, md: 8 },
-            alignItems: 'center',
-          }}
-        >
-          <Reveal>
-            <Box>
-              <SectionHead tier="minor" onInk title={C.pro.title} lede={C.pro.lede} maxWidth={480} />
-              <Box sx={{ mt: 4 }}>
-                <Button href={LINKS.stake} primary>
-                  Stake $OPEN
-                  <Box component="span" aria-hidden="true">→</Box>
-                </Button>
-              </Box>
-            </Box>
-          </Reveal>
-
-          <Reveal delay={100}>
-            <Box sx={{ ...PANEL_INK, overflow: 'hidden' }}>
-              <Box sx={{ ...HEAD_STRIP, borderBottomColor: RULE_ON_INK }}>
-                <Label onInk>Pro</Label>
-                <Label onInk>{RATES.threshold} staked</Label>
-              </Box>
-              <Box sx={{ px: { xs: 2.5, md: 3.2 }, pt: '6px', pb: { xs: 2.6, md: 3 } }}>
-                {PRO.map(([name, figure]) => (
-                  <Entry key={name} name={name} figure={figure} onInk />
-                ))}
-                <Typography sx={{ mt: '14px', fontSize: '0.82rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.46)' }}>
-                  {C.pro.note}
-                </Typography>
-              </Box>
-            </Box>
-          </Reveal>
-        </Box>
-      </Section>
-
-      {/* ── 5. Where the stake actually goes ───────────────────────── */}
-      <Section sx={{ py: { xs: 7, md: 10 } }}>
-        <Reveal>
-          <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
-            <SectionHead
-              title="Where the work actually happens."
-              lede="Your $OPEN does not leave your wallet. What it backs is deployed across three places, and two different kinds of thing come back: a rate the contract owes you either way, and whatever the book makes on top."
-            />
-          </Box>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, alignItems: 'stretch', mb: { xs: 5, md: 6 } }}>
-            <Box sx={{ display: 'flex', flex: { lg: '0 1 240px' }, minWidth: 0 }}>
-              <Node
-                tag="The stake"
-                k="Staked $OPEN"
-                s="Locked as collateral, still yours, visible the whole time. You can unstake."
-                mark="lock"
-                tone="accent"
-                sx={{ flex: 1 }}
-              />
-            </Box>
-
-            <Fan dir="out" />
-            <Down />
-
-            <Box
-              sx={{
-                flex: { lg: '1 1 0' },
-                minWidth: 0,
-                display: 'grid',
-                gridTemplateRows: { lg: 'repeat(3, 1fr)' },
-                gap: `${GAP}px`,
-              }}
-            >
-              {DEPLOY.map((d) => (
-                <Node key={d.k} k={d.k} s={d.s} mark={d.mark} />
-              ))}
-            </Box>
-
-            <Fan dir="in" />
-            <Down />
-
-            <Box
-              sx={{
-                flex: { lg: '1 1 0' },
-                minWidth: 0,
-                display: 'grid',
-                gridTemplateRows: { lg: 'repeat(2, 1fr)' },
-                gap: `${GAP}px`,
-              }}
-            >
-              {RETURNS.map((r) => (
-                <Node key={r.tag} tag={r.tag} k={r.k} s={r.s} mark={r.mark} tone={r.tone} big={r.big} />
-              ))}
-            </Box>
-          </Box>
-        </Reveal>
-
-        <Reveal delay={60}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: { xs: 3, md: 5 },
-              pt: { xs: 4, md: 5 },
-              borderTop: `1px solid ${RULE}`,
-            }}
-          >
-            {PROOF.map(([title, body]) => (
-              <Box key={title}>
-                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
-                  {title}
-                </Typography>
-                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
-              </Box>
-            ))}
-          </Box>
-        </Reveal>
-      </Section>
-
-      {/* ── 6. The business, named and left at its own door ──────────
+      {/* ── 3. The business, named and left at its own door ──────────
           Three full sections used to sit here and they were crowding a page
           whose subject is what staking does for the reader. They are
           /enterprise now; this is the claim, the three things it rests on,
@@ -1025,7 +830,7 @@ export default function StakePage() {
           it.
 
           It is a card, not a band. The page's other ink is the Pro section
-          two stops up and that one runs edge to edge; this one is held
+          two stops below and that one runs edge to edge; this one is held
           inside the measure, so the two cannot be taken for a pair.
 
           No eyebrow. The supplied design had one, "THE ECONOMICS BEHIND
@@ -1206,6 +1011,201 @@ export default function StakePage() {
                 </Box>
               </Box>
             </Box>
+          </Box>
+        </Reveal>
+      </Section>
+
+      {/* ── 4. There are two tokens ───────────────────────────────── */}
+      <Section sx={{ py: { xs: 7, md: 10 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 4, md: 5 } }}>
+            <SectionHead tier="minor" title={C.stakes.title} lede={C.stakes.lede} />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 2.5, md: 3 }, alignItems: 'stretch' }}>
+            {STAKES.map((s, i) => {
+              const lead = Boolean(s.lead);
+              return (
+                <Box key={s.token} sx={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', ...(lead ? ACCENT : PANEL) }}>
+                  <Box sx={{ ...HEAD_STRIP, borderBottomColor: lead ? 'rgba(255,102,0,0.18)' : RULE }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+                      <Box
+                        sx={{
+                          width: 30,
+                          height: 30,
+                          borderRadius: '9px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: lead ? 'var(--brand-accent)' : 'var(--text-heading)',
+                          backgroundColor: lead ? 'rgba(255,102,0,0.1)' : 'rgba(11,15,26,0.04)',
+                          border: `1px solid ${lead ? 'rgba(255,102,0,0.26)' : RULE}`,
+                        }}
+                      >
+                        <Mark name={s.mark} size={16} />
+                      </Box>
+                      <Typography sx={{ ...FIG, fontSize: '1.05rem', fontWeight: 600, color: lead ? 'var(--brand-accent)' : 'var(--text-heading)' }}>
+                        {s.token}
+                      </Typography>
+                    </Box>
+                    <Label>{s.kind}</Label>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, px: { xs: 2.5, md: 3 }, pt: { xs: 2.4, md: 2.8 }, pb: { xs: 2.6, md: 3 } }}>
+                    <Label>Paid in</Label>
+                    <Typography
+                      sx={{ mt: 1.3, mb: 2.2, fontSize: { xs: '1.5rem', md: '1.8rem' }, fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, color: 'var(--text-heading)' }}
+                    >
+                      {s.paidIn}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.96rem', lineHeight: 1.7, color: 'var(--text-secondary)', mb: 2.6, flex: 1 }}>
+                      {i === 0 ? C.stakes.openBody : C.stakes.heyBody}
+                    </Typography>
+                    <Box sx={{ borderTop: `1px solid ${lead ? 'rgba(255,102,0,0.18)' : RULE}`, pt: 0.6 }}>
+                      {s.rows.map(([name, figure]) => (
+                        <Entry key={name} name={name} figure={figure} />
+                      ))}
+                    </Box>
+                    <Box sx={{ mt: 2.8 }}>
+                      <Button href={s.href} primary={lead} small>{s.cta}</Button>
+                    </Box>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+        </Reveal>
+
+        <Reveal delay={140}>
+          <Typography sx={{ mt: { xs: 3, md: 3.5 }, fontFamily: MONO, fontSize: '0.74rem', lineHeight: 1.8, color: 'var(--text-muted)', maxWidth: '76ch' }}>
+            {C.stakes.foot}
+          </Typography>
+        </Reveal>
+      </Section>
+
+      {/* ── 5. And the app is free at a hundred. The first band of ink,
+             spent on the section that asks you to stop paying for
+             something. ──────────────────────────────────────────── */}
+      <Section ground="ink" sx={{ py: { xs: 8, md: 11 } }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+            gap: { xs: 4, md: 8 },
+            alignItems: 'center',
+          }}
+        >
+          <Reveal>
+            <Box>
+              <SectionHead tier="minor" onInk title={C.pro.title} lede={C.pro.lede} maxWidth={480} />
+              <Box sx={{ mt: 4 }}>
+                <Button href={LINKS.stake} primary>
+                  Stake $OPEN
+                  <Box component="span" aria-hidden="true">→</Box>
+                </Button>
+              </Box>
+            </Box>
+          </Reveal>
+
+          <Reveal delay={100}>
+            <Box sx={{ ...PANEL_INK, overflow: 'hidden' }}>
+              <Box sx={{ ...HEAD_STRIP, borderBottomColor: RULE_ON_INK }}>
+                <Label onInk>Pro</Label>
+                <Label onInk>{RATES.threshold} staked</Label>
+              </Box>
+              <Box sx={{ px: { xs: 2.5, md: 3.2 }, pt: '6px', pb: { xs: 2.6, md: 3 } }}>
+                {PRO.map(([name, figure]) => (
+                  <Entry key={name} name={name} figure={figure} onInk />
+                ))}
+                <Typography sx={{ mt: '14px', fontSize: '0.82rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.46)' }}>
+                  {C.pro.note}
+                </Typography>
+              </Box>
+            </Box>
+          </Reveal>
+        </Box>
+      </Section>
+
+      {/* ── 6. Where the stake actually goes ───────────────────────── */}
+      <Section sx={{ py: { xs: 7, md: 10 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
+            <SectionHead
+              title="Where the work actually happens."
+              lede="Your $OPEN does not leave your wallet. What it backs is deployed across three places, and two different kinds of thing come back: a rate the contract owes you either way, and whatever the book makes on top."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, alignItems: 'stretch', mb: { xs: 5, md: 6 } }}>
+            <Box sx={{ display: 'flex', flex: { lg: '0 1 240px' }, minWidth: 0 }}>
+              <Node
+                tag="The stake"
+                k="Staked $OPEN"
+                s="Locked as collateral, still yours, visible the whole time. You can unstake."
+                mark="lock"
+                tone="accent"
+                sx={{ flex: 1 }}
+              />
+            </Box>
+
+            <Fan dir="out" />
+            <Down />
+
+            <Box
+              sx={{
+                flex: { lg: '1 1 0' },
+                minWidth: 0,
+                display: 'grid',
+                gridTemplateRows: { lg: 'repeat(3, 1fr)' },
+                gap: `${GAP}px`,
+              }}
+            >
+              {DEPLOY.map((d) => (
+                <Node key={d.k} k={d.k} s={d.s} mark={d.mark} />
+              ))}
+            </Box>
+
+            <Fan dir="in" />
+            <Down />
+
+            <Box
+              sx={{
+                flex: { lg: '1 1 0' },
+                minWidth: 0,
+                display: 'grid',
+                gridTemplateRows: { lg: 'repeat(2, 1fr)' },
+                gap: `${GAP}px`,
+              }}
+            >
+              {RETURNS.map((r) => (
+                <Node key={r.tag} tag={r.tag} k={r.k} s={r.s} mark={r.mark} tone={r.tone} big={r.big} />
+              ))}
+            </Box>
+          </Box>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+              gap: { xs: 3, md: 5 },
+              pt: { xs: 4, md: 5 },
+              borderTop: `1px solid ${RULE}`,
+            }}
+          >
+            {PROOF.map(([title, body]) => (
+              <Box key={title}>
+                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
+                  {title}
+                </Typography>
+                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
+              </Box>
+            ))}
           </Box>
         </Reveal>
       </Section>
