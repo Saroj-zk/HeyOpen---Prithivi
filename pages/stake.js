@@ -954,7 +954,7 @@ export default function StakePage() {
         </Box>
       </Section>
 
-      {/* ── 4. And what sits on top of the rate ─────────────────────
+      {/* ── 4. And what sits on top of the rate. HIDDEN ─────────────────────
           Two figures, side by side, because that is the only honest way to
           show them: one is owed and the other is aimed at. They are set at
           the same size so neither looks like the headline, and the one that
@@ -962,112 +962,127 @@ export default function StakePage() {
           which is which before reading a word.
 
           The qualification sits next to the button that acts on it, not at
-          the foot of the page. A reader who clicks has already read it. */}
-      <Section
-        ground="linear-gradient(180deg, #F2F5F9 0%, #EBF0F5 46%, #EFF3F7 100%)"
-        sx={{ py: { xs: 7, md: 9 } }}
-      >
-        <Reveal>
-          <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
-            <SectionHead
-              eyebrow="Beyond staking"
-              tier="minor"
-              title="6% from staking. More from the strategy."
-              lede="Beyond the base staking rewards, Hey Open is developing an enterprise compute strategy targeting 40% to 50% returns through compute procurement, prepaid contracts, and options-based risk management."
-            />
-          </Box>
-        </Reveal>
+          the foot of the page. A reader who clicks has already read it.
 
-        <Reveal delay={80}>
-          <Box
-            sx={{
-              ...PANEL,
-              overflow: 'hidden',
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-            }}
-          >
-            {[
-              [RATES.base_short, 'Base annual staking rewards', false],
-              [RATES.total, 'Target compute strategy returns', true],
-            ].map(([fig, label, lead], i) => (
-              <Box
-                key={label}
-                sx={{
-                  px: { xs: 2.4, md: 3.4 },
-                  py: { xs: 2.6, md: 3 },
-                  borderLeft: { sm: i === 0 ? 'none' : `1px solid ${RULE}` },
-                  borderTop: { xs: i === 0 ? 'none' : `1px solid ${RULE}`, sm: 'none' },
-                  background: lead ? 'rgba(255,102,0,0.05)' : 'transparent',
-                }}
-              >
-                <Typography
+          HIDDEN ON REQUEST. Nothing is deleted: the markup below is behind
+          a false branch, and STRATEGY and RATES.base_short are still
+          defined above, so bringing it back is deleting the two lines that
+          wrap it. A `{/* */}` would not do here, because the section has
+          comments of its own and JSX comments do not nest.
+
+          Note what leaves with it. This was the only place the page set the
+          6% against the 40 to 50 band and said in as many words that the
+          band is a strategy target rather than a staking return. The
+          closing disclaimer still says it, and the band is still printed
+          there, but it is now the only place a reader meets the
+          distinction. */}
+      {false && (
+        <Section
+          ground="linear-gradient(180deg, #F2F5F9 0%, #EBF0F5 46%, #EFF3F7 100%)"
+          sx={{ py: { xs: 7, md: 9 } }}
+        >
+          <Reveal>
+            <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
+              <SectionHead
+                eyebrow="Beyond staking"
+                tier="minor"
+                title="6% from staking. More from the strategy."
+                lede="Beyond the base staking rewards, Hey Open is developing an enterprise compute strategy targeting 40% to 50% returns through compute procurement, prepaid contracts, and options-based risk management."
+              />
+            </Box>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <Box
+              sx={{
+                ...PANEL,
+                overflow: 'hidden',
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+              }}
+            >
+              {[
+                [RATES.base_short, 'Base annual staking rewards', false],
+                [RATES.total, 'Target compute strategy returns', true],
+              ].map(([fig, label, lead], i) => (
+                <Box
+                  key={label}
                   sx={{
-                    ...FIG,
-                    fontSize: { xs: '2.4rem', md: '3rem' },
-                    fontWeight: 600,
-                    letterSpacing: '-0.045em',
-                    lineHeight: 1,
-                    color: lead ? 'var(--brand-accent)' : 'var(--text-heading)',
+                    px: { xs: 2.4, md: 3.4 },
+                    py: { xs: 2.6, md: 3 },
+                    borderLeft: { sm: i === 0 ? 'none' : `1px solid ${RULE}` },
+                    borderTop: { xs: i === 0 ? 'none' : `1px solid ${RULE}`, sm: 'none' },
+                    background: lead ? 'rgba(255,102,0,0.05)' : 'transparent',
                   }}
                 >
-                  {fig}
-                </Typography>
-                <Typography sx={{ mt: 1.2, fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-                  {label}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        </Reveal>
-
-        <Reveal delay={60}>
-          <Box sx={{ mt: { xs: 3.5, md: 4 } }}>
-            <Label sx={{ display: 'block', mb: 2.2 }}>How the strategy works</Label>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2.4, md: 4 } }}>
-              {STRATEGY.map(([mark, name, body], i) => (
-                <Box
-                  key={name}
-                  sx={{ pl: { md: i === 0 ? 0 : 3.6 }, borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE}` } }}
-                >
-                  <Box sx={{ color: 'var(--brand-accent)', mb: 1.4 }}>
-                    <Mark name={mark} size={22} />
-                  </Box>
-                  <Typography sx={{ fontSize: '1.02rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
-                    {name}
+                  <Typography
+                    sx={{
+                      ...FIG,
+                      fontSize: { xs: '2.4rem', md: '3rem' },
+                      fontWeight: 600,
+                      letterSpacing: '-0.045em',
+                      lineHeight: 1,
+                      color: lead ? 'var(--brand-accent)' : 'var(--text-heading)',
+                    }}
+                  >
+                    {fig}
                   </Typography>
-                  <Typography sx={{ mt: 0.7, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
-                    {body}
+                  <Typography sx={{ mt: 1.2, fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+                    {label}
                   </Typography>
                 </Box>
               ))}
             </Box>
-          </Box>
-        </Reveal>
+          </Reveal>
 
-        <Reveal delay={60}>
-          <Box
-            sx={{
-              mt: { xs: 3, md: 3.5 },
-              pt: { xs: 2.6, md: 3 },
-              borderTop: `1px solid ${RULE}`,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              gap: { xs: 2, md: 3 },
-            }}
-          >
-            <Box sx={{ flexShrink: 0 }}>
-              <Button href="/enterprise" primary>Explore the return strategy</Button>
+          <Reveal delay={60}>
+            <Box sx={{ mt: { xs: 3.5, md: 4 } }}>
+              <Label sx={{ display: 'block', mb: 2.2 }}>How the strategy works</Label>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2.4, md: 4 } }}>
+                {STRATEGY.map(([mark, name, body], i) => (
+                  <Box
+                    key={name}
+                    sx={{ pl: { md: i === 0 ? 0 : 3.6 }, borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE}` } }}
+                  >
+                    <Box sx={{ color: 'var(--brand-accent)', mb: 1.4 }}>
+                      <Mark name={mark} size={22} />
+                    </Box>
+                    <Typography sx={{ fontSize: '1.02rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
+                      {name}
+                    </Typography>
+                    <Typography sx={{ mt: 0.7, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                      {body}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
             </Box>
-            <Typography sx={{ flex: '1 1 340px', minWidth: 0, fontSize: '0.78rem', lineHeight: 1.65, color: 'var(--text-muted)' }}>
-              The {RATES.total} figure is a strategy target, not a guaranteed staking return.
-              Actual results and any distribution to stakers depend on the programme&rsquo;s
-              published terms.
-            </Typography>
-          </Box>
-        </Reveal>
-      </Section>
+          </Reveal>
+
+          <Reveal delay={60}>
+            <Box
+              sx={{
+                mt: { xs: 3, md: 3.5 },
+                pt: { xs: 2.6, md: 3 },
+                borderTop: `1px solid ${RULE}`,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: { xs: 2, md: 3 },
+              }}
+            >
+              <Box sx={{ flexShrink: 0 }}>
+                <Button href="/enterprise" primary>Explore the return strategy</Button>
+              </Box>
+              <Typography sx={{ flex: '1 1 340px', minWidth: 0, fontSize: '0.78rem', lineHeight: 1.65, color: 'var(--text-muted)' }}>
+                The {RATES.total} figure is a strategy target, not a guaranteed staking return.
+                Actual results and any distribution to stakers depend on the programme&rsquo;s
+                published terms.
+              </Typography>
+            </Box>
+          </Reveal>
+        </Section>
+      )}
 
       {/* ── 5. Where the stake actually works ───────────────────────── */}
       <Section sx={{ py: { xs: 7, md: 10 } }}>
