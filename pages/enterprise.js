@@ -29,6 +29,10 @@ import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Led
  * taking them for one number. The panel says so in as many words too.
  */
 
+/* UNUSED on this page since the statement's footer went: its Stake $OPEN
+   button was the only thing reading from here, and the hero's button
+   points at /stake directly. Left in place because the placeholders are
+   what a real set of links would replace. */
 const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' };
 
 /* The only real contact address in the repo; the legal pages use the same
@@ -308,11 +312,15 @@ const HEDGE_PROOF = [
   ['Deliver', 'Quote enterprises a contracted rate.'],
 ];
 
+/* UNUSED since the statement's footer was removed. Kept because it is the
+   three-line summary of the whole token argument and restoring that footer
+   should not mean writing it again.
 const TOKEN_PROOF = [
   ['Stake', 'Reaches the compute utility.'],
   ['Buyback', 'Funded from a defined share of net revenue.'],
   ['Burn', 'Supply reduced through verifiable transactions.'],
 ];
+*/
 
 const STACK_PROOF = [
   ['Custom Branded', 'The product ships under their name.'],
@@ -1191,48 +1199,13 @@ function RevenueFlow() {
         </Typography>
       </Box>
 
-      {/* ---- footer: the chain, and the ask ---- */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          gap: { xs: 2, md: 3 },
-          px: { xs: 2.2, md: 3.4 },
-          py: { xs: 2, md: 2.1 },
-          borderTop: `1px solid ${RULE}`,
-          backgroundColor: 'rgba(11,15,26,0.022)',
-        }}
-      >
-        <Box sx={{ flex: '1 1 420px', minWidth: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: { xs: 1.4, md: 0 } }}>
-          {TOKEN_PROOF.map(([title, body], i) => (
-            <React.Fragment key={title}>
-              {i > 0 && (
-                <Box
-                  aria-hidden="true"
-                  sx={{
-                    display: { xs: 'none', sm: 'block' },
-                    width: '22px',
-                    height: '1px',
-                    flexShrink: 0,
-                    mx: 1.8,
-                    backgroundColor: 'rgba(11,15,26,0.24)',
-                  }}
-                />
-              )}
-              <Box sx={{ flex: '1 1 150px', minWidth: 0 }}>
-                <Typography sx={{ fontSize: '0.94rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
-                  {title}
-                </Typography>
-                <Typography sx={{ mt: 0.3, fontSize: '0.82rem', lineHeight: 1.5, color: 'var(--text-secondary)' }}>{body}</Typography>
-              </Box>
-            </React.Fragment>
-          ))}
-        </Box>
-        <Box sx={{ ml: { md: 'auto' }, flexShrink: 0 }}>
-          <Button href={LINKS.stake} primary>Stake $OPEN</Button>
-        </Box>
-      </Box>
+      {/* THE FOOTER WAS REMOVED ON REQUEST: the stake / buyback / burn
+          chain and the Stake $OPEN button that sat on a rule under the
+          statement. The sheet now ends on its own fine print.
+
+          Nothing else on the page loses a way out. The hero still carries
+          Stake $OPEN, pointing at /stake directly, and the closing section
+          carries the enterprise ask. */}
     </Box>
   );
 }
@@ -1307,7 +1280,7 @@ export default function EnterprisePage() {
                 textWrap: 'pretty',
               }}
             >
-              Hey Open powers white-label AI products for enterprises, with compute protection
+              Hey Open powers Custom Branded AI products for enterprises, with compute protection
               designed to keep costs predictable. As the business grows, its revenue model connects
               real AI usage to $OPEN buybacks and burns.
             </Typography>

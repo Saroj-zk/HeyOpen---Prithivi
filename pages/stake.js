@@ -142,17 +142,74 @@ const BENEFITS = [
   },
 ];
 
-/* The two lines the token policy figure draws. Revenue climbs as a
-   curve, because it accrues continuously; supply comes down in steps,
-   because a burn is an event and not a drift. They cross, which is the
-   headline said without words.
+/* The two lines the token policy figure draws. Revenue climbs as a curve,
+   because it accrues continuously; supply comes down in steps, because a
+   burn is an event and not a drift. They cross, which is the headline said
+   without words.
 
-   No value axis on either, and none implied. What the business earns and
-   what it would buy back are not settled anywhere in this repo. */
+   NO VALUE AXIS ON EITHER, and none implied. What the business earns and
+   what it would buy back are not settled anywhere in this repo, so the
+   chart carries gridlines and ticks but never a number: structure a reader
+   can measure the shape against, not a quantity.
+
+   The plot is its own coordinate space. Everything below is in viewBox
+   units and the frame is stated once here, so the gridlines, the ticks and
+   the fill cannot drift apart from the lines they belong to. */
+const POLICY_X0 = 20;
+const POLICY_X1 = 326;
+const POLICY_TOP = 18;
+const POLICY_BASE = 118;
+const POLICY_VIEW_W = 340;
+const POLICY_VIEW_H = 150;
+
 const POLICY_REVENUE = [
-  [14, 112], [66, 104], [118, 88], [170, 74], [222, 56], [274, 44], [326, 30],
+  [20, 108], [45.5, 105], [71, 101], [96.5, 96], [122, 90], [147.5, 83],
+  [173, 75], [198.5, 67], [224, 59], [249.5, 51], [275, 43], [300.5, 34], [326, 26],
 ];
-const POLICY_SUPPLY = 'M14 36 H70 V48 H126 V62 H182 V78 H238 V92 H294 V108 H326';
+
+/* Each entry is where a level begins and what that level is. Eight of
+   them, so the staircase has enough treads to read as a series of events
+   rather than as one drop. */
+const POLICY_SUPPLY = [
+  [20, 30], [58, 36], [96, 44], [134, 54], [172, 64], [210, 76], [248, 88], [286, 98],
+];
+
+const POLICY_SUPPLY_PATH =
+  POLICY_SUPPLY.map(([x, y], i) => (i === 0 ? `M${x} ${y}` : `H${x} V${y}`)).join(' ') +
+  ` H${POLICY_X1}`;
+
+/* The drop at the start of every level after the first. These are the
+   burns: the moment supply changes, which is the only thing on this chart
+   that is an event rather than a trend. */
+const POLICY_BURNS = POLICY_SUPPLY.slice(1);
+
+/* Where revenue first reaches supply, walked along the revenue polyline
+   against the step function rather than read off by eye. Supply is
+   piecewise constant, so there is no closed form to solve: the segment is
+   sampled finely enough that the marker sits on the lines rather than near
+   them. */
+const POLICY_CROSS = (() => {
+  const levelAt = (x) => {
+    let level = POLICY_SUPPLY[0][1];
+    POLICY_SUPPLY.forEach(([sx, y]) => {
+      if (x >= sx) level = y;
+    });
+    return level;
+  };
+  for (let i = 1; i < POLICY_REVENUE.length; i += 1) {
+    const [x0, y0] = POLICY_REVENUE[i - 1];
+    const [x1, y1] = POLICY_REVENUE[i];
+    for (let j = 1; j <= 80; j += 1) {
+      const t = j / 80;
+      const x = x0 + (x1 - x0) * t;
+      const y = y0 + (y1 - y0) * t;
+      if (y <= levelAt(x)) return [x, y];
+    }
+  }
+  return null;
+})();
+
+const POLICY_LINE = `M${POLICY_REVENUE.map(([x, y]) => `${x} ${y}`).join(' L')}`;
 
 /* 03a. Four lines of revenue, each with the kind of revenue it is. The
    second line is the one doing the work: "subscriptions" and "hedging
@@ -1777,11 +1834,19 @@ export default function StakePage() {
           purpose. Each one is a commitment about treasury mechanics, and
           none of them is settled in this repo.
 
-          No axis, no values, no figures anywhere. What the business earns
-          and what it would buy back are unknown, and a number here would
-          read as a projection. The badge says hypothetical and the note
-          under the card says nothing is guaranteed. NEITHER HAS BEEN
-          REVIEWED. */}
+          No values and no figures anywhere. What the business earns and
+          what it would buy back are unknown, and a number here would read
+          as a projection. The gridlines and the ticks carry no scale for
+          the same reason: they are there to measure the shape against, not
+          to be read off.
+
+          THE HYPOTHETICAL BADGE AND THE ILLUSTRATIVE NOTE WERE REMOVED ON
+          REQUEST. What still frames this as a proposal is the eyebrow,
+          "The proposed token policy", and the word "would" in the lede.
+          That is the whole of it. A reader who takes in the headline and
+          the chart without reading the eyebrow now sees revenue rising and
+          supply falling with nothing on the card saying it has not
+          happened. THAT TRADE HAS NOT BEEN REVIEWED. */}
       <Section sx={{ py: { xs: 7, md: 9 } }}>
         <Box
           sx={{
@@ -1791,8 +1856,11 @@ export default function StakePage() {
             gap: { xs: 4, lg: 7 },
           }}
         >
-          <Reveal>
-            <Box sx={{ flex: { lg: '0 1 440px' }, minWidth: 0 }}>
+          {/* 440, not 400. "Supply can shrink." measures 406px at the 48px
+              the headline uses at lg, so a 400 column breaks it after
+              "Supply" and orphans two words onto a second line. */}
+          <Box sx={{ flex: { lg: '0 1 440px' }, minWidth: 0 }}>
+            <Reveal>
               <SectionHead
                 eyebrow="The proposed token policy"
                 maxWidth="100%"
@@ -1804,106 +1872,230 @@ export default function StakePage() {
                     </Box>
                   </>
                 }
-                lede="When the business generates eligible surplus cash, a treasury policy could fund $OPEN purchases and permanent on-chain burns."
+                lede="As Hey Open generates revenue, the treasury would fund $OPEN buybacks and permanent on-chain burns."
               />
-            </Box>
-          </Reveal>
+            </Reveal>
+          </Box>
 
-          <Reveal delay={100}>
-            <Box
-              sx={{
-                flex: { lg: '1 1 0' },
-                minWidth: 0,
-                width: '100%',
-                ...PANEL,
-                px: { xs: 2.2, md: 3.2 },
-                py: { xs: 2.4, md: 2.8 },
-              }}
-            >
+          <Box sx={{ flex: { lg: '1 1 0' }, minWidth: 0, width: '100%' }}>
+            <Reveal delay={100}>
               <Box
                 sx={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  px: '12px',
-                  py: '7px',
-                  borderRadius: '999px',
-                  border: `1px solid ${RULE}`,
-                  backgroundColor: 'rgba(11,15,26,0.03)',
+                  ...PANEL,
+                  px: { xs: 2.2, md: 3.2 },
+                  py: { xs: 2.4, md: 2.8 },
                 }}
               >
-                <Label>Hypothetical, not a forecast</Label>
+              {/* The crossover label is HTML over the top rather than SVG
+                  text. This chart is about 300 units wide on a phone and
+                  700 on a desktop; anything measured in user units doubles
+                  across that range. Its position is a percentage worked out
+                  from the solved crossing and the viewBox, so the label and
+                  the marker cannot drift apart. */}
+              <Box sx={{ position: 'relative' }}>
+                <Box
+                  component="svg"
+                  viewBox={`0 0 ${POLICY_VIEW_W} ${POLICY_VIEW_H}`}
+                  sx={{ width: '100%', display: 'block' }}
+                >
+                  <defs>
+                    <linearGradient id="policyRise" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgba(255,102,0,0.22)" />
+                      <stop offset="100%" stopColor="rgba(255,102,0,0.02)" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* The frame the shape is read against. Four rules and a
+                      tick under every step: enough structure to see how far
+                      a line has travelled, and no number to read it as. */}
+                  {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+                    const y = POLICY_TOP + ((POLICY_BASE - POLICY_TOP) / 8) * i;
+                    return (
+                      <line
+                        key={y}
+                        x1={POLICY_X0}
+                        y1={y}
+                        x2={POLICY_X1}
+                        y2={y}
+                        stroke={i % 2 ? 'rgba(15,23,42,0.035)' : 'rgba(15,23,42,0.07)'}
+                        strokeWidth="1"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    );
+                  })}
+
+                  {/* the axis the whole plot hangs off */}
+                  <line
+                    x1={POLICY_X0}
+                    y1={POLICY_TOP}
+                    x2={POLICY_X0}
+                    y2={POLICY_BASE}
+                    stroke="rgba(15,23,42,0.16)"
+                    strokeWidth="1"
+                    vectorEffect="non-scaling-stroke"
+                  />
+
+                  {POLICY_SUPPLY.map(([x]) => (
+                    <line
+                      key={`t${x}`}
+                      x1={x}
+                      y1={POLICY_BASE}
+                      x2={x}
+                      y2={POLICY_BASE + 4}
+                      stroke="rgba(15,23,42,0.18)"
+                      strokeWidth="1"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+
+                  <path d={`${POLICY_LINE} L${POLICY_X1} ${POLICY_BASE} L${POLICY_X0} ${POLICY_BASE} Z`} fill="url(#policyRise)" />
+
+                  {/* supply, stepping down: a burn is an event, not a drift */}
+                  <path
+                    d={POLICY_SUPPLY_PATH}
+                    fill="none"
+                    stroke="#334155"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+
+                  {/* one marker per burn, on the tread it lands on */}
+                  {POLICY_BURNS.map(([x, y]) => (
+                    <circle
+                      key={`b${x}`}
+                      cx={x}
+                      cy={y}
+                      r="2.8"
+                      fill="#FFFFFF"
+                      stroke="#334155"
+                      strokeWidth="1.6"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+
+                  <path
+                    d={POLICY_LINE}
+                    fill="none"
+                    stroke="var(--brand-accent)"
+                    strokeWidth="2.4"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+
+                  {POLICY_CROSS && (
+                    <>
+                      <line
+                        x1={POLICY_CROSS[0]}
+                        y1={POLICY_CROSS[1]}
+                        x2={POLICY_CROSS[0]}
+                        y2={POLICY_BASE}
+                        stroke="rgba(255,102,0,0.4)"
+                        strokeWidth="1"
+                        strokeDasharray="3 3"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                      <circle
+                        cx={POLICY_CROSS[0]}
+                        cy={POLICY_CROSS[1]}
+                        r="4.2"
+                        fill="#FFFFFF"
+                        stroke="var(--brand-accent)"
+                        strokeWidth="2.2"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    </>
+                  )}
+
+                  <line
+                    x1={POLICY_X0}
+                    y1={POLICY_BASE}
+                    x2={POLICY_X1}
+                    y2={POLICY_BASE}
+                    stroke="rgba(15,23,42,0.16)"
+                    strokeWidth="1"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </Box>
+
+                {/* Period numbers, placed off the same tick positions the
+                    SVG draws, so a label can never sit between two ticks.
+                    They are a sequence and not a calendar: nothing here
+                    claims a quarter, a month or a date. */}
+                {POLICY_SUPPLY.map(([x], i) => (
+                  <Typography
+                    key={`l${x}`}
+                    component="div"
+                    aria-hidden="true"
+                    sx={{
+                      position: 'absolute',
+                      left: `${(x / POLICY_VIEW_W) * 100}%`,
+                      top: `${(POLICY_BASE / POLICY_VIEW_H) * 100}%`,
+                      transform: 'translateX(-50%)',
+                      mt: '7px',
+                      pointerEvents: 'none',
+                      fontFamily: MONO,
+                      fontSize: '0.56rem',
+                      fontWeight: 600,
+                      letterSpacing: '0.06em',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </Typography>
+                ))}
+
+                {POLICY_CROSS && (
+                  <Typography
+                    component="div"
+                    sx={{
+                      position: 'absolute',
+                      left: `${(POLICY_CROSS[0] / POLICY_VIEW_W) * 100}%`,
+                      top: `${(POLICY_CROSS[1] / POLICY_VIEW_H) * 100}%`,
+                      transform: 'translate(-50%, -100%)',
+                      mt: '-10px',
+                      whiteSpace: 'nowrap',
+                      pointerEvents: 'none',
+                      fontFamily: MONO,
+                      fontSize: '0.6rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: 'var(--brand-accent)',
+                    }}
+                  >
+                    Crossover
+                  </Typography>
+                )}
               </Box>
 
-              <Box component="svg" viewBox="0 10 340 128" sx={{ width: '100%', display: 'block', mt: { xs: 2, md: 2.4 } }}>
-                <defs>
-                  <linearGradient id="policyRise" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(255,102,0,0.22)" />
-                    <stop offset="100%" stopColor="rgba(255,102,0,0.02)" />
-                  </linearGradient>
-                </defs>
-
-                {/* what the revenue line is measured against */}
-                <line
-                  x1="14"
-                  y1="126"
-                  x2="326"
-                  y2="126"
-                  stroke="rgba(15,23,42,0.12)"
-                  strokeWidth="1"
-                  vectorEffect="non-scaling-stroke"
-                />
-
-                <path
-                  d={`M${POLICY_REVENUE.map(([x, y]) => `${x} ${y}`).join(' L')} L326 126 L14 126 Z`}
-                  fill="url(#policyRise)"
-                />
-
-                {/* supply, stepping down: a burn is an event, not a drift */}
-                <path
-                  d={POLICY_SUPPLY}
-                  fill="none"
-                  stroke="#334155"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-
-                <path
-                  d={`M${POLICY_REVENUE.map(([x, y]) => `${x} ${y}`).join(' L')}`}
-                  fill="none"
-                  stroke="var(--brand-accent)"
-                  strokeWidth="2.4"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </Box>
-
-              <Box sx={{ mt: 1.4, display: 'flex', flexWrap: 'wrap', gap: { xs: 1.4, md: 2.4 } }}>
+              <Box sx={{ mt: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: { xs: 1.4, md: 2.4 } }}>
                 {[['Revenue', 'var(--brand-accent)'], ['Supply', '#334155']].map(([k, c]) => (
                   <Box key={k} sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
                     <Box aria-hidden="true" sx={{ width: '16px', height: '0px', flexShrink: 0, borderTop: `2px solid ${c}` }} />
                     <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{k}</Typography>
                   </Box>
                 ))}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
+                  <Box
+                    aria-hidden="true"
+                    sx={{
+                      width: '9px',
+                      height: '9px',
+                      flexShrink: 0,
+                      borderRadius: '50%',
+                      backgroundColor: '#FFFFFF',
+                      border: '1.6px solid #334155',
+                    }}
+                  />
+                  <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Burn</Typography>
+                </Box>
               </Box>
-
-              <Typography
-                sx={{
-                  mt: { xs: 1.8, md: 2 },
-                  pt: { xs: 1.6, md: 1.8 },
-                  borderTop: `1px solid ${RULE}`,
-                  fontSize: '0.78rem',
-                  lineHeight: 1.6,
-                  color: 'var(--text-muted)',
-                }}
-              >
-                Illustrative only. No revenue, purchase or burn is guaranteed, and tokens burned
-                would depend on actual execution price and market conditions.
-              </Typography>
-            </Box>
-          </Reveal>
+              </Box>
+            </Reveal>
+          </Box>
         </Box>
       </Section>
 
