@@ -160,18 +160,17 @@ const POLICY_SUPPLY = 'M14 36 H70 V48 H126 V62 H182 V78 H238 V92 H294 V108 H326'
    services" are different businesses, and naming the kind is what stops
    the four reading as four words for the same thing.
 
-   The fourth field is the mark drawn above the card, and it is picked for
-   what the business is rather than for variety. Subscriptions are a closed
-   ring because they come round again. API usage is a helix because it
-   accumulates turn after turn. Enterprise contracts are two rings that
-   cannot be pulled apart. An option folds out and returns, so it is a
-   figure of eight. If a line changes enough that its shape stops meaning
-   anything, the shape should change with it.
+   The fourth field is the mark drawn above the card: a thing a reader can
+   name, not a pattern. Subscriptions are a stack of coins. An API layer is
+   a vortex drawing many routes into one point. A private deployment is a
+   sealed box. Compute options are a saddle, which is what an option book
+   looks like when it is drawn.
 
-   All four are forms, not diagrams. The library's fan draws three strands
-   converging, which is a truer picture of calls arriving at one API layer,
-   and it was tried here and dropped: among three flowing solids it read as
-   a chart that had wandered in.
+   The first attempt was abstract — a torus, a coil, two linked rings, a
+   folded ribbon. They were handsome and they meant nothing: nobody looks
+   at a torus and arrives at "subscriptions", so the relation lived in a
+   comment rather than on the page. If a line changes enough that its
+   object stops fitting, the object should change with it.
 
    TWO ARE HIDDEN ON REQUEST and kept at the foot of the list, commented
    out rather than deleted. Uncommenting them restores the pair, but the
@@ -182,25 +181,25 @@ const REVENUE = [
     'Hey Open subscriptions',
     'Monthly and annual plans for private multi-model AI, expanded usage and premium features.',
     'Consumer recurring revenue',
-    'ring',
+    'coins',
   ],
   [
     'Developer AI APIs',
     'Inference usage through one API layer, with margin on model routing and access.',
     'Usage-based API margin',
-    'rise',
+    'routes',
   ],
   [
     'Enterprise private AI',
     'Private inference, managed deployments, governance controls and white-label contracts.',
     'Enterprise contracts',
-    'link',
+    'vault',
   ],
   [
     'Compute options fees',
     'Hedging, structuring, transaction and settlement services for GPU and cloud-price risk.',
     'Financial marketplace fees',
-    'fold',
+    'surface',
   ],
   /* HIDDEN ON REQUEST. Restoring these two means putting the headline
      back to "Six ways" and the md grid back to three columns.
