@@ -112,7 +112,10 @@ const BENEFITS = [
     s: `Stake ${RATES.threshold} to unlock unlimited supported text and image models.`,
   },
   {
-    k: RATES.total,
+    /* APY is appended here rather than baked into RATES.total, so the
+       number keeps one definition and the four disclaimers that quote it
+       still read as sentences ("the 40% to 50% remains a target"). */
+    k: `${RATES.total} APY`,
     t: 'Compute strategy target',
     s: 'Explore targeted returns through enterprise compute and options strategies.',
   },
@@ -151,10 +154,15 @@ const POLICY_REVENUE = [
 ];
 const POLICY_SUPPLY = 'M14 36 H70 V48 H126 V62 H182 V78 H238 V92 H294 V108 H326';
 
-/* 03a. Six lines of revenue, each with the kind of revenue it is. The
-   second line is the one doing the work: "subscriptions" and "commission
-   on paid agents" are different businesses, and naming the kind is what
-   stops the six reading as six words for the same thing. */
+/* 03a. Four lines of revenue, each with the kind of revenue it is. The
+   second line is the one doing the work: "subscriptions" and "hedging
+   services" are different businesses, and naming the kind is what stops
+   the four reading as four words for the same thing.
+
+   TWO ARE HIDDEN ON REQUEST and kept at the foot of the list, commented
+   out rather than deleted. Uncommenting them restores the pair, but the
+   headline counts these cards in words and the grid is laid out for four,
+   so both have to come back with them. */
 const REVENUE = [
   [
     'Hey Open subscriptions',
@@ -176,6 +184,8 @@ const REVENUE = [
     'Hedging, structuring, transaction and settlement services for GPU and cloud-price risk.',
     'Financial marketplace fees',
   ],
+  /* HIDDEN ON REQUEST. Restoring these two means putting the headline
+     back to "Six ways" and the md grid back to three columns.
   [
     'Agent marketplace',
     'Commission on paid agents, workflow tools and agent subscriptions.',
@@ -186,6 +196,7 @@ const REVENUE = [
     'Hosting, secure memory, developer services and advanced privacy infrastructure.',
     'Infrastructure services',
   ],
+  */
 ];
 
 /* 03. What a qualifying stake turns on. Title and line, not name and
@@ -983,7 +994,13 @@ export default function StakePage() {
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                  /* Four across at lg, not md. Between 900 and 1199 four
+                     columns leave a 181px card: the titles wrap to two
+                     lines and "40% to 50% APY" clears the content box by
+                     two pixels, which a fallback face would overrun, and
+                     nowrap spills outside the card rather than wrapping.
+                     Two columns there give 354px and the problem is gone. */
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
                   gap: { xs: 1.6, md: 2 },
                 }}
               >
@@ -1005,6 +1022,12 @@ export default function StakePage() {
                     {b.k && (
                       <Typography
                         sx={{
+                          /* The longest of these is "40% to 50% APY" at
+                             198px. It has to clear the narrowest card the
+                             grid produces, which is why that grid only goes
+                             four across at lg. Shrinking the type instead
+                             does nothing: the card narrows with it and the
+                             ratio is unchanged. */
                           fontSize: { xs: '1.5rem', md: '1.55rem' },
                           fontWeight: 700,
                           letterSpacing: '-0.035em',
@@ -1102,18 +1125,22 @@ export default function StakePage() {
           follows immediately because a reader who has just been shown a
           rate and a buyback is owed the answer to "funded by what".
 
-          Light, because the section above it is ink. Six cards in three
-          columns, which is the only arrangement where six of anything reads
-          as a set rather than a list.
+          Light, because the section above it is ink. Four cards, two by
+          two. It was six in three columns; with two hidden, three columns
+          would have left a row of three and an orphan, and two by two is
+          the arrangement where four of anything reads as a set.
 
-          No icons. The section above had them and lost them, and six
+          THE HEADLINE COUNTS THESE CARDS OUT LOUD. "Four ways" is the
+          number of cards below it, so neither can change alone.
+
+          No icons. The section above had them and lost them, and four
           decorative tiles here would put the page straight back where it
           was. The second line carries the colour instead, and it earns it:
-          it names the kind of revenue, which is the part that makes six
-          different businesses legible as six different businesses.
+          it names the kind of revenue, which is the part that makes four
+          different businesses legible as four different businesses.
 
           The kind sits on a rule at the foot of every card, pushed there
-          rather than following the copy, so all six line up however long
+          rather than following the copy, so all four line up however long
           the description above them runs. */}
       <Section sx={{ py: { xs: 7, md: 9 } }}>
         <Reveal>
@@ -1123,7 +1150,7 @@ export default function StakePage() {
               maxWidth={820}
               title={
                 <>
-                  Six ways to generate{' '}
+                  Four ways to generate{' '}
                   <Box component="span" sx={{ color: 'var(--brand-accent)' }}>real revenue.</Box>
                 </>
               }
@@ -1136,7 +1163,10 @@ export default function StakePage() {
           <Box
             sx={{
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+              /* Two columns at md, not three: four cards across three
+                 columns is a row of three and one left over. Two by two
+                 also gives each card the width its footer line wants. */
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' },
               gap: { xs: 1.8, md: 2.2 },
             }}
           >
