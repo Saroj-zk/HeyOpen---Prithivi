@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -11,6 +10,7 @@ import Footer from '@/components/Footer';
 import { Reveal, Rule, ProviderTile } from '@/components/ui/LedgerUI';
 import ProductWindow from '@/components/ProductWindow';
 import { MODELS, KINDS, PROVIDERS } from '@/data/catalog';
+import PageMeta from '@/components/PageMeta';
 
 /* How many models the product serves. The list further down carries the
    ones written up so far, which is fewer, so the two are kept apart: this
@@ -206,13 +206,11 @@ export default function ModelsPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
-      <Head>
-        <title>{`${CATALOG_SIZE} AI Models in One Subscription | Hey Open`}</title>
-        <meta
-          name="description"
-          content={`Access GPT-4o, Claude Opus 4, DeepSeek R1, Gemini 2.5 Pro, FLUX and ${CATALOG_SIZE} models from ${PROVIDERS.length} providers in one subscription, with no tracking.`}
-        />
-      </Head>
+      <PageMeta
+        title={`${CATALOG_SIZE} AI Models in One Subscription | Hey Open`}
+        description={`Access GPT-4o, Claude Opus 4, DeepSeek R1, Gemini 2.5 Pro, FLUX and ${CATALOG_SIZE} models from ${PROVIDERS.length} providers in one subscription, with no tracking.`}
+        path="/models"
+      />
 
       <PageHeader spacer={false} />
 

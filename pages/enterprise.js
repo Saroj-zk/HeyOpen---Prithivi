@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -8,6 +7,7 @@ import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
 import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Ledger';
+import PageMeta from '@/components/PageMeta';
 
 /**
  * The business behind $OPEN, at length.
@@ -1215,13 +1215,11 @@ function RevenueFlow() {
 export default function EnterprisePage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
-      <Head>
-        <title>The economics behind $OPEN | Hey Open</title>
-        <meta
-          name="description"
-          content="Hey Open powers Custom branded AI products for enterprises, with compute protection designed to keep costs predictable. As the business grows, its revenue connects real AI usage to $OPEN buybacks and burns."
-        />
-      </Head>
+      <PageMeta
+        title="The economics behind $OPEN | Hey Open"
+        description="Hey Open powers Custom branded AI products for enterprises, with compute protection designed to keep costs predictable. As the business grows, its revenue connects real AI usage to $OPEN buybacks and burns."
+        path="/enterprise"
+      />
 
       <PageHeader />
 

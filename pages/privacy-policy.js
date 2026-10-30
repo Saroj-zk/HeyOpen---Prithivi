@@ -7,6 +7,7 @@ export default function PrivacyPolicyPage() {
     <LegalPage
       doc={PRIVACY_DOC}
       description="What Hey Open collects, what leaves our service, and what you can delete."
+      path="/privacy-policy"
     />
   );
 }

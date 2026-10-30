@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -12,6 +11,7 @@ import Footer from '@/components/Footer';
 import { Reveal, Rule, BrandTile } from '@/components/ui/LedgerUI';
 import { useThemeMode } from '@/context/ThemeContext';
 import dynamic from 'next/dynamic';
+import PageMeta from '@/components/PageMeta';
 
 const MemoryChatDemo = dynamic(() => import('@/components/MemoryChatDemo'), {
   ssr: false,
@@ -513,13 +513,11 @@ export default function MemoryPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
-      <Head>
-        <title>Universal Memory — One Context Across Every AI Model | Hey Open</title>
-        <meta
-          name="description"
-          content="Say it once, every model knows. Your preferences, active projects, and decisions live in one private memory layer, independent of which model you chat with."
-        />
-      </Head>
+      <PageMeta
+        title="Universal Memory — One Context Across Every AI Model | Hey Open"
+        description="Say it once, every model knows. Your preferences, active projects, and decisions live in one private memory layer, independent of which model you chat with."
+        path="/memory"
+      />
 
       <PageHeader />
 

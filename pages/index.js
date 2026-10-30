@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Header from '@/components/Header';
 import HeroSection from '@/components/HeroSection';
@@ -19,18 +18,16 @@ import TokenOptimizationSection from '@/components/TokenOptimizationSection';
 import EnterpriseSection from '@/components/EnterpriseSection';
 import ApiSection from '@/components/ApiSection';
 import Footer from '@/components/Footer';
+import PageMeta from '@/components/PageMeta';
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Hey Open | AI Assistant</title>
-        <meta
-          name="description"
-          content="Hey Open - A private, multi-model AI experience with no account required to start."
-        />
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
+      <PageMeta
+        title="Hey Open | Private, Multi-Model AI"
+        description="Every major AI model in one private workspace. Nothing retained, nothing trained on, and one memory that carries across all of them."
+        path="/"
+      />
 
       <Header />
 
