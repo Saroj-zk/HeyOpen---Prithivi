@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
+import ParticleMark from '@/components/ui/ParticleMark';
 import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Ledger';
 import { TOKEN } from '@/data/token';
 import { VERSIONS } from '@/data/stakeCopy';
@@ -159,30 +160,47 @@ const POLICY_SUPPLY = 'M14 36 H70 V48 H126 V62 H182 V78 H238 V92 H294 V108 H326'
    services" are different businesses, and naming the kind is what stops
    the four reading as four words for the same thing.
 
+   The fourth field is the mark drawn above the card, and it is picked for
+   what the business is rather than for variety. Subscriptions are a closed
+   ring because they come round again. API usage is a helix because it
+   accumulates turn after turn. Enterprise contracts are two rings that
+   cannot be pulled apart. An option folds out and returns, so it is a
+   figure of eight. If a line changes enough that its shape stops meaning
+   anything, the shape should change with it.
+
+   All four are forms, not diagrams. The library's fan draws three strands
+   converging, which is a truer picture of calls arriving at one API layer,
+   and it was tried here and dropped: among three flowing solids it read as
+   a chart that had wandered in.
+
    TWO ARE HIDDEN ON REQUEST and kept at the foot of the list, commented
    out rather than deleted. Uncommenting them restores the pair, but the
    headline counts these cards in words and the grid is laid out for four,
-   so both have to come back with them. */
+   so both have to come back with them, and each needs a mark of its own. */
 const REVENUE = [
   [
     'Hey Open subscriptions',
     'Monthly and annual plans for private multi-model AI, expanded usage and premium features.',
     'Consumer recurring revenue',
+    'ring',
   ],
   [
     'Developer AI APIs',
     'Inference usage through one API layer, with margin on model routing and access.',
     'Usage-based API margin',
+    'rise',
   ],
   [
     'Enterprise private AI',
     'Private inference, managed deployments, governance controls and white-label contracts.',
     'Enterprise contracts',
+    'link',
   ],
   [
     'Compute options fees',
     'Hedging, structuring, transaction and settlement services for GPU and cloud-price risk.',
     'Financial marketplace fees',
+    'fold',
   ],
   /* HIDDEN ON REQUEST. Restoring these two means putting the headline
      back to "Six ways" and the md grid back to three columns.
@@ -1125,23 +1143,32 @@ export default function StakePage() {
           follows immediately because a reader who has just been shown a
           rate and a buyback is owed the answer to "funded by what".
 
-          Light, because the section above it is ink. Four cards, two by
-          two. It was six in three columns; with two hidden, three columns
-          would have left a row of three and an orphan, and two by two is
-          the arrangement where four of anything reads as a set.
+          The ground stays light, because the section above it is ink.
+          THE CARDS DO NOT: they are ink now, four portraits in a row, each
+          opening on a drawn mark.
+
+          Dark cards on a light ground is the inverse of the reference this
+          came from, which floats lighter cards on a near-black page. It
+          has to be inverted. The marks are a field of dots that carries its
+          form in brightness, and on white there is no brightness to spend
+          — the shape flattens to a smudge. Ink gives them somewhere to
+          glow, and the light gutter around them is what keeps this section
+          from merging with the ink band above.
 
           THE HEADLINE COUNTS THESE CARDS OUT LOUD. "Four ways" is the
           number of cards below it, so neither can change alone.
 
-          No icons. The section above had them and lost them, and four
-          decorative tiles here would put the page straight back where it
-          was. The second line carries the colour instead, and it earns it:
-          it names the kind of revenue, which is the part that makes four
-          different businesses legible as four different businesses.
+          THE MARKS ARE NOT ICONS, which is the distinction that lets them
+          in after icons were twice thrown out of this page. An icon is a
+          small picture of the noun, repeated at a size where it can only
+          be a tile. These are one per card, each a different form, each
+          picked for what the business does rather than what it is called,
+          and they are the card's whole top third rather than a badge
+          above its title.
 
-          The kind sits on a rule at the foot of every card, pushed there
-          rather than following the copy, so all four line up however long
-          the description above them runs. */}
+          The kind still sits on a rule at the foot of every card, pushed
+          there rather than following the copy, so all four line up however
+          long the description above them runs. */}
       <Section sx={{ py: { xs: 7, md: 9 } }}>
         <Reveal>
           <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
@@ -1163,37 +1190,72 @@ export default function StakePage() {
           <Box
             sx={{
               display: 'grid',
-              /* Two columns at md, not three: four cards across three
-                 columns is a row of three and one left over. Two by two
-                 also gives each card the width its footer line wants. */
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(2, 1fr)' },
+              /* One row of four at lg. The cards carry a mark now and are
+                 taller than they are wide, and four portraits in a row is
+                 the arrangement that reads as a set. Two up to there: at md
+                 a quarter of the container is 264px, which crops the mark
+                 to a stripe and wraps every title. */
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
               gap: { xs: 1.8, md: 2.2 },
             }}
           >
-            {REVENUE.map(([name, body, kind]) => (
+            {REVENUE.map(([name, body, kind, mark]) => (
               <Box
                 key={name}
                 sx={{
-                  ...PANEL,
+                  ...PANEL_INK,
+                  overflow: 'hidden',
                   display: 'flex',
                   flexDirection: 'column',
-                  px: { xs: 2.2, md: 2.6 },
-                  py: { xs: 2.4, md: 2.6 },
+                  px: { xs: 2.2, md: 2.4 },
+                  pt: 0,
+                  pb: { xs: 2.4, md: 2.5 },
+                  transition: 'transform .22s ease, box-shadow .22s ease',
+                  '&:hover': {
+                    transform: 'translateY(-3px)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14), 0 34px 60px -30px rgba(11,15,26,0.7)',
+                  },
+                  '&:hover .mark': { transform: 'scale(1.05)' },
                 }}
               >
+                {/* The mark bleeds to the card's edges, so the gutter is
+                    taken off the card and given to the words instead. A
+                    decoration inset by the same margin as the copy reads as
+                    another block of content.
+
+                    It is masked rather than cropped: a hard bottom edge
+                    would have made it an image sitting in a box, and the
+                    point is that the card is one surface with a form
+                    surfacing out of it. */}
+                <Box
+                  className="mark"
+                  sx={{
+                    mx: { xs: -2.2, md: -2.4 },
+                    height: { xs: 168, md: 182 },
+                    color: 'var(--brand-accent)',
+                    transition: 'transform .45s cubic-bezier(.32,.72,0,1)',
+                    WebkitMaskImage:
+                      'linear-gradient(180deg, #000 0%, #000 64%, transparent 97%)',
+                    maskImage: 'linear-gradient(180deg, #000 0%, #000 64%, transparent 97%)',
+                  }}
+                >
+                  <ParticleMark shape={mark} />
+                </Box>
+
                 <Typography
                   sx={{
-                    fontSize: { xs: '1.06rem', md: '1.12rem' },
+                    mt: { xs: 0.4, md: 0.6 },
+                    fontSize: { xs: '1.06rem', md: '1.1rem' },
                     fontWeight: 750,
                     letterSpacing: '-0.025em',
                     lineHeight: 1.3,
-                    color: 'var(--text-heading)',
+                    color: '#FFFFFF',
                   }}
                 >
                   {name}
                 </Typography>
 
-                <Typography sx={{ mt: 1, fontSize: '0.92rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                <Typography sx={{ mt: 1, fontSize: '0.9rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)' }}>
                   {body}
                 </Typography>
 
@@ -1201,7 +1263,7 @@ export default function StakePage() {
                   <Typography
                     sx={{
                       pt: { xs: 1.4, md: 1.6 },
-                      borderTop: `1px solid ${RULE}`,
+                      borderTop: `1px solid ${RULE_ON_INK}`,
                       fontSize: '0.82rem',
                       fontWeight: 700,
                       letterSpacing: '-0.01em',
