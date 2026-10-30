@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
-import ParticleMark from '@/components/ui/ParticleMark';
 import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Ledger';
 import { TOKEN } from '@/data/token';
 import { VERSIONS } from '@/data/stakeCopy';
@@ -160,17 +159,19 @@ const POLICY_SUPPLY = 'M14 36 H70 V48 H126 V62 H182 V78 H238 V92 H294 V108 H326'
    services" are different businesses, and naming the kind is what stops
    the four reading as four words for the same thing.
 
-   The fourth field is the mark drawn above the card: a thing a reader can
-   name, not a pattern. Subscriptions are a stack of coins. An API layer is
-   a vortex drawing many routes into one point. A private deployment is a
-   sealed box. Compute options are a saddle, which is what an option book
-   looks like when it is drawn.
+   The fourth field is the card's icon, from the page's own set.
 
-   The first attempt was abstract — a torus, a coil, two linked rings, a
-   folded ribbon. They were handsome and they meant nothing: nobody looks
-   at a torus and arrives at "subscriptions", so the relation lived in a
-   comment rather than on the page. If a line changes enough that its
-   object stops fitting, the object should change with it.
+   It took two wrong turns to get here. First a generated pattern — a
+   torus, a coil, linked rings, a folded ribbon — which was handsome and
+   meant nothing: nobody looks at a torus and arrives at "subscriptions",
+   so the relation lived in a comment rather than on the page. Then the
+   same generator drawing nameable objects, a coin stack and a sealed box
+   and an option surface, which was closer and still a picture a reader
+   had to decode.
+
+   An icon is the thing a reader already reads without being asked. A
+   cycle for revenue that comes round again, brackets for an API, a shield
+   for a private deployment, a trend for a financial product.
 
    TWO ARE HIDDEN ON REQUEST and kept at the foot of the list, commented
    out rather than deleted. Uncommenting them restores the pair, but the
@@ -181,25 +182,25 @@ const REVENUE = [
     'Hey Open subscriptions',
     'Monthly and annual plans for private multi-model AI, expanded usage and premium features.',
     'Consumer recurring revenue',
-    'coins',
+    'cycle',
   ],
   [
     'Developer AI APIs',
     'Inference usage through one API layer, with margin on model routing and access.',
     'Usage-based API margin',
-    'routes',
+    'code',
   ],
   [
     'Enterprise private AI',
     'Private inference, managed deployments, governance controls and white-label contracts.',
     'Enterprise contracts',
-    'vault',
+    'shield',
   ],
   [
     'Compute options fees',
     'Hedging, structuring, transaction and settlement services for GPU and cloud-price risk.',
     'Financial marketplace fees',
-    'surface',
+    'rise',
   ],
   /* HIDDEN ON REQUEST. Restoring these two means putting the headline
      back to "Six ways" and the md grid back to three columns.
@@ -308,6 +309,8 @@ const PATHS = {
   lock: 'M6 9V6.5a4 4 0 1 1 8 0V9M4.5 9h11A1.5 1.5 0 0 1 17 10.5v6A1.5 1.5 0 0 1 15.5 18h-11A1.5 1.5 0 0 1 3 16.5v-6A1.5 1.5 0 0 1 4.5 9Z',
   chip: 'M6 6h8v8H6zM8 2v2M12 2v2M8 16v2M12 16v2M2 8h2M2 12h2M16 8h2M16 12h2',
   chart: 'M3 17h14M6 14V8M10 14V4M14 14v-4',
+  cycle: 'M3.4 7.6A7 7 0 0 1 16.6 7.6M13.9 7.1l2.7.5.5-2.7M16.6 12.4A7 7 0 0 1 3.4 12.4M6.1 12.9l-2.7-.5-.5 2.7',
+  code: 'M7.3 5.5 3 10l4.3 4.5M12.7 5.5 17 10l-4.3 4.5M11.3 4.2l-2.6 11.6',
   layers: 'M10 2.5 2.5 6.5 10 10.5l7.5-4zM2.5 10.5 10 14.5l7.5-4M2.5 14 10 18l7.5-4',
   shield: 'M10 2.5 3.5 5v5c0 3.6 2.7 6.6 6.5 7.5 3.8-.9 6.5-3.9 6.5-7.5V5zM7.2 10.2l2 2 3.6-3.9',
   rise: 'M3 15.5 7.8 10l3 2.6L17 5.5M17 5.5h-4M17 5.5v4',
@@ -1143,27 +1146,25 @@ export default function StakePage() {
           rate and a buyback is owed the answer to "funded by what".
 
           The ground stays light, because the section above it is ink.
-          THE CARDS DO NOT: they are ink now, four portraits in a row, each
-          opening on a drawn mark.
-
-          Dark cards on a light ground is the inverse of the reference this
-          came from, which floats lighter cards on a near-black page. It
-          has to be inverted. The marks are a field of dots that carries its
-          form in brightness, and on white there is no brightness to spend
-          — the shape flattens to a smudge. Ink gives them somewhere to
-          glow, and the light gutter around them is what keeps this section
+          THE CARDS DO NOT: they are ink, four in a row, each opening on an
+          icon. Dark cards on a light ground give the orange somewhere to
+          sit, and the light gutter around them is what keeps this section
           from merging with the ink band above.
 
           THE HEADLINE COUNTS THESE CARDS OUT LOUD. "Four ways" is the
           number of cards below it, so neither can change alone.
 
-          THE MARKS ARE NOT ICONS, which is the distinction that lets them
-          in after icons were twice thrown out of this page. An icon is a
-          small picture of the noun, repeated at a size where it can only
-          be a tile. These are one per card, each a different form, each
-          picked for what the business does rather than what it is called,
-          and they are the card's whole top third rather than a badge
-          above its title.
+          ICONS, AFTER TWO ATTEMPTS AT SOMETHING CLEVERER. First a
+          generated pattern per card, then the same generator drawing
+          nameable objects. Both were decoration a reader had to decode,
+          and the argument for them — that they were forms rather than
+          icons — was a distinction that only mattered to whoever wrote
+          it. An icon is read without being asked.
+
+          This is not the thing that was thrown out of the section above.
+          That was a row of small tiles repeated above four cards that were
+          already carrying a figure each. Here the icon is the only mark on
+          the card and the first thing in it.
 
           The kind still sits on a rule at the foot of every card, pushed
           there rather than following the copy, so all four line up however
@@ -1203,47 +1204,41 @@ export default function StakePage() {
                 key={name}
                 sx={{
                   ...PANEL_INK,
-                  overflow: 'hidden',
                   display: 'flex',
                   flexDirection: 'column',
                   px: { xs: 2.2, md: 2.4 },
-                  pt: 0,
-                  pb: { xs: 2.4, md: 2.5 },
+                  py: { xs: 2.4, md: 2.6 },
                   transition: 'transform .22s ease, box-shadow .22s ease',
                   '&:hover': {
                     transform: 'translateY(-3px)',
                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14), 0 34px 60px -30px rgba(11,15,26,0.7)',
                   },
-                  '&:hover .mark': { transform: 'scale(1.05)' },
                 }}
               >
-                {/* The mark bleeds to the card's edges, so the gutter is
-                    taken off the card and given to the words instead. A
-                    decoration inset by the same margin as the copy reads as
-                    another block of content.
-
-                    It is masked rather than cropped: a hard bottom edge
-                    would have made it an image sitting in a box, and the
-                    point is that the card is one surface with a form
-                    surfacing out of it. */}
+                {/* Larger than the shared Chip, which is 38px and built for
+                    sitting beside a line of text. Here it is the first
+                    thing in the card and has the width of the card to
+                    itself, so it is sized to be looked at. */}
                 <Box
-                  className="mark"
                   sx={{
-                    mx: { xs: -2.2, md: -2.4 },
-                    height: { xs: 168, md: 182 },
+                    width: 54,
+                    height: 54,
+                    flexShrink: 0,
+                    borderRadius: '15px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     color: 'var(--brand-accent)',
-                    transition: 'transform .45s cubic-bezier(.32,.72,0,1)',
-                    WebkitMaskImage:
-                      'linear-gradient(180deg, #000 0%, #000 64%, transparent 97%)',
-                    maskImage: 'linear-gradient(180deg, #000 0%, #000 64%, transparent 97%)',
+                    backgroundColor: 'rgba(255,102,0,0.12)',
+                    border: '1px solid rgba(255,102,0,0.26)',
                   }}
                 >
-                  <ParticleMark shape={mark} />
+                  <Mark name={mark} size={27} />
                 </Box>
 
                 <Typography
                   sx={{
-                    mt: { xs: 0.4, md: 0.6 },
+                    mt: { xs: 2, md: 2.2 },
                     fontSize: { xs: '1.06rem', md: '1.1rem' },
                     fontWeight: 750,
                     letterSpacing: '-0.025em',
