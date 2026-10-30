@@ -6,224 +6,833 @@ import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
-import { INK, MONO, RULE, RULE_ON_INK, FIG, Label, Entry, Button, Head2 } from '@/components/ui/Ledger';
+import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Ledger';
 import { TOKEN } from '@/data/token';
 import { VERSIONS } from '@/data/stakeCopy';
-import CopySwitch, { useCopyVersion } from '@/components/ui/CopySwitch';
 
 /**
  * $OPEN, and what staking it does.
  *
- * Laid out to follow Venice's VVV page, which is the thing this was asked to
- * be like, with the same two tokens doing the same two jobs. $OPEN is the
- * capital asset you buy and stake, as VVV is. $HEY is minted only by stakers
- * and pays out credit every day, as DIEM is.
+ * ------------------------------------------------------------------
+ * Light, because the rest of the site is.
  *
- * Drawn as a ledger, because that is the company's own word and because
- * staking is bookkeeping. Figures are monospace and tabular so columns line
- * up the way they do on a statement, entries are set with leader dots, and
- * the total carries a double rule, which is the one convention every
- * accountant recognises and which nothing else on the site uses.
+ * The page went dark once to borrow the one component that was working, and
+ * the borrowing worked. But a token page in a different colour from every
+ * other page is a different product, so it came back to paper and kept what
+ * it learned. Ink is one band rather than the whole page, spent on the
+ * section that asks you to stop paying for something.
  *
- * That device is also what carries the honesty, which is the reason it was
- * chosen over something merely decorative. A fixed base rate and a variable
- * share on top are different kinds of promise, so they are different kinds
- * of entry: the base is a firm line, the share above the total is dashed and
- * holds no figure, because no number can honestly sit there ahead of time.
- * Read only the card and you still learn which half is owed to you.
+ * Four surfaces, in order of how often they appear:
  *
- * Two things the copy does and does not do. It does say the share only ever
- * adds, which is true and is the reassuring part: a quiet period pays the
- * base in full, never less. It does not say where the share comes from.
- * Leaving a strategy off a landing page is normal; naming a source that is
- * not the real one would be an easier sentence and would be false.
+ *   PAPER   the page itself, and the only ground outside the ink band. A
+ *           warm tint used to sit behind one section; with the yield section
+ *           gone it landed directly under the hero and read as a stray band
+ *           of colour rather than as a change of pace, so it went.
+ *   PANEL   white, a hairline, a long soft shadow. Holds almost everything.
+ *   ACCENT  PANEL with an amber rim and a warm body. Spent twice: on the
+ *           thing you are asked to do, and on the token you are asked to buy.
+ *   INK     one full-bleed band, once.
+ *
+ * ------------------------------------------------------------------
+ * Five sections, and nothing that explains the rate.
+ *
+ *   hero  what $OPEN is, and what staking it gets you
+ *   1     where the stake actually goes       architecture, proof
+ *   2     there are two tokens                $OPEN and $HEY
+ *   3     the app is free at a hundred        Pro, on ink
+ *   4     how $OPEN works                     three moves, supply
+ *         so start                            close
+ *
+ * The yield section is gone, and with it the dial and the calculator. Six
+ * drawings of the same two numbers were made for that section and none of
+ * them survived review; the figures themselves are still on the page, once
+ * each, in the returns pair and the $OPEN card. If a worked example ever
+ * comes back it should go somewhere a reader asks for it, not above the
+ * explanation of what the token is.
+ *
+ * Headings have no eyebrow. A numbered label above every section is useful
+ * when there are seven of them and a reader needs to know where they are;
+ * with four it is a second heading in smaller type saying the same thing.
+ * Size is the only hierarchy left, and that is enough.
+ *
+ * ------------------------------------------------------------------
+ * The marks are drawn.
+ *
+ * Every icon on the page was a unicode geometric shape, which renders
+ * differently in every font and reads as a placeholder in all of them. They
+ * are inline SVG on currentColor instead, one stroke weight, one grid.
+ *
+ * ------------------------------------------------------------------
+ * Each section says the two figures at most once, and most do not say them
+ * at all. They were being printed eight and seven times across six of eight
+ * sections, which is what made the page feel like it was saying one thing
+ * over and over. Everywhere else says "the floor" and "the band".
+ *
+ * WORDING ON THE DEPLOYMENT CARDS NEEDS SIGN-OFF. What the treasury is
+ * actually placed in is a representation about money. The three cards name
+ * the categories that were described and say nothing about instruments,
+ * venues, counterparties or proportions, because none of that was given.
+ * ------------------------------------------------------------------
  */
 
 /* ------------------------------------------------------------------ */
 /* Fill these in before the page goes live.                            */
-/*                                                                     */
-/* Every one of these is a representation about money, so none of them */
-/* is invented here. They are placeholders on purpose: left as they    */
-/* are, the page reads as unfinished rather than as a wrong promise.   */
 /* ------------------------------------------------------------------ */
 const RATES = {
-  /* Supply comes from the tokenomics data rather than being retyped, so the
-     two pages cannot drift apart. */
   supply: TOKEN.supply,
-  /* Fixed, and stated as fixed. */
   base: '6.00%',
-  /* A range, and stated as a target rather than as a rate, because a return
-     produced by deploying a treasury is not a rate the way a protocol
-     emission is. The page never calls this guaranteed. Guaranteed by whom,
-     and backed by what, is the version of that claim that can be written,
-     and it needs an answer from the business before it goes on a page. */
-  /* All in, and inclusive of the floor rather than stacked on top of it.
-     The floor is the worst case inside this band, not a separate payment
-     added to it, which is why nothing on the page sums the two. */
+  /* The same rate, set as a headline rather than as a contract figure. */
+  base_short: '6%',
+  /* All in, and inclusive of the floor rather than stacked on top of it. */
   total: '40% to 50%',
-  /* What actually lands: the floor at worst, the top of the band at best. */
-  range: '6.00% to 50%',
-  /* The same hundred that unlocks Pro on the page this follows. */
   threshold: '100 $OPEN',
 };
 
-/* The same thing on an actual stake. A percentage is an abstraction and six
-   hundred tokens is not, which is why the page this was measured against
-   works its rate through ten thousand dollars rather than leaving it at a
-   rate. Arithmetic only, on the figures above, and the target figure is the
-   whole return rather than an amount added to the floor. */
-const EXAMPLE = {
-  stake: "10,000",
-  floorAdd: "+600",
-  targetAdd: "+4,000 to +5,000",
-  floorTotal: "10,600",
-  planTotal: "14,000 to 15,000",
-};
+/* Swap the # for the real destinations when they exist. */
+const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' };
+const APP = 'https://ais.openledger.xyz/chat';
 
-/* What makes the number checkable. These are the claims that let a page
-   print a figure well above the alternatives without asking to be taken on
-   faith, and they are the same three any reader of this kind of page looks
-   for. Each needs a real answer from the business before publication. */
-/* What the stake unlocks beyond the yield. Written as entries rather than
-   as a list of ticks, so it reads as the account it is. */
-const PRO = [
-  ['Text prompts', 'Unlimited'],
-  ['Image and video models', 'The leading ones'],
-  ['Every model in the catalogue', 'Included'],
-  ['What it costs while staked', 'Nothing'],
+/* ------------------------------------------------------------------ */
+/* What each section says                                              */
+/* ------------------------------------------------------------------ */
+
+/* 02. Four things one token does, each as a figure, the category it
+   belongs to, and a line of detail. No mark: at this size an icon above
+   three lines of type is decoration sitting where the eye wants the
+   figure. */
+const BENEFITS = [
+  {
+    k: RATES.base_short,
+    t: 'Annual staking rewards',
+    s: 'Earn annual rewards on eligible staked $OPEN.',
+  },
+  {
+    k: 'Hey Open Pro',
+    t: 'Premium AI access',
+    s: `Stake ${RATES.threshold} to unlock unlimited supported text and image models.`,
+  },
+  {
+    /* APY is appended here rather than baked into RATES.total, so the
+       number keeps one definition and the four disclaimers that quote it
+       still read as sentences ("the 40% to 50% remains a target"). */
+    k: `${RATES.total} APY`,
+    t: 'Compute strategy target',
+    s: 'Explore targeted returns through enterprise compute and options strategies.',
+  },
+  {
+    k: '$OPEN economy',
+    t: 'Buybacks and burns',
+    s: 'A proposed net revenue model designed to buy back and burn $OPEN.',
+  },
+  {
+    t: 'Compute-credit collateral',
+    s: 'Proposed $HEY is issued against $OPEN locked under staking.',
+  },
+  {
+    t: 'AI agent access',
+    s: 'Access premium agents, developer tools and potential agent marketplace payment flows.',
+  },
+  {
+    t: 'Member advantages',
+    s: 'Proposed discounts, priority routing, advanced memory and higher service tiers.',
+  },
+  {
+    t: 'Community voting',
+    s: 'Vote on protocol rules, incentives and ecosystem direction. New features are released based on what the community votes for.',
+  },
 ];
 
-/* Three things a reader can establish without being asked to take anyone's
-   word for it. Each follows from how the thing is built, which is why they
-   can sit on the page before anybody signs off on an audit. */
+/* The two lines the token policy figure draws. Revenue climbs as a curve,
+   because it accrues continuously; supply comes down in steps, because a
+   burn is an event and not a drift. They cross, which is the headline said
+   without words.
+
+   NO VALUE AXIS ON EITHER, and none implied. What the business earns and
+   what it would buy back are not settled anywhere in this repo, so the
+   chart carries gridlines and ticks but never a number: structure a reader
+   can measure the shape against, not a quantity.
+
+   The plot is its own coordinate space. Everything below is in viewBox
+   units and the frame is stated once here, so the gridlines, the ticks and
+   the fill cannot drift apart from the lines they belong to. */
+const POLICY_X0 = 20;
+const POLICY_X1 = 326;
+const POLICY_TOP = 18;
+const POLICY_BASE = 118;
+const POLICY_VIEW_W = 340;
+const POLICY_VIEW_H = 150;
+
+const POLICY_REVENUE = [
+  [20, 108], [45.5, 105], [71, 101], [96.5, 96], [122, 90], [147.5, 83],
+  [173, 75], [198.5, 67], [224, 59], [249.5, 51], [275, 43], [300.5, 34], [326, 26],
+];
+
+/* Each entry is where a level begins and what that level is. Eight of
+   them, so the staircase has enough treads to read as a series of events
+   rather than as one drop. */
+const POLICY_SUPPLY = [
+  [20, 30], [58, 36], [96, 44], [134, 54], [172, 64], [210, 76], [248, 88], [286, 98],
+];
+
+const POLICY_SUPPLY_PATH =
+  POLICY_SUPPLY.map(([x, y], i) => (i === 0 ? `M${x} ${y}` : `H${x} V${y}`)).join(' ') +
+  ` H${POLICY_X1}`;
+
+/* The drop at the start of every level after the first. These are the
+   burns: the moment supply changes, which is the only thing on this chart
+   that is an event rather than a trend. */
+const POLICY_BURNS = POLICY_SUPPLY.slice(1);
+
+/* Where revenue first reaches supply, walked along the revenue polyline
+   against the step function rather than read off by eye. Supply is
+   piecewise constant, so there is no closed form to solve: the segment is
+   sampled finely enough that the marker sits on the lines rather than near
+   them. */
+const POLICY_CROSS = (() => {
+  const levelAt = (x) => {
+    let level = POLICY_SUPPLY[0][1];
+    POLICY_SUPPLY.forEach(([sx, y]) => {
+      if (x >= sx) level = y;
+    });
+    return level;
+  };
+  for (let i = 1; i < POLICY_REVENUE.length; i += 1) {
+    const [x0, y0] = POLICY_REVENUE[i - 1];
+    const [x1, y1] = POLICY_REVENUE[i];
+    for (let j = 1; j <= 80; j += 1) {
+      const t = j / 80;
+      const x = x0 + (x1 - x0) * t;
+      const y = y0 + (y1 - y0) * t;
+      if (y <= levelAt(x)) return [x, y];
+    }
+  }
+  return null;
+})();
+
+const POLICY_LINE = `M${POLICY_REVENUE.map(([x, y]) => `${x} ${y}`).join(' L')}`;
+
+/* 03a. Four lines of revenue, each with the kind of revenue it is. The
+   second line is the one doing the work: "subscriptions" and "hedging
+   services" are different businesses, and naming the kind is what stops
+   the four reading as four words for the same thing.
+
+   The fourth field is the card's icon, from the page's own set.
+
+   It took two wrong turns to get here. First a generated pattern — a
+   torus, a coil, linked rings, a folded ribbon — which was handsome and
+   meant nothing: nobody looks at a torus and arrives at "subscriptions",
+   so the relation lived in a comment rather than on the page. Then the
+   same generator drawing nameable objects, a coin stack and a sealed box
+   and an option surface, which was closer and still a picture a reader
+   had to decode.
+
+   An icon is the thing a reader already reads without being asked. A
+   cycle for revenue that comes round again, brackets for an API, a shield
+   for a private deployment, a trend for a financial product.
+
+   TWO ARE HIDDEN ON REQUEST and kept at the foot of the list, commented
+   out rather than deleted. Uncommenting them restores the pair, but the
+   headline counts these cards in words and the grid is laid out for four,
+   so both have to come back with them, and each needs a mark of its own. */
+const REVENUE = [
+  [
+    'Hey Open subscriptions',
+    'Monthly and annual plans for private multi-model AI, expanded usage and premium features.',
+    'Consumer recurring revenue',
+    'cycle',
+  ],
+  [
+    'Developer AI APIs',
+    'Inference usage through one API layer, with margin on model routing and access.',
+    'Usage-based API margin',
+    'code',
+  ],
+  [
+    'Enterprise private AI',
+    'Private inference, managed deployments, governance controls and white-label contracts.',
+    'Enterprise contracts',
+    'shield',
+  ],
+  [
+    'Compute options fees',
+    'Hedging, structuring, transaction and settlement services for GPU and cloud-price risk.',
+    'Financial marketplace fees',
+    'rise',
+  ],
+  /* HIDDEN ON REQUEST. Restoring these two means putting the headline
+     back to "Six ways" and the md grid back to three columns.
+  [
+    'Agent marketplace',
+    'Commission on paid agents, workflow tools and agent subscriptions.',
+    'Marketplace take rate',
+  ],
+  [
+    'Agent and memory infrastructure',
+    'Hosting, secure memory, developer services and advanced privacy infrastructure.',
+    'Infrastructure services',
+  ],
+  */
+];
+
+/* 03. What a qualifying stake turns on. Title and line, not name and
+   figure, because none of these four are quantities. */
+const PRO = [
+  ['Unlimited text models', 'Access supported AI text models.'],
+  ['Unlimited image models', 'Generate images across supported models.'],
+  ['Premium AI access', 'Unlock the Hey Open Pro experience.'],
+  ['No separate subscription', 'Your qualifying stake unlocks Pro.'],
+];
+
+/* 04. The two figures side by side, which is the only honest way to show
+   them: one is owed, the other is aimed at. */
+const STRATEGY = [
+  ['layers', 'Enterprise contracts', 'Prepaid agreements create committed compute demand.'],
+  ['shield', 'Compute options', 'Hedging strategies manage GPU price exposure.'],
+  ['chart', 'Managed economics', 'Contract pricing and cost management create opportunities for operating returns.'],
+];
+
+const DEPLOY = [
+  { k: 'Compute capital', s: 'Capacity the network runs on', mark: 'chip' },
+  { k: 'Options', s: 'Positions run against the book', mark: 'chart' },
+  { k: 'AI infrastructure', s: 'The rails underneath the models', mark: 'layers' },
+];
+
+const RETURNS = [
+  {
+    tag: 'Owed to you',
+    k: RATES.base,
+    s: 'Paid from the staking contract whatever the period did. It does not wait on the book.',
+    mark: 'shield',
+    tone: 'ink',
+    big: true,
+  },
+  {
+    tag: 'Aimed at',
+    k: 'Everything above it',
+    s: 'What the book makes on top of it. Reported once a period has closed, never promised before.',
+    mark: 'rise',
+  },
+];
+
+/* Three readings of the same promise, under the figure that makes it. */
 const PROOF = [
   [
     'The floor is a contract rate',
-    `The ${RATES.base} is set in the staking contract. It pays on schedule, it does not wait on a decision, and anyone can read it without asking us.`,
+    'The floor is set in the staking contract. It pays on schedule, and anyone can read it without asking us.',
   ],
   [
     'The stake stays yours',
     'Staking does not sell your $OPEN or move it beyond your reach. You can unstake, and the balance is visible the whole time.',
   ],
   [
-    'The target is reported after the fact',
-    'Each period closes with the figure that was actually returned, published against the band rather than compared with it later.',
+    'The target is reported after',
+    'Each period ends with the figure that was actually returned, published against the band rather than compared with it later.',
   ],
 ];
 
-/* Swap the # for the real destinations when they exist. */
-const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' };
-const APP = 'https://ais.openledger.xyz/chat';
 
-const HOW = [
-  {
-    n: '01',
-    title: 'Get $OPEN',
-    body: 'An ERC-20, with a fixed supply and no inflation switch. Buy it wherever it trades.',
-    cta: 'Buy $OPEN',
-    href: LINKS.buy,
-  },
-  {
-    n: '02',
-    title: 'Stake it',
-    body: `Everything you stake earns from the epoch it lands in. ${RATES.base} is the floor, ${RATES.total} is the aim.`,
-    cta: 'Stake $OPEN',
-    href: LINKS.stake,
-  },
-  {
-    n: '03',
-    title: 'Mint $HEY',
-    body: 'Staked $OPEN mints $HEY, and nothing else does. Stake the $HEY and it pays you in compute.',
-    cta: 'Mint $HEY',
-    href: LINKS.mint,
-  },
+/* 06. Where the supply goes, and how anyone checks. */
+const TOKENOMICS = [
+  ['coins', 'Revenue-funded buybacks', 'A defined allocation of net revenue funds $OPEN purchases.'],
+  ['flame', 'Permanent burns', 'Purchased tokens are removed from circulation.'],
+  ['chart', 'Transparent economics', 'Track supply, buybacks, and verified burn activity.'],
 ];
 
-/* The two stakes, which is the part of this that is easy to get wrong.
-   Staking the capital asset pays in value. Staking what it mints pays in
-   compute. Same verb, two different currencies out, and the page is clearer
-   for putting them side by side than for explaining them a section apart. */
-const STAKES = [
-  {
-    token: '$OPEN',
-    kind: 'The capital asset',
-    paidIn: 'Value',
-    lead: true,
-    body:
-      'The asset you buy and hold. Staking it pays a fixed floor you cannot drop below and aims well above it, in $OPEN rather than in anything you have to spend here.',
-    rows: [
-      ['Floor', RATES.base],
-      ['On plan', RATES.total],
-      ['Paid in', '$OPEN'],
-    ],
-    cta: 'Stake $OPEN',
-    href: LINKS.stake,
-  },
-  {
-    token: '$HEY',
-    kind: 'Minted by stakers',
-    paidIn: 'Compute credits',
-    body:
-      'Minted against staked $OPEN and held or sold like anything else. Staking it pays out credit for the catalogue, which is the network paying you in the thing it makes.',
-    rows: [
-      ['Minted from', 'Staked $OPEN'],
-      ['Pays out', 'Compute credits'],
-      ['Good for', 'Every model'],
-    ],
-    cta: 'Mint $HEY',
-    href: LINKS.mint,
-  },
+/* 07. Three moves. The third is no longer a mint: nothing on this page
+   mints anything now, so it is the thing the stake actually unlocks. */
+const STEPS = [
+  { n: '01', mark: 'coins', k: 'Get $OPEN', s: 'Acquire $OPEN to enter the ecosystem.', cta: 'Buy $OPEN', href: LINKS.buy },
+  { n: '02', mark: 'lock', k: 'Stake $OPEN', s: 'Stake your tokens to access eligible rewards.', cta: 'Stake $OPEN', href: LINKS.stake },
+  { n: '03', mark: 'spark', k: 'Unlock benefits', s: 'Earn staking rewards and access Hey Open Pro when eligible.' },
+];
+
+/* The three sections that used to sit here, one line each. The order is
+   the order of the argument on the page they link to: there is a business,
+   its costs are held still, and what is left reaches the token. */
+const ECONOMY = [
+  ['building', 'Enterprise AI', 'Custom Branded products create recurring compute demand.'],
+  ['shield', 'Compute protection', 'Options-based strategies help manage GPU price volatility.'],
+  ['flame', '$OPEN economics', 'Net revenue supports the proposed buyback-and-burn model.'],
 ];
 
 /* ------------------------------------------------------------------ */
-/* Ledger parts                                                        */
+/* Marks                                                               */
 /* ------------------------------------------------------------------ */
 
-/* The thesis of the page, as an object: what staking pays, set as the
-   statement it produces. */
-function Statement({ onInk }) {
+/* One grid, one stroke weight, drawn on currentColor. A unicode glyph picks
+   a different shape out of whatever font happens to be resolving, which is
+   why the page used to look like it had placeholders in it. */
+const PATHS = {
+  lock: 'M6 9V6.5a4 4 0 1 1 8 0V9M4.5 9h11A1.5 1.5 0 0 1 17 10.5v6A1.5 1.5 0 0 1 15.5 18h-11A1.5 1.5 0 0 1 3 16.5v-6A1.5 1.5 0 0 1 4.5 9Z',
+  chip: 'M6 6h8v8H6zM8 2v2M12 2v2M8 16v2M12 16v2M2 8h2M2 12h2M16 8h2M16 12h2',
+  chart: 'M3 17h14M6 14V8M10 14V4M14 14v-4',
+  cycle: 'M3.4 7.6A7 7 0 0 1 16.6 7.6M13.9 7.1l2.7.5.5-2.7M16.6 12.4A7 7 0 0 1 3.4 12.4M6.1 12.9l-2.7-.5-.5 2.7',
+  code: 'M7.3 5.5 3 10l4.3 4.5M12.7 5.5 17 10l-4.3 4.5M11.3 4.2l-2.6 11.6',
+  layers: 'M10 2.5 2.5 6.5 10 10.5l7.5-4zM2.5 10.5 10 14.5l7.5-4M2.5 14 10 18l7.5-4',
+  shield: 'M10 2.5 3.5 5v5c0 3.6 2.7 6.6 6.5 7.5 3.8-.9 6.5-3.9 6.5-7.5V5zM7.2 10.2l2 2 3.6-3.9',
+  rise: 'M3 15.5 7.8 10l3 2.6L17 5.5M17 5.5h-4M17 5.5v4',
+  diamond: 'M10 2.5 17 10l-7 7.5L3 10z',
+  spark: 'M10 2.2c.7 4.3 2.8 6.4 7.1 7.1-4.3.7-6.4 2.8-7.1 7.1-.7-4.3-2.8-6.4-7.1-7.1 4.3-.7 6.4-2.8 7.1-7.1Z',
+  coins: 'M12.5 6.5a4.5 2.5 0 1 1-9 0 4.5 2.5 0 0 1 9 0ZM3.5 6.5v4c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4M7.5 13.3v1.2c0 1.4 2 2.5 4.5 2.5s4.5-1.1 4.5-2.5v-4c0-1-1-1.9-2.6-2.3',
+  building: 'M2.8 17.4h14.4M4.6 17.4V9.2M7.9 17.4V9.2M12.1 17.4V9.2M15.4 17.4V9.2M2.8 9.2h14.4L10 4.6z',
+  flame: 'M10 2.6c3 3.4 4.6 5.7 4.6 8.2a4.6 4.6 0 0 1-9.2 0c0-2.5 1.6-4.8 4.6-8.2ZM10 10.4c1.1 1.3 1.7 2.1 1.7 3a1.7 1.7 0 0 1-3.4 0c0-.9.6-1.7 1.7-3Z',
+};
+
+/** Market data and the contract, wherever they are least in the way. */
+function LinkChips() {
+  return (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+      {[['Market data', LINKS.marketCap], ['Contract', LINKS.explorer]].map(([label, href]) => (
+        <Box
+          key={label}
+          component="a"
+          href={href}
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '7px',
+            px: '13px',
+            py: '7px',
+            borderRadius: '999px',
+            border: `1px solid ${RULE}`,
+            backgroundColor: 'var(--bg-card)',
+            fontFamily: MONO,
+            fontSize: '0.68rem',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            color: 'var(--text-muted)',
+            textDecoration: 'none',
+            transition: 'all .18s ease',
+            '&:hover': { color: 'var(--text-heading)', borderColor: 'rgba(255,102,0,0.45)' },
+          }}
+        >
+          {label}
+          <Box component="span" aria-hidden="true" sx={{ opacity: 0.55 }}>↗</Box>
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
+function Mark({ name, size = 20, sx }) {
+  return (
+    <Box
+      component="svg"
+      aria-hidden="true"
+      viewBox="0 0 20 20"
+      sx={{ width: size, height: size, display: 'block', flexShrink: 0, ...sx }}
+    >
+      <Box
+        component="path"
+        d={PATHS[name]}
+        sx={{
+          fill: 'none',
+          stroke: 'currentColor',
+          strokeWidth: 1.5,
+          strokeLinecap: 'round',
+          strokeLinejoin: 'round',
+        }}
+      />
+    </Box>
+  );
+}
+
+/* A mark floating at 40% opacity in a corner reads as a watermark. In a
+   tinted chip it reads as a label, which is what it is. */
+function Chip({ name, tone }) {
+  const ink = tone === 'ink';
+  const accent = tone === 'accent';
   return (
     <Box
       sx={{
-        borderRadius: '4px',
-        border: `1px solid ${onInk ? RULE_ON_INK : RULE}`,
-        backgroundColor: onInk ? 'rgba(255,255,255,0.03)' : 'var(--bg-card)',
-        boxShadow: onInk ? 'none' : '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -28px rgba(11,15,26,.22)',
-        px: { xs: 2.5, md: 3.5 },
-        pt: { xs: 2.2, md: 2.6 },
-        pb: { xs: 2.2, md: 2.8 },
+        width: 38,
+        height: 38,
+        flexShrink: 0,
+        borderRadius: '11px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: ink ? 'var(--brand-accent)' : accent ? '#C2541A' : 'var(--text-heading)',
+        backgroundColor: ink
+          ? 'rgba(255,102,0,0.14)'
+          : accent
+            ? 'rgba(255,102,0,0.1)'
+            : 'rgba(11,15,26,0.045)',
+        border: `1px solid ${ink ? 'rgba(255,102,0,0.3)' : accent ? 'rgba(255,102,0,0.24)' : 'rgba(11,15,26,0.08)'
+          }`,
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 2,
-          pb: '14px',
-          borderBottom: `1px solid ${onInk ? RULE_ON_INK : RULE}`,
-        }}
-      >
-        <Label onInk={onInk}>Statement</Label>
-        <Label onInk={onInk}>Per epoch</Label>
-      </Box>
+      <Mark name={name} size={19} />
+    </Box>
+  );
+}
 
-      <Entry name="The floor" figure={RATES.base} onInk={onInk} />
-      <Entry name="Target, all in" figure={RATES.total} dashed onInk={onInk} />
-      <Entry name="So you are paid" figure={RATES.range} total onInk={onInk} />
+/* ------------------------------------------------------------------ */
+/* Four surfaces                                                       */
+/* ------------------------------------------------------------------ */
 
+const INK = '#0B0F1A';
+
+const PANEL = {
+  position: 'relative',
+  borderRadius: '16px',
+  border: '1px solid rgba(11,15,26,0.07)',
+  background: 'linear-gradient(180deg, #FFFFFF 0%, #FCFDFE 100%)',
+  boxShadow:
+    'inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(11,15,26,0.04), 0 26px 50px -34px rgba(11,15,26,0.32)',
+};
+
+const ACCENT = {
+  ...PANEL,
+  border: '1px solid rgba(255,102,0,0.26)',
+  background: 'linear-gradient(180deg, #FFF8F3 0%, #FFEFE2 100%)',
+  boxShadow:
+    'inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(11,15,26,0.04), 0 26px 52px -34px rgba(214,86,0,0.38)',
+};
+
+/* A pane of glass on ink. The rim is two lines, not one: a bright inset
+   along the top edge where light would catch, and a hairline all round.
+   `saturate` on the backdrop is what keeps the bloom underneath coloured
+   rather than washing it to grey. */
+const GLASS = {
+  position: 'relative',
+  borderRadius: '18px',
+  border: '1px solid rgba(255,255,255,0.12)',
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.035) 100%)',
+  backdropFilter: 'blur(22px) saturate(150%)',
+  WebkitBackdropFilter: 'blur(22px) saturate(150%)',
+  boxShadow:
+    'inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(255,255,255,0.05), 0 22px 44px -28px rgba(0,0,0,0.9)',
+};
+
+const PANEL_INK = {
+  position: 'relative',
+  borderRadius: '16px',
+  border: `1px solid ${RULE_ON_INK}`,
+  background: 'linear-gradient(180deg, #1A1F2B 0%, #0B0F1A 70%)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1), 0 26px 52px -34px rgba(11,15,26,0.6)',
+};
+
+/**
+ * A section, one screen tall.
+ *
+ * Every section now holds at least a viewport and centres what it contains,
+ * so a reader lands on one thing at a time instead of catching the top of the
+ * next one under the bottom of this one.
+ *
+ * It is a floor, not a fixed height. The sections with three cards and a
+ * supply block in them are taller than a screen on a phone and are left to
+ * be; forcing those to a fixed height is how content gets clipped.
+ *
+ * svh rather than vh, because on a phone vh is the viewport with the browser
+ * chrome retracted, which is not the viewport you are looking at when the
+ * page loads. The vh line stays underneath it for anything that does not know
+ * svh yet.
+ *
+ * The first section takes the header's spacer off its height. That spacer is
+ * in the flow, so without the subtraction the opening screen is the header
+ * plus the top nine tenths of the hero, and everything after it is off by the
+ * same amount.
+ */
+const HEADER = { xs: '78px', md: '92px' };
+
+function Section({ ground, full = true, first, bare, children, sx }) {
+  const tall = first
+    ? { xs: `calc(100vh - ${HEADER.xs})`, md: `calc(100vh - ${HEADER.md})` }
+    : '100vh';
+  const tallSmall = first
+    ? { xs: `calc(100svh - ${HEADER.xs})`, md: `calc(100svh - ${HEADER.md})` }
+    : '100svh';
+  return (
+    <Box
+      component="section"
+      sx={{
+        position: 'relative',
+        zIndex: 1,
+        ...(full
+          ? {
+            minHeight: tall,
+            '@supports (min-height: 100svh)': { minHeight: tallSmall },
+            display: 'flex',
+            alignItems: 'center',
+          }
+          : null),
+        ...(ground === 'ink'
+          ? { backgroundColor: INK }
+          : ground
+            ? {
+              background: ground,
+              borderTop: '1px solid rgba(11,15,26,0.05)',
+              borderBottom: '1px solid rgba(11,15,26,0.05)',
+            }
+            : null),
+        ...sx,
+      }}
+    >
+      {bare ? (
+        children
+      ) : (
+        <Container maxWidth="lg" sx={{ width: '100%', px: { xs: 2.5, sm: 4, md: 6 } }}>
+          {children}
+        </Container>
+      )}
+    </Box>
+  );
+}
+
+/**
+ * A section heading.
+ *
+ * It used to open with a numbered eyebrow, 01 through 05 with a rule and a
+ * label, so a reader could tell how far through the argument they were. That
+ * went with the yield section: four stops do not need signposting, and the
+ * labels were restating the headline underneath them in smaller type.
+ *
+ * The tier stays, because it is the only thing left carrying shape. Five
+ * consecutive headings at the same size and weight is a flat line; the
+ * sections that carry the argument are large and the ones that support it
+ * step down.
+ */
+function SectionHead({ eyebrow, title, lede, onInk, tier = 'major', maxWidth = 760 }) {
+  return (
+    <Box sx={{ maxWidth }}>
+      {eyebrow && (
+        <Label onInk={onInk} sx={{ display: 'block', mb: 1.8, color: 'var(--brand-accent)' }}>
+          {eyebrow}
+        </Label>
+      )}
       <Typography
+        component="h2"
         sx={{
-          mt: '14px',
-          fontSize: '0.8rem',
-          lineHeight: 1.6,
-          color: onInk ? 'rgba(255,255,255,0.52)' : 'var(--text-muted)',
+          fontSize:
+            tier === 'minor'
+              ? { xs: '1.7rem', sm: '2rem', md: '2.2rem' }
+              : { xs: '2rem', sm: '2.5rem', md: '3rem' },
+          fontWeight: 700,
+          letterSpacing: '-0.035em',
+          lineHeight: 1.06,
+          color: onInk ? '#FFFFFF' : 'var(--text-heading)',
+          textWrap: 'balance',
         }}
       >
-        The {RATES.base} is fixed and is the worst case. The line above it is
-        the figure we are aiming at, all in, and it is a target rather than a
-        rate.
+        {title}
       </Typography>
+      {lede && (
+        <Typography
+          sx={{
+            mt: 2.2,
+            fontSize: '1.04rem',
+            lineHeight: 1.65,
+            color: onInk ? 'rgba(255,255,255,0.66)' : 'var(--text-secondary)',
+            textWrap: 'pretty',
+          }}
+        >
+          {lede}
+        </Typography>
+      )}
+    </Box>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* The architecture                                                    */
+/* ------------------------------------------------------------------ */
+
+const LINE = 'rgba(15,23,42,0.2)';
+const RUN = 'rgba(255,102,0,0.9)';
+
+/* Three rows of height H and two gaps of G put the card centres at H/2,
+   1.5H+G and 2.5H+2G. The fan column is alignSelf stretch, so its height is
+   the row's height and those three numbers are where the branches have to
+   land. Arithmetic rather than eyeballing is what keeps them on the cards
+   when the cards change height. */
+const GAP = 14;
+
+/* An elbow with rounded corners: out along the middle, down or up the spine,
+   then out again. A straight run when there is no corner to turn. */
+function elbow(w, from, to) {
+  const x = w / 2;
+  const r = Math.min(9, Math.abs(to - from) / 2);
+  if (r < 1) return `M0 ${from} H${w}`;
+  const dir = to > from ? 1 : -1;
+  return [
+    `M0 ${from}`,
+    `H${x - r}`,
+    `Q${x} ${from} ${x} ${from + r * dir}`,
+    `V${to - r * dir}`,
+    `Q${x} ${to} ${x + r} ${to}`,
+    `H${w}`,
+  ].join(' ');
+}
+
+/**
+ * One node splitting into three, or three converging into one.
+ *
+ * Drawn as SVG rather than as CSS borders, for two reasons. Corners can be
+ * turned with a curve instead of a right angle, and a dash can be made to
+ * travel: the second path over each route is dashed and its offset animates,
+ * which is the stake visibly moving along the route rather than a diagram of
+ * it having moved. Held still for anyone who asked not to see motion.
+ */
+function Fan({ dir }) {
+  const ref = React.useRef(null);
+  const [h, setH] = React.useState(300);
+  const W = 64;
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const measure = () => setH(el.clientHeight || 300);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const rowH = (h - GAP * 2) / 3;
+  const centres = [rowH * 0.5, rowH * 1.5 + GAP, rowH * 2.5 + GAP * 2];
+  const mid = h / 2;
+  const out = dir === 'out';
+
+  const routes = out
+    ? centres.map((c) => elbow(W, mid, c))
+    : centres.map((c) => elbow(W, c, mid));
+
+  return (
+    <Box
+      ref={ref}
+      aria-hidden="true"
+      sx={{ display: { xs: 'none', lg: 'block' }, position: 'relative', width: W, alignSelf: 'stretch' }}
+    >
+      <Box
+        component="svg"
+        width={W}
+        height={h}
+        viewBox={`0 0 ${W} ${h}`}
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          overflow: 'visible',
+          '@keyframes runAlong': { to: { strokeDashoffset: -18 } },
+        }}
+      >
+        <defs>
+          <marker id={`tip-${dir}`} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill={LINE} />
+          </marker>
+        </defs>
+
+        {routes.map((d, i) => (
+          <g key={i}>
+            {/* the route */}
+            <path d={d} fill="none" stroke={LINE} strokeWidth="1.5" markerEnd={`url(#tip-${dir})`} />
+            {/* and what is moving along it */}
+            <Box
+              component="path"
+              d={d}
+              sx={{
+                fill: 'none',
+                stroke: RUN,
+                strokeWidth: 1.8,
+                strokeLinecap: 'round',
+                strokeDasharray: '5 13',
+                animation: 'runAlong 1.1s linear infinite',
+                animationDelay: `${i * 0.18}s`,
+                '@media (prefers-reduced-motion: reduce)': { animation: 'none', opacity: 0.45 },
+              }}
+            />
+          </g>
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
+/** What the fan collapses to below lg, where there is no room to branch. */
+function Down() {
+  return (
+    <Box
+      aria-hidden="true"
+      sx={{ display: { xs: 'flex', lg: 'none' }, alignItems: 'center', justifyContent: 'center', py: 1.2 }}
+    >
+      <Box
+        component="svg"
+        width="12"
+        height="34"
+        viewBox="0 0 12 34"
+        /* A flex child with align-items stretch ignores the width and height
+           attributes and fills the row, which turned a 12 by 34 connector
+           into a bar the height of the gap. */
+        sx={{ width: 12, height: 34, flexShrink: 0, '@keyframes runDown': { to: { strokeDashoffset: -18 } } }}
+      >
+        <path d="M6 0 V27" fill="none" stroke={LINE} strokeWidth="1.5" />
+        <path d="M1.5 26 L6 33 L10.5 26 z" fill={LINE} />
+        <Box
+          component="path"
+          d="M6 0 V27"
+          sx={{
+            fill: 'none',
+            stroke: RUN,
+            strokeWidth: 1.8,
+            strokeLinecap: 'round',
+            strokeDasharray: '5 13',
+            animation: 'runDown 1.1s linear infinite',
+            '@media (prefers-reduced-motion: reduce)': { animation: 'none', opacity: 0.45 },
+          }}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+/**
+ * A node on the diagram.
+ *
+ * The mark moved out of the far corner and into a chip beside the text,
+ * which is the difference between a watermark and a label.
+ */
+function Node({ tag, k, s, mark, tone, big, sx }) {
+  const ink = tone === 'ink';
+  const accent = tone === 'accent';
+  const surface = ink ? PANEL_INK : accent ? ACCENT : PANEL;
+  const head = ink ? '#FFFFFF' : accent ? '#9A3C00' : 'var(--text-heading)';
+  const body = ink ? 'rgba(255,255,255,0.62)' : accent ? 'rgba(154,60,0,0.8)' : 'var(--text-secondary)';
+
+  return (
+    <Box
+      sx={{
+        ...surface,
+        overflow: 'hidden',
+        px: { xs: 2, md: 2.3 },
+        py: { xs: 1.9, md: 2.1 },
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 1.8,
+        transition: 'transform .18s ease, box-shadow .18s ease',
+        '&:hover': { transform: 'translateY(-2px)' },
+        ...(ink
+          ? { boxShadow: `${surface.boxShadow}, 0 0 0 1px rgba(255,102,0,0.12)` }
+          : null),
+        ...sx,
+      }}
+    >
+      {mark && <Chip name={mark} tone={tone} />}
+      <Box sx={{ minWidth: 0, flex: 1 }}>
+        {tag && <Label onInk={ink} sx={{ display: 'block', mb: 0.8 }}>{tag}</Label>}
+        <Typography
+          sx={{
+            ...(big ? FIG : null),
+            fontSize: big ? { xs: '1.7rem', md: '2rem' } : { xs: '1rem', md: '1.06rem' },
+            fontWeight: big ? 600 : 700,
+            letterSpacing: '-0.025em',
+            lineHeight: 1.15,
+            color: head,
+          }}
+        >
+          {k}
+        </Typography>
+        {s && <Typography sx={{ mt: 0.8, fontSize: '0.84rem', lineHeight: 1.55, color: body }}>{s}</Typography>}
+      </Box>
     </Box>
   );
 }
@@ -231,11 +840,9 @@ function Statement({ onInk }) {
 /* ------------------------------------------------------------------ */
 
 export default function StakePage() {
-  /* Three versions of this page's words, switchable in the corner while they
-     are being chosen between. The structure, the figures and the drawing are
-     the same in all three: only the argument changes. */
-  const [version, setVersion] = useCopyVersion('heyopen.stake.copy', VERSIONS.length);
-  const C = VERSIONS[version];
+  /* Four versions of this page's words live in data/stakeCopy. D is the one
+     chosen; change the index to read the page in one of the others. */
+  const C = VERSIONS[3];
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
@@ -248,334 +855,500 @@ export default function StakePage() {
       </Head>
 
       <PageHeader />
-      <CopySwitch versions={VERSIONS} index={version} onChange={setVersion} />
 
+      {/* The sky behind the opening screen.
+          It was a radial wash of brand orange, which is the one thing every
+          other crypto page opens with. The painting does the same job, warm
+          at the edges and open in the middle, and the headline sits in the
+          open middle by design: the plate is positioned so the pale centre
+          of the sky lands behind the type.
+          Two scrims, not one. The vertical pass lifts the whole plate toward
+          the page colour so dark text keeps its contrast on a light painting;
+          the lower stop goes fully opaque so the image ends in the page
+          rather than on a cut edge. Decorative, so aria-hidden, and it never
+          takes a pointer. */}
       <Box
-        data-ambient-blur
         aria-hidden="true"
         sx={{
           position: 'absolute',
-          top: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: 1400,
-          height: 640,
-          background:
-            'radial-gradient(ellipse 72% 58% at 50% 0%, rgba(255, 102, 0, 0.15) 0%, rgba(255, 80, 0, 0.03) 52%, transparent 78%)',
+          inset: '0 0 auto 0',
+          height: { xs: 560, md: 820 },
+          backgroundImage:
+            'linear-gradient(180deg, rgba(248,249,250,0.42) 0%, rgba(248,249,250,0.5) 38%, rgba(248,249,250,0.86) 74%, var(--bg-page) 100%), url(/images/stake-sky.webp)',
+          backgroundSize: 'cover, cover',
+          backgroundPosition: 'center, center 32%',
+          backgroundRepeat: 'no-repeat',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      {/* ── Hero ─────────────────────────────────────────────────── */}
-      <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 }, position: 'relative', zIndex: 1 }}>
-        <Box component="section" sx={{ pt: { xs: 7, md: 12 }, pb: { xs: 7, md: 11 } }}>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: '1fr 0.92fr' },
-              gap: { xs: 5, md: 8 },
-              alignItems: 'center',
-            }}
-          >
-            <Reveal>
-              <Label sx={{ color: 'var(--brand-accent)' }}>{C.hero.eyebrow}</Label>
-              <Typography
-                component="h1"
-                sx={{
-                  mt: 2.5,
-                  fontSize: { xs: '2.8rem', sm: '3.6rem', md: '4.6rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.05em',
-                  lineHeight: 0.98,
-                  color: 'var(--text-heading)',
-                  textWrap: 'balance',
-                }}
-              >
-                {C.hero.title}
-              </Typography>
-              <Typography
-                sx={{
-                  mt: 3,
-                  fontSize: { xs: '1.05rem', md: '1.16rem' },
-                  lineHeight: 1.6,
-                  color: 'var(--text-secondary)',
-                  maxWidth: '48ch',
-                  textWrap: 'pretty',
-                }}
-              >
-                {C.hero.lede}
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4 }}>
-                <Button href={LINKS.stake} primary>
-                  Stake $OPEN
-                  <Box component="span" aria-hidden="true">→</Box>
-                </Button>
-                <Button href={LINKS.buy}>Buy $OPEN</Button>
-              </Box>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mt: 3.5 }}>
-                {[['Market data', LINKS.marketCap], ['Contract', LINKS.explorer]].map(([label, href]) => (
-                  <Box
-                    key={label}
-                    component="a"
-                    href={href}
-                    sx={{
-                      fontFamily: MONO,
-                      fontSize: '0.72rem',
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      color: 'var(--text-muted)',
-                      textDecoration: 'none',
-                      borderBottom: `1px solid ${RULE}`,
-                      pb: '3px',
-                      '&:hover': { color: 'var(--text-heading)', borderColor: 'var(--brand-accent)' },
-                    }}
-                  >
-                    {label}
-                  </Box>
-                ))}
-              </Box>
-            </Reveal>
+      {/* ── 1. What this is ───────────────────────────────────────── */}
+      <Section first sx={{ py: { xs: 6, md: 8 } }}>
+        <Reveal>
+          <Box sx={{ position: 'relative', zIndex: 1, maxWidth: 880, mx: 'auto', textAlign: 'center' }}>
+            {/* The subject of the headline, said once, in the sky.
 
-            <Reveal delay={120}>
-              <Statement />
-            </Reveal>
+                The sentence on this screen is "the gateway for unrestricted
+                AI" and it had no subject: a reader had to already know what
+                the page was about to know what was doing the gating. The
+                word sits behind and just above the line, soft enough to
+                belong to the painting rather than to the type, so the screen
+                reads $OPEN, the gateway for unrestricted AI, top to bottom.
+
+                Blurred rather than merely faint. A hard-edged ghost at this
+                size reads as a second headline someone forgot to delete; the
+                blur is what puts it behind the glass instead of on it.
+
+                Anchored to the headline, not to the section, and measured in
+                its own em. Hung off the section's centre it sat behind the
+                second line on a phone instead of above the first, because
+                the headline wraps there and the centre stops meaning the
+                same thing. `top: 0` is the top of the heading whatever the
+                heading does, the rise is a fraction of the word's own
+                height, and the blur is too, so the three stay in proportion
+                from 320px to a desktop. The size is capped against the
+                viewport for the same reason: at a fixed rem the word ran off
+                both edges of a phone and read as two orange smudges rather
+                than as a word. It wants to be about half the measure, not
+                all of it: at 15rem it filled the column and stopped reading
+                as something behind the headline.
+
+                Decorative, so it is hidden from the accessibility tree and
+                never takes a pointer. */}
+            <Box
+              component="span"
+              aria-hidden="true"
+              sx={{
+                position: 'absolute',
+                left: '50%',
+                top: 0,
+                transform: 'translate(-50%, -74%)',
+                zIndex: -1,
+                pointerEvents: 'none',
+                fontSize: 'min(14vw, 9.5rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.055em',
+                lineHeight: 1,
+                whiteSpace: 'nowrap',
+                color: 'var(--brand-accent)',
+                opacity: { xs: 0.2, md: 0.26 },
+                filter: 'blur(0.075em)',
+              }}
+            >
+              $OPEN
+            </Box>
+
+            {/* Sized to hold one line on a desktop. It is the page's only
+                headline and it is a name, so breaking it across two rows made
+                it read as a sentence that had run on. */}
+            <Typography
+              component="h1"
+              sx={{
+                fontSize: { xs: '2.1rem', sm: '2.6rem', md: '3.1rem' },
+                fontWeight: 700,
+                letterSpacing: '-0.04em',
+                lineHeight: 1.08,
+                color: 'var(--text-heading)',
+                textWrap: 'balance',
+              }}
+            >
+              {C.hero.title}
+            </Typography>
+
+            <Typography
+              sx={{
+                mt: { xs: 2.5, md: 3 },
+                fontSize: { xs: '1.05rem', md: '1.16rem' },
+                lineHeight: 1.65,
+                color: 'var(--text-secondary)',
+                maxWidth: '54ch',
+                mx: 'auto',
+                textWrap: 'pretty',
+              }}
+            >
+              {C.hero.lede}
+            </Typography>
+
+            {/* Stacked rather than side by side: at this width a centred pair
+                reads as one column of choices instead of a primary and an
+                afterthought. */}
+            <Box
+              sx={{
+                mt: { xs: 4, md: 5 },
+                mx: 'auto',
+                maxWidth: 300,
+                display: 'grid',
+                gap: 1.3,
+                '& a': { width: '100%', justifyContent: 'center' },
+              }}
+            >
+              <Button href={LINKS.stake} primary>Stake $OPEN</Button>
+              <Button href={LINKS.buy}>Buy $OPEN</Button>
+            </Box>
           </Box>
-        </Box>
+        </Reveal>
+      </Section>
 
-        {/* ── Three moves ────────────────────────────────────────── */}
-        <Box component="section" sx={{ pb: { xs: 7, md: 11 } }}>
-          <Reveal>
-            <Box sx={{ mb: { xs: 4, md: 6 } }}>
-              <Head2 eyebrow="How $OPEN works" title={C.howTitle} />
-            </Box>
-          </Reveal>
+      {/* ── 2. What one token does ───────────
+          Four square cards in a row, read left to right.
 
-          <Reveal delay={80}>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-                gap: { xs: 0, md: 5 },
-              }}
-            >
-              {HOW.map((step, i) => (
-                <Box
-                  key={step.n}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderTop: `2px solid ${INK}`,
-                    pt: { xs: 2.4, md: 3 },
-                    pb: { xs: 4, md: 0 },
-                  }}
-                >
-                  <Typography sx={{ ...FIG, fontSize: '0.78rem', fontWeight: 600, color: 'var(--brand-accent)', mb: 2 }}>
-                    {step.n}
-                  </Typography>
-                  <Typography
+          Two earlier attempts are worth not repeating. A scroll-stack
+          needed opaque cards, two and a half screens of travel to happen
+          in, and it still only worked with a cursor. Four wide rows stacked
+          downward read as a list and left the section with nothing to look
+          at. A row of squares is the one arrangement where all four are
+          taken in at once, which is what a set of benefits wants. */}
+      <Section ground="ink" sx={{ py: { xs: 8, md: 9.5 } }}>
+        {/* What the glass has to blur. Two blooms, warm and off-centre, so
+            the four panes do not all pick up the same flat tone. Behind the
+            content at z-index -1, which still paints above the section's own
+            background. Decorative, so it is hidden and takes no pointer. */}
+        <Box
+          aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: -1,
+            pointerEvents: 'none',
+            background:
+              'radial-gradient(44% 58% at 80% 14%, rgba(255,102,0,0.26) 0%, rgba(255,102,0,0.05) 46%, transparent 72%),' +
+              'radial-gradient(40% 54% at 14% 88%, rgba(255,140,60,0.14) 0%, transparent 70%)',
+          }}
+        />
+
+        <Reveal>
+          <Box sx={{ mb: { xs: 3.5, md: 3 } }}>
+            <SectionHead
+              eyebrow="The utility of $OPEN"
+              onInk
+              maxWidth={820}
+              title={
+                <>
+                  <Box component="span" sx={{ display: 'block' }}>One token.</Box>
+                  <Box component="span" sx={{ display: 'block' }}>More ways to benefit.</Box>
+                </>
+              }
+              lede="What a single staked position is worth, and what it opens up. Several of these are proposals rather than live features."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          {/* Eight cards, in the two groups they actually are.
+
+              Four of them carry a headline value and four do not, and every
+              attempt to pretend otherwise has failed in the same way. With
+              the value on top, the four titles that had one sat half an inch
+              below the four that did not, so only cards in the same row
+              could be compared. Pinned to the foot instead, the rule above
+              it appeared on half the cards and sat a different distance
+              below the copy in each, and the four without it had nothing
+              anchoring the slack at the bottom.
+
+              So the difference is labelled rather than hidden. Inside a
+              group every card now has the same anatomy, which is what makes
+              the alignment hold: same top line, same title height, same
+              rhythm down to the body.
+
+              The value goes back on top and keeps the accent. It is the
+              card's headline where there is one, and the title under it is
+              the category, which is the order a reader wants them in.
+
+              THE SLACK IN A SHORT CARD IS LEFT AT THE BOTTOM, unanchored
+              and therefore invisible. It only read as dead space when a
+              rule was sitting on it. */}
+          {[
+            ['What a stake is worth', BENEFITS.filter((b) => b.k)],
+            ['What a stake unlocks', BENEFITS.filter((b) => !b.k)],
+          ].map(([group, items], gi) => (
+            <Box key={group} sx={{ mt: gi ? { xs: 3.2, md: 3.4 } : 0 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: { xs: 1.8, md: 2 } }}>
+                <Label onInk sx={{ flexShrink: 0 }}>{group}</Label>
+                <Box aria-hidden="true" sx={{ flex: 1, height: '1px', backgroundColor: RULE_ON_INK }} />
+              </Box>
+
+              <Box
+                sx={{
+                  display: 'grid',
+                  /* Four across at lg, not md. Between 900 and 1199 four
+                     columns leave a 181px card: the titles wrap to two
+                     lines and "40% to 50% APY" clears the content box by
+                     two pixels, which a fallback face would overrun, and
+                     nowrap spills outside the card rather than wrapping.
+                     Two columns there give 354px and the problem is gone. */
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
+                  gap: { xs: 1.6, md: 2 },
+                }}
+              >
+                {items.map((b) => (
+                  <Box
+                    key={b.t}
                     sx={{
-                      fontSize: { xs: '1.45rem', md: '1.6rem' },
-                      fontWeight: 700,
-                      letterSpacing: '-0.03em',
-                      color: 'var(--text-heading)',
-                      mb: 1.4,
+                      ...GLASS,
+                      px: { xs: 2.4, md: 2.5 },
+                      py: { xs: 2.5, md: 2.5 },
+                      transition: 'transform .22s ease, box-shadow .22s ease',
+                      '&:hover': {
+                        transform: 'translateY(-3px)',
+                        boxShadow:
+                          'inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(255,255,255,0.06), 0 30px 56px -28px rgba(0,0,0,0.95)',
+                      },
                     }}
                   >
-                    {C.how[i].title}
-                  </Typography>
-                  <Typography
-                    sx={{ fontSize: '0.96rem', lineHeight: 1.65, color: 'var(--text-secondary)', mb: 3, flex: 1 }}
-                  >
-                    {C.how[i].body}
-                  </Typography>
-                  <Box>
-                    <Button href={step.href} small>
-                      {step.cta}
-                    </Button>
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          </Reveal>
-        </Box>
-      </Container>
+                    {b.k && (
+                      <Typography
+                        sx={{
+                          /* The longest of these is "40% to 50% APY" at
+                             198px. It has to clear the narrowest card the
+                             grid produces, which is why that grid only goes
+                             four across at lg. Shrinking the type instead
+                             does nothing: the card narrows with it and the
+                             ratio is unchanged. */
+                          fontSize: { xs: '1.5rem', md: '1.55rem' },
+                          fontWeight: 700,
+                          letterSpacing: '-0.035em',
+                          lineHeight: 1.05,
+                          /* Tabular, not FIG: FIG is the mono face and two
+                             of these four are phrases, not figures. */
+                          fontVariantNumeric: 'tabular-nums',
+                          whiteSpace: { md: 'nowrap' },
+                          color: 'var(--brand-accent)',
+                          mb: { xs: 1.4, md: 1.5 },
+                        }}
+                      >
+                        {b.k}
+                      </Typography>
+                    )}
 
-      {/* ── The yield, on ink ────────────────────────────────────── */}
-      <Box component="section" sx={{ backgroundColor: INK, position: 'relative', zIndex: 1 }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 } }}>
-          <Box sx={{ py: { xs: 8, md: 13 } }}>
-            <Reveal>
-              <Box sx={{ mb: { xs: 5, md: 7 } }}>
-                <Head2
-                  onInk
-                  eyebrow={C.yield.eyebrow}
-                  title={C.yield.title}
-                  lede={C.yield.lede}
-                  maxWidth={760}
-                />
-              </Box>
-            </Reveal>
-
-            {/* The deal, in two numbers, and then what it looks like on an
-                actual stake.
-             *
-             * This block used to be two matched paragraphs beside a repeat of
-             * the chart above it, which buried the proposition in prose and
-             * then said nothing new. A reader wants two things here: the worst
-             * case, and the case worth staking for. So the worst case is a
-             * number, the good case is a number, and the panel beside them
-             * works it through on a round figure, because a percentage is an
-             * abstraction and six hundred tokens is not. */}
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                gap: { xs: 5, md: 8 },
-                alignItems: 'center',
-                mb: { xs: 6, md: 9 },
-              }}
-            >
-              <Reveal>
-                <Box>
-                  <Box sx={{ pb: { xs: 3.5, md: 4 }, mb: { xs: 3.5, md: 4 }, borderBottom: `1px solid ${RULE_ON_INK}` }}>
-                    <Label onInk sx={{ color: 'var(--brand-accent)' }}>{C.yield.floorLabel}</Label>
                     <Typography
                       sx={{
-                        ...FIG,
-                        mt: 1.8,
-                        fontSize: { xs: '3.2rem', md: '4.4rem' },
-                        fontWeight: 600,
-                        lineHeight: 0.92,
-                        letterSpacing: '-0.045em',
+                        fontSize: { xs: '1.04rem', md: '1.06rem' },
+                        fontWeight: 750,
+                        letterSpacing: '-0.025em',
+                        lineHeight: 1.3,
                         color: '#FFFFFF',
                       }}
                     >
-                      {RATES.base}
+                      {b.t}
                     </Typography>
-                    <Typography
-                      sx={{ mt: 2, fontSize: '1rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.66)', maxWidth: '38ch' }}
-                    >
-                      {C.yield.floorBody}
+
+                    <Typography sx={{ mt: 0.9, fontSize: '0.91rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)' }}>
+                      {b.s}
                     </Typography>
                   </Box>
-
-                  <Box>
-                    <Label onInk>{C.yield.targetLabel}</Label>
-                    <Typography
-                      sx={{
-                        ...FIG,
-                        mt: 1.8,
-                        fontSize: { xs: '3.2rem', md: '4.4rem' },
-                        fontWeight: 600,
-                        lineHeight: 0.92,
-                        letterSpacing: '-0.045em',
-                        color: 'var(--brand-accent)',
-                      }}
-                    >
-                      {RATES.total}
-                    </Typography>
-                    <Typography
-                      sx={{ mt: 2, fontSize: '1rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.66)', maxWidth: '38ch' }}
-                    >
-                      {C.yield.targetBody}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Reveal>
-
-              <Reveal delay={120}>
-                <Box>
-                  <Box
-                    sx={{
-                      borderRadius: '4px',
-                      border: `1px solid ${RULE_ON_INK}`,
-                      backgroundColor: 'rgba(255,255,255,0.03)',
-                      px: { xs: 2.5, md: 3.5 },
-                      pt: { xs: 2.2, md: 2.6 },
-                      pb: { xs: 2.4, md: 3 },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: 2,
-                        pb: '14px',
-                        borderBottom: `1px solid ${RULE_ON_INK}`,
-                      }}
-                    >
-                      <Label onInk>Worked through</Label>
-                      <Label onInk>A year</Label>
-                    </Box>
-
-                    <Entry name="You stake" figure={`${EXAMPLE.stake} $OPEN`} onInk />
-                    <Entry name="The floor pays" figure={EXAMPLE.floorAdd} onInk />
-                    <Entry name="On plan, all in" figure={EXAMPLE.targetAdd} dashed onInk />
-                    <Entry name="You hold, on plan" figure={EXAMPLE.planTotal} total onInk />
-
-                    <Typography
-                      sx={{
-                        mt: '16px',
-                        fontSize: '0.84rem',
-                        lineHeight: 1.7,
-                        color: 'rgba(255,255,255,0.52)',
-                      }}
-                    >
-                      {C.yield.workedNote}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Reveal>
+                ))}
+              </Box>
             </Box>
+          ))}
+        </Reveal>
 
+        <Reveal delay={60}>
+          <Box
+            sx={{
+              mt: { xs: 3, md: 2.2 },
+              pt: { xs: 2.6, md: 2.2 },
+              borderTop: `1px solid ${RULE_ON_INK}`,
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: { xs: 2, md: 3 },
+            }}
+          >
+            <Typography
+              sx={{
+                flex: '1 1 340px',
+                minWidth: 0,
+                fontSize: { xs: '1.04rem', md: '1.16rem' },
+                fontWeight: 700,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.45,
+                color: '#FFFFFF',
+                textWrap: 'pretty',
+              }}
+            >
+              Earn rewards. Unlock premium AI. Explore the compute economy.
+            </Typography>
+            <Box sx={{ flexShrink: 0 }}>
+              <Button href={LINKS.stake} primary>
+                Stake $OPEN
+                <Box component="span" aria-hidden="true">→</Box>
+              </Button>
+            </Box>
+          </Box>
 
-            {/* Why the number is believable. A rate this far above the
-                alternatives is only worth printing next to the reason anyone
-                should believe it, which is the second thing both reference
-                pages do and the part most yield pages skip. */}
-            <Reveal delay={60}>
-              <Box sx={{ borderTop: `1px solid ${RULE_ON_INK}`, pt: { xs: 4, md: 5 } }}>
-                <Box sx={{ mb: { xs: 3, md: 4 } }}>
-                  <Label onInk sx={{ color: 'rgba(255,255,255,0.7)' }}>{C.yield.proofEyebrow}</Label>
-                </Box>
+          {/* The band is a target and the page has to say so somewhere a
+              reader reaches. It used to say it in the beyond-staking
+              section, which is hidden, leaving the closing disclaimer as
+              the only place. This is that line, under the card that prints
+              the figure. */}
+          <Typography
+            sx={{
+              mt: { xs: 2, md: 2.2 },
+              fontSize: '0.78rem',
+              lineHeight: 1.65,
+              color: 'rgba(255,255,255,0.42)',
+            }}
+          >
+            The {RATES.total} remains a strategy target, not a guaranteed additional staking
+            payout.
+          </Typography>
+        </Reveal>
+      </Section>
+
+      {/* ── 3. Where the money actually comes from ───────
+          The section above lists what a holder gets. This is the other half
+          of that promise: the businesses the gets are paid out of. It
+          follows immediately because a reader who has just been shown a
+          rate and a buyback is owed the answer to "funded by what".
+
+          The ground stays light, because the section above it is ink.
+          THE CARDS DO NOT: they are ink, four in a row, each opening on an
+          icon. Dark cards on a light ground give the orange somewhere to
+          sit, and the light gutter around them is what keeps this section
+          from merging with the ink band above.
+
+          THE HEADLINE COUNTS THESE CARDS OUT LOUD. "Four ways" is the
+          number of cards below it, so neither can change alone.
+
+          ICONS, AFTER TWO ATTEMPTS AT SOMETHING CLEVERER. First a
+          generated pattern per card, then the same generator drawing
+          nameable objects. Both were decoration a reader had to decode,
+          and the argument for them — that they were forms rather than
+          icons — was a distinction that only mattered to whoever wrote
+          it. An icon is read without being asked.
+
+          This is not the thing that was thrown out of the section above.
+          That was a row of small tiles repeated above four cards that were
+          already carrying a figure each. Here the icon is the only mark on
+          the card and the first thing in it.
+
+          The kind still sits on a rule at the foot of every card, pushed
+          there rather than following the copy, so all four line up however
+          long the description above them runs. */}
+      <Section sx={{ py: { xs: 7, md: 9 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
+            <SectionHead
+              eyebrow="Revenue, not speculation"
+              maxWidth={820}
+              title={
+                <>
+                  Four ways to generate{' '}
+                  <Box component="span" sx={{ color: 'var(--brand-accent)' }}>real revenue.</Box>
+                </>
+              }
+              lede="Not all revenue needs to come from speculation. The ecosystem is designed around payments for useful products and financial services."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box
+            sx={{
+              display: 'grid',
+              /* One row of four at lg. The cards carry a mark now and are
+                 taller than they are wide, and four portraits in a row is
+                 the arrangement that reads as a set. Two up to there: at md
+                 a quarter of the container is 264px, which crops the mark
+                 to a stripe and wraps every title. */
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' },
+              gap: { xs: 1.8, md: 2.2 },
+            }}
+          >
+            {REVENUE.map(([name, body, kind, mark]) => (
+              <Box
+                key={name}
+                sx={{
+                  ...PANEL_INK,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  px: { xs: 2.2, md: 2.4 },
+                  py: { xs: 2.4, md: 2.6 },
+                  transition: 'transform .22s ease, box-shadow .22s ease',
+                  '&:hover': {
+                    transform: 'translateY(-3px)',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14), 0 34px 60px -30px rgba(11,15,26,0.7)',
+                  },
+                }}
+              >
+                {/* Larger than the shared Chip, which is 38px and built for
+                    sitting beside a line of text. Here it is the first
+                    thing in the card and has the width of the card to
+                    itself, so it is sized to be looked at. */}
                 <Box
                   sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-                    gap: { xs: 3, md: 6 },
+                    width: 54,
+                    height: 54,
+                    flexShrink: 0,
+                    borderRadius: '15px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'var(--brand-accent)',
+                    backgroundColor: 'rgba(255,102,0,0.12)',
+                    border: '1px solid rgba(255,102,0,0.26)',
                   }}
                 >
-                  {PROOF.map(([title, body]) => (
-                    <Box key={title}>
-                      <Typography
-                        sx={{
-                          fontSize: '1.02rem',
-                          fontWeight: 700,
-                          letterSpacing: '-0.02em',
-                          color: '#FFFFFF',
-                          mb: 1.2,
-                        }}
-                      >
-                        {title}
-                      </Typography>
-                      <Typography sx={{ fontSize: '0.92rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.6)' }}>
-                        {body}
-                      </Typography>
-                    </Box>
-                  ))}
+                  <Mark name={mark} size={27} />
+                </Box>
+
+                <Typography
+                  sx={{
+                    mt: { xs: 2, md: 2.2 },
+                    fontSize: { xs: '1.06rem', md: '1.1rem' },
+                    fontWeight: 750,
+                    letterSpacing: '-0.025em',
+                    lineHeight: 1.3,
+                    color: '#FFFFFF',
+                  }}
+                >
+                  {name}
+                </Typography>
+
+                <Typography sx={{ mt: 1, fontSize: '0.9rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)' }}>
+                  {body}
+                </Typography>
+
+                <Box sx={{ mt: 'auto', pt: { xs: 1.8, md: 2 } }}>
+                  <Typography
+                    sx={{
+                      pt: { xs: 1.4, md: 1.6 },
+                      borderTop: `1px solid ${RULE_ON_INK}`,
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      letterSpacing: '-0.01em',
+                      color: 'var(--brand-accent)',
+                    }}
+                  >
+                    {kind}
+                  </Typography>
                 </Box>
               </Box>
-            </Reveal>
+            ))}
           </Box>
-        </Container>
-      </Box>
+        </Reveal>
+      </Section>
 
-      <Container maxWidth="lg" sx={{ px: { xs: 2.5, sm: 4, md: 6 }, position: 'relative', zIndex: 1 }}>
-        {/* ── Stake to unlock Pro ────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
+      {/* ── 4. And what it unlocks. HIDDEN ────────────
+          Reverted to the design it had before the darker pass, then hidden.
+          The ink band with the benefits in a panel and the threshold as a
+          tinted strip at its foot, exactly as it was.
+
+          HIDDEN ON REQUEST. Nothing is deleted. The markup sits behind a
+          false branch and PRO is still defined, so bringing it back is
+          deleting the two lines that wrap it, and what comes back is the
+          old design rather than the rebuilt one. Commenting it out would
+          not work: the markup carries comments of its own and those do not
+          nest, so the first inner terminator would close the wrapper and
+          spill the rest of the file onto the page as text.
+
+          Note what leaves with it. The hundred staked is the single
+          condition the Pro offer turns on, and section two now mentions Pro
+          only as one of four benefits. If this stays hidden, the threshold
+          is stated nowhere on the page. */}
+      {false && (
+        <Section ground="ink" sx={{ py: { xs: 8, md: 10 } }}>
           <Box
             sx={{
               display: 'grid',
@@ -586,10 +1359,13 @@ export default function StakePage() {
           >
             <Reveal>
               <Box>
-                <Head2
-                  eyebrow={C.pro.eyebrow}
-                  title={C.pro.title}
-                  lede={C.pro.lede}
+                <SectionHead
+                  eyebrow="Exclusive staking benefits"
+                  tier="minor"
+                  onInk
+                  maxWidth={480}
+                  title="Stake $OPEN. Unlock Hey Open Pro."
+                  lede="Stake 100 $OPEN to unlock Hey Open Pro. Unlimited access to supported text and image models, premium AI features, and no separate subscription fee."
                 />
                 <Box sx={{ mt: 4 }}>
                   <Button href={LINKS.stake} primary>
@@ -601,50 +1377,748 @@ export default function StakePage() {
             </Reveal>
 
             <Reveal delay={100}>
-              <Box
-                sx={{
-                  borderRadius: '4px',
-                  border: `1px solid ${RULE}`,
-                  backgroundColor: 'var(--bg-card)',
-                  boxShadow: '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -30px rgba(11,15,26,.20)',
-                  px: { xs: 2.5, md: 3.5 },
-                  pt: { xs: 2.2, md: 2.6 },
-                  pb: { xs: 2.4, md: 3 },
-                }}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 2,
-                    pb: '14px',
-                    borderBottom: `1px solid ${RULE}`,
-                  }}
-                >
-                  <Label>Pro</Label>
-                  <Label>{RATES.threshold} staked</Label>
+              <Box>
+                <Box sx={{ ...PANEL_INK, overflow: 'hidden' }}>
+                  <Box sx={{ px: { xs: 2.5, md: 3.2 }, py: { xs: 2.4, md: 2.8 } }}>
+                    {PRO.map(([name, body], i) => (
+                      <Box
+                        key={name}
+                        sx={{ pt: i ? 1.8 : 0, mt: i ? 1.8 : 0, borderTop: i ? `1px solid ${RULE_ON_INK}` : 'none' }}
+                      >
+                        <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
+                          {name}
+                        </Typography>
+                        <Typography sx={{ mt: 0.5, fontSize: '0.88rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.58)' }}>
+                          {body}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+
+                  <Box
+                    sx={{
+                      px: { xs: 2.5, md: 3.2 },
+                      py: { xs: 1.8, md: 2 },
+                      borderTop: `1px solid ${RULE_ON_INK}`,
+                      backgroundColor: 'rgba(255,102,0,0.11)',
+                    }}
+                  >
+                    <Typography
+                      sx={{ ...FIG, fontSize: { xs: '0.92rem', md: '1rem' }, fontWeight: 600, letterSpacing: '-0.005em', color: '#FFB071' }}
+                    >
+                      {RATES.threshold} staked = Hey Open Pro unlocked
+                    </Typography>
+                  </Box>
                 </Box>
-                {PRO.map(([name, figure]) => (
-                  <Entry key={name} name={name} figure={figure} />
-                ))}
-                <Typography sx={{ mt: '14px', fontSize: '0.84rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
-                  {C.pro.note}
+
+                <Typography sx={{ mt: 1.8, fontSize: '0.8rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.46)' }}>
+                  Access remains active while staking requirements and applicable usage policies are
+                  met.
                 </Typography>
               </Box>
             </Reveal>
           </Box>
-        </Box>
+        </Section>
+      )}
 
+      {/* ── 5. And what sits on top of the rate. HIDDEN ─────────────────────
+          Two figures, side by side, because that is the only honest way to
+          show them: one is owed and the other is aimed at. They are set at
+          the same size so neither looks like the headline, and the one that
+          is a target takes the accent and the tint, so a reader can see
+          which is which before reading a word.
 
-        {/* ── Two things to stake ────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
+          The qualification sits next to the button that acts on it, not at
+          the foot of the page. A reader who clicks has already read it.
+
+          HIDDEN ON REQUEST. Nothing is deleted: the markup below is behind
+          a false branch, and STRATEGY and RATES.base_short are still
+          defined above, so bringing it back is deleting the two lines that
+          wrap it. Commenting the block out would not work: the section
+          carries JSX comments of its own and those do not nest, so the
+          first inner terminator would close the wrapper and spill the rest
+          of the file onto the page as text. Do not write a comment
+          terminator inside a comment, which is how this very note shipped
+          itself to production once already.
+
+          Note what leaves with it. This was the only place the page set the
+          6% against the 40 to 50 band and said in as many words that the
+          band is a strategy target rather than a staking return. The
+          closing disclaimer still says it, and the band is still printed
+          there, but it is now the only place a reader meets the
+          distinction. */}
+      {false && (
+        <Section
+          ground="linear-gradient(180deg, #F2F5F9 0%, #EBF0F5 46%, #EFF3F7 100%)"
+          sx={{ py: { xs: 7, md: 9 } }}
+        >
           <Reveal>
-            <Box sx={{ mb: { xs: 4, md: 6 } }}>
-              <Head2
-                eyebrow={C.stakes.eyebrow}
-                title={C.stakes.title}
-                lede={C.stakes.lede}
+            <Box sx={{ mb: { xs: 3.5, md: 4 } }}>
+              <SectionHead
+                eyebrow="Beyond staking"
+                tier="minor"
+                title="6% from staking. More from the strategy."
+                lede="Beyond the base staking rewards, Hey Open is developing an enterprise compute strategy targeting 40% to 50% returns through compute procurement, prepaid contracts, and options-based risk management."
+              />
+            </Box>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <Box
+              sx={{
+                ...PANEL,
+                overflow: 'hidden',
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+              }}
+            >
+              {[
+                [RATES.base_short, 'Base annual staking rewards', false],
+                [RATES.total, 'Target compute strategy returns', true],
+              ].map(([fig, label, lead], i) => (
+                <Box
+                  key={label}
+                  sx={{
+                    px: { xs: 2.4, md: 3.4 },
+                    py: { xs: 2.6, md: 3 },
+                    borderLeft: { sm: i === 0 ? 'none' : `1px solid ${RULE}` },
+                    borderTop: { xs: i === 0 ? 'none' : `1px solid ${RULE}`, sm: 'none' },
+                    background: lead ? 'rgba(255,102,0,0.05)' : 'transparent',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      ...FIG,
+                      fontSize: { xs: '2.4rem', md: '3rem' },
+                      fontWeight: 600,
+                      letterSpacing: '-0.045em',
+                      lineHeight: 1,
+                      color: lead ? 'var(--brand-accent)' : 'var(--text-heading)',
+                    }}
+                  >
+                    {fig}
+                  </Typography>
+                  <Typography sx={{ mt: 1.2, fontSize: '0.92rem', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+                    {label}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          </Reveal>
+
+          <Reveal delay={60}>
+            <Box sx={{ mt: { xs: 3.5, md: 4 } }}>
+              <Label sx={{ display: 'block', mb: 2.2 }}>How the strategy works</Label>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2.4, md: 4 } }}>
+                {STRATEGY.map(([mark, name, body], i) => (
+                  <Box
+                    key={name}
+                    sx={{ pl: { md: i === 0 ? 0 : 3.6 }, borderLeft: { md: i === 0 ? 'none' : `1px solid ${RULE}` } }}
+                  >
+                    <Box sx={{ color: 'var(--brand-accent)', mb: 1.4 }}>
+                      <Mark name={mark} size={22} />
+                    </Box>
+                    <Typography sx={{ fontSize: '1.02rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
+                      {name}
+                    </Typography>
+                    <Typography sx={{ mt: 0.7, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                      {body}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Reveal>
+
+          <Reveal delay={60}>
+            <Box
+              sx={{
+                mt: { xs: 3, md: 3.5 },
+                pt: { xs: 2.6, md: 3 },
+                borderTop: `1px solid ${RULE}`,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: { xs: 2, md: 3 },
+              }}
+            >
+              <Box sx={{ flexShrink: 0 }}>
+                <Button href="/enterprise" primary>Explore the return strategy</Button>
+              </Box>
+              <Typography sx={{ flex: '1 1 340px', minWidth: 0, fontSize: '0.78rem', lineHeight: 1.65, color: 'var(--text-muted)' }}>
+                The {RATES.total} figure is a strategy target, not a guaranteed staking return.
+                Actual results and any distribution to stakers depend on the programme&rsquo;s
+                published terms.
+              </Typography>
+            </Box>
+          </Reveal>
+        </Section>
+      )}
+
+      {/* ── 6. Where the stake actually works ───────────────────────── */}
+      <Section sx={{ py: { xs: 7, md: 10 } }}>
+        <Reveal>
+          <Box sx={{ mb: { xs: 4.5, md: 6 } }}>
+            <SectionHead
+              eyebrow="Where the stake works"
+              tier="minor"
+              title="Where the work actually happens."
+              lede="Your $OPEN does not leave your wallet. What it backs is deployed across three places, and two different kinds of thing come back: the rate the staking contract owes you either way, and whatever the strategy makes on top of it."
+            />
+          </Box>
+        </Reveal>
+
+        <Reveal delay={80}>
+          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, alignItems: 'stretch', mb: { xs: 5, md: 6 } }}>
+            <Box sx={{ display: 'flex', flex: { lg: '0 1 240px' }, minWidth: 0 }}>
+              <Node
+                tag="The stake"
+                k="Staked $OPEN"
+                s="Locked as collateral, still yours, visible the whole time. You can unstake."
+                mark="lock"
+                tone="accent"
+                sx={{ flex: 1 }}
+              />
+            </Box>
+
+            <Fan dir="out" />
+            <Down />
+
+            <Box
+              sx={{
+                flex: { lg: '1 1 0' },
+                minWidth: 0,
+                display: 'grid',
+                gridTemplateRows: { lg: 'repeat(3, 1fr)' },
+                gap: `${GAP}px`,
+              }}
+            >
+              {DEPLOY.map((d) => (
+                <Node key={d.k} k={d.k} s={d.s} mark={d.mark} />
+              ))}
+            </Box>
+
+            <Fan dir="in" />
+            <Down />
+
+            <Box
+              sx={{
+                flex: { lg: '1 1 0' },
+                minWidth: 0,
+                display: 'grid',
+                gridTemplateRows: { lg: 'repeat(2, 1fr)' },
+                gap: `${GAP}px`,
+              }}
+            >
+              {RETURNS.map((r) => (
+                <Node key={r.tag} tag={r.tag} k={r.k} s={r.s} mark={r.mark} tone={r.tone} big={r.big} />
+              ))}
+            </Box>
+          </Box>
+        </Reveal>
+
+        <Reveal delay={60}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+              gap: { xs: 3, md: 5 },
+              pt: { xs: 4, md: 5 },
+              borderTop: `1px solid ${RULE}`,
+            }}
+          >
+            {PROOF.map(([title, body]) => (
+              <Box key={title}>
+                <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 0.8 }}>
+                  {title}
+                </Typography>
+                <Typography sx={{ fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>{body}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Reveal>
+      </Section>
+
+      {/* ── 7. The business behind all of it. HIDDEN ──────────
+          The ink card with its own light, the three glass claims and the
+          way through to /enterprise. Replaced by the token policy section
+          below, which answers a question this one only gestured at.
+
+          HIDDEN ON REQUEST. Nothing is deleted and ECONOMY is still
+          defined, so bringing it back is deleting the two lines that wrap
+          it. A comment wrapper would not work here: the markup carries
+          comments of its own and those do not nest.
+
+          Note what leaves with it. This was the page's only link to
+          /enterprise, and that page is not in the navigation. With this
+          hidden, /enterprise is reachable only by typing the address. */}
+      {false && (
+        <Section sx={{ py: { xs: 7, md: 9 } }}>
+          <Reveal>
+            <Box
+              sx={{
+                ...PANEL_INK,
+                position: 'relative',
+                overflow: 'hidden',
+                borderRadius: '26px',
+                px: { xs: 2.6, md: 5 },
+                py: { xs: 3.6, md: 4.6 },
+              }}
+            >
+              <Box
+                aria-hidden="true"
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: 'none',
+                  background:
+                    'radial-gradient(ellipse 60% 78% at 86% 0%, rgba(255,102,0,0.2) 0%, rgba(255,102,0,0.05) 44%, transparent 70%)',
+                }}
+              />
+
+              <Box sx={{ position: 'relative', zIndex: 1 }}>
+                <Label onInk sx={{ display: 'block', mb: 1.8, color: 'var(--brand-accent)' }}>
+                  The business behind $OPEN
+                </Label>
+                <Typography
+                  component="h2"
+                  sx={{
+                    maxWidth: 640,
+                    fontSize: { xs: '1.85rem', sm: '2.25rem', md: '2.6rem' },
+                    fontWeight: 700,
+                    letterSpacing: '-0.04em',
+                    lineHeight: 1.06,
+                    color: '#FFFFFF',
+                  }}
+                >
+                  <Box component="span" sx={{ display: 'block' }}>Real AI demand.</Box>
+                  <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
+                    A stronger $OPEN economy.
+                  </Box>
+                </Typography>
+
+                <Typography
+                  sx={{
+                    mt: { xs: 2, md: 2.4 },
+                    maxWidth: 620,
+                    fontSize: { xs: '0.96rem', md: '1.02rem' },
+                    lineHeight: 1.7,
+                    color: 'rgba(255,255,255,0.62)',
+                    textWrap: 'pretty',
+                  }}
+                >
+                  Hey Open powers Custom Branded AI products for enterprises while managing compute
+                  costs through options-based strategies. As businesses scale, infrastructure usage
+                  drives commercial activity across the ecosystem.
+                </Typography>
+
+                <Box
+                  sx={{
+                    mt: { xs: 3, md: 3.6 },
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                    gap: { xs: 1.6, md: 2 },
+                  }}
+                >
+                  {ECONOMY.map(([mark, name, body]) => (
+                    <Box
+                      key={name}
+                      sx={{
+                        borderRadius: '16px',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        background:
+                          'linear-gradient(180deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.022) 100%)',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08)',
+                        px: { xs: 2, md: 2.3 },
+                        py: { xs: 2, md: 2.3 },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: '12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'var(--brand-accent)',
+                          backgroundColor: 'rgba(255,102,0,0.13)',
+                          border: '1px solid rgba(255,102,0,0.3)',
+                        }}
+                      >
+                        <Mark name={mark} size={20} />
+                      </Box>
+                      <Typography
+                        sx={{
+                          mt: 1.8,
+                          fontSize: { xs: '1.02rem', md: '1.06rem' },
+                          fontWeight: 700,
+                          letterSpacing: '-0.025em',
+                          lineHeight: 1.25,
+                          color: '#FFFFFF',
+                        }}
+                      >
+                        {name}
+                      </Typography>
+                      <Typography sx={{ mt: 0.8, fontSize: '0.89rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.56)' }}>
+                        {body}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+
+                <Box
+                  sx={{
+                    mt: { xs: 2.8, md: 3.4 },
+                    pt: { xs: 2.2, md: 2.6 },
+                    borderTop: `1px solid ${RULE_ON_INK}`,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    gap: 2,
+                  }}
+                >
+                  <Typography sx={{ flex: '1 1 300px', minWidth: 0, fontSize: '0.9rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
+                    How enterprise revenue, compute protection and $OPEN economics work together.
+                  </Typography>
+
+                  <Box
+                    component="a"
+                    href="/enterprise"
+                    sx={{
+                      flexShrink: 0,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      px: '22px',
+                      py: '13px',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(255,255,255,0.24)',
+                      backgroundColor: 'rgba(255,255,255,0.06)',
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      letterSpacing: '-0.015em',
+                      color: '#FFFFFF',
+                      textDecoration: 'none',
+                      transition: 'background-color .18s ease, border-color .18s ease, transform .18s ease',
+                      '&:hover': {
+                        backgroundColor: 'var(--brand-accent)',
+                        borderColor: 'var(--brand-accent)',
+                        transform: 'translateY(-1px)',
+                      },
+                    }}
+                  >
+                    Explore the $OPEN economy
+                    <Box component="span" aria-hidden="true" sx={{ opacity: 0.75 }}>&#8599;</Box>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Reveal>
+        </Section>
+      )}
+
+      {/* ── 8. What the business would do with the surplus ────
+          Replaces the business card above it. That one said there was a
+          business and pointed at another page; this one answers the
+          question a holder actually has, which is what happens to the
+          money once the business has it.
+
+          Words left, figure right. The figure is the headline drawn:
+          revenue climbing as a curve because it accrues continuously,
+          supply coming down in steps because a burn is an event rather
+          than a drift. They cross in the middle, which is the whole claim
+          and needs no caption to land.
+
+          The four numbered policy steps from the reference are not here on
+          purpose. Each one is a commitment about treasury mechanics, and
+          none of them is settled in this repo.
+
+          No values and no figures anywhere. What the business earns and
+          what it would buy back are unknown, and a number here would read
+          as a projection. The gridlines and the ticks carry no scale for
+          the same reason: they are there to measure the shape against, not
+          to be read off.
+
+          THE HYPOTHETICAL BADGE AND THE ILLUSTRATIVE NOTE WERE REMOVED ON
+          REQUEST. What still frames this as a proposal is the eyebrow,
+          "The proposed token policy", and the word "would" in the lede.
+          That is the whole of it. A reader who takes in the headline and
+          the chart without reading the eyebrow now sees revenue rising and
+          supply falling with nothing on the card saying it has not
+          happened. THAT TRADE HAS NOT BEEN REVIEWED. */}
+      <Section sx={{ py: { xs: 7, md: 9 } }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', lg: 'row' },
+            alignItems: { lg: 'center' },
+            gap: { xs: 4, lg: 7 },
+          }}
+        >
+          {/* 440, not 400. "Supply can shrink." measures 406px at the 48px
+              the headline uses at lg, so a 400 column breaks it after
+              "Supply" and orphans two words onto a second line. */}
+          <Box sx={{ flex: { lg: '0 1 440px' }, minWidth: 0 }}>
+            <Reveal>
+              <SectionHead
+                eyebrow="The proposed token policy"
+                maxWidth="100%"
+                title={
+                  <>
+                    <Box component="span" sx={{ display: 'block' }}>Revenue grows.</Box>
+                    <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
+                      Supply can shrink.
+                    </Box>
+                  </>
+                }
+                lede="As Hey Open generates revenue, the treasury would fund $OPEN buybacks and permanent on-chain burns."
+              />
+            </Reveal>
+          </Box>
+
+          <Box sx={{ flex: { lg: '1 1 0' }, minWidth: 0, width: '100%' }}>
+            <Reveal delay={100}>
+              <Box
+                sx={{
+                  ...PANEL,
+                  px: { xs: 2.2, md: 3.2 },
+                  py: { xs: 2.4, md: 2.8 },
+                }}
+              >
+              {/* The crossover label is HTML over the top rather than SVG
+                  text. This chart is about 300 units wide on a phone and
+                  700 on a desktop; anything measured in user units doubles
+                  across that range. Its position is a percentage worked out
+                  from the solved crossing and the viewBox, so the label and
+                  the marker cannot drift apart. */}
+              <Box sx={{ position: 'relative' }}>
+                <Box
+                  component="svg"
+                  viewBox={`0 0 ${POLICY_VIEW_W} ${POLICY_VIEW_H}`}
+                  sx={{ width: '100%', display: 'block' }}
+                >
+                  <defs>
+                    <linearGradient id="policyRise" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgba(255,102,0,0.22)" />
+                      <stop offset="100%" stopColor="rgba(255,102,0,0.02)" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* The frame the shape is read against. Four rules and a
+                      tick under every step: enough structure to see how far
+                      a line has travelled, and no number to read it as. */}
+                  {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+                    const y = POLICY_TOP + ((POLICY_BASE - POLICY_TOP) / 8) * i;
+                    return (
+                      <line
+                        key={y}
+                        x1={POLICY_X0}
+                        y1={y}
+                        x2={POLICY_X1}
+                        y2={y}
+                        stroke={i % 2 ? 'rgba(15,23,42,0.035)' : 'rgba(15,23,42,0.07)'}
+                        strokeWidth="1"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    );
+                  })}
+
+                  {/* the axis the whole plot hangs off */}
+                  <line
+                    x1={POLICY_X0}
+                    y1={POLICY_TOP}
+                    x2={POLICY_X0}
+                    y2={POLICY_BASE}
+                    stroke="rgba(15,23,42,0.16)"
+                    strokeWidth="1"
+                    vectorEffect="non-scaling-stroke"
+                  />
+
+                  {POLICY_SUPPLY.map(([x]) => (
+                    <line
+                      key={`t${x}`}
+                      x1={x}
+                      y1={POLICY_BASE}
+                      x2={x}
+                      y2={POLICY_BASE + 4}
+                      stroke="rgba(15,23,42,0.18)"
+                      strokeWidth="1"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+
+                  <path d={`${POLICY_LINE} L${POLICY_X1} ${POLICY_BASE} L${POLICY_X0} ${POLICY_BASE} Z`} fill="url(#policyRise)" />
+
+                  {/* supply, stepping down: a burn is an event, not a drift */}
+                  <path
+                    d={POLICY_SUPPLY_PATH}
+                    fill="none"
+                    stroke="#334155"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+
+                  {/* one marker per burn, on the tread it lands on */}
+                  {POLICY_BURNS.map(([x, y]) => (
+                    <circle
+                      key={`b${x}`}
+                      cx={x}
+                      cy={y}
+                      r="2.8"
+                      fill="#FFFFFF"
+                      stroke="#334155"
+                      strokeWidth="1.6"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+
+                  <path
+                    d={POLICY_LINE}
+                    fill="none"
+                    stroke="var(--brand-accent)"
+                    strokeWidth="2.4"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                  />
+
+                  {POLICY_CROSS && (
+                    <>
+                      <line
+                        x1={POLICY_CROSS[0]}
+                        y1={POLICY_CROSS[1]}
+                        x2={POLICY_CROSS[0]}
+                        y2={POLICY_BASE}
+                        stroke="rgba(255,102,0,0.4)"
+                        strokeWidth="1"
+                        strokeDasharray="3 3"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                      <circle
+                        cx={POLICY_CROSS[0]}
+                        cy={POLICY_CROSS[1]}
+                        r="4.2"
+                        fill="#FFFFFF"
+                        stroke="var(--brand-accent)"
+                        strokeWidth="2.2"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    </>
+                  )}
+
+                  <line
+                    x1={POLICY_X0}
+                    y1={POLICY_BASE}
+                    x2={POLICY_X1}
+                    y2={POLICY_BASE}
+                    stroke="rgba(15,23,42,0.16)"
+                    strokeWidth="1"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </Box>
+
+                {/* Period numbers, placed off the same tick positions the
+                    SVG draws, so a label can never sit between two ticks.
+                    They are a sequence and not a calendar: nothing here
+                    claims a quarter, a month or a date. */}
+                {POLICY_SUPPLY.map(([x], i) => (
+                  <Typography
+                    key={`l${x}`}
+                    component="div"
+                    aria-hidden="true"
+                    sx={{
+                      position: 'absolute',
+                      left: `${(x / POLICY_VIEW_W) * 100}%`,
+                      top: `${(POLICY_BASE / POLICY_VIEW_H) * 100}%`,
+                      transform: 'translateX(-50%)',
+                      mt: '7px',
+                      pointerEvents: 'none',
+                      fontFamily: MONO,
+                      fontSize: '0.56rem',
+                      fontWeight: 600,
+                      letterSpacing: '0.06em',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    {String(i + 1).padStart(2, '0')}
+                  </Typography>
+                ))}
+
+                {POLICY_CROSS && (
+                  <Typography
+                    component="div"
+                    sx={{
+                      position: 'absolute',
+                      left: `${(POLICY_CROSS[0] / POLICY_VIEW_W) * 100}%`,
+                      top: `${(POLICY_CROSS[1] / POLICY_VIEW_H) * 100}%`,
+                      transform: 'translate(-50%, -100%)',
+                      mt: '-10px',
+                      whiteSpace: 'nowrap',
+                      pointerEvents: 'none',
+                      fontFamily: MONO,
+                      fontSize: '0.6rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: 'var(--brand-accent)',
+                    }}
+                  >
+                    Crossover
+                  </Typography>
+                )}
+              </Box>
+
+              <Box sx={{ mt: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: { xs: 1.4, md: 2.4 } }}>
+                {[['Revenue', 'var(--brand-accent)'], ['Supply', '#334155']].map(([k, c]) => (
+                  <Box key={k} sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
+                    <Box aria-hidden="true" sx={{ width: '16px', height: '0px', flexShrink: 0, borderTop: `2px solid ${c}` }} />
+                    <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{k}</Typography>
+                  </Box>
+                ))}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.9 }}>
+                  <Box
+                    aria-hidden="true"
+                    sx={{
+                      width: '9px',
+                      height: '9px',
+                      flexShrink: 0,
+                      borderRadius: '50%',
+                      backgroundColor: '#FFFFFF',
+                      border: '1.6px solid #334155',
+                    }}
+                  />
+                  <Typography sx={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Burn</Typography>
+                </Box>
+              </Box>
+              </Box>
+            </Reveal>
+          </Box>
+        </Box>
+      </Section>
+
+      {/* ── 9. What that does to the supply. HIDDEN ──────────
+          The fixed supply figure, the three buyback and burn mechanics and
+          the row of reference links.
+
+          HIDDEN ON REQUEST. Nothing is deleted and TOKENOMICS, RATES.supply
+          and LinkChips are all still defined, so it is two lines to bring
+          back.
+
+          Note what leaves with it. The supply figure is stated nowhere else
+          on the page, and this section held the only links to /token, to
+          market data and to the contract. LinkChips is now unused. */}
+      {false && (
+        <Section sx={{ py: { xs: 7, md: 9 } }}>
+          <Reveal>
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              <SectionHead
+                eyebrow="$OPEN tokenomics"
+                tier="minor"
+                title="Less supply. Built around real usage."
+                lede="Hey Open's proposed buyback-and-burn mechanism connects available net revenue to $OPEN purchases and permanent token burns."
               />
             </Box>
           </Reveal>
@@ -653,212 +2127,191 @@ export default function StakePage() {
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                gap: { xs: 2.5, md: 3 },
+                gridTemplateColumns: { xs: '1fr', md: '0.8fr 1.2fr' },
+                gap: { xs: 3, md: 6 },
+                alignItems: 'center',
               }}
             >
-              {STAKES.map((s, i) => (
-                <Box
-                  key={s.token}
+              <Box sx={{ ...ACCENT, px: { xs: 2.6, md: 3.2 }, py: { xs: 3, md: 3.6 } }}>
+                <Label sx={{ color: '#9A3C00' }}>Supply</Label>
+                <Typography
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderRadius: '4px',
-                    border: `1px solid ${s.lead ? 'rgba(255,102,0,0.4)' : RULE}`,
-                    backgroundColor: 'var(--bg-card)',
-                    boxShadow: s.lead
-                      ? '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -28px rgba(255,102,0,.3)'
-                      : '0 1px 2px rgba(11,15,26,.04), 0 24px 56px -32px rgba(11,15,26,.18)',
-                    px: { xs: 2.5, md: 3.5 },
-                    pt: { xs: 2.4, md: 3 },
-                    pb: { xs: 2.8, md: 3.5 },
+                    ...FIG,
+                    mt: 1.8,
+                    fontSize: { xs: '2.8rem', md: '3.4rem' },
+                    fontWeight: 600,
+                    lineHeight: 0.95,
+                    letterSpacing: '-0.04em',
+                    color: '#9A3C00',
                   }}
                 >
+                  {RATES.supply}
+                </Typography>
+                <Typography sx={{ mt: 1.4, fontSize: '0.86rem', lineHeight: 1.55, color: 'rgba(154,60,0,0.8)' }}>
+                  Fixed at launch. No inflation switch.
+                </Typography>
+              </Box>
+
+              <Box>
+                {TOKENOMICS.map(([mark, name, body], i) => (
                   <Box
+                    key={name}
                     sx={{
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
                       gap: 2,
-                      pb: '16px',
-                      mb: '20px',
-                      borderBottom: `1px solid ${RULE}`,
+                      pt: i ? 2.2 : 0,
+                      mt: i ? 2.2 : 0,
+                      borderTop: i ? `1px solid ${RULE}` : 'none',
                     }}
                   >
-                    <Typography
+                    <Chip name={mark} />
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography sx={{ fontSize: '1.02rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--text-heading)' }}>
+                        {name}
+                      </Typography>
+                      <Typography sx={{ mt: 0.5, fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)' }}>
+                        {body}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ))}
+
+                <Box sx={{ mt: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.6 }}>
+                  <Button href="/token" small>Read the tokenomics</Button>
+                  <LinkChips />
+                </Box>
+              </Box>
+            </Box>
+          </Reveal>
+        </Section>
+      )}
+
+      {/* ── 10. So start. HIDDEN ────────────
+          The three numbered cards: get it, stake it, unlock what it gives.
+
+          HIDDEN ON REQUEST. Nothing is deleted and STEPS is still defined.
+
+          Note what leaves with it. Nothing essential: the hero still
+          carries both Buy $OPEN and Stake $OPEN, and the ask carries Stake
+          $OPEN again, so both routes survive. What goes is the only place
+          the page set them out in order. */}
+      {false && (
+        <Section sx={{ py: { xs: 7, md: 9 } }}>
+          <Reveal>
+            <Box sx={{ mb: { xs: 4, md: 5 } }}>
+              <SectionHead
+                eyebrow="Get started with $OPEN"
+                tier="minor"
+                title="Three moves. Put $OPEN to work."
+              />
+            </Box>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: { xs: 2, md: 2.5 } }}>
+              {STEPS.map((step) => (
+                <Box
+                  key={step.n}
+                  sx={{ ...PANEL, display: 'flex', flexDirection: 'column', px: { xs: 2.4, md: 2.8 }, py: { xs: 2.8, md: 3.2 } }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2.4 }}>
+                    <Box
                       sx={{
                         ...FIG,
-                        fontSize: '1.05rem',
-                        fontWeight: 600,
-                        color: s.lead ? 'var(--brand-accent)' : 'var(--text-heading)',
+                        width: 36,
+                        height: 36,
+                        borderRadius: '11px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.78rem',
+                        fontWeight: 700,
+                        color: 'var(--brand-accent)',
+                        backgroundColor: 'rgba(255,102,0,0.09)',
+                        border: '1px solid rgba(255,102,0,0.2)',
                       }}
                     >
-                      {s.token}
-                    </Typography>
-                    <Label>{s.kind}</Label>
+                      {step.n}
+                    </Box>
+                    <Mark name={step.mark} sx={{ color: 'var(--text-heading)', opacity: 0.32 }} />
                   </Box>
-
-                  <Label sx={{ color: 'var(--text-muted)' }}>Paid in</Label>
                   <Typography
-                    sx={{
-                      mt: 1.4,
-                      mb: 2.4,
-                      fontSize: { xs: '1.5rem', md: '1.8rem' },
-                      fontWeight: 700,
-                      letterSpacing: '-0.03em',
-                      lineHeight: 1.1,
-                      color: 'var(--text-heading)',
-                    }}
+                    sx={{ fontSize: { xs: '1.3rem', md: '1.45rem' }, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--text-heading)', mb: 1.2 }}
                   >
-                    {s.paidIn}
+                    {step.k}
                   </Typography>
-
-                  <Typography
-                    sx={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--text-secondary)', mb: 3, flex: 1 }}
-                  >
-                    {i === 0 ? C.stakes.openBody : C.stakes.heyBody}
+                  <Typography sx={{ fontSize: '0.94rem', lineHeight: 1.7, color: 'var(--text-secondary)', flex: 1 }}>
+                    {step.s}
                   </Typography>
-
-                  <Box sx={{ borderTop: `1px solid ${RULE}`, pt: 1 }}>
-                    {s.rows.map(([name, figure]) => (
-                      <Entry key={name} name={name} figure={figure} />
-                    ))}
-                  </Box>
-
-                  <Box sx={{ mt: 3 }}>
-                    <Button href={s.href} primary={s.lead} small>
-                      {s.cta}
-                    </Button>
-                  </Box>
+                  {step.cta && (
+                    <Box sx={{ mt: 3 }}>
+                      <Button href={step.href} small>{step.cta}</Button>
+                    </Box>
+                  )}
                 </Box>
               ))}
             </Box>
           </Reveal>
+        </Section>
+      )}
 
-          <Reveal delay={140}>
+      {/* ── The ask ───────────────────────────────────────────────── */}
+      <Section sx={{ py: { xs: 8, md: 11 } }}>
+        <Reveal>
+          <Box sx={{ textAlign: 'center' }}>
+            <Label sx={{ display: 'block', mb: 2.2, color: 'var(--brand-accent)' }}>
+              Put $OPEN to work
+            </Label>
             <Typography
+              component="h2"
               sx={{
-                mt: { xs: 3, md: 4 },
-                fontFamily: MONO,
-                fontSize: '0.74rem',
-                lineHeight: 1.8,
-                color: 'var(--text-muted)',
-                maxWidth: '76ch',
+                fontSize: { xs: '2.4rem', md: '3.6rem' },
+                fontWeight: 700,
+                letterSpacing: '-0.045em',
+                lineHeight: 1.02,
+                color: 'var(--text-heading)',
+                maxWidth: '17ch',
+                mx: 'auto',
+                textWrap: 'balance',
               }}
             >
-              {C.stakes.foot}
+              Your $OPEN. More than a holding.
             </Typography>
-          </Reveal>
-        </Box>
 
+            <Typography
+              sx={{
+                mt: 2.6,
+                maxWidth: '58ch',
+                mx: 'auto',
+                fontSize: { xs: '1rem', md: '1.08rem' },
+                lineHeight: 1.7,
+                color: 'var(--text-secondary)',
+                textWrap: 'pretty',
+              }}
+            >
+              Earn staking rewards, unlock Hey Open Pro, and take part in an AI ecosystem powered
+              by real products and enterprise demand.
+            </Typography>
 
-        {/* ── Supply ─────────────────────────────────────────────── */}
-        <Box component="section" sx={{ py: { xs: 7, md: 11 } }}>
-          <Reveal>
-            <Box sx={{ borderTop: `2px solid ${INK}`, pt: { xs: 3, md: 4 } }}>
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '0.8fr 1.2fr' },
-                  gap: { xs: 2.5, md: 8 },
-                  alignItems: 'start',
-                }}
-              >
-                <Box>
-                  <Label sx={{ color: 'var(--brand-accent)' }}>Supply</Label>
-                  <Typography
-                    sx={{
-                      ...FIG,
-                      mt: 2,
-                      fontSize: { xs: '3rem', md: '4.2rem' },
-                      fontWeight: 600,
-                      lineHeight: 0.95,
-                      letterSpacing: '-0.04em',
-                      color: 'var(--text-heading)',
-                    }}
-                  >
-                    {RATES.supply}
-                  </Typography>
-                  <Typography sx={{ mt: 1.5, fontSize: '0.88rem', color: 'var(--text-muted)' }}>
-                    Fixed at launch. No inflation switch.
-                  </Typography>
-                </Box>
-                <Box>
-                  <Typography
-                    component="h2"
-                    sx={{
-                      fontSize: { xs: '1.3rem', md: '1.6rem' },
-                      fontWeight: 700,
-                      letterSpacing: '-0.028em',
-                      lineHeight: 1.3,
-                      color: 'var(--text-heading)',
-                      mb: 1.8,
-                      textWrap: 'balance',
-                    }}
-                  >
-                    {C.supply.title}
-                  </Typography>
-                  <Typography sx={{ fontSize: '1rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                    {C.supply.body}
-                  </Typography>
-                  <Box sx={{ mt: 3 }}>
-                    <Button href="/token" small>
-                      Read the tokenomics
-                    </Button>
-                  </Box>
-                </Box>
-              </Box>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4, justifyContent: 'center' }}>
+              <Button href={LINKS.stake} primary>
+                Stake $OPEN
+                <Box component="span" aria-hidden="true">→</Box>
+              </Button>
+              <Button href={APP}>Try the app first</Button>
             </Box>
-          </Reveal>
-        </Box>
 
-        {/* ── Close ──────────────────────────────────────────────── */}
-        <Box component="section" sx={{ pt: { xs: 5, md: 8 }, pb: { xs: 8, md: 13 } }}>
-          <Reveal>
-            <Box sx={{ textAlign: 'center' }}>
-              <Typography
-                component="h2"
-                sx={{
-                  fontSize: { xs: '2rem', md: '3rem' },
-                  fontWeight: 700,
-                  letterSpacing: '-0.04em',
-                  lineHeight: 1.06,
-                  color: 'var(--text-heading)',
-                  maxWidth: '17ch',
-                  mx: 'auto',
-                  textWrap: 'balance',
-                }}
-              >
-                {C.close.title}
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mt: 4, justifyContent: 'center' }}>
-                <Button href={LINKS.stake} primary>
-                  Stake $OPEN
-                  <Box component="span" aria-hidden="true">→</Box>
-                </Button>
-                <Button href={APP}>Try the app first</Button>
-              </Box>
-
-              <Typography
-                sx={{
-                  mt: 6,
-                  fontFamily: MONO,
-                  fontSize: '0.72rem',
-                  lineHeight: 1.85,
-                  color: 'var(--text-muted)',
-                  maxWidth: '72ch',
-                  mx: 'auto',
-                }}
-              >
-                Staking rewards are not a guarantee. The {RATES.base} floor is fixed; the
-                {RATES.total} is a target the treasury is run to, not a promised rate, and what
-                lands above the floor varies by period. Nothing here is investment advice. Read the
-                terms before you stake.
-              </Typography>
-            </Box>
-          </Reveal>
-        </Box>
-      </Container>
+            <Typography
+              sx={{ mt: 6, fontFamily: MONO, fontSize: '0.72rem', lineHeight: 1.85, color: 'var(--text-muted)', maxWidth: '72ch', mx: 'auto' }}
+            >
+              Staking rewards are not a guarantee. {RATES.base} is the base annual staking rate.
+              The {RATES.total} band is a target for the enterprise compute strategy, not a
+              staking return, and any distribution to stakers depends on that programme&rsquo;s
+              published terms. Nothing here is investment advice. Read the terms before you stake.
+            </Typography>
+          </Box>
+        </Reveal>
+      </Section>
 
       <Footer />
     </Box>

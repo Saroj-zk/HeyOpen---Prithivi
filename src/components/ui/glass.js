@@ -79,3 +79,26 @@ export const SMOKE = glass({
   drop: 'rgba(14,16,22,0.5)',
 });
 
+/* A small tile needs a tighter, brighter rim than a large one or the bevel
+   disappears at that size. Everything under about 48px uses this instead. */
+export const CHIP_BEVEL = [
+  'inset 0 1px 0 rgba(255,255,255,1)',
+  'inset 0 0 0 0.5px rgba(255,255,255,0.6)',
+  'inset 0 -6px 12px -8px rgba(15,23,42,0.32)',
+  '0 2px 4px rgba(20,22,27,0.06)',
+  '0 10px 20px -10px rgba(15,23,42,0.3)',
+].join(',');
+
+/* The panel the tiles sit on. One warm pool only, so the clear tiles have
+   something to pick up. The fill underneath is the site's own panel colour; a
+   bespoke gradient here read as a different section. Padding is left to the
+   caller, since the two sections carry different amounts. */
+export const CANVAS = {
+  position: 'relative',
+  borderRadius: '24px',
+  border: '1px solid var(--border-subtle)',
+  backgroundColor: 'var(--bg-section-alt)',
+  backgroundImage:
+    'radial-gradient(62% 82% at 16% 10%, rgba(255,150,80,0.16) 0%, transparent 62%)',
+  overflow: 'hidden',
+};

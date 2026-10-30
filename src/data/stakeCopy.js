@@ -9,6 +9,12 @@
  *                      hold end up paying for the AI you use.
  *   C, Don't sell it   short, direct, for a holder deciding what to do
  *                      with a position they already have.
+ *   D, Owed and aimed  the tightest of the four, and the one the page
+ *      at               runs on. It leads on the distinction the whole
+ *                      page exists to make: one of these two numbers is
+ *                      owed to you and the other is aimed at, and a
+ *                      reader who takes nothing else away should take
+ *                      that.
  *
  * Guaranteed is used, deliberately, and only ever about the 6.00%. That
  * figure is a protocol rate written into the staking contract, so calling it
@@ -242,6 +248,81 @@ export const VERSIONS = [
 
     close: {
       title: 'Your move.',
+    },
+  },
+
+  {
+    id: 'D',
+    name: 'Owed and aimed at',
+    note: 'Tightest of the four. Leads on the distinction the page exists to make.',
+
+    hero: {
+      eyebrow: 'Staking',
+      title: 'The Gateway for Unrestricted AI',
+      lede:
+        '$OPEN is the capital asset of Hey Open. Stake it to earn yield, mint $HEY, and get Hey Open Pro free at 100 $OPEN staked.',
+    },
+
+    howTitle: 'Three moves, then it works for you.',
+    how: [
+      {
+        title: 'Get $OPEN',
+        body: 'Fixed supply, no inflation switch. Buy it wherever it already trades.',
+      },
+      {
+        title: 'Stake it',
+        body: 'One transaction, earning the same epoch. Nothing sold, nothing put beyond your reach.',
+      },
+      {
+        title: 'Mint $HEY',
+        body: 'Only a stake mints it. Stake the $HEY and your compute is paid for too.',
+      },
+    ],
+
+    yield: {
+      eyebrow: 'The yield',
+      title: 'One number is owed. One is aimed at.',
+      lede:
+        'The 6% sits in the staking contract and pays on schedule. The 40% to 50% is the band we run the book to, all in. Telling you which is which is the whole job of this page.',
+      floorLabel: 'Owed to you',
+      floorBody:
+        "Written into the contract and paid on schedule. It does not wait on a good year, a good quarter, or anybody's decision.",
+      targetLabel: 'Aimed at',
+      targetBody:
+        'The range we manage to, all in, with the floor sitting inside it as the worst case. Reported after a period closes, never promised before it opens.',
+      workedNote:
+        'Miss the band completely and the floor still pays in full. That is what makes it a floor rather than a forecast.',
+      proofEyebrow: 'Check it yourself',
+    },
+
+    pro: {
+      eyebrow: 'The hundred',
+      title: 'At a hundred staked, the app is free.',
+      lede:
+        'Every model, unlimited prompts, the whole app, free for as long as the stake is there. The stake keeps earning the entire time it covers you.',
+      note: 'Unstake whenever you like. It just goes back to being a subscription.',
+    },
+
+    stakes: {
+      eyebrow: 'Two tokens',
+      title: 'One pays in money. One pays in compute.',
+      lede:
+        '$OPEN is what you buy and stake. $HEY is what the stake mints. Same position, two returns, in two different currencies.',
+      openBody:
+        'The one you hold. Staked, it pays in $OPEN rather than in anything you can only spend here, and nothing has to be spent to collect it.',
+      heyBody:
+        'The one your stake makes. Staked, it pays out compute every day across the whole catalogue. Or sell it, if you would rather have the money.',
+      foot: 'Only staked $OPEN mints $HEY. Burn the $HEY and your stake comes back.',
+    },
+
+    supply: {
+      title: 'Less of it every month.',
+      body:
+        'Revenue buys $OPEN on the open market, pays the providers doing the work, and burns the rest on chain. Supply has one direction.',
+    },
+
+    close: {
+      title: 'Put it to work.',
     },
   },
 ];

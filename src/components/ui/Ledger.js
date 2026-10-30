@@ -132,6 +132,11 @@ export function Entry({ name, figure, dashed, total, onInk }) {
 
 export function Button({ children, href, primary, onInk, small }) {
   const external = href.startsWith('http');
+  /* A mailto is a plain anchor, not a route. Passed to next/link it is
+     treated as a path and the mail client never opens. It does not get
+     target="_blank" either: handing off to a mail client leaves the blank
+     tab behind. */
+  const bare = external || href === '#' || href.startsWith('mailto:');
   const sx = {
     display: 'inline-flex',
     alignItems: 'center',
@@ -166,7 +171,7 @@ export function Button({ children, href, primary, onInk, small }) {
         }),
   };
 
-  if (external || href === '#') {
+  if (bare) {
     return (
       <Box
         component="a"

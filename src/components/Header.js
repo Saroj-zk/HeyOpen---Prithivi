@@ -8,11 +8,22 @@ import { useThemeMode } from '@/context/ThemeContext';
 
 /* Each of these resolves to a section on this page. #consensus and #privacy
    were in here before and matched nothing. */
+/* Destinations first, then the two anchors on this page. The first three
+   are the subpages the second section links out to; before this they were
+   only reachable from its EXPLORE links. */
 const NAV_ITEMS = [
   { label: 'Models', href: '/models' },
+  { label: 'Memory', href: '/memory' },
+  { label: 'Private AI', href: '/private' },
+  /* The staking page is about the token, so it is named after it. */
+  { label: '$OPEN', href: '/stake' },
+  { label: 'Enterprise', href: '/enterprise' },
+  /* $HEY is hidden from the nav on request. Nothing else in the site links
+     to /hey, so the page is now reachable only by typing the address.
+     Uncomment to put it back. */
+  // { label: '$HEY', href: '/hey' },
   { label: 'Consensus', href: '#consensus-mode' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'Token', href: null, isComingSoon: true },
 ];
 
 export default function Header() {
@@ -161,14 +172,17 @@ export default function Header() {
                   <Box
                     component="span"
                     sx={{
-                      fontSize: '0.65rem',
-                      fontWeight: 700,
+                      fontSize: '0.55rem',
+                      fontWeight: 800,
                       textTransform: 'uppercase',
-                      px: 0.8,
+                      px: 0.6,
                       py: 0.2,
-                      borderRadius: '999px',
-                      backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
-                      color: isDark ? 'rgba(255,255,255,0.6)' : '#64748B',
+                      borderRadius: '4px',
+                      backgroundColor: isDark ? 'rgba(255, 102, 0, 0.15)' : 'rgba(255, 102, 0, 0.1)',
+                      color: '#FF6600',
+                      border: isDark ? '1px solid rgba(255, 102, 0, 0.3)' : '1px solid rgba(255, 102, 0, 0.2)',
+                      transform: 'translateY(-2px)',
+                      ml: -0.2,
                     }}
                   >
                     Coming Soon
@@ -188,7 +202,57 @@ export default function Header() {
               gap: { xs: 1, sm: 2 },
             }}
           >
-            {/* $OPEN Button removed as requested */}
+            <Box
+              sx={{
+                position: 'relative',
+                /* Hidden on request. Restore by putting the display value
+                   back; the pill and its COMING SOON badge are untouched. */
+                display: 'none',
+                alignItems: 'center',
+                borderRadius: '9999px',
+                py: 0.6,
+                px: 2.2,
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                color: '#ff6600',
+                backdropFilter: 'blur(8px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(8px) saturate(180%)',
+                background: isDark
+                  ? 'linear-gradient(180deg, rgba(255, 102, 0, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%)'
+                  : 'linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 243, 235, 0.84) 100%)',
+                border: isDark ? '1px solid rgba(255, 102, 0, 0.32)' : '1px solid rgba(255, 102, 0, 0.24)',
+                boxShadow: isDark
+                  ? '0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35)'
+                  : '0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 1)',
+                fontFamily: '"Inter", -apple-system, sans-serif',
+                userSelect: 'none',
+              }}
+            >
+              Token
+              <Box
+                component="span"
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  transform: 'translate(10%, -40%)',
+                  fontSize: '7px',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  padding: '2px 5px',
+                  borderRadius: '10px',
+                  backgroundColor: '#FF6600',
+                  color: '#FFF',
+                  lineHeight: 1,
+                  border: isDark ? '1.5px solid #0a0a0a' : '1.5px solid #ffffff',
+                  boxShadow: '0 2px 4px rgba(255,102,0,0.3)',
+                  zIndex: 1,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Coming Soon
+              </Box>
+            </Box>
 
             {/* Log in Link */}
             <Box
@@ -266,14 +330,17 @@ export default function Header() {
                   <Box
                     component="span"
                     sx={{
-                      fontSize: '0.65rem',
-                      fontWeight: 700,
+                      fontSize: '0.55rem',
+                      fontWeight: 800,
                       textTransform: 'uppercase',
-                      px: 0.8,
+                      px: 0.6,
                       py: 0.2,
-                      borderRadius: '999px',
-                      backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)',
-                      color: isDark ? 'rgba(255,255,255,0.6)' : '#64748B',
+                      borderRadius: '4px',
+                      backgroundColor: isDark ? 'rgba(255, 102, 0, 0.15)' : 'rgba(255, 102, 0, 0.1)',
+                      color: '#FF6600',
+                      border: isDark ? '1px solid rgba(255, 102, 0, 0.3)' : '1px solid rgba(255, 102, 0, 0.2)',
+                      transform: 'translateY(-1px)',
+                      ml: -0.2,
                     }}
                   >
                     Coming Soon
@@ -285,7 +352,57 @@ export default function Header() {
             <Box sx={{ height: 1, backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', my: 1 }} />
             
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              {/* $OPEN button removed as requested */}
+              <Box
+                sx={{
+                  position: 'relative',
+                  /* Hidden on request. Restore by putting the display value
+                     back; the pill and its COMING SOON badge are untouched. */
+                  display: 'none',
+                  alignItems: 'center',
+                  borderRadius: '9999px',
+                  py: 0.8,
+                  px: 2.5,
+                  fontSize: '0.9rem',
+                  fontWeight: 700,
+                  color: '#ff6600',
+                  backdropFilter: 'blur(8px) saturate(180%)',
+                  WebkitBackdropFilter: 'blur(8px) saturate(180%)',
+                  background: isDark
+                    ? 'linear-gradient(180deg, rgba(255, 102, 0, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%)'
+                    : 'linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 243, 235, 0.84) 100%)',
+                  border: isDark ? '1px solid rgba(255, 102, 0, 0.32)' : '1px solid rgba(255, 102, 0, 0.24)',
+                  boxShadow: isDark
+                    ? '0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.3)'
+                    : '0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 1)',
+                  fontFamily: '"Inter", -apple-system, sans-serif',
+                  userSelect: 'none',
+                }}
+              >
+                Token
+                <Box
+                  component="span"
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    transform: 'translate(10%, -40%)',
+                    fontSize: '7px',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    padding: '2px 5px',
+                    borderRadius: '10px',
+                    backgroundColor: '#FF6600',
+                    color: '#FFF',
+                    lineHeight: 1,
+                    border: isDark ? '1.5px solid #0a0a0a' : '1.5px solid #ffffff',
+                    boxShadow: '0 2px 4px rgba(255,102,0,0.3)',
+                    zIndex: 1,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Coming Soon
+                </Box>
+              </Box>
               
               <Box
                 component="a"

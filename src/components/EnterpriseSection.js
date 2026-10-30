@@ -217,7 +217,7 @@ export default function EnterpriseSection() {
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, px: { xs: 2.5, sm: 3, md: 5 } }}>
         <Box sx={{ maxWidth: 1280, mx: 'auto' }}>
-          
+
           {/* TOP HEADER */}
           <Box ref={headRef} sx={{ mb: { xs: 6, md: 8 }, ...revealSx(headShown) }}>
             {/* Eyebrow Pill */}

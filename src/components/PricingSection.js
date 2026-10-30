@@ -160,6 +160,7 @@ export default function PricingSection() {
             ,{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>uncensored</Box>.
           </Typography>
+
         </Box>
 
         {/* COMPARISON LAYOUT (Flex Node Graph) */}
