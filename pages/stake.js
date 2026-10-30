@@ -123,7 +123,7 @@ const BENEFITS = [
   },
   {
     t: 'Compute-credit collateral',
-    s: 'Proposed OIU credits are issued against $OPEN locked under defined protocol rules.',
+    s: 'Proposed $HEY is issued against $OPEN locked under staking.',
   },
   {
     t: 'AI agent access',
@@ -264,7 +264,7 @@ const STEPS = [
    the order of the argument on the page they link to: there is a business,
    its costs are held still, and what is left reaches the token. */
 const ECONOMY = [
-  ['building', 'Enterprise AI', 'White-label products create recurring compute demand.'],
+  ['building', 'Enterprise AI', 'Custom Branded products create recurring compute demand.'],
   ['shield', 'Compute protection', 'Options-based strategies help manage GPU price volatility.'],
   ['flame', '$OPEN economics', 'Net revenue supports the proposed buyback-and-burn model.'],
 ];
@@ -368,11 +368,10 @@ function Chip({ name, tone }) {
         backgroundColor: ink
           ? 'rgba(255,102,0,0.14)'
           : accent
-          ? 'rgba(255,102,0,0.1)'
-          : 'rgba(11,15,26,0.045)',
-        border: `1px solid ${
-          ink ? 'rgba(255,102,0,0.3)' : accent ? 'rgba(255,102,0,0.24)' : 'rgba(11,15,26,0.08)'
-        }`,
+            ? 'rgba(255,102,0,0.1)'
+            : 'rgba(11,15,26,0.045)',
+        border: `1px solid ${ink ? 'rgba(255,102,0,0.3)' : accent ? 'rgba(255,102,0,0.24)' : 'rgba(11,15,26,0.08)'
+          }`,
       }}
     >
       <Mark name={name} size={19} />
@@ -464,21 +463,21 @@ function Section({ ground, full = true, first, bare, children, sx }) {
         zIndex: 1,
         ...(full
           ? {
-              minHeight: tall,
-              '@supports (min-height: 100svh)': { minHeight: tallSmall },
-              display: 'flex',
-              alignItems: 'center',
-            }
+            minHeight: tall,
+            '@supports (min-height: 100svh)': { minHeight: tallSmall },
+            display: 'flex',
+            alignItems: 'center',
+          }
           : null),
         ...(ground === 'ink'
           ? { backgroundColor: INK }
           : ground
-          ? {
+            ? {
               background: ground,
               borderTop: '1px solid rgba(11,15,26,0.05)',
               borderBottom: '1px solid rgba(11,15,26,0.05)',
             }
-          : null),
+            : null),
         ...sx,
       }}
     >
@@ -954,15 +953,29 @@ export default function StakePage() {
               put in it. Inventing one would have been four more words
               pretending to be numbers.
 
-              Nothing is accented. The moment one card is, the other three
-              read as consolation.
+              THE FIGURE SITS AT THE FOOT, which is what makes eight cards
+              read as one set rather than two.
 
-              The figure, the category and the detail sit at the same three
-              heights in every card, because the grid gives each row one
-              height and each card starts its stack at the top. That is the
-              alignment the icons were breaking: an icon above the figure
-              pushed the figure down by its own height, and the four
-              figures stopped agreeing wherever a card's copy ran long. */}
+              It used to lead, at nearly twice the size of the title under
+              it. That gave every card in the top row two things competing
+              to be read first, and it pushed those four titles half an inch
+              below the four underneath them, so the only four cards that
+              could be compared at a glance were the ones in the same row.
+              The old note here claimed all three parts sat at the same
+              three heights in every card; that stopped being true the
+              moment four cards without a figure were added.
+
+              Pinned to the bottom instead, every card opens on its title at
+              the same height, the four figures line up along one baseline
+              because they are pinned to it, and the slack in a short card
+              is taken up by the spacer rather than left trailing under the
+              last line. The rule above the figure is the only ornament.
+
+              The figure takes the accent now. On top it would have been a
+              second headline; at the foot, after the explanation, it reads
+              as the payoff, which is what it is. Nothing else is accented:
+              the moment one whole card is, the other seven read as
+              consolation. */}
           <Box
             sx={{
               display: 'grid',
@@ -975,8 +988,10 @@ export default function StakePage() {
                 key={b.t}
                 sx={{
                   ...GLASS,
+                  display: 'flex',
+                  flexDirection: 'column',
                   px: { xs: 2.4, md: 2.4 },
-                  py: { xs: 2.6, md: 2.2 },
+                  py: { xs: 2.6, md: 2.4 },
                   transition: 'transform .22s ease, box-shadow .22s ease',
                   '&:hover': {
                     transform: 'translateY(-3px)',
@@ -985,27 +1000,11 @@ export default function StakePage() {
                   },
                 }}
               >
-                {b.k && (
-                  <Typography
-                    sx={{
-                      fontSize: { xs: '1.9rem', md: '1.7rem' },
-                      fontWeight: 700,
-                      letterSpacing: '-0.04em',
-                      lineHeight: 1.05,
-                      color: '#FFFFFF',
-                      whiteSpace: { md: 'nowrap' },
-                      mb: { xs: 1.4, md: 1.6 },
-                    }}
-                  >
-                    {b.k}
-                  </Typography>
-                )}
-
                 <Typography
                   sx={{
-                    fontSize: '1rem',
-                    fontWeight: 700,
-                    letterSpacing: '-0.02em',
+                    fontSize: { xs: '1.08rem', md: '1.1rem' },
+                    fontWeight: 750,
+                    letterSpacing: '-0.025em',
                     lineHeight: 1.3,
                     color: '#FFFFFF',
                   }}
@@ -1013,9 +1012,41 @@ export default function StakePage() {
                   {b.t}
                 </Typography>
 
-                <Typography sx={{ mt: 0.9, fontSize: '0.92rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.56)' }}>
+                <Typography sx={{ mt: 1, fontSize: '0.92rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.6)' }}>
                   {b.s}
                 </Typography>
+
+                {/* mt:auto is what holds the baseline. Without it the
+                    figure follows the copy, and the copy is a different
+                    length in all four. */}
+                {b.k && (
+                  <Typography
+                    sx={{
+                      mt: 'auto',
+                      pt: { xs: 2, md: 2.2 },
+                      fontSize: { xs: '1.26rem', md: '1.32rem' },
+                      fontWeight: 700,
+                      letterSpacing: '-0.03em',
+                      lineHeight: 1.15,
+                      /* Tabular, not FIG: FIG is the mono face and two of
+                         these four are phrases, not figures. */
+                      fontVariantNumeric: 'tabular-nums',
+                      whiteSpace: { md: 'nowrap' },
+                      color: 'var(--brand-accent)',
+                    }}
+                  >
+                    <Box
+                      component="span"
+                      sx={{
+                        display: 'block',
+                        pt: { xs: 1.6, md: 1.7 },
+                        borderTop: `1px solid ${RULE_ON_INK}`,
+                      }}
+                    >
+                      {b.k}
+                    </Box>
+                  </Typography>
+                )}
               </Box>
             ))}
           </Box>
@@ -1542,7 +1573,7 @@ export default function StakePage() {
                     textWrap: 'pretty',
                   }}
                 >
-                  Hey Open powers white-label AI products for enterprises while managing compute
+                  Hey Open powers Custom Branded AI products for enterprises while managing compute
                   costs through options-based strategies. As businesses scale, infrastructure usage
                   drives commercial activity across the ecosystem.
                 </Typography>
