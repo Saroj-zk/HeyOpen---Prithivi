@@ -941,115 +941,106 @@ export default function StakePage() {
                   <Box component="span" sx={{ display: 'block' }}>More ways to benefit.</Box>
                 </>
               }
-              lede="Stake $OPEN to earn annual rewards, unlock premium AI access, and explore additional opportunities in Hey Open's compute economy."
+              lede="What a single staked position is worth, and what it opens up. Several of these are proposals rather than live features."
             />
           </Box>
         </Reveal>
 
         <Reveal delay={80}>
-          {/* Four across, two rows. The top row is what the stake pays in
-              figures, the bottom is what it gives access to, and the figure
-              slot is empty on the second row because there is nothing to
-              put in it. Inventing one would have been four more words
-              pretending to be numbers.
+          {/* Eight cards, in the two groups they actually are.
 
-              THE FIGURE SITS AT THE FOOT, which is what makes eight cards
-              read as one set rather than two.
+              Four of them carry a headline value and four do not, and every
+              attempt to pretend otherwise has failed in the same way. With
+              the value on top, the four titles that had one sat half an inch
+              below the four that did not, so only cards in the same row
+              could be compared. Pinned to the foot instead, the rule above
+              it appeared on half the cards and sat a different distance
+              below the copy in each, and the four without it had nothing
+              anchoring the slack at the bottom.
 
-              It used to lead, at nearly twice the size of the title under
-              it. That gave every card in the top row two things competing
-              to be read first, and it pushed those four titles half an inch
-              below the four underneath them, so the only four cards that
-              could be compared at a glance were the ones in the same row.
-              The old note here claimed all three parts sat at the same
-              three heights in every card; that stopped being true the
-              moment four cards without a figure were added.
+              So the difference is labelled rather than hidden. Inside a
+              group every card now has the same anatomy, which is what makes
+              the alignment hold: same top line, same title height, same
+              rhythm down to the body.
 
-              Pinned to the bottom instead, every card opens on its title at
-              the same height, the four figures line up along one baseline
-              because they are pinned to it, and the slack in a short card
-              is taken up by the spacer rather than left trailing under the
-              last line. The rule above the figure is the only ornament.
+              The value goes back on top and keeps the accent. It is the
+              card's headline where there is one, and the title under it is
+              the category, which is the order a reader wants them in.
 
-              The figure takes the accent now. On top it would have been a
-              second headline; at the foot, after the explanation, it reads
-              as the payoff, which is what it is. Nothing else is accented:
-              the moment one whole card is, the other seven read as
-              consolation. */}
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
-              gap: { xs: 1.6, md: 2 },
-            }}
-          >
-            {BENEFITS.map((b) => (
+              THE SLACK IN A SHORT CARD IS LEFT AT THE BOTTOM, unanchored
+              and therefore invisible. It only read as dead space when a
+              rule was sitting on it. */}
+          {[
+            ['What a stake is worth', BENEFITS.filter((b) => b.k)],
+            ['What a stake unlocks', BENEFITS.filter((b) => !b.k)],
+          ].map(([group, items], gi) => (
+            <Box key={group} sx={{ mt: gi ? { xs: 3.2, md: 3.4 } : 0 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: { xs: 1.8, md: 2 } }}>
+                <Label onInk sx={{ flexShrink: 0 }}>{group}</Label>
+                <Box aria-hidden="true" sx={{ flex: 1, height: '1px', backgroundColor: RULE_ON_INK }} />
+              </Box>
+
               <Box
-                key={b.t}
                 sx={{
-                  ...GLASS,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  px: { xs: 2.4, md: 2.4 },
-                  py: { xs: 2.6, md: 2.4 },
-                  transition: 'transform .22s ease, box-shadow .22s ease',
-                  '&:hover': {
-                    transform: 'translateY(-3px)',
-                    boxShadow:
-                      'inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(255,255,255,0.06), 0 30px 56px -28px rgba(0,0,0,0.95)',
-                  },
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                  gap: { xs: 1.6, md: 2 },
                 }}
               >
-                <Typography
-                  sx={{
-                    fontSize: { xs: '1.08rem', md: '1.1rem' },
-                    fontWeight: 750,
-                    letterSpacing: '-0.025em',
-                    lineHeight: 1.3,
-                    color: '#FFFFFF',
-                  }}
-                >
-                  {b.t}
-                </Typography>
-
-                <Typography sx={{ mt: 1, fontSize: '0.92rem', lineHeight: 1.65, color: 'rgba(255,255,255,0.6)' }}>
-                  {b.s}
-                </Typography>
-
-                {/* mt:auto is what holds the baseline. Without it the
-                    figure follows the copy, and the copy is a different
-                    length in all four. */}
-                {b.k && (
-                  <Typography
+                {items.map((b) => (
+                  <Box
+                    key={b.t}
                     sx={{
-                      mt: 'auto',
-                      pt: { xs: 2, md: 2.2 },
-                      fontSize: { xs: '1.26rem', md: '1.32rem' },
-                      fontWeight: 700,
-                      letterSpacing: '-0.03em',
-                      lineHeight: 1.15,
-                      /* Tabular, not FIG: FIG is the mono face and two of
-                         these four are phrases, not figures. */
-                      fontVariantNumeric: 'tabular-nums',
-                      whiteSpace: { md: 'nowrap' },
-                      color: 'var(--brand-accent)',
+                      ...GLASS,
+                      px: { xs: 2.4, md: 2.5 },
+                      py: { xs: 2.5, md: 2.5 },
+                      transition: 'transform .22s ease, box-shadow .22s ease',
+                      '&:hover': {
+                        transform: 'translateY(-3px)',
+                        boxShadow:
+                          'inset 0 1px 0 rgba(255,255,255,0.28), inset 0 -1px 0 rgba(255,255,255,0.06), 0 30px 56px -28px rgba(0,0,0,0.95)',
+                      },
                     }}
                   >
-                    <Box
-                      component="span"
+                    {b.k && (
+                      <Typography
+                        sx={{
+                          fontSize: { xs: '1.5rem', md: '1.55rem' },
+                          fontWeight: 700,
+                          letterSpacing: '-0.035em',
+                          lineHeight: 1.05,
+                          /* Tabular, not FIG: FIG is the mono face and two
+                             of these four are phrases, not figures. */
+                          fontVariantNumeric: 'tabular-nums',
+                          whiteSpace: { md: 'nowrap' },
+                          color: 'var(--brand-accent)',
+                          mb: { xs: 1.4, md: 1.5 },
+                        }}
+                      >
+                        {b.k}
+                      </Typography>
+                    )}
+
+                    <Typography
                       sx={{
-                        display: 'block',
-                        pt: { xs: 1.6, md: 1.7 },
-                        borderTop: `1px solid ${RULE_ON_INK}`,
+                        fontSize: { xs: '1.04rem', md: '1.06rem' },
+                        fontWeight: 750,
+                        letterSpacing: '-0.025em',
+                        lineHeight: 1.3,
+                        color: '#FFFFFF',
                       }}
                     >
-                      {b.k}
-                    </Box>
-                  </Typography>
-                )}
+                      {b.t}
+                    </Typography>
+
+                    <Typography sx={{ mt: 0.9, fontSize: '0.91rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.6)' }}>
+                      {b.s}
+                    </Typography>
+                  </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
+            </Box>
+          ))}
         </Reveal>
 
         <Reveal delay={60}>
