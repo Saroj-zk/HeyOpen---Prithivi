@@ -331,7 +331,7 @@ export default function ComputeOptionsSection() {
               textWrap: 'pretty',
             }}
           >
-            Enterprises can hedge future Azure and GPU rental price exposure using compute-price
+            Enterprises can hedge future GPU rental price exposure using compute-price
             options. Not another GPU rental platform.
           </Typography>
 

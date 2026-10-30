@@ -260,7 +260,7 @@ export const VERSIONS = [
       eyebrow: 'Staking',
       title: 'The Gateway for Unrestricted AI',
       lede:
-        '$OPEN is the capital asset of Hey Open. Stake it to earn yield, mint $HEY, and get Hey Open Pro free at 100 staked. Revenue buys $OPEN and burns it.',
+        '$OPEN is the capital asset of Hey Open. Stake it to earn yield, mint $HEY, and get Hey Open Pro free at 100 $OPEN staked.',
     },
 
     howTitle: 'Three moves, then it works for you.',

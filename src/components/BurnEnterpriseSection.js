@@ -159,7 +159,7 @@ const REVENUE = [
    shortest thing that is true, and flagged at the top of this file. */
 const COSTS = [
   { k: 'Inference', s: 'The compute behind every call' },
-  { k: 'Taxes', s: 'Due where the network runs' },
+  { k: 'Platform Costs', s: 'Costs of running the platform' },
   { k: '$HEY credits', s: 'Compute already claimed' },
   { k: 'Reserves', s: 'Held back, not spent' },
 ];
@@ -860,7 +860,7 @@ export default function BurnEnterpriseSection() {
                 textWrap: 'pretty',
               }}
             >
-              Enterprises can hedge future Azure and GPU rental price exposure using
+              Enterprises can hedge future GPU rental price exposure using
               compute-price options. Not another GPU rental platform.
             </Typography>
 
