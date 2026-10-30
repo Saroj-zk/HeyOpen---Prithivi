@@ -271,11 +271,17 @@ function SectionHead({ title, lede, onInk, tier = 'major', maxWidth = 760 }) {
 /* ------------------------------------------------------------------ */
 
 /* Three products on one set of rails. The chrome line is what the buyer's
-   own customer sees; the line under it is what the product does. */
+   own customer sees; the line under it is what the product does.
+
+   The tabs name the three things, so they cannot be dropped: they are the
+   control, and an unlabelled one is not a choice. The first used to read
+   "AI Apps", which told a reader nothing the heading above it had not
+   already said and put a third "AI" in a row of three. "Applications" is
+   the thing being branded, which is what the tab is for. */
 const STACK = [
   {
     id: 'apps',
-    tab: 'AI Apps',
+    tab: 'Applications',
     mark: 'chat',
     name: 'Branded AI Workspace',
     chrome: 'Your enterprise brand',
@@ -430,19 +436,13 @@ function WhiteLabel() {
           >
             {item.name}
           </Typography>
-          <Label
-            sx={{
-              ml: 'auto',
-              flexShrink: 0,
-              px: '11px',
-              py: '5px',
-              borderRadius: '999px',
-              border: `1px solid ${RULE}`,
-              backgroundColor: 'var(--bg-card)',
-            }}
-          >
-            Custom Branded
-          </Label>
+          {/* A "Custom Branded" badge used to sit here. It was hard-coded,
+              so it read the same on all three tabs, and in one view the
+              reader already had it four times over: the lede ends on "under
+              their own brand", the proof row on the left is headed Custom
+              Branded, this panel's product is a Branded AI Workspace, and
+              the window below says YOUR ENTERPRISE BRAND. The badge was the
+              only one of the five carrying nothing of its own. */}
         </Box>
 
         {/* The buyer's window. The bar carries their name; the screen is ours. */}
