@@ -1,11 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import PageMeta from '@/components/PageMeta';
-import { MONO, RULE, Label } from '@/components/ui/Ledger';
+import { MONO, RULE } from '@/components/ui/Ledger';
 
 /**
  * The Help Center.
@@ -1092,8 +1091,24 @@ export default function HelpPage() {
     return () => window.removeEventListener('scroll', pick);
   }, []);
 
+  const current = SECTIONS.find((s) => s.id === active) || SECTIONS[0];
+
+  /* The sticky rails scroll independently, which on Windows draws a wide
+     grey gutter down the middle of the page. Thin and transparent until
+     hovered, as the reference does. */
+  const quietScroll = {
+    overflowY: 'auto',
+    scrollbarWidth: 'thin',
+    scrollbarColor: 'transparent transparent',
+    '&:hover': { scrollbarColor: 'var(--border-normal) transparent' },
+    '&::-webkit-scrollbar': { width: '6px' },
+    '&::-webkit-scrollbar-track': { background: 'transparent' },
+    '&::-webkit-scrollbar-thumb': { background: 'transparent', borderRadius: '3px' },
+    '&:hover::-webkit-scrollbar-thumb': { background: 'var(--border-normal)' },
+  };
+
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)' }}>
+    <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-card)' }}>
       <PageMeta
         title="Help Center | Hey Open"
         description="How Hey Open works: choosing a model, the privacy filter, request modes, Consensus, memory, images and video, plans, the API and troubleshooting."
@@ -1101,65 +1116,38 @@ export default function HelpPage() {
       />
       <PageHeader spacer />
 
-      <Container maxWidth="xl" sx={{ px: { xs: 2.5, sm: 4, md: 6 } }}>
-        {/* ---- opening ---- */}
-        <Box sx={{ maxWidth: 820, pt: { xs: 5, md: 8 }, pb: { xs: 4, md: 6 } }}>
-          <Label sx={{ display: 'block', mb: 1.8, color: 'var(--brand-accent)' }}>Help Center</Label>
-          <Typography
-            component="h1"
-            sx={{
-              fontSize: { xs: '2.3rem', sm: '2.9rem', md: '3.4rem' }, fontWeight: 700,
-              letterSpacing: '-0.035em', lineHeight: 1.05, color: 'var(--text-heading)',
-              textWrap: 'balance', mb: 2.2,
-            }}
-          >
-            Everything Hey Open does,
-            <Box component="span" sx={{ display: 'block', color: 'var(--brand-accent)' }}>
-              and how to do it.
-            </Box>
-          </Typography>
-          <Typography sx={{ fontSize: { xs: '1.04rem', md: '1.12rem' }, lineHeight: 1.7, color: 'var(--text-secondary)', textWrap: 'pretty' }}>
-            A private, multi-model AI workspace: 133 models, a privacy level you set per
-            conversation, and a memory that follows you between them. Start at the top, or jump to
-            what you need.
-          </Typography>
-
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 2.5, md: 4 }, mt: { xs: 3.4, md: 4 } }}>
-            {[['133', 'models'], ['64', 'text'], ['35', 'image'], ['34', 'video'], ['$20', 'per month']].map(([n, l]) => (
-              <Box key={l}>
-                <Typography sx={{ fontSize: { xs: '1.5rem', md: '1.7rem' }, fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--text-heading)', fontVariantNumeric: 'tabular-nums', lineHeight: 1.1 }}>
-                  {n}
-                </Typography>
-                <Typography sx={{ fontSize: '0.8rem', color: 'var(--text-muted)', mt: 0.2 }}>{l}</Typography>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        {/* ---- rail + body ---- */}
+      <Box sx={{ maxWidth: 1340, mx: 'auto', px: { xs: 2.5, sm: 4, md: 5 } }}>
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '218px minmax(0, 1fr)' },
-            gap: { xs: 0, md: 6 },
+            gridTemplateColumns: { xs: '1fr', md: '236px minmax(0, 1fr)', lg: '236px minmax(0, 1fr) 208px' },
+            columnGap: { md: 6, lg: 7 },
             alignItems: 'start',
-            borderTop: '1px solid var(--border-subtle)',
-            pt: { xs: 3, md: 5 },
           }}
         >
+          {/* ---------------- section rail ---------------- */}
           <Box
             component="nav"
             aria-label="Help sections"
             sx={{
-              position: { md: 'sticky' }, top: { md: 92 },
-              maxHeight: { md: 'calc(100vh - 110px)' }, overflowY: { md: 'auto' },
-              pb: { xs: 3, md: 6 }, mb: { xs: 3, md: 0 },
+              position: { md: 'sticky' },
+              top: { md: 88 },
+              maxHeight: { md: 'calc(100vh - 104px)' },
+              pt: { xs: 3, md: 5 },
+              pb: { xs: 3, md: 6 },
+              mb: { xs: 3, md: 0 },
               borderBottom: { xs: '1px solid var(--border-subtle)', md: 'none' },
+              ...quietScroll,
             }}
           >
             {PARTS.map((p) => (
-              <Box key={p.name} sx={{ mb: 2.4 }}>
-                <Typography sx={{ fontFamily: MONO, fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', mb: 0.9 }}>
+              <Box key={p.name} sx={{ mb: 2.8 }}>
+                <Typography
+                  sx={{
+                    fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.08em',
+                    textTransform: 'uppercase', color: 'var(--text-muted)', mb: 1.1,
+                  }}
+                >
                   {p.name}
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'row', md: 'column' }, flexWrap: 'wrap', gap: { xs: 0.8, md: 0 } }}>
@@ -1169,14 +1157,15 @@ export default function HelpPage() {
                       component="a"
                       href={`#${s.id}`}
                       sx={{
-                        display: 'block', textDecoration: 'none', fontSize: '0.875rem', lineHeight: 1.4,
-                        padding: { xs: '5px 11px', md: '5px 10px' },
-                        margin: { md: '0 0 0 -10px' },
-                        borderRadius: { xs: '999px', md: '7px' },
+                        display: 'block', textDecoration: 'none',
+                        fontSize: '0.9rem', lineHeight: 1.45,
+                        py: { xs: 0.6, md: 0.72 },
+                        px: { xs: 1.4, md: 0 },
+                        borderRadius: { xs: '999px', md: 0 },
                         border: { xs: '1px solid var(--border-subtle)', md: 'none' },
                         color: active === s.id ? 'var(--brand-accent)' : 'var(--text-secondary)',
-                        fontWeight: active === s.id ? 650 : 400,
-                        backgroundColor: active === s.id ? 'rgba(255,102,0,0.08)' : 'transparent',
+                        fontWeight: active === s.id ? 600 : 400,
+                        transition: 'color .12s ease',
                         '&:hover': { color: 'var(--text-heading)' },
                       }}
                     >
@@ -1188,28 +1177,46 @@ export default function HelpPage() {
             ))}
           </Box>
 
-          <Box component="main" sx={{ minWidth: 0, pb: { xs: 7, md: 11 } }}>
-            {SECTIONS.map((s, i) => (
+          {/* ---------------- article ---------------- */}
+          <Box component="main" sx={{ minWidth: 0, pt: { xs: 0, md: 5 }, pb: { xs: 7, md: 12 } }}>
+            {/* Breadcrumb, which is the only wayfinding above the title. */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.9, mb: 1.6, flexWrap: 'wrap' }}>
+              <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)' }}>Help Center</Typography>
+              <Box component="span" aria-hidden="true" sx={{ color: 'var(--border-strong)', fontSize: '0.8rem' }}>&rsaquo;</Box>
+              <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)' }}>{current.part}</Typography>
+            </Box>
+
+            <Typography
+              component="h1"
+              sx={{
+                fontSize: { xs: '2.1rem', md: '2.6rem' }, fontWeight: 700,
+                letterSpacing: '-0.032em', lineHeight: 1.12, color: 'var(--text-heading)',
+                textWrap: 'balance', mb: 2.2,
+              }}
+            >
+              Hey Open Help Center
+            </Typography>
+
+            <Typography sx={{ fontSize: '1.06rem', lineHeight: 1.72, color: 'var(--text-secondary)', maxWidth: '68ch', mb: 0 }}>
+              Everything Hey Open does and how to do it, from your first conversation to the API.
+              Twenty sections: start at the top, or jump to what you need.
+            </Typography>
+
+            {SECTIONS.map((s) => (
               <Box
                 key={s.id}
                 component="section"
                 id={s.id}
-                sx={{
-                  scrollMarginTop: '100px',
-                  pt: i === 0 ? 0 : { xs: 4.5, md: 6 },
-                  mt: i === 0 ? 0 : { xs: 4.5, md: 6 },
-                  borderTop: i === 0 ? 'none' : '1px solid var(--border-subtle)',
-                }}
+                sx={{ scrollMarginTop: '92px', mt: { xs: 5, md: 6.5 } }}
               >
-                <Typography sx={{ fontFamily: MONO, fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--brand-accent)', mb: 1 }}>
-                  {String(i + 1).padStart(2, '0')} &nbsp;{s.part}
-                </Typography>
                 <Typography
                   component="h2"
                   sx={{
-                    fontSize: { xs: '1.6rem', md: '1.95rem' }, fontWeight: 700,
-                    letterSpacing: '-0.03em', lineHeight: 1.15, color: 'var(--text-heading)',
-                    textWrap: 'balance', mb: 2,
+                    fontSize: { xs: '1.42rem', md: '1.62rem' }, fontWeight: 700,
+                    letterSpacing: '-0.025em', lineHeight: 1.2, color: 'var(--text-heading)',
+                    textWrap: 'balance',
+                    pb: 1.3, mb: 2.4,
+                    borderBottom: '1px solid var(--border-subtle)',
                   }}
                 >
                   {s.title}
@@ -1218,7 +1225,7 @@ export default function HelpPage() {
               </Box>
             ))}
 
-            <Box sx={{ mt: { xs: 5, md: 7 }, pt: 3, borderTop: '1px solid var(--border-subtle)', maxWidth: '68ch' }}>
+            <Box sx={{ mt: { xs: 6, md: 8 }, pt: 2.6, borderTop: '1px solid var(--border-subtle)', maxWidth: '68ch' }}>
               <Typography sx={{ fontSize: '0.84rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
                 Written from the Hey Open application and the product site, both walked on 4 and
                 5 November 2026. Model counts, badges, prices and availability were read from the
@@ -1228,8 +1235,48 @@ export default function HelpPage() {
               </Typography>
             </Box>
           </Box>
+
+          {/* ---------------- on this page ---------------- */}
+          <Box
+            component="aside"
+            aria-label="On this page"
+            sx={{
+              display: { xs: 'none', lg: 'block' },
+              position: 'sticky', top: 88,
+              maxHeight: 'calc(100vh - 104px)',
+              pt: 5, pb: 6,
+              ...quietScroll,
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.08em',
+                textTransform: 'uppercase', color: 'var(--text-muted)', mb: 1.2,
+              }}
+            >
+              On this page
+            </Typography>
+            {SECTIONS.map((s) => (
+              <Box
+                key={s.id}
+                component="a"
+                href={`#${s.id}`}
+                sx={{
+                  display: 'block', textDecoration: 'none',
+                  fontSize: '0.84rem', lineHeight: 1.42, py: 0.62, pl: 1.4,
+                  borderLeft: '2px solid',
+                  borderLeftColor: active === s.id ? 'var(--brand-accent)' : 'var(--border-subtle)',
+                  color: active === s.id ? 'var(--brand-accent)' : 'var(--text-muted)',
+                  transition: 'color .12s ease, border-color .12s ease',
+                  '&:hover': { color: 'var(--text-heading)' },
+                }}
+              >
+                {s.nav}
+              </Box>
+            ))}
+          </Box>
         </Box>
-      </Container>
+      </Box>
 
       <Footer />
     </Box>
