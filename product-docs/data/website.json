@@ -1,0 +1,169 @@
+{
+  "_source": "Crawled from https://hey-open.vercel.app on 4 November 2026.",
+  "_note": "The deployed build carries the recent section work (Four ways to generate real revenue, Revenue earned / Compute reinvested, Run it under your own name) but NOT the metadata commit fe06f60: page titles are still the old ones, and the home page still reads 'Hey Open | AI Assistant'.",
+  "_status": "Captured for the themed document that was not built before the usage limit was reached. Page copy and heading structure are complete; screenshots of the website pages are not.",
+  "crawledOn": "2026-11-04",
+  "routes": [
+    {
+      "path": "/",
+      "title": "Hey Open | AI Assistant",
+      "words": 1289,
+      "headings": [
+        "H1 Hey Open..",
+        "H2 From multi-model access to private, uncensored AI.",
+        "H2 Stop paying for every AI separately.",
+        "H3 Pay for it. Or let your holdings pay for it.",
+        "H2 Every model you need. All in One place.",
+        "H2 Ask four models. Get one answer.",
+        "H2 Unfiltered. From Chat to Code.",
+        "H3 You use AI. $OPEN burns.",
+        "H3 Not every question needs the biggest model.",
+        "H2 One endpoint. Every model behind it.",
+        "H2 Give your team AI. Keep your data private.",
+        "H2 You shouldn't have to bet on one model."
+      ],
+      "anchors": ["#pricing", "#consensus-mode", "#api"]
+    },
+    {
+      "path": "/models",
+      "title": "200+ AI Models in One Subscription | Hey Open",
+      "words": 1381,
+      "headings": [
+        "H1 Every model. One subscription.",
+        "H2 32 labs. One account.",
+        "H2 No model wins at everything.",
+        "H2 Every one of them, one click away.",
+        "H2 Browse every model",
+        "H2 All 200+ of them, behind one login."
+      ]
+    },
+    {
+      "path": "/memory",
+      "title": "Universal Memory — One Context Across Every AI Model | Hey Open",
+      "words": 839,
+      "headings": [
+        "H1 Say it once. Pick up anywhere.",
+        "H2 Switch models. Keep the context.",
+        "H2 You decide what it keeps.",
+        "H2 Most AI memory stops at the app.",
+        "H2 Your memory belongs to you. Not the model.",
+        "H2 Stop starting over with AI."
+      ]
+    },
+    {
+      "path": "/private",
+      "title": "Private AI — Confidential Intelligence | Hey Open",
+      "words": 493,
+      "headings": [
+        "H1 What you ask stays yours.",
+        "H2 Privacy that is built, not promised.",
+        "H2 Your request goes in. Your data doesn't stick around.",
+        "H2 Private enough to ask. Unfiltered enough to answer.",
+        "H2 Ask anything. Leave nothing behind."
+      ]
+    },
+    {
+      "path": "/docs",
+      "title": "What You Can Build With Hey Open | Hey Open",
+      "words": 928,
+      "headings": [
+        "H1 The model changes. The thread does not.",
+        "H2 Start anywhere. Finish in the same thread.",
+        "H3 A film, start to finish.",
+        "H3 A support agent that knows when to escalate.",
+        "H3 Sensitive documents, nothing left behind.",
+        "H2 The same work, counted honestly.",
+        "H2 Bring the thing you gave up on."
+      ]
+    },
+    {
+      "path": "/stake",
+      "title": "Stake $OPEN: Earn Yield and Mint $HEY | Hey Open",
+      "words": 716,
+      "headings": [
+        "H1 The Gateway for Unrestricted AI",
+        "H2 One token. More ways to benefit.",
+        "H2 Four ways to generate real revenue.",
+        "H2 Where the work actually happens.",
+        "H2 Revenue grows. Supply can shrink.",
+        "H2 Your $OPEN. More than a holding."
+      ]
+    },
+    {
+      "path": "/enterprise",
+      "title": "The economics behind $OPEN | Hey Open",
+      "words": 487,
+      "headings": [
+        "H1 Real AI demand. A stronger $OPEN economy.",
+        "H2 Their brand. Our infrastructure.",
+        "H2 Compute prices move. We manage the exposure.",
+        "H2 Revenue earned. Compute reinvested.",
+        "H2 Run it under your own name."
+      ]
+    },
+    {
+      "path": "/token",
+      "title": "Tokenomics — $OPEN Revenue Flywheel & Utility | Hey Open",
+      "words": 562,
+      "headings": [
+        "H1 $OPEN is rewarded for real usage, not printed out of thin air.",
+        "H2 How value flows through $OPEN",
+        "H3 Product revenue",
+        "H3 Protocol fees",
+        "H3 Market buys $OPEN",
+        "H3 Providers rewarded, surplus burns",
+        "H2 Native currency for autonomous agents.",
+        "H3 Pay for usage",
+        "H3 Stake to serve",
+        "H3 Vote on the rules",
+        "H3 Earn for work",
+        "H2 Built for the long term.",
+        "H2 Fueling the next generation of AI and autonomous compute."
+      ]
+    },
+    {
+      "path": "/capabilities",
+      "title": "Capabilities — Text, Photoreal Images, Voice & Video | Hey Open",
+      "words": 667,
+      "headings": [
+        "H1 Uncensored chat, photoreal images, voice & video.",
+        "H2 Describe what you envision. Render in seconds.",
+        "H2 Unfiltered logic and chain-of-thought proofs.",
+        "H2 Real-time voice conversations without round-trip latency.",
+        "H2 Clips from a written brief. Seamless physics & sound.",
+        "H2 Built for Autonomous Agents.",
+        "H2 Ready to unleash the full frontier of AI capabilities?"
+      ]
+    },
+    {
+      "path": "/hey",
+      "title": "$HEY: Compute Credit, Every Day | Hey Open",
+      "words": 698,
+      "headings": [
+        "H1 $HEY",
+        "H2 Hold it, stake it, or pass it on.",
+        "H3 Stake once. Credits arrive daily.",
+        "H2 Compute you hold, instead of compute you rent.",
+        "H2 Four ways people use it.",
+        "H2 A day of compute, every day."
+      ]
+    },
+    { "path": "/privacy-policy", "title": "Privacy Policy | Hey Open", "note": "Legal page. Not crawled in detail." },
+    { "path": "/terms", "title": "Terms of Service | Hey Open", "note": "Legal page. Carries unfilled placeholders." },
+    { "path": "/chat", "title": "Chat - Hey Open", "note": "Redirects into the application." }
+  ],
+  "notDeployed": {
+    "_note": "Present in the local repo but not on the live deployment as of this crawl.",
+    "items": [
+      "PageMeta metadata: og:title, og:description, og:url, twitter tags and canonical links on every page.",
+      "Home page title change from 'Hey Open | AI Assistant' to 'Hey Open | Private, Multi-Model AI'.",
+      "Nav changes: Guide hidden, $HEY hidden, Token pill hidden."
+    ]
+  },
+  "contradictionsWithTheApp": [
+    "Site /stake and /token describe staking, buybacks and burns in the present tense. In the application, Staking is a Coming Soon page.",
+    "Site /models claims 200+ models. The live picker holds 133: 64 text, 35 image, 34 video.",
+    "Site /private carries blanket zero-retention language. The app exposes four distinct privacy badges whose guarantees differ by route.",
+    "Site home advertises unlimited text and image generation on Pro. Terms permit credits, rate limits and overages."
+  ]
+}

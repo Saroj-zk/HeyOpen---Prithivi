@@ -19,6 +19,7 @@ const NAV_LINKS = [
   /* The staking page is about the token, so it is named after it. */
   { label: '$OPEN', href: '/stake' },
   { label: 'Enterprise', href: '/enterprise' },
+  { label: 'Help', href: '/help' },
   /* $HEY is hidden from the nav on request. Nothing else in the site links
      to /hey, so the page is now reachable only by typing the address.
      Uncomment to put it back. */

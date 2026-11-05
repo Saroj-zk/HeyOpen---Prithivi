@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hey Open Help Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* Single-theme white help centre. Fraunces display over Inter body, the
+     site's own faces; brand orange used only for state and emphasis.
+     Layout: fixed nav rail, 72ch article, sticky contents rail. */
+  :root{
+    color-scheme: light;
+    --paper:#ffffff;
+    --panel:#f7f8fa;
+    --ink:#101418;
+    --muted:#5c6673;
+    --faint:#8b949e;
+    --rule:#e4e7ec;
+    --accent:#e2590c;
+    --accent-soft:#fff4ec;
+    --good:#0f7b4f;
+    --good-soft:#eefaf3;
+    --warn:#8a5a00;
+    --warn-soft:#fff8e8;
+    --stop:#a3302a;
+    --stop-soft:#fdeeed;
+    --mono:"Roboto Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper); color:var(--ink);
+    font:400 16px/1.68 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+
+  /* ---------- masthead ---------- */
+  header.top{
+    position:sticky; top:0; z-index:40; background:rgba(255,255,255,.93);
+    backdrop-filter:saturate(160%) blur(10px);
+    border-bottom:1px solid var(--rule);
+  }
+  .top .in{max-width:1400px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+  .wordmark{font-family:Fraunces,Georgia,serif; font-weight:600; font-size:19px; letter-spacing:-.01em}
+  .wordmark span{color:var(--accent)}
+  .top .meta{margin-left:auto; font-size:12.5px; color:var(--muted); font-family:var(--mono)}
+
+  /* ---------- shell ---------- */
+  .shell{max-width:1400px; margin:0 auto; padding:0 24px; display:grid; gap:40px;
+    grid-template-columns:232px minmax(0,1fr) 196px; align-items:start}
+
+  nav.rail{position:sticky; top:62px; max-height:calc(100vh - 62px); overflow-y:auto; padding:30px 0 60px}
+  nav.rail .grp{font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--faint); margin:20px 0 7px}
+  nav.rail .grp:first-child{margin-top:0}
+  nav.rail a{display:block; padding:5px 10px; margin-left:-10px; font-size:13.8px; color:var(--muted);
+    text-decoration:none; border-radius:6px; line-height:1.4}
+  nav.rail a:hover{background:var(--panel); color:var(--ink)}
+  nav.rail a.on{background:var(--accent-soft); color:var(--accent); font-weight:600}
+
+  main{padding:34px 0 120px; min-width:0}
+
+  aside.toc{position:sticky; top:62px; max-height:calc(100vh - 62px); overflow-y:auto; padding:34px 0 60px}
+  aside.toc h4{margin:0 0 10px; font-size:10.5px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--faint)}
+  aside.toc a{display:block; padding:4px 0 4px 11px; font-size:13px; color:var(--muted);
+    text-decoration:none; border-left:2px solid var(--rule); line-height:1.45}
+  aside.toc a:hover{color:var(--ink)}
+  aside.toc a.on{border-left-color:var(--accent); color:var(--accent)}
+
+  /* ---------- article ---------- */
+  .lede{font-size:18px; line-height:1.62; color:var(--muted); max-width:70ch; margin:0 0 22px}
+  h1{font-family:Fraunces,Georgia,serif; font-weight:600; font-size:clamp(2.1rem,4vw,2.75rem);
+    letter-spacing:-.02em; line-height:1.1; margin:0 0 14px; text-wrap:balance}
+  h2{font-family:Fraunces,Georgia,serif; font-weight:600; font-size:1.62rem; letter-spacing:-.015em;
+    line-height:1.2; margin:0 0 14px; text-wrap:balance; scroll-margin-top:84px}
+  h3{font-size:1.07rem; font-weight:700; margin:28px 0 8px; letter-spacing:-.01em; scroll-margin-top:84px}
+  h4{font-size:.95rem; font-weight:700; margin:20px 0 6px; color:var(--ink)}
+  p{margin:0 0 13px; max-width:72ch}
+  ul,ol{margin:0 0 13px; padding-left:22px; max-width:72ch}
+  li{margin:5px 0}
+  section.band{border-top:1px solid var(--rule); padding-top:30px; margin-top:44px}
+  section.band:first-of-type{border-top:0; padding-top:0; margin-top:0}
+  .kicker{font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 9px}
+
+  /* ---------- components ---------- */
+  figure{margin:20px 0}
+  figure img{display:block; width:100%; border:1px solid var(--rule); border-radius:10px}
+  figcaption{margin-top:8px; font-size:12.8px; color:var(--faint)}
+
+  .tbl{overflow-x:auto; margin:0 0 16px; border:1px solid var(--rule); border-radius:10px}
+  table{border-collapse:collapse; width:100%; font-size:14px; font-variant-numeric:tabular-nums}
+  th,td{text-align:left; padding:9px 13px; border-bottom:1px solid var(--rule); vertical-align:top}
+  th{background:var(--panel); font-weight:600; font-size:12.5px; letter-spacing:.02em; white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td code{white-space:nowrap}
+
+  code{font-family:var(--mono); font-size:.87em; background:var(--panel); padding:.1em .38em;
+    border-radius:4px; border:1px solid var(--rule)}
+  pre{background:#101418; color:#e8ecf1; padding:15px 17px; border-radius:10px; overflow-x:auto;
+    font-family:var(--mono); font-size:12.8px; line-height:1.62; margin:0 0 16px}
+  pre code{background:none; border:0; padding:0; color:inherit; font-size:inherit}
+
+  .steps{counter-reset:s; list-style:none; padding:0; margin:14px 0 16px; max-width:72ch}
+  .steps>li{counter-increment:s; position:relative; padding:0 0 15px 40px; margin:0}
+  .steps>li::before{content:counter(s); position:absolute; left:0; top:-1px; width:25px; height:25px;
+    border-radius:50%; background:var(--accent); color:#fff; font-size:12.5px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; font-variant-numeric:tabular-nums}
+  .steps>li::after{content:""; position:absolute; left:12px; top:28px; bottom:2px; width:1px; background:var(--rule)}
+  .steps>li:last-child{padding-bottom:0}
+  .steps>li:last-child::after{display:none}
+  .steps b{display:block; margin-bottom:2px}
+
+  .note{border-radius:10px; padding:13px 16px; margin:0 0 16px; border:1px solid; font-size:14.5px; max-width:72ch}
+  .note p:last-child{margin-bottom:0}
+  .note .tag{display:block; font-size:10.5px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; margin-bottom:5px}
+  .note.info{background:var(--panel); border-color:var(--rule)}
+  .note.info .tag{color:var(--muted)}
+  .note.good{background:var(--good-soft); border-color:#bfe3d0}
+  .note.good .tag{color:var(--good)}
+  .note.warn{background:var(--warn-soft); border-color:#ebd9a8}
+  .note.warn .tag{color:var(--warn)}
+  .note.stop{background:var(--stop-soft); border-color:#eec3bf}
+  .note.stop .tag{color:var(--stop)}
+
+  .pill{display:inline-block; font-family:var(--mono); font-size:10.5px; font-weight:500;
+    padding:2px 7px; border-radius:999px; border:1px solid var(--rule); background:var(--panel);
+    color:var(--muted); white-space:nowrap; letter-spacing:.02em}
+  .pill.a{background:var(--accent-soft); border-color:#f6d4bd; color:var(--accent)}
+  .pill.s{background:var(--stop-soft); border-color:#eec3bf; color:var(--stop)}
+  .pill.g{background:var(--good-soft); border-color:#bfe3d0; color:var(--good)}
+
+  .grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(248px,1fr)); gap:14px; margin:0 0 16px}
+  .card{border:1px solid var(--rule); border-radius:10px; padding:15px 17px; background:var(--paper)}
+  .card h4{margin:0 0 5px}
+  .card p{margin:0; font-size:14px; color:var(--muted)}
+
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:12px; margin:0 0 18px}
+  .stat{border:1px solid var(--rule); border-radius:10px; padding:13px 15px; background:var(--panel)}
+  .stat b{display:block; font-family:Fraunces,Georgia,serif; font-size:1.6rem; font-weight:600;
+    letter-spacing:-.02em; font-variant-numeric:tabular-nums; line-height:1.1}
+  .stat span{display:block; font-size:12px; color:var(--muted); margin-top:3px}
+
+  .faq{border-bottom:1px solid var(--rule); padding:14px 0}
+  .faq:last-of-type{border-bottom:0}
+  .faq h4{margin:0 0 5px; font-size:.98rem}
+  .faq p{margin:0; color:var(--muted); font-size:14.8px}
+
+  footer.end{border-top:1px solid var(--rule); margin-top:56px; padding-top:22px;
+    font-size:13px; color:var(--faint); max-width:72ch}
+
+  @media (max-width:1140px){
+    .shell{grid-template-columns:214px minmax(0,1fr)}
+    aside.toc{display:none}
+  }
+  @media (max-width:820px){
+    .shell{grid-template-columns:1fr; gap:0; padding:0 16px}
+    nav.rail{position:static; max-height:none; border-bottom:1px solid var(--rule); padding:18px 0}
+    nav.rail .inner{display:flex; flex-wrap:wrap; gap:5px}
+    nav.rail .grp{width:100%; margin:12px 0 3px}
+    nav.rail a{margin:0; padding:5px 11px; border:1px solid var(--rule); border-radius:999px; font-size:13px}
+    main{padding:26px 0 80px}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto !important}}
+  html{scroll-behavior:smooth}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="in">
+    <div class="wordmark">Hey <span>Open</span> &nbsp;Help Center</div>
+    <div class="meta">Updated 5 Nov 2026</div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <nav class="rail" aria-label="Sections">
+    <div class="inner">
+      <div class="grp">Getting started</div>
+      <a href="#what" class="on">What is Hey Open?</a>
+      <a href="#start">Your first conversation</a>
+      <a href="#workspace">The workspace</a>
+
+      <div class="grp">Chat</div>
+      <a href="#models">Choosing a model</a>
+      <a href="#privacy">Privacy filter</a>
+      <a href="#mode">Request mode</a>
+      <a href="#consensus">Consensus Mode</a>
+      <a href="#memory">Memory</a>
+
+      <div class="grp">Create</div>
+      <a href="#images">Images</a>
+      <a href="#video">Video</a>
+      <a href="#tools">Image &amp; Audio Tools</a>
+      <a href="#agents">Agents</a>
+
+      <div class="grp">Plans</div>
+      <a href="#plans">Plans and pricing</a>
+      <a href="#pay">How you pay</a>
+
+      <div class="grp">Build</div>
+      <a href="#api">API</a>
+      <a href="#enterprise">Enterprise</a>
+      <a href="#token">$OPEN and $HEY</a>
+
+      <div class="grp">Help</div>
+      <a href="#soon">Not available yet</a>
+      <a href="#trouble">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </nav>
+
+  <main>
+    <p class="kicker">Getting started</p>
+    <h1 id="what" style="scroll-margin-top:84px">What is Hey Open?</h1>
+    <p class="lede">Hey Open is a private, multi-model AI workspace. One app gives you 133 AI models,
+      a privacy level you set per conversation, a memory that follows you between models, and tools
+      for images, video and audio in the same place.</p>
+
+    <p><b>Available on:</b> web at <a href="https://ais.openledger.xyz/chat">ais.openledger.xyz</a>.
+      The app opens straight into a chat. You can browse the whole model catalogue without an
+      account; sending a message requires signing in.</p>
+
+    <div class="stats">
+      <div class="stat"><b>133</b><span>models in total</span></div>
+      <div class="stat"><b>64</b><span>text models</span></div>
+      <div class="stat"><b>35</b><span>image models</span></div>
+      <div class="stat"><b>34</b><span>video models</span></div>
+      <div class="stat"><b>$20</b><span>per month, Pro</span></div>
+    </div>
+
+    <figure>
+      <img src="images/01-chat-empty.jpg" alt="The Hey Open chat screen, with a message composer, an Auto model picker and five starter chips." />
+      <figcaption>The chat screen. Composer in the middle, model and request-mode controls beneath it, privacy and memory in the header.</figcaption>
+    </figure>
+
+    <section class="band">
+      <h2>What makes it different</h2>
+      <div class="grid2">
+        <div class="card"><h4>Every model, one subscription</h4>
+          <p>Separate subscriptions to ChatGPT, Claude, Gemini and the rest come to about $165 a month. Hey Open is $20.</p></div>
+        <div class="card"><h4>Privacy you set per conversation</h4>
+          <p>A filter in the header decides which models you may use, by how strongly each one protects the prompt.</p></div>
+        <div class="card"><h4>Speed or cost, per request</h4>
+          <p>A request mode on the composer biases the gateway toward the cheapest or the fastest providers.</p></div>
+        <div class="card"><h4>One memory across models</h4>
+          <p>Saved details about you are reused in new chats, whichever model answers.</p></div>
+        <div class="card"><h4>Chat, image, video and audio</h4>
+          <p>The same picker holds 64 text models, 35 image models and 34 video models, plus 12 single-purpose tools.</p></div>
+        <div class="card"><h4>One API endpoint</h4>
+          <p>An OpenAI-compatible endpoint reaches every model behind one key.</p></div>
+      </div>
+    </section>
+
+    <!-- ==================== GETTING STARTED ==================== -->
+    <section class="band" id="start">
+      <p class="kicker">Getting started</p>
+      <h2>Your first conversation</h2>
+      <p>You do not need an account to look around. You do need one to send a message.</p>
+
+      <ol class="steps">
+        <li><b>Open the app</b>
+          Go to <a href="https://ais.openledger.xyz/chat">ais.openledger.xyz/chat</a>. It opens on
+          the chat screen, with the composer in the middle.</li>
+        <li><b>Set your privacy level, if it matters</b>
+          Click <b>Privacy</b> in the header and pick Min, Mid or Max. This decides which models you
+          are allowed to use. Leave it on Min for ordinary work.</li>
+        <li><b>Choose a model, or leave it on Auto</b>
+          The pill under the composer reads <b>Auto</b>. Auto picks a model per message. Click it to
+          choose one yourself.</li>
+        <li><b>Type your question</b>
+          Be specific about what you want back. Instead of &ldquo;write a launch post&rdquo;, try
+          &ldquo;write a 400 word launch announcement for enterprise IT buyers, with a headline, a
+          subhead and three benefits&rdquo;.</li>
+        <li><b>Sign in when prompted</b>
+          Sending requires an account. Click <b>Connect Wallet</b> in the header.</li>
+        <li><b>Follow up in the same thread</b>
+          Keep going rather than starting over. The thread holds the context, and you can switch
+          models mid-conversation without losing it.</li>
+      </ol>
+
+      <h3>Starter prompts</h3>
+      <p>Five chips sit under the composer on an empty screen: <b>Weather</b>, <b>Code</b>,
+        <b>Write</b>, <b>Analyze</b> and <b>Brainstorm</b>. Each fills the composer with a starting
+        prompt you can edit.</p>
+
+      <h3>If the answer is not good enough</h3>
+      <ul>
+        <li><b>Too broad?</b> Say what to keep, what to cut, and what a good answer looks like.</li>
+        <li><b>Misunderstood?</b> Ask the model to state its assumptions before continuing.</li>
+        <li><b>Confidently wrong?</b> Check it elsewhere, or ask a second model to criticise it. A
+          second opinion sharpens scrutiny; it does not prove correctness.</li>
+        <li><b>Forgot something?</b> The thread may have outgrown the model's context window.
+          Restate the decisive requirement.</li>
+      </ul>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>A long thread costs more per turn than a short one, because the earlier turns are sent
+        again as context each time.</p></div>
+    </section>
+
+    <!-- ==================== WORKSPACE ==================== -->
+    <section class="band" id="workspace">
+      <p class="kicker">Getting started</p>
+      <h2>The workspace</h2>
+      <p>The sidebar groups everything into three areas. Click the menu icon to expand it and see the
+        labels.</p>
+
+      <figure>
+        <img src="images/09-sidebar-expanded.jpg" alt="The expanded Hey Open sidebar showing Workspace, AI Studio and Tools groups." />
+        <figcaption>The expanded sidebar. Workspace, AI Studio and Tools, with recent chats below.</figcaption>
+      </figure>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Group</th><th>Item</th><th>What it does</th><th>State</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="4"><b>Workspace</b></td><td>New Chat</td><td>Starts a fresh conversation</td><td><span class="pill g">Live</span></td></tr>
+          <tr><td>Consensus</td><td>Ask several models at once</td><td><span class="pill a">Pro</span></td></tr>
+          <tr><td>Home</td><td>Quick actions and the community feed</td><td><span class="pill g">Live</span></td></tr>
+          <tr><td>More</td><td>Agents, Community Feed, API, Token Dashboard</td><td><span class="pill g">Live</span></td></tr>
+          <tr><td rowspan="2"><b>AI Studio</b></td><td>Model Factory</td><td>Customise and train your own models</td><td><span class="pill s">Coming soon</span></td></tr>
+          <tr><td>Staking</td><td>Stake tokens to support the network</td><td><span class="pill s">Coming soon</span></td></tr>
+          <tr><td rowspan="2"><b>Tools</b></td><td>Image</td><td>9 single-purpose image tools</td><td><span class="pill g">Live</span></td></tr>
+          <tr><td>Audio</td><td>3 audio tools</td><td><span class="pill g">Live</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>The header</h3>
+      <ul>
+        <li><b>Memory</b> opens two switches that control what is saved and what is used.</li>
+        <li><b>Privacy</b> opens the Min / Mid / Max filter.</li>
+        <li><b>Connect Wallet</b> signs you in.</li>
+      </ul>
+
+      <h3>The composer</h3>
+      <ul>
+        <li>The <b>model pill</b>, reading <b>Auto</b> until you choose a model.</li>
+        <li>The <b>request mode pill</b>, reading <b>Boost</b> by default.</li>
+        <li><b>Voice input</b>, an <b>expand</b> control for a larger editor, and <b>send</b>.</li>
+      </ul>
+
+      <h3>Finding an old chat</h3>
+      <p>Chat search is at the top of the sidebar, or press <code>Ctrl K</code>. Recent chats are
+        listed below the Tools group.</p>
+
+      <figure>
+        <img src="images/07-search-chats.jpg" alt="The chat search dialog, opened with Ctrl K." />
+        <figcaption>Chat search, reachable with Ctrl K from anywhere in the app.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ==================== MODELS ==================== -->
+    <section class="band" id="models">
+      <p class="kicker">Chat</p>
+      <h2>Choosing a model</h2>
+      <p>Hey Open holds 133 models. The picker in the app is the source of truth; this page is a
+        snapshot taken on 4 November 2026.</p>
+
+      <ol class="steps">
+        <li><b>Open the picker</b>
+          Click the model pill under the composer. It reads <b>Auto</b> until you change it.</li>
+        <li><b>Narrow the list</b>
+          Use the <b>All / Text / Image / Video</b> tabs, or type in <b>Search models</b>.</li>
+        <li><b>Read the badges</b>
+          Each model carries badges for privacy, web access and restrictions. They are explained below.</li>
+        <li><b>Pick one, or star it</b>
+          Click a model to use it. Click the star to keep it at the top of the list.</li>
+      </ol>
+
+      <figure>
+        <img src="images/03-model-picker-video.jpg" alt="The model picker, open on the Video tab, showing models with per-second prices and favourite stars." />
+        <figcaption>The model picker on the Video tab. Video models show a price per second of output.</figcaption>
+      </figure>
+
+      <h3>What the badges mean</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Badge</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill">Incognito</span></td><td>Routed so the provider does not receive your identity. The provider still processes the prompt under its own terms.</td></tr>
+          <tr><td><span class="pill">Private</span></td><td>Runs under zero-data-retention terms.</td></tr>
+          <tr><td><span class="pill">TEE</span></td><td>Trusted Execution Environment. Inference runs inside a hardware-isolated enclave, so the GPU operator cannot read the prompt.</td></tr>
+          <tr><td><span class="pill">E2EE</span></td><td>End to end encrypted. Encrypted on your device, decrypted only inside a verified enclave.</td></tr>
+          <tr><td><span class="pill">Web</span></td><td>Can retrieve live web results. 24 of the 64 text models carry this.</td></tr>
+          <tr><td><span class="pill">Vision</span></td><td>Accepts images as input.</td></tr>
+          <tr><td><span class="pill">Uncensored</span></td><td>Reduced content filtering. Applicable law and the Terms still apply.</td></tr>
+          <tr><td><span class="pill">Not in Boost</span></td><td>Unavailable when the request mode is set to Boost.</td></tr>
+          <tr><td><span class="pill">Image required</span></td><td>Needs a source image. Cannot generate from text alone.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Which model should I use?</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>If you want</th><th>Try</th></tr></thead>
+        <tbody>
+          <tr><td>Most everyday things</td><td>Auto, or GPT 6 Luna</td></tr>
+          <tr><td>Hard reasoning</td><td>Claude Opus 5, o3, Kimi K2 Thinking</td></tr>
+          <tr><td>Writing</td><td>Claude Sonnet 5, GPT 6 Sol</td></tr>
+          <tr><td>Code</td><td>Kimi K2.7 Code, Claude Opus 5</td></tr>
+          <tr><td>Speed</td><td>Gemini 3.8 Flash, Qwen3.8 Flash, Nemotron 3.5 Lightning</td></tr>
+          <tr><td>Live web results</td><td>Any <span class="pill">Web</span> model, such as Grok 4.6 or GPT 5.1</td></tr>
+          <tr><td>Maximum privacy</td><td>Any <span class="pill">E2EE</span> model, such as Qwen3.8 27B (E2EE)</td></tr>
+          <tr><td>Reading an image</td><td>Qwen3 VL 30B (E2EE) or Qwen3 VL 235B</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>A sample of the catalogue</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Provider</th><th>Models available</th></tr></thead>
+        <tbody>
+          <tr><td>OpenAI</td><td>GPT 6 Sol, GPT 6 Luna, GPT 6 Astra, GPT 5.6 Sol / Luna / Terra, GPT 5.4, GPT 5.4 Mini, GPT 5.1, GPT 3.5 Turbo, GPT OSS 120B, o3, o4 mini</td></tr>
+          <tr><td>Anthropic</td><td>Claude Opus 5, Claude Opus 4.7, Claude Sonnet 5, Claude Haiku 4.5, Claude Fable 5</td></tr>
+          <tr><td>Google</td><td>Gemini 4 Argon, Gemini 3.8 Flash, Gemini 3.7 Flash, Gemini 3.5 / 3.1 Flash Lite, Gemini 2.5 Pro, Gemma 4 26B, Gemma 4 31B IT</td></tr>
+          <tr><td>xAI</td><td>Grok 4.6, Grok 4.5, Grok 4.3</td></tr>
+          <tr><td>Others</td><td>DeepSeek V4 Pro / Flash / R1, Qwen3.8 Max, Qwen3.7 Max, Kimi K3, Kimi K2 Thinking, MiniMax M3, Mistral Large 4.0, GLM 5.3, Nemotron 3.5 Lightning, Fugu Ultra, Hy3, MiMo V2.5 Pro</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>Every model in the picker shows <b>Sign in</b>. Browsing the catalogue is open to
+        everyone; running a model is not. A context window figure is a technical maximum, not a
+        target: filling it is slow and expensive.</p></div>
+    </section>
+
+    <!-- ==================== PRIVACY ==================== -->
+    <section class="band" id="privacy">
+      <p class="kicker">Chat</p>
+      <h2>Privacy filter: Min, Mid and Max</h2>
+      <p>This is the control most people miss. It sits in the header next to Memory, and it decides
+        which models you are allowed to use at all, by how strongly the route protects your prompt.</p>
+
+      <figure>
+        <img src="images/02-privacy-filter.jpg" alt="The privacy filter open, showing Min, Mid and Max with Min selected." />
+        <figcaption>The privacy filter, set to Min. Raising it removes models from the picker.</figcaption>
+      </figure>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Setting</th><th>What it allows</th><th>Text models left</th></tr></thead>
+        <tbody>
+          <tr><td><b>Min</b></td><td>Every model, whatever it is tagged.</td><td>64 of 64</td></tr>
+          <tr><td><b>Mid</b></td><td>Private, TEE and E2EE models only.</td><td>10 of 64</td></tr>
+          <tr><td><b>Max</b></td><td>TEE and E2EE models only, hardware-protected prompts.</td><td>9 of 64</td></tr>
+        </tbody>
+      </table></div>
+
+      <ol class="steps">
+        <li><b>Click Privacy in the header</b>
+          Three settings appear, with a one-line description of the current one underneath.</li>
+        <li><b>Pick a level</b>
+          Min for ordinary work. Mid when the material is confidential. Max when it must never
+          leave an enclave in readable form.</li>
+        <li><b>Check your model is still there</b>
+          Raising the filter removes models. If a model you were using has gone, this is why.</li>
+      </ol>
+
+      <div class="note warn"><span class="tag">Important</span>
+        <p>HTTPS in transit is not end-to-end encryption, and <b>Incognito</b> is the weakest of the
+        four badges: it hides who you are from the provider, but does not stop the provider keeping
+        the prompt. Only <b>E2EE</b> means the prompt is encrypted before it leaves your device.</p></div>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>Never put passwords, recovery phrases, secret keys or API credentials into a prompt, on
+        any route and at any privacy level.</p></div>
+    </section>
+
+    <!-- ==================== REQUEST MODE ==================== -->
+    <section class="band" id="mode">
+      <p class="kicker">Chat</p>
+      <h2>Request mode</h2>
+      <p>Separate from privacy, the request mode decides which providers the gateway reaches for
+        first. It sits on the composer next to the model pill, and reads <b>Boost</b> by default.</p>
+
+      <figure>
+        <img src="images/04-memory-and-request-mode.jpg" alt="Memory settings on the left and the four request modes on the composer." />
+        <figcaption>Memory settings in the header, and the four request modes on the composer.</figcaption>
+      </figure>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Mode</th><th>What it does</th><th>Use it when</th></tr></thead>
+        <tbody>
+          <tr><td><b>Default</b></td><td>Every model; the gateway picks the vendor.</td><td>You have no preference.</td></tr>
+          <tr><td><b>Saver</b></td><td>Cheapest providers first.</td><td>The task is routine and you care about cost.</td></tr>
+          <tr><td><b>Balanced</b></td><td>A balance of speed and cost.</td><td>General work.</td></tr>
+          <tr><td><b>Boost</b></td><td>Fastest providers first.</td><td>You are waiting on the answer.</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>Three text models and ten image models are badged <b>Not in Boost</b> and disappear from
+        the picker in that mode. If a model vanished and the privacy filter is unchanged, check this.</p></div>
+
+      <h3>Token optimisation</h3>
+      <p>A request carries more than your message: the current instruction, the chat history,
+        retrieved memory, tool definitions and any media. Hey Open trims duplicated or irrelevant
+        material and reuses context where it can, which the site describes as up to 60% fewer tokens
+        billed on a typical example.</p>
+      <p>That is an estimate, not a guarantee on any given request. Trimming is not free of risk
+        either: if correctness depends on a specific instruction stated earlier, restate it rather
+        than trusting automatic selection.</p>
+    </section>
+
+    <!-- ==================== CONSENSUS ==================== -->
+    <section class="band" id="consensus">
+      <p class="kicker">Chat</p>
+      <h2>Consensus Mode</h2>
+      <p>Consensus sends one prompt to several models and brings their answers together, so you can
+        see where they disagree before you act.</p>
+
+      <figure>
+        <img src="images/05-consensus-gate.jpg" alt="The Consensus screen showing a sign-in gate stating it is available on the Pro plan and above." />
+        <figcaption>Consensus requires signing in, and a Pro plan.</figcaption>
+      </figure>
+
+      <div class="note info"><span class="tag">Availability</span>
+        <p>Consensus is available to members on the <b>Pro plan and above</b> and requires signing
+        in. Opening it without an account shows a sign-in gate.</p></div>
+
+      <ol class="steps">
+        <li><b>Open Consensus from the sidebar</b>
+          It carries a <b>NEW</b> badge in the Workspace group.</li>
+        <li><b>Ask a question worth the cost</b>
+          Use it for a decision, a review or a trade-off analysis, not for everyday questions.</li>
+        <li><b>Read the individual answers first</b>
+          The disagreements are the useful part. A combined answer can hide them.</li>
+        <li><b>Verify anything that matters</b>
+          Agreement is not proof.</li>
+      </ol>
+
+      <div class="note warn"><span class="tag">Cost</span>
+        <p>Every participating model consumes usage. One Consensus question can cost several times
+        a single-model turn. It is the easiest way to spend a lot of credits by accident.</p></div>
+    </section>
+
+    <!-- ==================== MEMORY ==================== -->
+    <section class="band" id="memory">
+      <p class="kicker">Chat</p>
+      <h2>Memory</h2>
+      <p>Memory keeps useful details about you so you do not have to re-explain yourself to each new
+        model. Reach it from <b>Memory</b> in the header.</p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Switch</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><b>Save memories from chats</b></td><td>Automatically saves useful details about you as you chat. Requires <b>Use memory</b> to be on.</td></tr>
+          <tr><td><b>Use memory</b></td><td>Lets the assistant use your saved memories in new chats.</td></tr>
+        </tbody>
+      </table></div>
+
+      <p>Turning <b>Use memory</b> off disables saving as well, because the save switch depends on
+        it.</p>
+
+      <div class="note warn"><span class="tag">Important</span>
+        <p>Memory is sent to whichever model answers, so it travels under that model's privacy
+        route. Raise the <a href="#privacy">privacy filter</a> before putting anything sensitive
+        into memory.</p></div>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>Memory is not chat history. It stores selected facts such as preferences, project details
+        and decisions, not a transcript of every conversation.</p></div>
+    </section>
+
+    <!-- ==================== IMAGES ==================== -->
+    <section class="band" id="images">
+      <p class="kicker">Create</p>
+      <h2>Images</h2>
+      <p>35 image models sit in the same picker as chat, under the <b>Image</b> tab.</p>
+
+      <ol class="steps">
+        <li><b>Select an image-capable model</b>
+          A text model cannot generate pictures. Check the Image tab.</li>
+        <li><b>Describe the image, not the feeling</b>
+          Cover subject, intended use, style, composition, background, lighting and framing.</li>
+        <li><b>Set dimensions only if the model exposes them</b>
+          Not every model lets you choose an aspect ratio.</li>
+        <li><b>Assess before you regenerate</b>
+          Check anatomy, text rendering, logos and likeness. Every regeneration is charged again.</li>
+        <li><b>Change one variable at a time</b>
+          Adjust the lighting or the composition, not both, or you will not know which change worked.</li>
+      </ol>
+
+      <h3>What goes in a prompt</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Element</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Subject</td><td>A private AI workspace represented as modular glass panels</td></tr>
+          <tr><td>Style</td><td>Editorial illustration, restrained</td></tr>
+          <tr><td>Palette</td><td>Neutral background, blue-grey</td></tr>
+          <tr><td>Lighting</td><td>Soft directional</td></tr>
+          <tr><td>Composition</td><td>Wide 16:9, generous negative space</td></tr>
+          <tr><td>Exclusions</td><td>No text, no logos</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Model families</h3>
+      <ul>
+        <li><b>Flux</b> &mdash; nine models including Flux 2 Klein, Flux Pro and Flux Realism. All are <span class="pill">Not in Boost</span>.</li>
+        <li><b>Gemini</b> &mdash; Gemini 3 Pro Image, Flash Lite Image and their Edit variants.</li>
+        <li><b>GPT</b> &mdash; GPT Image 2, GPT 5.4 Image 2, GPT 5 Image and Mini, each with an Edit variant.</li>
+        <li><b>Grok</b> &mdash; Grok Imagine Image 2.0 and Edit.</li>
+        <li><b>Others</b> &mdash; Nano Banana Pro, Seedream V5 Pro, Z Image Pro, Qwen Image Edit.</li>
+      </ul>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>Models whose name ends in <b>Edit</b> expect a source image. Eleven image models are badged
+        <span class="pill">Image required</span> and cannot generate from text alone.</p></div>
+    </section>
+
+    <!-- ==================== VIDEO ==================== -->
+    <section class="band" id="video">
+      <p class="kicker">Create</p>
+      <h2>Video</h2>
+      <p>34 video models, under the <b>Video</b> tab. Thirteen of them publish a price per second of
+        output, which makes video the one place in the product where cost is visible before you
+        commit.</p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Model</th><th>Per second</th><th>10 second clip</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Seedance 1.5 Pro</td><td>$0.02</td><td>$0.20</td><td>Cheapest priced model</td></tr>
+          <tr><td>Seedance 2.0 Mini</td><td>$0.03</td><td>$0.30</td><td></td></tr>
+          <tr><td>Seedance 2.0 Fast</td><td>$0.04</td><td>$0.40</td><td></td></tr>
+          <tr><td>Hailuo 2.3</td><td>$0.08</td><td>$0.80</td><td></td></tr>
+          <tr><td>Hailuo 3 Max</td><td>$0.08</td><td>$0.80</td><td></td></tr>
+          <tr><td>Kling V3.0 Standard</td><td>$0.08</td><td>$0.80</td><td></td></tr>
+          <tr><td>Wan 2.7</td><td>$0.10</td><td>$1.00</td><td></td></tr>
+          <tr><td>Kling V3.0 Pro</td><td>$0.11</td><td>$1.10</td><td></td></tr>
+          <tr><td>Kling Video O1</td><td>$0.11</td><td>$1.10</td><td></td></tr>
+          <tr><td>Runway Gen4.5</td><td>$0.12</td><td>$1.20</td><td><span class="pill">Image required</span></td></tr>
+          <tr><td>Hailuo 3</td><td>$0.13</td><td>$1.30</td><td></td></tr>
+          <tr><td>Wan 3.0</td><td>$0.20</td><td>$2.00</td><td><span class="pill">Image required</span></td></tr>
+          <tr><td>Wan 3.0 Prime</td><td>$0.28</td><td>$2.80</td><td>Most expensive priced model</td></tr>
+        </tbody>
+      </table></div>
+
+      <p>Ten seconds costs $0.20 on Seedance 1.5 Pro and $2.80 on Wan 3.0 Prime, a factor of 14.
+        Clip length is the main cost lever, so plan the shot before you generate it.</p>
+
+      <h3>Models without a published price</h3>
+      <p>Veo 3.1 and its Fast and Lite variants, Grok Imagine Video, Flux 3 Video, Seedance 2.0,
+        Happyhorse 1.0 and 1.1, Heygen Video 1, Mischief 1, Wan 2.6, and the Unfiltered variants of
+        Seedance, Wan 2.6, Wan 2.7 and Wan 3.0.</p>
+
+      <h3>Describing a shot</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Element</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>Subject and action</td><td>Rain running down a glass office wall at dusk</td></tr>
+          <tr><td>Camera</td><td>Locked off, slow focus pull to a distant skyline</td></tr>
+          <tr><td>Duration</td><td>Six seconds</td></tr>
+          <tr><td>Mood and palette</td><td>Muted blue light</td></tr>
+          <tr><td>Exclusions</td><td>No text, no on-screen captions</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>Media jobs queue differently from chat. Do not treat an unconfirmed job status as a
+        finished asset. Some models produce silent video and others include audio, so check the
+        model before planning a soundtrack.</p></div>
+    </section>
+
+    <!-- ==================== TOOLS ==================== -->
+    <section class="band" id="tools">
+      <p class="kicker">Create</p>
+      <h2>Image and Audio Tools</h2>
+      <p>Twelve single-purpose tools, reached from the <b>Tools</b> group in the sidebar. Each does
+        one job, so you do not have to describe it in a prompt.</p>
+
+      <figure>
+        <img src="images/06-image-tools.jpg" alt="The Image Tools panel showing nine tools with preview thumbnails." />
+        <figcaption>Image Tools opens as a panel over whatever screen you are on.</figcaption>
+      </figure>
+
+      <h3>Image Tools (9)</h3>
+      <div class="grid2">
+        <div class="card"><h4>Text to Image</h4><p>Generate visuals from prompts</p></div>
+        <div class="card"><h4>Image to Image</h4><p>Transform existing images</p></div>
+        <div class="card"><h4>Image Enhancer</h4><p>Upscale resolution and clarity</p></div>
+        <div class="card"><h4>Image Unblur</h4><p>Sharpen motion-blurred details</p></div>
+        <div class="card"><h4>Image to Anime</h4><p>Convert photos into anime style</p></div>
+        <div class="card"><h4>Image to Cartoon</h4><p>Turn portraits into 3D cartoons</p></div>
+        <div class="card"><h4>Image to text</h4><p>Analyse and extract descriptions</p></div>
+        <div class="card"><h4>Headshots</h4><p>Studio-quality portrait photos</p></div>
+        <div class="card"><h4>Background removal</h4><p>Isolate subjects instantly</p></div>
+      </div>
+
+      <h3>Audio Tools (3)</h3>
+      <div class="grid2">
+        <div class="card"><h4>Text to speech</h4><p>Natural AI voice synthesis</p></div>
+        <div class="card"><h4>Text to Music</h4><p>Compose songs from text prompts</p></div>
+        <div class="card"><h4>Voice to text</h4><p>Transcribe spoken audio into text</p></div>
+      </div>
+
+      <div class="note warn"><span class="tag">Rights</span>
+        <p>Do not imitate a real person's voice or upload a protected recording without rights and
+        consent. A paid plan does not grant ownership of third-party music or samples.</p></div>
+    </section>
+
+    <!-- ==================== AGENTS ==================== -->
+    <section class="band" id="agents">
+      <p class="kicker">Create</p>
+      <h2>Agents</h2>
+      <p>The agent marketplace sits under <b>More</b> in the sidebar.</p>
+
+      <figure>
+        <img src="images/11-agent-marketplace.jpg" alt="The agent marketplace showing cards for Deep Research Agent, Trading Agent, Coding Agent and Financial Analyst." />
+        <figcaption>The agent marketplace. Every agent is currently badged Coming Soon.</figcaption>
+      </figure>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Agent</th><th>Category</th><th>What it does</th><th>Tier</th></tr></thead>
+        <tbody>
+          <tr><td>Deep Research Agent</td><td>Research</td><td>Researches complex topics, analyses multiple sources</td><td>Premium</td></tr>
+          <tr><td>Trading Agent</td><td>Finance &amp; Trading</td><td>Analyses market trends and tracks assets</td><td>Free</td></tr>
+          <tr><td>Coding Agent</td><td>Coding</td><td>Writes, debugs and optimises code</td><td>Enterprise</td></tr>
+          <tr><td>Financial Analyst</td><td>Finance</td><td>Stock prices, financials, earnings, SEC filings</td><td>Premium</td></tr>
+          <tr><td>Web Research</td><td>Research</td><td>Live web search with citations</td><td>Free</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="note stop"><span class="tag">Not available yet</span>
+        <p>Every agent in the marketplace is badged <b>Coming Soon</b>. You can browse them and read
+        their descriptions, but none can be launched. The ratings and download counts on the cards
+        are placeholder values.</p></div>
+    </section>
+
+    <!-- ==================== PLANS ==================== -->
+    <section class="band" id="plans">
+      <p class="kicker">Plans</p>
+      <h2>Plans and pricing</h2>
+      <p>Hey Open Pro is <b>$20 a month</b>. The comparison the site makes is against paying for each
+        AI separately.</p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Separately</th><th>Price</th></tr></thead>
+        <tbody>
+          <tr><td>ChatGPT Plus</td><td>$20</td></tr>
+          <tr><td>Claude Pro</td><td>$20</td></tr>
+          <tr><td>Gemini Pro</td><td>$20</td></tr>
+          <tr><td>Grok</td><td>$30</td></tr>
+          <tr><td>Midjourney</td><td>$30</td></tr>
+          <tr><td>Perplexity Pro</td><td>$20</td></tr>
+          <tr><td>GitHub Copilot</td><td>$10</td></tr>
+          <tr><td>Runway Gen-2</td><td>$15</td></tr>
+          <tr><td><b>Total</b></td><td><b>$165 / month</b></td></tr>
+          <tr><td><b>Hey Open Pro</b></td><td><b>$20 / month</b></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>What Pro includes</h3>
+      <ul>
+        <li>All premium models included</li>
+        <li>Unified context and memory</li>
+        <li>Zero hidden API costs</li>
+        <li>Unlimited text and image generation</li>
+        <li>Consensus Mode</li>
+      </ul>
+      <p>The site states <b>cancel anytime, no lock-in</b>, and <b>free to start, no card, nothing
+        retained</b>.</p>
+
+      <div class="note warn"><span class="tag">Read this before quoting &ldquo;unlimited&rdquo;</span>
+        <p>The marketing page advertises unlimited text and image generation. The Terms of Service
+        separately permit model-specific prices, included credits, rate limits and overages. The
+        entitlement that actually applies is whatever the checkout screen shows, together with any
+        fair-use policy it incorporates. Video is priced per second regardless.</p></div>
+    </section>
+
+    <!-- ==================== PAY ==================== -->
+    <section class="band" id="pay">
+      <p class="kicker">Plans</p>
+      <h2>How you pay</h2>
+      <p>Two ways to cover your credits, and one of them leaves what you hold untouched.</p>
+
+      <div class="grid2">
+        <div class="card"><h4>Pay directly</h4>
+          <p>Card or crypto, whichever you already use. One bill either way.</p></div>
+        <div class="card"><h4>Or stake instead</h4>
+          <p>Stake USDC, ETH or BTC and the yield covers your credits. The position stays yours the
+            whole time, and unstaking simply stops the credits.</p></div>
+      </div>
+
+      <div class="note info"><span class="tag">Card versus crypto</span>
+        <p>Card subscriptions normally renew automatically unless the checkout says otherwise.
+        Crypto subscriptions may require manual renewal, and a completed blockchain payment may be
+        irreversible. Check asset, amount, chain and destination before paying, and never send a
+        second transfer until support confirms the first cannot be reconciled.</p></div>
+
+      <div class="note warn"><span class="tag">Not a guaranteed return</span>
+        <p>What a stake earns moves with the market. Rates are not fixed and nothing here is a
+        guaranteed return.</p></div>
+
+      <h3>Cancelling</h3>
+      <ol class="steps">
+        <li><b>Sign in with the identity that owns the subscription</b>
+          A different wallet or browser profile may show a different plan.</li>
+        <li><b>Open Billing or Subscription and find cancellation</b></li>
+        <li><b>Read the effective date</b>
+          Cancellation generally takes effect at the end of the current paid period, not immediately.</li>
+        <li><b>Keep the confirmation</b></li>
+      </ol>
+      <p>Cancelling the subscription does not revoke API keys, delete memory, close your account or
+        unwind a stake. Those are four separate actions.</p>
+    </section>
+
+    <!-- ==================== API ==================== -->
+    <section class="band" id="api">
+      <p class="kicker">Build</p>
+      <h2>API</h2>
+      <p>One endpoint reaches every model behind one subscription, built for use by people and by
+        x402-ready agents.</p>
+
+      <div class="stats">
+        <div class="stat"><b>1M+</b><span>API calls per day</span></div>
+        <div class="stat"><b>&lt;200ms</b><span>median latency</span></div>
+        <div class="stat"><b>5+</b><span>model families</span></div>
+      </div>
+
+      <p>The endpoint is OpenAI-compatible, so an existing OpenAI SDK integration works by changing
+        the base URL and the key. Set <code>"model": "auto"</code> to let the gateway choose.</p>
+
+      <pre><code>curl https://api.openledger.xyz/v1/chat/completions \
+  -H "Authorization: Bearer $OPENLEDGER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "auto",
+    "messages": [
+      { "role": "user", "content": "Explain quantum computing" }
+    ]
+  }'</code></pre>
+
+      <p>The site shows the same request in Python, TypeScript, TypeScript with the OpenAI SDK, and
+        cURL.</p>
+
+      <div class="note info"><span class="tag">Good to know</span>
+        <p>Log the serving model returned in the response where it is available, so a result can be
+        traced back to the model that produced it. Two <code>auto</code> calls are not guaranteed to
+        use the same model.</p></div>
+    </section>
+
+    <!-- ==================== ENTERPRISE ==================== -->
+    <section class="band" id="enterprise">
+      <p class="kicker">Build</p>
+      <h2>Enterprise</h2>
+      <p>One secure workspace for a company to reach leading AI models, with the privacy and
+        controls IT teams need.</p>
+
+      <div class="grid2">
+        <div class="card"><h4>Company-wide AI access</h4><p>Give every team access from one managed workspace.</p></div>
+        <div class="card"><h4>Model access controls</h4><p>Choose which AI models each team can use.</p></div>
+        <div class="card"><h4>Unified company memory</h4><p>Keep approved company context available across models and teams.</p></div>
+        <div class="card"><h4>Audit and visibility</h4><p>See how AI is being used across your company.</p></div>
+        <div class="card"><h4>Private company data</h4><p>Your prompts and company data are not used to train models.</p></div>
+        <div class="card"><h4>Central user management</h4><p>Add, remove and manage employee access from one place.</p></div>
+        <div class="card"><h4>Usage and spend controls</h4><p>Set limits and track AI usage across the organisation.</p></div>
+        <div class="card"><h4>Enterprise API</h4><p>Connect your internal tools and agents through one API.</p></div>
+      </div>
+
+      <p>The site states <b>SOC 2 Type II Certified</b> and <b>Zero Model Training on Data</b>.
+        Enterprise enquiries go to
+        <a href="mailto:marketing@openledger.xyz">marketing@openledger.xyz</a>
+        (marketing@openledger.xyz).</p>
+
+      <h3>White-label products</h3>
+      <p>Hey Open also powers custom-branded AI products that ship under the customer's own name,
+        in three shapes: a branded AI workspace, an enterprise model API, and an agent platform.
+        Compute costs behind them can be hedged with compute-price options so a quoted rate holds.</p>
+    </section>
+
+    <!-- ==================== TOKEN ==================== -->
+    <section class="band" id="token">
+      <p class="kicker">Build</p>
+      <h2>$OPEN and $HEY</h2>
+      <p>$OPEN is the capital asset behind the product. The published model is that real usage
+        generates revenue, a share of the net revenue buys $OPEN on the open market, and those
+        tokens are burned.</p>
+
+      <h3>Where the revenue comes from</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>#</th><th>Line</th></tr></thead>
+        <tbody>
+          <tr><td>01</td><td>Enterprise inference and API</td></tr>
+          <tr><td>02</td><td>Hey Open subscriptions</td></tr>
+          <tr><td>03</td><td>Pay-as-you-go inference</td></tr>
+          <tr><td>04</td><td>Compute agent marketplace</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>What comes out before the buyback</h3>
+      <ul>
+        <li><b>Inference</b> &mdash; the compute behind every call</li>
+        <li><b>Platform costs</b> &mdash; the cost of running the platform</li>
+        <li><b>$HEY credits</b> &mdash; compute already claimed</li>
+        <li><b>Reserves</b> &mdash; held back, not spent</li>
+      </ul>
+      <p>A portion of what remains funds the buyback, and the tokens bought are burned.</p>
+
+      <h3>$HEY</h3>
+      <p>$HEY is described as a compute credit: staked $OPEN mints it, and holding it pays out
+        compute credit daily for any model on the network.</p>
+
+      <div class="note stop"><span class="tag">Not available in the app yet</span>
+        <p>The <b>Staking</b> page in the application reads <b>Coming Soon</b>. The marketing site
+        describes staking, buybacks and burns in the present tense, but there is nothing to stake
+        against in the product today. Treat the token material as a published plan rather than a
+        feature you can use.</p></div>
+    </section>
+
+    <!-- ==================== COMING SOON ==================== -->
+    <section class="band" id="soon">
+      <p class="kicker">Help</p>
+      <h2>Not available yet</h2>
+      <p>Four things appear in the interface but cannot be used in the current build. Knowing this
+        in advance saves a support ticket.</p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>Where</th><th>What it says it will do</th><th>State</th></tr></thead>
+        <tbody>
+          <tr><td>AI Studio &rsaquo; Model Factory</td><td>Customise and train your own AI models</td><td><span class="pill s">Coming soon</span></td></tr>
+          <tr><td>AI Studio &rsaquo; Staking</td><td>Stake tokens to support the network and earn rewards</td><td><span class="pill s">Coming soon</span></td></tr>
+          <tr><td>Home &rsaquo; Voice Chat</td><td>Have natural, real-time conversations</td><td><span class="pill s">Coming soon</span></td></tr>
+          <tr><td>More &rsaquo; Agents</td><td>Five agents in the marketplace</td><td><span class="pill s">All coming soon</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ==================== TROUBLESHOOTING ==================== -->
+    <section class="band" id="trouble">
+      <p class="kicker">Help</p>
+      <h2>Troubleshooting</h2>
+
+      <h3>A model has disappeared from the picker</h3>
+      <p>Two settings hide models, and they are the most common cause of confusion:</p>
+      <ol>
+        <li>The <a href="#privacy">privacy filter</a>. On Mid or Max only Private, TEE and E2EE models appear.</li>
+        <li>The <a href="#mode">request mode</a>. Models badged <b>Not in Boost</b> disappear in Boost mode.</li>
+      </ol>
+
+      <h3>I cannot send a message</h3>
+      <p>Sending requires signing in. Browsing the catalogue does not. Click <b>Connect Wallet</b>.</p>
+
+      <h3>Consensus will not open</h3>
+      <p>Consensus requires signing in and a Pro plan. The gate states both.</p>
+
+      <h3>The model forgot something from earlier</h3>
+      <p>The thread may have outgrown the model's context window, or context trimming removed it.
+        Restate the decisive requirement rather than assuming it is still in view.</p>
+
+      <h3>A model gave a different answer than last time</h3>
+      <p>If the model pill reads <b>Auto</b>, two requests can be served by different models. Name a
+        model when you need a reproducible result.</p>
+
+      <h3>A page says Coming Soon</h3>
+      <p>See <a href="#soon">Not available yet</a>. Model Factory, Staking, Voice Chat and every
+        agent are unavailable in the current build.</p>
+
+      <h3>Getting help</h3>
+      <p>A <b>Contact support</b> control sits on the chat screen. Include the feature, the browser,
+        the exact error text, the approximate time, the model used and a non-secret account
+        reference. Never include a password, recovery phrase, private key or bearer token.</p>
+    </section>
+
+    <!-- ==================== FAQ ==================== -->
+    <section class="band" id="faq">
+      <p class="kicker">Help</p>
+      <h2>Frequently asked questions</h2>
+
+      <h3>Hey Open</h3>
+      <div class="faq"><h4>How is Hey Open different from ChatGPT or Claude?</h4>
+        <p>Those are models. Hey Open is the workspace that brings 133 of them together, with one
+          memory and a privacy setting you choose per conversation, so you pick the right model per
+          task instead of reorganising your work around one vendor.</p></div>
+      <div class="faq"><h4>Do I need a separate subscription for each model?</h4>
+        <p>No. One plan covers the catalogue. What your account can actually run depends on your
+          plan and provider eligibility.</p></div>
+      <div class="faq"><h4>Do I need an account to start?</h4>
+        <p>You can open the app, browse all 133 models and open the Image and Audio Tools without an
+          account. Sending a message requires signing in.</p></div>
+      <div class="faq"><h4>Can I switch models without losing context?</h4>
+        <p>Yes, within a conversation. Different models support different context lengths, so a very
+          long thread may not carry over in full.</p></div>
+
+      <h3>Privacy</h3>
+      <div class="faq"><h4>What do Min, Mid and Max do?</h4>
+        <p>They are a privacy filter, not a speed or cost setting. Min allows every model, Mid allows
+          Private, TEE and E2EE models only, and Max allows TEE and E2EE models only.</p></div>
+      <div class="faq"><h4>Is Incognito the same as private?</h4>
+        <p>No. Incognito means the provider does not receive your identity. It does not mean the
+          provider stores nothing. Private means zero data retention, and TEE and E2EE are stronger
+          again.</p></div>
+      <div class="faq"><h4>Which models are the most private?</h4>
+        <p>The nine badged E2EE. Your prompt is encrypted on your device and decrypted only inside a
+          verified enclave.</p></div>
+      <div class="faq"><h4>Does Hey Open train on my chats?</h4>
+        <p>Hey Open states it does not train its own models on private chats or memory without
+          separate authorisation. What a model provider does with a prompt is governed by that
+          provider's own terms, which is why the privacy filter exists.</p></div>
+
+      <h3>Models and usage</h3>
+      <div class="faq"><h4>What is the difference between the privacy filter and request mode?</h4>
+        <p>The privacy filter decides which models you may use. Request mode decides which provider
+          serves them, biased toward cost or speed.</p></div>
+      <div class="faq"><h4>Which models can search the web?</h4>
+        <p>The 24 badged Web. Everything else answers from training data alone.</p></div>
+      <div class="faq"><h4>How much does video cost?</h4>
+        <p>Thirteen video models publish a price per second of output, from $0.02 to $0.28. Ten
+          seconds therefore runs from $0.20 to $2.80.</p></div>
+
+      <h3>Plans</h3>
+      <div class="faq"><h4>Is Consensus Mode free?</h4>
+        <p>No. It is available on the Pro plan and above, and requires signing in.</p></div>
+      <div class="faq"><h4>Can I stake tokens?</h4>
+        <p>Not yet. Staking is a Coming Soon page in the current build.</p></div>
+      <div class="faq"><h4>Can I cancel any time?</h4>
+        <p>Yes. The site states cancel anytime, no lock-in. Cancellation generally takes effect at
+          the end of the current paid period.</p></div>
+    </section>
+
+    <footer class="end">
+      <p>Written from the Hey Open application at ais.openledger.xyz and the product site at
+        hey-open.vercel.app, both walked on 4 and 5 November 2026. Model counts, badges, prices and
+        availability were read from the live model picker with the privacy filter set to Min.</p>
+      <p>The application is the source of truth. Catalogue contents change as providers add and
+        retire models, so treat every count and price here as a snapshot of that date.</p>
+    </footer>
+  </main>
+
+  <aside class="toc" aria-label="On this page">
+    <h4>On this page</h4>
+    <div id="tocLinks"></div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* Build the contents rail from the h2 of every section, then keep both
+     rails in step with the reading position. */
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.band[id]"));
+  var toc = document.getElementById("tocLinks");
+  secs.forEach(function(s){
+    var h = s.querySelector("h2");
+    if (!h) return;
+    var a = document.createElement("a");
+    a.href = "#" + s.id;
+    a.textContent = h.textContent;
+    a.dataset.id = s.id;
+    toc.appendChild(a);
+  });
+
+  var railLinks = Array.prototype.slice.call(document.querySelectorAll("nav.rail a"));
+  var tocLinks  = Array.prototype.slice.call(toc.querySelectorAll("a"));
+
+  function mark(id){
+    railLinks.forEach(function(a){ a.classList.toggle("on", a.getAttribute("href") === "#" + id); });
+    tocLinks.forEach(function(a){ a.classList.toggle("on", a.dataset.id === id); });
+  }
+
+  if ("IntersectionObserver" in window) {
+    var seen = {};
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ seen[e.target.id] = e.isIntersecting ? e.boundingClientRect.top : null; });
+      var best = null, bestTop = Infinity;
+      secs.forEach(function(s){
+        var r = s.getBoundingClientRect();
+        if (r.top <= 140 && r.bottom > 140) { best = s.id; bestTop = -1; }
+        else if (best === null && r.top > 0 && r.top < bestTop) { bestTop = r.top; best = s.id; }
+      });
+      if (best) mark(best);
+    }, { rootMargin: "-100px 0px -60% 0px", threshold: [0, 1] });
+    secs.forEach(function(s){ io.observe(s); });
+  }
+
+  /* The first section has no band wrapper, so mark it while at the top. */
+  window.addEventListener("scroll", function(){
+    if (window.scrollY < 120) {
+      railLinks.forEach(function(a){ a.classList.toggle("on", a.getAttribute("href") === "#what"); });
+      tocLinks.forEach(function(a){ a.classList.remove("on"); });
+    }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

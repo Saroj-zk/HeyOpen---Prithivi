@@ -1,0 +1,1172 @@
+{
+  "_source": "Read from the live model picker at https://ais.openledger.xyz/chat on 4 November 2026, with the privacy filter set to Min so nothing was hidden.",
+  "_note": "The picker in the app is the source of truth. This file is a snapshot and will go stale. Regenerate it rather than hand-editing.",
+  "capturedOn": "2026-11-04",
+  "counts": {
+    "text": 64,
+    "image": 35,
+    "video": 34,
+    "total": 133
+  },
+  "badges": {
+    "Incognito": "Routed so the provider does not receive your identity. Assume the provider still processes the prompt under its own terms.",
+    "Private": "Runs under zero-data-retention terms.",
+    "TEE": "Trusted Execution Environment. Inference runs inside a hardware-isolated enclave.",
+    "E2EE": "End to end encrypted. Encrypted on your device, decrypted only inside a verified enclave.",
+    "Web": "Can retrieve live web results.",
+    "Vision": "Accepts images as input.",
+    "Uncensored": "Reduced content filtering. Applicable law and the Terms still apply.",
+    "Not in Boost": "Not available when the request mode is set to Boost.",
+    "Image required": "Needs a source image. Cannot generate from text alone."
+  },
+  "text": [
+    {
+      "n": "Claude Fable 5",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Claude Haiku 4.5",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Claude Opus 4.7",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Claude Opus 5",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Claude Sonnet 5",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "DeepSeek R1 (0528)",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "DeepSeek V4 Flash",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "DeepSeek V4 Flash (E2EE)",
+      "f": [
+        "E2EE",
+        "TEE"
+      ]
+    },
+    {
+      "n": "DeepSeek V4 Pro",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "DeepSeek V4.1 Flash",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Fugu Ultra",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Gemini 2.5 Pro",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Gemini 3.1 Flash Lite",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Gemini 3.5 Flash Lite",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Gemini 3.7 Flash",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Gemini 3.8 Flash",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Gemini 4 Argon",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Gemma 4 26B",
+      "f": [
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Gemma 4 26B A4B (Unfiltered)",
+      "f": [
+        "TEE",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Gemma 4 31B IT",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "GLM 4.7 Flash",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "GLM 5",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GLM 5.1",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GLM 5.2",
+      "f": [
+        "TEE"
+      ]
+    },
+    {
+      "n": "GLM 5.3",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "GLM 5.3 Flash (E2EE)",
+      "f": [
+        "E2EE",
+        "TEE"
+      ]
+    },
+    {
+      "n": "GPT 3.5 Turbo",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "GPT 5.1",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "GPT 5.4",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 5.4 Mini",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 5.6 Luna",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 5.6 Sol",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 5.6 Terra",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 6 Astra",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 6 Luna",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 6 Sol",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT OSS 120B",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Grok 4.3",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Grok 4.5",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Grok 4.6",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Hy3",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Kimi K2 Thinking",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Kimi K2.7 Code",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Kimi K3",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "MiMo V2.5 Pro",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "MiniMax M3",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Mistral Large 4.0",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Mistral Medium 3.5",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Nemotron 3.5 Lightning",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "o3",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "o4 mini",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Qwen3 VL 235B A22B Instruct",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Qwen3 VL 30B (E2EE)",
+      "f": [
+        "E2EE",
+        "TEE",
+        "Vision"
+      ]
+    },
+    {
+      "n": "Qwen3 VL 32B Instruct",
+      "f": [
+        "Private",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Qwen3.5 27B",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Qwen3.5 35B A3B",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Qwen3.5 397B A17B",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Qwen3.6 35B",
+      "f": [
+        "E2EE",
+        "TEE"
+      ]
+    },
+    {
+      "n": "Qwen3.7 Max",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    },
+    {
+      "n": "Qwen3.7 Plus",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Qwen3.8 27B",
+      "f": [
+        "TEE",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Qwen3.8 27B (E2EE)",
+      "f": [
+        "E2EE",
+        "TEE"
+      ]
+    },
+    {
+      "n": "Qwen3.8 Flash",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Qwen3.8 Max",
+      "f": [
+        "Incognito",
+        "Web"
+      ]
+    }
+  ],
+  "image": [
+    {
+      "n": "Flux 2 Klein",
+      "f": [
+        "Private",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Dev",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Kontext Max",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Kontext Pro",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Pro",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Pro V1.1",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Pro V1.1 Ultra",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Realism",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Flux Schnell",
+      "f": [
+        "Incognito",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Gemini 2.5 Flash Image",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Gemini 2.5 Flash Image Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Gemini 3 Pro Image",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "Gemini 3 Pro Image Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Gemini 3.1 Flash Lite Image",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "Gemini 3.1 Flash Lite Image Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Gemini Flash Image",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "Gemini Flash Image Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 5 Image",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "GPT 5 Image Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 5 Image Mini",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "GPT 5 Image Mini Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT 5.4 Image 2",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "GPT 5.4 Image 2 Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "GPT Image 2",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "GPT Image 2 Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Grok Imagine Edit",
+      "f": [
+        "Incognito",
+        "Image required",
+        "Not in Boost"
+      ]
+    },
+    {
+      "n": "Grok Imagine Image 2.0",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "Grok Imagine Image 2.0 Edit",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Nano Banana Pro",
+      "f": [
+        "Incognito",
+        "Image required"
+      ]
+    },
+    {
+      "n": "Qwen Image Edit (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Seedream V4.5 (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored",
+        "Image required"
+      ]
+    },
+    {
+      "n": "Seedream V5 Lite (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Seedream V5 Pro (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Z Image (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Z Image Pro (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    }
+  ],
+  "video": [
+    {
+      "n": "Flux 3 Video",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Grok Imagine Video",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Grok Imagine Video 1.5 Lite",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Hailuo 2.3",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.08"
+    },
+    {
+      "n": "Hailuo 3",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.13"
+    },
+    {
+      "n": "Hailuo 3 Max",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.08"
+    },
+    {
+      "n": "Happyhorse 1.0",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Happyhorse 1.1",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Heygen Video 1",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Kling V3.0 Pro",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.11"
+    },
+    {
+      "n": "Kling V3.0 Standard",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.08"
+    },
+    {
+      "n": "Kling Video O1",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.11"
+    },
+    {
+      "n": "Mischief 1",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Runway Gen4.5",
+      "f": [
+        "Incognito",
+        "Image required"
+      ],
+      "price": "0.12"
+    },
+    {
+      "n": "Seedance 1.5 Pro",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.02"
+    },
+    {
+      "n": "Seedance 2.0",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Seedance 2.0 Fast",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.04"
+    },
+    {
+      "n": "Seedance 2.0 Mini",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.03"
+    },
+    {
+      "n": "Seedance 2.5 (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Seedance Pro V1.5 (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Veo 3.1",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Veo 3.1 Fast",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Veo 3.1 Lite",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Wan 2.6",
+      "f": [
+        "Incognito"
+      ]
+    },
+    {
+      "n": "Wan 2.6 (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Wan 2.7",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.10"
+    },
+    {
+      "n": "Wan 2.7 (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Wan 3.0",
+      "f": [
+        "Incognito",
+        "Image required"
+      ],
+      "price": "0.20"
+    },
+    {
+      "n": "Wan 3.0 (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Wan 3.0 Prime",
+      "f": [
+        "Incognito"
+      ],
+      "price": "0.28"
+    },
+    {
+      "n": "Wan 3.0 Prime (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Wan 3.0 Prime Pro (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    },
+    {
+      "n": "Wan 3.0 Pro (Unfiltered)",
+      "f": [
+        "Incognito",
+        "Uncensored"
+      ]
+    }
+  ],
+  "privacyFilter": [
+    {
+      "tier": "Min",
+      "desc": "Every model, whatever it is tagged."
+    },
+    {
+      "tier": "Mid",
+      "desc": "Private, TEE and E2EE models only."
+    },
+    {
+      "tier": "Max",
+      "desc": "TEE and E2EE models only, hardware-protected prompts."
+    }
+  ],
+  "requestMode": [
+    {
+      "mode": "Default",
+      "desc": "Every model; the gateway picks the vendor."
+    },
+    {
+      "mode": "Saver",
+      "desc": "Cheapest providers first."
+    },
+    {
+      "mode": "Balanced",
+      "desc": "A balance of speed and cost."
+    },
+    {
+      "mode": "Boost",
+      "desc": "Fastest providers first."
+    }
+  ],
+  "imageTools": [
+    [
+      "Text to Image",
+      "Generate visuals from prompts"
+    ],
+    [
+      "Image to Image",
+      "Transform existing images"
+    ],
+    [
+      "Image Enhancer",
+      "Upscale resolution and clarity"
+    ],
+    [
+      "Image Unblur",
+      "Sharpen motion-blurred details"
+    ],
+    [
+      "Image to Anime",
+      "Convert photos into anime style"
+    ],
+    [
+      "Image to Cartoon",
+      "Turn portraits into 3D cartoons"
+    ],
+    [
+      "Image to text",
+      "Analyze and extract descriptions"
+    ],
+    [
+      "Headshots",
+      "Studio-quality portrait photos"
+    ],
+    [
+      "Background removal",
+      "Isolate subjects instantly"
+    ]
+  ],
+  "audioTools": [
+    [
+      "Text to speech",
+      "Natural AI voice synthesis"
+    ],
+    [
+      "Text to Music",
+      "Compose songs from text prompts"
+    ],
+    [
+      "Voice to text",
+      "Transcribe spoken audio into text"
+    ]
+  ],
+  "nav": {
+    "_source": "Read from the expanded sidebar at ais.openledger.xyz/chat on 4 November 2026.",
+    "WORKSPACE": [
+      [
+        "New Chat",
+        "Starts a fresh conversation",
+        "Live"
+      ],
+      [
+        "Consensus",
+        "Ask several models at once. Badged NEW.",
+        "Pro plan and above"
+      ],
+      [
+        "Home",
+        "Quick actions and the community feed",
+        "Live"
+      ],
+      [
+        "More",
+        "Agents, Community Feed, API, Token Dashboard",
+        "Live"
+      ]
+    ],
+    "AI STUDIO": [
+      [
+        "Model Factory",
+        "Customize and train your own AI models",
+        "Coming Soon"
+      ],
+      [
+        "Staking",
+        "Stake tokens to support the network and earn rewards",
+        "Coming Soon"
+      ]
+    ],
+    "TOOLS": [
+      [
+        "Image",
+        "9 image tools",
+        "Live"
+      ],
+      [
+        "Audio",
+        "3 audio tools",
+        "Live"
+      ]
+    ],
+    "FOOT": [
+      [
+        "Recent chats",
+        "Your conversation history",
+        "Live"
+      ],
+      [
+        "Invite & Earn $10",
+        "Referral programme",
+        "Live"
+      ],
+      [
+        "Connect Wallet",
+        "Sign in",
+        "Live"
+      ]
+    ],
+    "more": [
+      [
+        "Agents",
+        "Agent marketplace at /agents",
+        "All agents Coming Soon"
+      ],
+      [
+        "Community Feed",
+        "Dated image and video posts, on Home",
+        "Live"
+      ],
+      [
+        "API",
+        "Developer API",
+        "Destination unconfirmed; /api returns 404"
+      ],
+      [
+        "Token Dashboard",
+        "Token view",
+        "Destination unconfirmed"
+      ]
+    ]
+  },
+  "agents": {
+    "_note": "Every agent in the marketplace is badged Coming Soon as of 4 November 2026.",
+    "items": [
+      [
+        "Deep Research Agent",
+        "Research",
+        "Researches complex topics, analyzes multiple sources",
+        "Premium"
+      ],
+      [
+        "Trading Agent",
+        "Finance & Trading",
+        "Analyzes market trends and tracks assets",
+        "Free"
+      ],
+      [
+        "Coding Agent",
+        "Coding",
+        "Writes, debugs and optimizes code",
+        "Enterprise"
+      ],
+      [
+        "Financial Analyst",
+        "Finance",
+        "Stock prices, company financials, earnings, SEC filings",
+        "Premium"
+      ],
+      [
+        "Web Research",
+        "Research",
+        "Live web search with citations",
+        "Free"
+      ]
+    ]
+  },
+  "homeQuickActions": [
+    [
+      "New Chat",
+      "Quick chat",
+      "Explore 200+ AI models in one place",
+      "Live"
+    ],
+    [
+      "Launch Agent",
+      "Agent marketplace",
+      "Discover agents or build your own",
+      "Live"
+    ],
+    [
+      "Generate Image",
+      "Image generation",
+      "Turn your ideas into visuals with AI",
+      "Live"
+    ],
+    [
+      "Voice Chat",
+      "",
+      "Have natural, real-time conversations",
+      "Coming Soon"
+    ]
+  ],
+  "starters": [
+    "Weather",
+    "Code",
+    "Write",
+    "Analyze",
+    "Brainstorm"
+  ],
+  "composer": [
+    [
+      "Model pill",
+      "Reads Auto until you choose a model"
+    ],
+    [
+      "Request mode pill",
+      "Reads Boost by default"
+    ],
+    [
+      "Voice input",
+      "Microphone"
+    ],
+    [
+      "Expand message box",
+      "A larger editor"
+    ],
+    [
+      "Send",
+      "Requires signing in"
+    ]
+  ]
+}
