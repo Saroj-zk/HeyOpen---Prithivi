@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -10,6 +9,7 @@ import { Reveal, Rule, FormatTile } from '@/components/ui/LedgerUI';
 import { CAPABILITIES } from '@/data/capabilities';
 import { MODELS, countByKind } from '@/data/catalog';
 import { useThemeMode } from '@/context/ThemeContext';
+import PageMeta from '@/components/PageMeta';
 
 function modelsFor(kind) {
   const list = MODELS.filter((m) => m.kind === kind);
@@ -25,13 +25,11 @@ export default function CapabilitiesPage() {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
-      <Head>
-        <title>Capabilities — Text, Photoreal Images, Voice & Video | Hey Open</title>
-        <meta
-          name="description"
-          content="Uncensored chat, photoreal image synthesis, speech-to-speech audio, and cinematic video. All private, with one subscription across 50+ models."
-        />
-      </Head>
+      <PageMeta
+        title="Capabilities — Text, Photoreal Images, Voice & Video | Hey Open"
+        description="Uncensored chat, photoreal image synthesis, speech-to-speech audio, and cinematic video. All private, with one subscription across 50+ models."
+        path="/capabilities"
+      />
 
       <PageHeader />
 

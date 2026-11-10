@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -8,6 +7,7 @@ import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal, Rule } from '@/components/ui/LedgerUI';
 import { useThemeMode } from '@/context/ThemeContext';
+import PageMeta from '@/components/PageMeta';
 
 const ORANGE = '#FF6600';
 const CHAT_URL = 'https://ais.openledger.xyz/chat';
@@ -1175,13 +1175,11 @@ export default function PrivatePage() {
         transition: 'background-color 0.35s ease',
       }}
     >
-      <Head>
-        <title>Private AI — Confidential Intelligence | Hey Open</title>
-        <meta
-          name="description"
-          content="Use powerful AI without giving up your privacy. Zero retention, no training, and local-only history by default."
-        />
-      </Head>
+      <PageMeta
+        title="Private AI — Confidential Intelligence | Hey Open"
+        description="Use powerful AI without giving up your privacy. Zero retention, no training, and local-only history by default."
+        path="/private"
+      />
 
       {/* Ambient layers */}
       <Box

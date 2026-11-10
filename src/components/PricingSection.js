@@ -238,7 +238,15 @@ export default function PricingSection() {
                 <Typography sx={{ fontSize: '1rem', fontWeight: 700, letterSpacing: '0.05em', color: secondaryText, textTransform: 'uppercase' }}>
                   Total
                 </Typography>
-                <Typography sx={{ fontSize: '2.8rem', fontWeight: 800, color: mutedText, lineHeight: 1 }}>
+                <Typography sx={{
+                  fontSize: '2.8rem', fontWeight: 800, color: mutedText, lineHeight: 1,
+                  /* Struck on phones, where this figure is the first thing
+                     read and nothing around it yet says it is the total you
+                     avoid rather than a price being charged. */
+                  textDecorationLine: { xs: 'line-through', md: 'none' },
+                  textDecorationThickness: { xs: '3px', md: 'initial' },
+                  textDecorationColor: '#ff6600',
+                }}>
                   $165
                 </Typography>
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 600, color: mutedText }}>
@@ -357,8 +365,13 @@ export default function PricingSection() {
                 }}>
 
                   {/* Top Header Row */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                    <Typography sx={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
+                  <Box sx={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    /* Both children refuse to wrap, so on a narrow card they
+                       collided. Let the row wrap instead of the badge. */
+                    flexWrap: 'wrap', gap: 1, mb: 2,
+                  }}>
+                    <Typography sx={{ fontSize: { xs: '1.05rem', sm: '1.2rem' }, fontWeight: 900, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
                       <span style={{ color: primaryText }}>HEY OPEN</span> <span style={{ color: '#ff6600' }}>PRO</span>
                     </Typography>
                     <Box sx={{
@@ -367,9 +380,10 @@ export default function PricingSection() {
                       color: '#ff6600',
                       px: 1, py: 0.25, borderRadius: '99px',
                       fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase',
-                      display: 'flex', alignItems: 'center', gap: 0.5
+                      display: 'flex', alignItems: 'center', gap: 0.5,
+                      whiteSpace: 'nowrap', flexShrink: 0, lineHeight: 1.6,
                     }}>
-                      <CheckCircleRoundedIcon sx={{ fontSize: '0.8rem' }} /> Best value
+                      <CheckCircleRoundedIcon sx={{ fontSize: '0.8rem', flexShrink: 0 }} /> Best value
                     </Box>
                   </Box>
 

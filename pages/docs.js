@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
 import useInView from '@/utils/useInView';
+import PageMeta from '@/components/PageMeta';
 
 /**
  * What Hey Open is for.
@@ -1274,13 +1274,11 @@ export default function DocsPage() {
      scroll without becoming a scroll container. */
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: T.bg, position: 'relative', overflowX: 'clip' }}>
-      <Head>
-        <title>What You Can Build With Hey Open | Hey Open</title>
-        <meta
-          name="description"
-          content="Make a film in one thread, build on one API key across 200+ models, or put sensitive documents through AI that keeps nothing."
-        />
-      </Head>
+      <PageMeta
+        title="What You Can Build With Hey Open | Hey Open"
+        description="Make a film in one thread, build on one API key across 200+ models, or put sensitive documents through AI that keeps nothing."
+        path="/docs"
+      />
 
       <PageHeader />
 

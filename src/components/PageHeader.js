@@ -125,18 +125,6 @@ export default function PageHeader({ spacer = true }) {
                       },
                     }}
                   >
-                    {isActive && (
-                      <Box
-                        sx={{
-                          width: 5,
-                          height: 5,
-                          borderRadius: '50%',
-                          backgroundColor: '#FF6600',
-                          boxShadow: '0 0 7px #FF6600',
-                          flexShrink: 0,
-                        }}
-                      />
-                    )}
                     {link.label}
                     {link.isComingSoon && (
                       <Box
@@ -326,17 +314,6 @@ export default function PageHeader({ spacer = true }) {
                       fontWeight: isActive ? 700 : 600,
                     }}
                   >
-                    {isActive && (
-                      <Box
-                        sx={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: '50%',
-                          backgroundColor: '#FF6600',
-                          boxShadow: '0 0 8px #FF6600',
-                        }}
-                      />
-                    )}
                     {link.label}
                     {link.isComingSoon && (
                       <Box

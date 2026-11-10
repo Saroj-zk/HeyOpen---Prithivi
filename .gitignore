@@ -37,3 +37,13 @@ next-env.d.ts
 # Reference recordings used to build the product demo panels, not shipped
 /videos/
 *.mov
+
+# generated deliverables: rebuilt by product-docs/build-handbook-pdf.sh
+# and by printing /help, so the binaries do not belong in history
+/Hey-Open-Help-Center.pdf
+/product-docs/HeyOpen-Complete-Documentation.pdf
+/product-docs/HeyOpen-GitBook.zip
+/product-docs/handbook.html
+
+# unreleased legal drafts, kept out of the repo deliberately
+/legal-drafts/

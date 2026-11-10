@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -9,19 +8,18 @@ import Footer from '@/components/Footer';
 import { Reveal, Rule } from '@/components/ui/LedgerUI';
 import { TOKEN, STATS, FLOW, PRINCIPLES, UTILITY } from '@/data/token';
 import { useThemeMode } from '@/context/ThemeContext';
+import PageMeta from '@/components/PageMeta';
 
 export default function TokenPage() {
   const { isDark } = useThemeMode();
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
-      <Head>
-        <title>Tokenomics — $OPEN Revenue Flywheel & Utility | Hey Open</title>
-        <meta
-          name="description"
-          content="$OPEN is rewarded for real AI usage, not printed out of thin air. Real protocol revenue buys back tokens, rewards compute providers, and burns the surplus on-chain."
-        />
-      </Head>
+      <PageMeta
+        title="Tokenomics — $OPEN Revenue Flywheel & Utility | Hey Open"
+        description="$OPEN is rewarded for real AI usage, not printed out of thin air. Real protocol revenue buys back tokens, rewards compute providers, and burns the surplus on-chain."
+        path="/token"
+      />
 
       <PageHeader />
 

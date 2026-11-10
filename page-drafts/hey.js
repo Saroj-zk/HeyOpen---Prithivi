@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -9,6 +8,7 @@ import Footer from '@/components/Footer';
 import { Reveal } from '@/components/ui/LedgerUI';
 import { INK, MONO, RULE, RULE_ON_INK, FIG, Label, Entry, Button, Head2 } from '@/components/ui/Ledger';
 import { MODELS, MODEL_TOTAL } from '@/data/catalog';
+import PageMeta from '@/components/PageMeta';
 
 /**
  * $HEY, the second token.
@@ -141,13 +141,11 @@ function DailyStatement() {
 export default function HeyPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
-      <Head>
-        <title>$HEY: Compute Credit, Every Day | Hey Open</title>
-        <meta
-          name="description"
-          content="$HEY is minted from staked $OPEN. Stake it and it pays out compute credit every day, for any model on the network, renewed daily."
-        />
-      </Head>
+      <PageMeta
+        title="$HEY: Compute Credit, Every Day | Hey Open"
+        description="$HEY is minted from staked $OPEN. Stake it and it pays out compute credit every day, for any model on the network, renewed daily."
+        path="/hey"
+      />
 
       <PageHeader />
 

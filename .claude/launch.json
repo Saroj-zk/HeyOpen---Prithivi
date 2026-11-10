@@ -4,8 +4,20 @@
     {
       "name": "landing",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000,
+      "autoPort": false
+    },
+    {
+      "name": "docs",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "product-docs/preview/server.js"
+      ],
+      "port": 4000,
       "autoPort": false
     }
   ]

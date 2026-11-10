@@ -63,7 +63,12 @@ export default function MyApp(props) {
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>Hey Open | AI-Powered Infrastructure</title>
+        {/* No title here any more. Every page states its own through
+            PageMeta, and a title in _app is a second one competing with it:
+            Next keeps the last to render, which made which title won depend
+            on render order rather than on the page. The old fallback also
+            said "AI-Powered Infrastructure" while the home page said "AI
+            Assistant", so the site shipped two descriptions of itself. */}
         <link rel="icon" href="/openchat_icon_mark.svg" type="image/svg+xml" />
         <link rel="alternate icon" href="/favicon.ico" />
       </Head>

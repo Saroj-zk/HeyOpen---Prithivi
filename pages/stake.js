@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Head from 'next/head';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -9,6 +8,7 @@ import { Reveal } from '@/components/ui/LedgerUI';
 import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Ledger';
 import { TOKEN } from '@/data/token';
 import { VERSIONS } from '@/data/stakeCopy';
+import PageMeta from '@/components/PageMeta';
 
 /**
  * $OPEN, and what staking it does.
@@ -846,13 +846,11 @@ export default function StakePage() {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
-      <Head>
-        <title>Stake $OPEN: Earn Yield and Mint $HEY | Hey Open</title>
-        <meta
-          name="description"
-          content="$OPEN is the capital asset of Hey Open. Stake it for a fixed floor and a target well above it, and to mint $HEY, which pays out compute credits when you stake it."
-        />
-      </Head>
+      <PageMeta
+        title="Stake $OPEN: Earn Yield and Mint $HEY | Hey Open"
+        description="$OPEN is the capital asset of Hey Open. Stake it for a fixed floor and a target well above it, and to mint $HEY, which pays out compute credits when you stake it."
+        path="/stake"
+      />
 
       <PageHeader />
 

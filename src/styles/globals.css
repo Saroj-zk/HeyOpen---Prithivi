@@ -235,3 +235,98 @@ h6 {
     padding-right: 16px !important;
   }
 }
+
+/* ------------------------------------------------------------------
+   Help Center, printed.
+
+   The page is three sticky columns inside a fixed header, and none of
+   that paginates: the rails would print once at wherever they were
+   scrolled to, and the fixed header would stamp itself across page one.
+   So printing drops the chrome, runs the article at full width, and
+   keeps figures, callouts and table rows from splitting over a break.
+   ------------------------------------------------------------------ */
+@media print {
+  html, body {
+    background: #FFFFFF !important;
+    margin: 0 !important;
+  }
+
+  /* Backgrounds carry meaning here: table header bands, callout tints
+     and the screenshots' own frames. Without this the engine drops
+     them and the tables lose their structure. */
+  .help-root, .help-root * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .help-root > header,
+  .help-root header,
+  .help-root footer,
+  .help-root nav[aria-label="Help sections"],
+  .help-root aside[aria-label="On this page"] {
+    display: none !important;
+  }
+
+  .help-grid {
+    display: block !important;
+  }
+
+  .help-main {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    max-width: none !important;
+  }
+
+  /* The measure is set for a 704px column on screen; on paper the
+     article has the whole page, so let the prose use it. */
+  .help-main p,
+  .help-main > div > p {
+    max-width: none !important;
+  }
+
+  .help-main h1 {
+    font-size: 30pt !important;
+  }
+
+  .help-main h2 {
+    font-size: 16pt !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .help-main h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Sections flow rather than each starting a fresh page: the ruled
+     heading already separates them, and forcing a break left a third of
+     the pages nearly empty. */
+  .help-main section {
+    break-inside: auto;
+  }
+
+  .help-main figure,
+  .help-main table,
+  .help-main tr,
+  .help-main .help-block {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Keep at least two lines of a paragraph either side of a break. */
+  .help-main p {
+    orphans: 2;
+    widows: 2;
+  }
+
+  .help-main figure img {
+    max-height: 125mm;
+    object-fit: contain;
+    object-position: left top;
+  }
+
+  .help-main a {
+    text-decoration: none !important;
+  }
+}

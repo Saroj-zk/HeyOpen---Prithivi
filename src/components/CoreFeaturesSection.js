@@ -426,7 +426,11 @@ export default function CoreFeaturesSection() {
                 width: '100%',
                 height: 58,
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
+                /* minmax(0, ...), not plain 1fr: a 1fr track refuses to go
+                   below its content's automatic minimum, so the four cells
+                   came out unequal and the sliding pill, which is positioned
+                   as an exact quarter, no longer lined up with them. */
+                gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
                 p: '6px',
                 borderRadius: '9999px',
                 backgroundColor: isDark ? 'rgba(20, 24, 30, 0.48)' : 'rgba(255, 255, 255, 0.45)',
@@ -546,6 +550,10 @@ export default function CoreFeaturesSection() {
                       {IconComponent && (
                         <IconComponent
                           sx={{
+                            /* A quarter of a phone screen is about 82px. The
+                               icon and the label cannot both have it, and the
+                               label is the one that says where you are. */
+                            display: { xs: 'none', sm: 'inline-block' },
                             fontSize: { xs: '1.05rem', sm: '1.18rem' },
                             flexShrink: 0,
                             color: isActive

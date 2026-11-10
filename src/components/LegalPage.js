@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import PageHeader from '@/components/PageHeader';
 import Footer from '@/components/Footer';
+import PageMeta from '@/components/PageMeta';
 
 /**
  * The shell both legal pages share, laid out the way Venice's legal pages are:
@@ -302,20 +303,23 @@ function Body({ body, number }) {
 
 /* While any slot remains, the document is not finished, and an unfinished
    policy should not be the version search engines hold. */
-export default function LegalPage({ doc, description }) {
+export default function LegalPage({ doc, description, path }) {
   const sections = (doc && doc.sections) || [];
   const hasText = sections.length > 0;
   const unfinished = !hasText || new RegExp(SLOT.source).test(JSON.stringify(doc));
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)' }}>
-      <Head>
-        <title>{`${doc.title} | Hey Open`}</title>
-        <meta name="description" content={description} />
-        {/* Not worth indexing while it is a holding page, and not safe to index
-            while it still has blanks in it. */}
-        {unfinished && <meta name="robots" content="noindex" />}
-      </Head>
+      <PageMeta title={`${doc.title} | Hey Open`} description={description} path={path} />
+
+      {/* Separate from PageMeta because this one is conditional: not worth
+          indexing while it is a holding page, and not safe to index while it
+          still has blanks in it. */}
+      {unfinished && (
+        <Head>
+          <meta name="robots" content="noindex" />
+        </Head>
+      )}
 
       <PageHeader />
 

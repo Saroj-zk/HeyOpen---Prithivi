@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hey Open Docs Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #f7f8fa;
+      --ink: #1a1a1a;
+      --muted: #5a5a5a;
+      --rule: #e3e6ea;
+      --accent: #c2410c;
+      --accent-soft: #fdf0e6;
+      --code-bg: #f2f4f7;
+      --warn: #fff8e6;
+      --warn-edge: #e8c07c;
+      --danger: #fdecec;
+      --danger-edge: #e59b9b;
+      --info: #eef4fd;
+      --info-edge: #9dbbe8;
+      --mark: #fff3a3;
+    }
+
+    :root:not([data-theme="light"]) {}
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #14171c;
+        --panel: #191d23;
+        --ink: #e8eaed;
+        --muted: #9aa2ad;
+        --rule: #2a2f37;
+        --accent: #ff8a4c;
+        --accent-soft: #2a1b12;
+        --code-bg: #1f242b;
+        --warn: #2a2415;
+        --warn-edge: #6b5a2e;
+        --danger: #2c1a1a;
+        --danger-edge: #7a4040;
+        --info: #172230;
+        --info-edge: #3c5f8f;
+        --mark: #6b5f1f;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #14171c;
+      --panel: #191d23;
+      --ink: #e8eaed;
+      --muted: #9aa2ad;
+      --rule: #2a2f37;
+      --accent: #ff8a4c;
+      --accent-soft: #2a1b12;
+      --code-bg: #1f242b;
+      --warn: #2a2415;
+      --warn-edge: #6b5a2e;
+      --danger: #2c1a1a;
+      --danger-edge: #7a4040;
+      --info: #172230;
+      --info-edge: #3c5f8f;
+      --mark: #6b5f1f;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font: 400 16px/1.65 Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .shell {
+      display: flex;
+      min-height: 100vh
+    }
+
+    /* ---- sidebar ---- */
+    aside {
+      width: 290px;
+      flex: 0 0 290px;
+      background: var(--panel);
+      border-right: 1px solid var(--rule);
+      padding: 22px 0 60px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand {
+      padding: 0 22px 16px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 14px
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.01em
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    aside .grp {
+      padding: 16px 22px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    aside a {
+      display: block;
+      padding: 7px 22px;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 14px;
+      border-left: 2px solid transparent;
+    }
+
+    aside a:hover {
+      background: rgba(127, 127, 127, .09)
+    }
+
+    aside a.on {
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+      background: var(--accent-soft)
+    }
+
+    /* ---- content ---- */
+    main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      justify-content: center;
+      padding: 44px 40px 100px
+    }
+
+    article {
+      width: 100%;
+      max-width: 820px
+    }
+
+    article h1 {
+      font-size: 2.1rem;
+      letter-spacing: -.03em;
+      margin: 0 0 .6em;
+      line-height: 1.15
+    }
+
+    article h2 {
+      font-size: 1.42rem;
+      letter-spacing: -.02em;
+      margin: 2em 0 .55em;
+      padding-bottom: .3em;
+      border-bottom: 1px solid var(--rule)
+    }
+
+    article h3 {
+      font-size: 1.1rem;
+      margin: 1.6em 0 .45em
+    }
+
+    article p {
+      margin: 0 0 1em
+    }
+
+    article ul,
+    article ol {
+      margin: 0 0 1em;
+      padding-left: 1.4em
+    }
+
+    article li {
+      margin: .3em 0
+    }
+
+    article a {
+      color: var(--accent)
+    }
+
+    article code {
+      background: var(--code-bg);
+      padding: .12em .4em;
+      border-radius: 4px;
+      font-size: .88em;
+      font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace
+    }
+
+    article pre {
+      background: var(--code-bg);
+      padding: 16px 18px;
+      border-radius: 10px;
+      overflow: auto;
+      border: 1px solid var(--rule);
+      line-height: 1.5
+    }
+
+    article pre code {
+      background: none;
+      padding: 0;
+      font-size: .84em
+    }
+
+    article img {
+      max-width: 100%;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      display: block;
+      margin: 1.2em 0
+    }
+
+    article table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0 0 1.3em;
+      font-size: .93rem;
+      display: block;
+      overflow-x: auto
+    }
+
+    article th,
+    article td {
+      border: 1px solid var(--rule);
+      padding: 9px 12px;
+      text-align: left;
+      vertical-align: top
+    }
+
+    article th {
+      background: var(--code-bg);
+      font-weight: 600;
+      white-space: nowrap
+    }
+
+    article hr {
+      border: 0;
+      border-top: 1px solid var(--rule);
+      margin: 2.4em 0 1.4em
+    }
+
+    article blockquote {
+      margin: 0 0 1em;
+      padding: .1em 1em;
+      border-left: 3px solid var(--rule);
+      color: var(--muted)
+    }
+
+    /* GitBook hint blocks, rendered rather than left as literal braces */
+    .hint {
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 0 0 1.3em;
+      border: 1px solid
+    }
+
+    .hint p:last-child {
+      margin-bottom: 0
+    }
+
+    .hint.warning {
+      background: var(--warn);
+      border-color: var(--warn-edge)
+    }
+
+    .hint.danger {
+      background: var(--danger);
+      border-color: var(--danger-edge)
+    }
+
+    .hint.info {
+      background: var(--info);
+      border-color: var(--info-edge)
+    }
+
+    .hint .tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+      opacity: .75
+    }
+
+    .bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 26px;
+      flex-wrap: wrap
+    }
+
+    .bar .path {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: "Roboto Mono", ui-monospace, monospace
+    }
+
+    .bar button {
+      margin-left: auto;
+      background: var(--panel);
+      border: 1px solid var(--rule);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .bar button:hover {
+      border-color: var(--accent);
+      color: var(--accent)
+    }
+
+    @media (max-width:900px) {
+      .shell {
+        flex-direction: column
+      }
+
+      aside {
+        width: auto;
+        flex: none;
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--rule)
+      }
+
+      main {
+        padding: 28px 16px 70px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <aside>
+      <div class="brand">
+        <h1>Get Started</h1>
+        <p>Local preview of the GitBook</p>
+      </div>
+      <nav id="nav"></nav>
+    </aside>
+    <main>
+      <article id="doc">
+        <div class="bar"><span class="path">loading…</span></div>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    /* The sidebar is built from SUMMARY.md, so the preview cannot drift from
+       the table of contents GitBook itself will use. */
+    const nav = document.getElementById('nav');
+    const doc = document.getElementById('doc');
+
+    function hints(md) {
+      return md.replace(
+        /\{%\s*hint\s+style="(\w+)"\s*%\}([\s\S]*?)\{%\s*endhint\s*%\}/g,
+        (_, style, body) =>
+          `<div class="hint ${style}"><span class="tag">${style}</span>\n\n${body.trim()}\n\n</div>`
+      );
+    }
+
+    /* Markdown links point at .md files; in the viewer they become hash routes.
+       Images point at ../images/x.jpg; the server serves /images/x.jpg. */
+    function rewrite(html, dir) {
+      const d = document.createElement('div');
+      d.innerHTML = html;
+      d.querySelectorAll('a[href]').forEach(a => {
+        const h = a.getAttribute('href');
+        if (/^https?:/.test(h)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; return; }
+        if (h.endsWith('.md')) a.setAttribute('href', '#' + norm(dir, h));
+      });
+      d.querySelectorAll('img[src]').forEach(img => {
+        const s = img.getAttribute('src');
+        if (!/^https?:/.test(s)) img.setAttribute('src', '/' + norm(dir, s));
+      });
+      return d.innerHTML;
+    }
+
+    function norm(dir, rel) {
+      const parts = (dir ? dir.split('/') : []).concat(rel.split('/'));
+      const out = [];
+      for (const p of parts) {
+        if (p === '' || p === '.') continue;
+        if (p === '..') out.pop(); else out.push(p);
+      }
+      return out.join('/');
+    }
+
+    async function load(page) {
+      const res = await fetch('/md/' + page);
+      if (!res.ok) { doc.innerHTML = '<h1>Not found</h1><p>' + page + '</p>'; return; }
+      const md = await res.text();
+      const dir = page.includes('/') ? page.slice(0, page.lastIndexOf('/')) : '';
+      const html = rewrite(marked.parse(hints(md)), dir);
+      doc.innerHTML =
+        '<div class="bar"><span class="path">' + page + '</span>' +
+        '<button id="theme">Toggle theme</button></div>' + html;
+      document.getElementById('theme').onclick = toggle;
+      [...nav.querySelectorAll('a')].forEach(a => a.classList.toggle('on', a.dataset.page === page));
+      window.scrollTo(0, 0);
+    }
+
+    function toggle() {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const dark = cur ? cur === 'dark'
+        : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+      try { localStorage.setItem('heyopen-docs-theme', dark ? 'light' : 'dark'); } catch (e) { }
+    }
+    try {
+      const saved = localStorage.getItem('heyopen-docs-theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    } catch (e) { }
+
+    (async function () {
+      const summary = await (await fetch('/md/SUMMARY.md')).text();
+      let html = '';
+      for (const line of summary.split('\n')) {
+        const grp = line.match(/^##\s+(.+)/);
+        if (grp) { html += '<div class="grp">' + grp[1] + '</div>'; continue; }
+        const link = line.match(/^[-*]\s+\[([^\]]+)\]\(([^)]+)\)/);
+        if (link) {
+          html += '<a href="#' + link[2] + '" data-page="' + link[2] + '">' + link[1] + '</a>';
+        }
+      }
+      nav.innerHTML = html;
+      const open = () => load(location.hash.slice(1) || 'README.md');
+      window.addEventListener('hashchange', open);
+      open();
+    })();
+  </script>
+</body>
+
+</html>
