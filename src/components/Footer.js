@@ -47,6 +47,7 @@ const FOOTER_COLUMNS = [
       { label: 'Pricing', href: '/#pricing' },
       { label: 'API', href: '/#api' },
       { label: 'Token', href: '/token' },
+      { label: 'Help Center', href: '/help' },
     ],
   },
   {

@@ -789,7 +789,7 @@ export default function SupportedModelsSection() {
             sx={{
               display: 'grid',
               gridTemplateColumns: {
-                xs: '1fr auto 44px',
+                xs: 'minmax(0, 1fr) auto 44px',
                 md: '2fr 1.4fr 1fr 2.4fr 48px',
               },
               alignItems: 'center',
@@ -825,7 +825,7 @@ export default function SupportedModelsSection() {
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: {
-                      xs: '1fr auto 44px',
+                      xs: 'minmax(0, 1fr) auto 44px',
                       md: '2fr 1.4fr 1fr 2.4fr 48px',
                     },
                     alignItems: 'center',
@@ -894,13 +894,16 @@ export default function SupportedModelsSection() {
                   </Box>
 
                   {/* Context Column */}
-                  <Box>
+                  <Box sx={{ pl: { xs: 1, md: 0 } }}>
                     <Typography
                       sx={{
                         fontSize: '0.88rem',
                         fontWeight: 700,
                         color: 'var(--text-heading)',
                         fontFamily: 'inherit',
+                        /* Without this the squeeze on a phone broke the value
+                           mid-word, so "200K" set as "200" over "K". */
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {m.context}

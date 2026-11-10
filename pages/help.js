@@ -32,7 +32,7 @@ import { MONO, RULE } from '@/components/ui/Ledger';
  * of that date; the application is the source of truth.
  */
 
-const SNAP = '5 November 2026';
+const SNAP = '10 November 2026';
 const APP = 'https://ais.openledger.xyz/chat';
 
 /* ------------------------------------------------------------------ */
@@ -47,7 +47,7 @@ const PANEL = {
 
 function Para({ children }) {
   return (
-    <Typography sx={{ mb: 1.6, maxWidth: '68ch', fontSize: '1rem', lineHeight: 1.72, color: 'var(--text-secondary)' }}>
+    <Typography sx={{ mb: 1.6, maxWidth: '74ch', fontSize: '1rem', lineHeight: 1.72, color: 'var(--text-secondary)' }}>
       {children}
     </Typography>
   );
@@ -71,7 +71,7 @@ function H3({ children }) {
    steps read as a sequence rather than as a list that happens to count. */
 function Steps({ items }) {
   return (
-    <Box component="ol" sx={{ listStyle: 'none', m: '4px 0 20px', p: 0, maxWidth: '68ch' }}>
+    <Box component="ol" sx={{ listStyle: 'none', m: '4px 0 20px', p: 0, maxWidth: '74ch' }}>
       {items.map(([title, body], i) => (
         <Box component="li" key={title} sx={{ position: 'relative', pl: 5.2, pb: i === items.length - 1 ? 0 : 2.4 }}>
           <Box
@@ -105,7 +105,9 @@ const TONES = {
 function Callout({ tag, tone = 'note', children }) {
   const [bg, edge, ink] = TONES[tone];
   return (
-    <Box sx={{ ...PANEL, backgroundColor: bg, borderColor: edge, p: '14px 17px', mb: 2.2, maxWidth: '68ch' }}>
+    /* Full width, like the tables. Holding these to the prose measure
+       left them visibly narrower than everything around them. */
+    <Box className="help-block" sx={{ ...PANEL, backgroundColor: bg, borderColor: edge, p: '16px 19px', mb: 2.2 }}>
       <Typography sx={{ fontFamily: MONO, fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.13em', textTransform: 'uppercase', color: ink, mb: 0.7 }}>
         {tag}
       </Typography>
@@ -114,10 +116,54 @@ function Callout({ tag, tone = 'note', children }) {
   );
 }
 
-function Table({ head, rows, widths }) {
+/* The comparison total. On a phone the table scrolls sideways and the
+   "Paid separately" header goes with it, so the strike carries the
+   meaning the header would have: this is the eight-subscription total
+   you do not pay, not a former price for Hey Open. The row label says
+   so too, for anyone the styling does not reach. */
+function Strike({ children }) {
   return (
-    <Box sx={{ ...PANEL, overflowX: 'auto', mb: 2.4 }}>
-      <Box component="table" sx={{ borderCollapse: 'collapse', width: '100%', minWidth: 460, fontVariantNumeric: 'tabular-nums' }}>
+    <Box
+      component="span"
+      sx={{
+        textDecorationLine: { xs: 'line-through', md: 'none' },
+        textDecorationThickness: '1.5px',
+        textDecorationColor: 'var(--brand-accent)',
+        color: { xs: 'var(--text-muted)', md: 'inherit' },
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
+
+function Table({ head, rows, widths }) {
+  /* One minimum for every table pushed the two-column ones off a phone
+     screen, taking the figures with them: the pricing table showed its
+     labels and hid every price. Narrow tables now fit, and only the wide
+     ones scroll. */
+  const cols = head.length;
+  const minWidth = cols <= 2 ? 0 : cols === 3 ? 430 : 520;
+  return (
+    <Box
+      /* The table is wider than a phone and scrolls inside this panel.
+         SmoothScroll captures pointer and wheel events for the whole
+         document, so without this opt-out the swipe never arrives. */
+      data-lenis-prevent=""
+      sx={{
+        ...PANEL,
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        mb: 2.4,
+        /* A hint that there is more to the right, on the screens where
+           that is true. It sits above the panel's own background. */
+        backgroundImage: minWidth
+          ? { xs: 'linear-gradient(to right, transparent calc(100% - 34px), rgba(15,23,42,0.05))', md: 'none' }
+          : 'none',
+        backgroundAttachment: 'local',
+      }}
+    >
+      <Box component="table" sx={{ borderCollapse: 'collapse', width: '100%', minWidth, fontVariantNumeric: 'tabular-nums' }}>
         <Box component="thead">
           <Box component="tr">
             {head.map((h, i) => (
@@ -165,7 +211,7 @@ function Cards({ items }) {
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)' }, gap: 1.6, mb: 2.4 }}>
       {items.map(([t, s]) => (
-        <Box key={t} sx={{ ...PANEL, p: '14px 16px' }}>
+        <Box key={t} className="help-block" sx={{ ...PANEL, p: '14px 16px' }}>
           <Typography sx={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-heading)', mb: 0.4 }}>{t}</Typography>
           <Typography sx={{ fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--text-muted)' }}>{s}</Typography>
         </Box>
@@ -174,24 +220,42 @@ function Cards({ items }) {
   );
 }
 
+/* The screenshots were taken at three different sizes, and cropping a
+   product screenshot to a single ratio cuts the sides off the very UI the
+   caption is pointing at. So each one declares its own pixel size: the
+   browser reserves exactly the right box, nothing is cropped, and the page
+   does not jump as the images arrive. */
+/* Odd-sized captures only. Everything shot from the application is
+   1568x758 and falls through to SHOT_DEFAULT_A. */
+const SHOT_SIZE = {};
+const SHOT_DEFAULT_A = [1568, 758];   // the signed-in captures
+const SHOT_WIDE = [800, 500];
+const SHOT_TALL = [800, 600];
+
+function shotSize(src) {
+  const name = src.replace('/help/', '');
+  if (SHOT_SIZE[name]) return SHOT_SIZE[name];
+  if (name.startsWith('a')) return SHOT_DEFAULT_A;
+  return Number(name.slice(0, 2)) >= 9 ? SHOT_TALL : SHOT_WIDE;
+}
+
 function Shot({ src, alt, caption }) {
+  const [w, h] = shotSize(src);
   return (
     <Box component="figure" sx={{ m: '0 0 26px' }}>
-      {/* No lazy loading, and an explicit ratio. An <img> with no intrinsic
-          size collapses to a 1px box before it loads; a 1px box never
-          intersects the viewport, so a lazy image in it is never fetched
-          and the figure stays blank forever. Reserving the ratio also
-          stops the page jumping as each screenshot arrives. Nine images
-          at about 200 KB in total do not need deferring. */}
+      {/* No lazy loading. An <img> with no intrinsic size collapses to a 1px
+          box before it loads; a 1px box never intersects the viewport, so a
+          lazy image in it is never fetched and the figure stays blank
+          forever. These are small enough not to need deferring. */}
       <Box
         component="img"
         src={src}
         alt={alt}
-        width={1440}
-        height={900}
+        width={w}
+        height={h}
         sx={{
-          display: 'block', width: '100%', height: 'auto', aspectRatio: '1440 / 900',
-          objectFit: 'cover', objectPosition: 'top',
+          display: 'block', width: '100%', height: 'auto',
+          aspectRatio: `${w} / ${h}`,
           backgroundColor: 'var(--bg-section)',
           borderRadius: '14px', border: '1px solid var(--border-subtle)',
           boxShadow: 'var(--shadow-card)',
@@ -248,7 +312,7 @@ const SECTIONS = [
           The app opens straight into a chat. You can browse the whole catalogue without an account;
           sending a message requires signing in.
         </Para>
-        <Shot src="/help/01-chat-empty.jpg" alt="The Hey Open chat screen with composer, model picker and starter chips." caption="The chat screen. Composer in the middle, model and request mode beneath it, privacy and memory in the header." />
+        <Shot src="/help/a01-chat-signed-in.jpg" alt="The Hey Open chat screen signed in, with the sidebar, composer and model picker." caption="The chat screen, signed in. The sidebar foot shows the wallet, the plan and the credits left." />
         <H3>What makes it different</H3>
         <Cards items={[
           ['Every model, one subscription', 'Paying for ChatGPT, Claude, Gemini and the rest separately comes to about $165 a month. Hey Open is $20.'],
@@ -308,7 +372,7 @@ const SECTIONS = [
     body: (
       <>
         <Para>The sidebar groups everything into three areas. Click the menu icon to expand it.</Para>
-        <Shot src="/help/09-sidebar-expanded.jpg" alt="The expanded sidebar showing Workspace, AI Studio and Tools." caption="The expanded sidebar: Workspace, AI Studio and Tools, with recent chats below." />
+        <Shot src="/help/a18-workspace.jpg" alt="The sidebar showing Workspace, AI Studio, Tools and Recent Chats." caption="The expanded sidebar: Workspace, AI Studio and Tools, with recent chats below." />
         <Table
           head={['Group', 'Item', 'What it does', 'State']}
           rows={[
@@ -336,12 +400,26 @@ const SECTIONS = [
           ]}
           widths={['26%', '18%', '56%']}
         />
+        <H3>What is under More</H3>
+        <Para>
+          More opens a submenu with four entries: Agents, Community Feed, API and Token Dashboard.
+        </Para>
+        <Shot src="/help/a20-more-menu.jpg" alt="The More submenu showing Agents, Community Feed, API and Token Dashboard." caption="More, in the Workspace group, opens a submenu of four." />
+
+        <H3>Settings</H3>
+        <Para>
+          Settings opens from the account menu at the foot of the sidebar, not from the header. It
+          holds Profile, Appearance and Memory under General; Billing, Usage and Credits History
+          under Billing; and Storage under Data and Privacy. See
+          Account, settings and your data.
+        </Para>
+
         <H3>Finding an old chat</H3>
         <Para>
           Chat search is at the top of the sidebar, or press Ctrl K. Recent chats are listed below
           the Tools group.
         </Para>
-        <Shot src="/help/07-search-chats.jpg" alt="The chat search dialog." caption="Chat search, reachable with Ctrl K from anywhere in the app." />
+        <Shot src="/help/a19-search-chats.jpg" alt="The chat search dialog, opened with Ctrl K." caption="Chat search, reachable with Ctrl K from anywhere in the app." />
       </>
     ),
   },
@@ -364,7 +442,7 @@ const SECTIONS = [
           ['Read the badges', 'Each model carries badges for privacy, web access and restrictions.'],
           ['Pick one, or star it', 'Click a model to use it. Click the star to keep it at the top.'],
         ]} />
-        <Shot src="/help/03-model-picker-video.jpg" alt="The model picker on the Video tab showing per-second prices." caption="The model picker on the Video tab. Video models show a price per second of output." />
+        <Shot src="/help/a11-model-picker.jpg" alt="The model picker on the Video tab showing per-second prices." caption="The model picker on the Video tab. Video models show a price per second of output." />
         <H3>What the badges mean</H3>
         <Table
           head={['Badge', 'Meaning']}
@@ -427,7 +505,7 @@ const SECTIONS = [
           This is the control most people miss. It sits in the header next to Memory, and it decides
           which models you are allowed to use at all, by how strongly the route protects your prompt.
         </Para>
-        <Shot src="/help/02-privacy-filter.jpg" alt="The privacy filter open, showing Min, Mid and Max." caption="The privacy filter, set to Min. Raising it removes models from the picker." />
+        <Shot src="/help/a02-privacy-filter.jpg" alt="The privacy filter open, showing Min, Mid and Max." caption="The privacy filter, set to Min. Raising it removes models from the picker." />
         <Table
           head={['Setting', 'What it allows', 'Text models left']}
           rows={[
@@ -465,7 +543,7 @@ const SECTIONS = [
           Separate from privacy, the request mode decides which providers the gateway reaches for
           first. It sits on the composer next to the model pill and reads Boost by default.
         </Para>
-        <Shot src="/help/04-memory-and-request-mode.jpg" alt="Memory settings and the four request modes." caption="Memory settings in the header, and the four request modes on the composer." />
+        <Shot src="/help/a08-memory.jpg" alt="Memory settings, showing three switches, an add box and the saved memories list." caption="Memory settings. Three switches, a box to add a memory by hand, and the list of saved ones." />
         <Table
           head={['Mode', 'What it does', 'Use it when']}
           rows={[
@@ -506,7 +584,7 @@ const SECTIONS = [
           Consensus sends one prompt to several models and brings their answers together, so you can
           see where they disagree before you act.
         </Para>
-        <Shot src="/help/05-consensus-gate.jpg" alt="The Consensus sign-in gate." caption="Consensus requires signing in, and a Pro plan." />
+        <Shot src="/help/a12-consensus.jpg" alt="The Consensus sign-in gate." caption="Consensus requires signing in, and a Pro plan." />
         <Callout tag="Availability" tone="warn">
           Consensus is available to members on the Pro plan and above, and requires signing in.
           Opening it without an account shows a sign-in gate.
@@ -535,24 +613,37 @@ const SECTIONS = [
           Memory keeps useful details about you so you do not have to re-explain yourself to each new
           model. Reach it from Memory in the header.
         </Para>
+        <Para>
+          Settings, Memory holds three switches, a box for adding a memory by hand, and the list of
+          what has been saved.
+        </Para>
         <Table
-          head={['Switch', 'What it does']}
+          head={['Switch', 'Default', 'What it does']}
           rows={[
-            ['Save memories from chats', 'Automatically saves useful details about you as you chat. Requires Use memory to be on.'],
-            ['Use memory', 'Lets the assistant use your saved memories in new chats.'],
+            ['Save memories from chats', 'On', 'Automatically saves useful details about you as you chat. Requires Use memory to be on.'],
+            ['Use memory', 'On', 'Lets the assistant use your saved memories in new chats.'],
+            ['Share memory with external models', 'Off', 'While off, your memory is never sent to models hosted by external providers such as OpenAI, Anthropic, Google and OpenRouter.'],
           ]}
-          widths={['30%', '70%']}
+          widths={['28%', '12%', '60%']}
         />
         <Para>
           Turning Use memory off disables saving as well, because the save switch depends on it.
         </Para>
-        <Callout tag="Important" tone="warn">
-          Memory is sent to whichever model answers, so it travels under that model&rsquo;s privacy
-          route. Raise the privacy filter before putting anything sensitive into memory.
+        <H3>Adding and removing memories</H3>
+        <Para>
+          Type into the Add a memory box to save one yourself, for example &ldquo;I prefer short,
+          direct answers&rdquo;. Each saved memory has its own switch, so you can keep one without
+          using it, and Delete All clears the list. Memories captured automatically are labelled
+          with their source and an importance score.
+        </Para>
+        <Callout tag="Where memory lives" tone="warn">
+          Memory is stored in the browser you are using. It does not sync across devices, and
+          clearing your browser data may delete it. There is no server copy to restore from.
         </Callout>
         <Callout tag="Good to know">
           Memory is not chat history. It stores selected facts such as preferences, project details
-          and decisions, not a transcript of every conversation.
+          and decisions, not a transcript of every conversation. With the external sharing switch
+          off, memory is confined to models that are not hosted by an outside provider.
         </Callout>
       </>
     ),
@@ -674,10 +765,10 @@ const SECTIONS = [
     body: (
       <>
         <Para>
-          Twelve single-purpose tools, reached from the Tools group in the sidebar. Each does one
+          Eleven single-purpose tools, reached from the Tools group in the sidebar. Each does one
           job, so you do not have to describe it in a prompt.
         </Para>
-        <Shot src="/help/06-image-tools.jpg" alt="The Image Tools panel showing nine tools." caption="Image Tools opens as a panel over whatever screen you are on." />
+        <Shot src="/help/a13-image-tools.jpg" alt="The Image Tools panel showing nine tools." caption="Image Tools opens as a panel over whatever screen you are on." />
         <H3>Image Tools</H3>
         <Cards items={[
           ['Text to Image', 'Generate visuals from prompts'],
@@ -693,12 +784,11 @@ const SECTIONS = [
         <H3>Audio Tools</H3>
         <Cards items={[
           ['Text to speech', 'Natural AI voice synthesis'],
-          ['Text to Music', 'Compose songs from text prompts'],
           ['Voice to text', 'Transcribe spoken audio into text'],
         ]} />
         <Callout tag="Rights" tone="warn">
           Do not imitate a real person&rsquo;s voice or upload a protected recording without rights
-          and consent. A paid plan does not grant ownership of third-party music or samples.
+          and consent. A paid plan does not grant ownership of third-party recordings or samples.
         </Callout>
       </>
     ),
@@ -711,7 +801,7 @@ const SECTIONS = [
     body: (
       <>
         <Para>The agent marketplace sits under More in the sidebar.</Para>
-        <Shot src="/help/11-agent-marketplace.jpg" alt="The agent marketplace showing agent cards." caption="The agent marketplace. Every agent is currently badged Coming Soon." />
+        <Shot src="/help/a21-agents.jpg" alt="The agent marketplace showing five agent cards, each badged Coming Soon." caption="The agent marketplace. Every agent is currently badged Coming Soon." />
         <Table
           head={['Agent', 'Category', 'What it does', 'Tier']}
           rows={[
@@ -755,11 +845,50 @@ const SECTIONS = [
             ['Perplexity Pro', '$20'],
             ['GitHub Copilot', '$10'],
             ['Runway Gen-2', '$15'],
-            ['Total', '$165'],
+            ['Total, bought separately', <Strike>$165</Strike>],
             ['Hey Open Pro', '$20'],
           ]}
           widths={['68%', '32%']}
         />
+        <H3>Pro+</H3>
+        <Para>
+          There is a tier above Pro. An account on it shows HeyOpen Pro+ in Settings, Billing, with
+          a monthly renewal at US$40.00 and an allowance of 40 credits a period.
+        </Para>
+        <Table
+          head={['', 'Hey Open Pro', 'HeyOpen Pro+']}
+          rows={[
+            ['Price', '$20 per month, as advertised on the site', 'US$40.00 per month, as shown at renewal'],
+            ['Credit allowance', 'Not shown on the site', '40 credits a period'],
+            ['Consensus Mode', 'Included', 'Included'],
+          ]}
+          widths={['24%', '38%', '38%']}
+        />
+        <H3>Staking instead of paying</H3>
+        <Para>
+          There is a third route to Pro that does not go through a card. Pro is granted while you
+          hold $1,000 worth of $OPEN staked, alongside a 6% annual yield paid in $OPEN and a 7 day
+          cooling period on unstaking.
+        </Para>
+        <Table
+          head={['Route to Pro', 'What it costs', 'Available']}
+          rows={[
+            ['Subscription', '$20 a month', <Pill tone="a">Now</Pill>],
+            ['Stake $OPEN', '$1,000 worth of $OPEN staked, which you keep', <Pill tone="s">Not yet</Pill>],
+          ]}
+          widths={['26%', '50%', '24%']}
+        />
+        <Callout tag="The threshold is a dollar value" tone="warn">
+          It is $1,000 worth of $OPEN, not a fixed number of tokens, so the quantity it takes
+          changes with the price. A position that qualifies today can fall below the threshold
+          without you selling anything.
+        </Callout>
+        <Callout tag="Staked tokens are not a payment" tone="warn">
+          Staking is not a cheaper subscription. The tokens stay yours and keep earning, but they
+          are locked while they are staked and take 7 days to come back, and their value moves with
+          the market in a way $20 a month does not. See $OPEN for the state of this.
+        </Callout>
+
         <H3>What Pro includes</H3>
         <Cards items={[
           ['All premium models', 'The whole catalogue, not a subset.'],
@@ -769,11 +898,11 @@ const SECTIONS = [
           ['Consensus Mode', 'Pro plan and above.'],
           ['Cancel anytime', 'No lock-in, per the site.'],
         ]} />
-        <Callout tag="Read this before quoting unlimited" tone="warn">
-          The marketing page advertises unlimited text and image generation. The Terms of Service
-          separately permit model-specific prices, included credits, rate limits and overages. The
-          entitlement that applies is whatever the checkout screen shows, together with any fair-use
-          policy it incorporates. Video is priced per second regardless.
+        <Callout tag="What unlimited covers" tone="warn">
+          Pro is described as unlimited text and image generation, and the Terms of Service also
+          allow model-specific prices, included credits, rate limits and overages. Your actual
+          entitlement is whatever the checkout screen shows, together with the fair-use policy it
+          incorporates. Video is priced per second either way.
         </Callout>
       </>
     ),
@@ -820,60 +949,154 @@ const SECTIONS = [
 
   /* ---------------- 5. BUILD ---------------- */
   {
-    part: 'For builders',
-    id: 'api',
-    nav: 'API',
-    title: 'API',
+    part: 'Plans and billing',
+    id: 'account',
+    nav: 'Account, settings and data',
+    title: 'Account, settings and your data',
     body: (
       <>
         <Para>
-          One endpoint reaches every model behind one subscription, built for use by people and by
-          x402-ready agents. It is OpenAI-compatible, so an existing integration works by changing
-          the base URL and the key.
+          Everything about the account sits behind the wallet address at the foot of the sidebar.
+          Clicking it opens the account menu; Settings opens a panel with three groups.
         </Para>
+        <Shot src="/help/a03-account-menu.jpg" alt="The account menu showing Manage Subscription, Top up credits, Copy referral link, Affiliate, Settings, Help and Feedback, Learn More and Log Out." caption="The account menu, reached from the wallet address at the foot of the sidebar." />
         <Table
-          head={['', 'Figure']}
+          head={['Item', 'What it does']}
           rows={[
-            ['API calls per day', '1M+'],
-            ['Median latency', 'Under 200ms'],
-            ['Model families', '5+'],
+            ['Manage Subscription', 'Change or cancel the plan'],
+            ['Top up credits', 'Buy credits beyond the plan allowance'],
+            ['Copy referral link', 'Your referral link, copied to the clipboard. See Referrals and the affiliate programme.'],
+            ['Affiliate', 'The affiliate programme'],
+            ['Settings', 'Profile, Appearance, Memory, Billing, Usage, Credits History and Storage'],
+            ['Help and Feedback', 'Support and feedback'],
+            ['Learn More', 'Product information'],
+            ['Log Out', 'Signs out of this browser'],
           ]}
-          widths={['60%', '40%']}
+          widths={['30%', '70%']}
+        />
+
+        <H3>What is in Settings</H3>
+        <Shot src="/help/a04-settings-appearance.jpg" alt="The Settings panel showing General, Billing and Data and Privacy groups." caption="Settings. General, Billing and Data and Privacy, with Appearance open." />
+        <Table
+          head={['Group', 'Tabs']}
+          rows={[
+            ['General', 'Profile, Appearance, Memory'],
+            ['Billing', 'Billing, Usage, Credits History'],
+            ['Data & Privacy', 'Storage'],
+          ]}
+          widths={['26%', '74%']}
         />
         <Para>
-          Set the model to <Box component="code" sx={{ fontFamily: MONO, fontSize: '0.85em', backgroundColor: 'var(--bg-section)', px: 0.7, py: 0.2, borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>auto</Box> to let the gateway choose.
+          Appearance offers Light, Dark and System themes.
         </Para>
-        <Box
-          component="pre"
-          sx={{
-            backgroundColor: '#0B0F1A', color: '#E6EAF0', p: '16px 18px', borderRadius: '12px',
-            overflowX: 'auto', fontFamily: MONO, fontSize: '0.78rem', lineHeight: 1.65, mb: 2.4,
-          }}
-        >
-{`curl https://api.openledger.xyz/v1/chat/completions \\
-  -H "Authorization: Bearer $OPENLEDGER_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "model": "auto",
-    "messages": [
-      { "role": "user", "content": "Explain quantum computing" }
-    ]
-  }'`}
-        </Box>
+
+        <H3>Billing</H3>
+        <Shot src="/help/a05-billing.jpg" alt="The Billing tab showing the current plan, extra credits, an invoice with a PDF download, and a cancel control." caption="Billing: the current plan and renewal, extra credits, invoices with PDF downloads, and cancellation." />
         <Para>
-          The site shows the same request in Python, TypeScript, TypeScript with the OpenAI SDK, and
-          cURL.
+          Billing shows the current plan with its renewal date and amount, a separate Extra Credits
+          balance with a Buy Credits control, and a table of invoices with a PDF download for each
+          one. Cancelling is at the foot, and states plainly that access continues to the end of the
+          paid period.
         </Para>
-        <Callout tag="Good to know">
-          Log the serving model returned in the response where it is available, so a result can be
-          traced back to the model that produced it. Two auto calls are not guaranteed to use the
-          same model.
+
+        <H3>Usage</H3>
+        <Shot src="/help/a06-usage.jpg" alt="The Usage tab showing plan period, percentage of credits used, and usage broken down by model." caption="Usage, for the current billing period, with a per-model breakdown and an Export control." />
+        <Table
+          head={['What it shows', 'Detail']}
+          rows={[
+            ['Plan and period', 'The active plan and the dates of the current billing period'],
+            ['Credits used', 'As a percentage and as a figure to four decimal places, against the allowance'],
+            ['Reset date', 'When the allowance refreshes'],
+            ['Usage by model', 'Requests, credits and tokens split into input and output, searchable'],
+            ['Export', 'Downloads the breakdown'],
+          ]}
+          widths={['26%', '74%']}
+        />
+        <Callout tag="Credits reset, they do not roll over">
+          The Usage screen states a reset date for the allowance rather than a carry-over. Credits
+          History records each grant separately, so a subscription renewal appears as its own entry.
+        </Callout>
+
+        <H3>Credits History</H3>
+        <Shot src="/help/a07-credits-history.jpg" alt="The Credits History tab listing each credit grant with its date, source and amount." caption="Credits History. One line for each grant, with its source." />
+        <Para>
+          Credits History is the ledger behind the Usage figures. Each line gives a date, a source
+          such as subscription, and the number of credits added.
+        </Para>
+
+        <H3>Storage</H3>
+        <Shot src="/help/a09-storage.jpg" alt="The Storage tab showing space used, history from other accounts on the device, and a delete control." caption="Storage. Chat history is kept in the browser, with a 10 GB allowance." />
+        <Para>
+          Chat history is saved only in the browser you are using, with a 10 GB allowance. When that
+          fills, the oldest images are removed first and the chat text is always kept.
+        </Para>
+        <Table
+          head={['Control', 'What it does']}
+          rows={[
+            ['History from other accounts', 'Conversations saved in this browser under a different account stay on the device but do not appear in your chat list. Move to This Account files them under the account you are signed in as, or Delete removes them.'],
+            ['Delete all history on this device', 'Permanently deletes every chat stored in this browser.'],
+          ]}
+          widths={['32%', '68%']}
+        />
+        <Callout tag="There is no backup" tone="stop">
+          Deleting history cannot be undone, and no backup copy exists. Because history and memory
+          both live in the browser, clearing browser data or moving to a new device loses both.
+          Copy anything you need to keep before you clear anything.
         </Callout>
       </>
     ),
   },
   {
-    part: 'For builders',
+    part: 'Plans and billing',
+    id: 'referrals',
+    nav: 'Referrals and affiliate',
+    title: 'Referrals and the affiliate programme',
+    body: (
+      <>
+        <Para>
+          Hey Open pays a commission on users you refer who go on to subscribe. Both ways in are
+          in the account menu at the foot of the sidebar: Copy referral link hands you your link
+          straight away, and Affiliate opens the programme page with the terms, a dashboard and an
+          earnings calculator.
+        </Para>
+        <Shot src="/help/a14-affiliate-hero.jpg" alt="The affiliate page, offering 20 percent recurring commission with a 90 day cookie window and no cost to join." caption="The affiliate programme, reached from Affiliate in the account menu." />
+        <H3>What it pays</H3>
+        <Table
+          head={['Term', 'What the page states']}
+          rows={[
+            ['Commission', '20% of every payment a referred user makes'],
+            ['Duration', 'Up to 12 months per referral'],
+            ['Attribution window', '90 days from the click'],
+            ['Cost to join', '$0, with no approval waitlist'],
+            ['Application review', 'Within 48 hours'],
+            ['Payout', 'The 1st of each month, by PayPal or wire'],
+            ['Minimum payout', '$25'],
+            ['Referral cap', 'None'],
+          ]}
+          widths={['30%', '70%']}
+        />
+        <H3>How it works</H3>
+        <Steps items={[
+          ['Apply', 'A short application, reviewed within 48 hours. You then get your referral link and dashboard access.'],
+          ['Share your link', 'It works anywhere: a blog, a newsletter, social media, a podcast. Banners, copy and email templates are provided.'],
+          ['Earn', 'Commission accrues on each payment your referrals make, and is paid monthly.'],
+        ]} />
+        <Shot src="/help/a17-affiliate-rates.jpg" alt="The commission tiers, calculated against the plan the referral subscribes to." caption="Commission is calculated on the plan the referral subscribes to." />
+        <H3>What counts as a referral</H3>
+        <Para>
+          Someone who clicks your link and creates a <Em>paid</Em> account within 90 days. Free
+          sign-ups earn nothing. If a referral later upgrades, your commission adjusts to 20% of
+          the new price for the rest of their window.
+        </Para>
+        <Callout tag="Check the current terms" tone="warn">
+          Commission rates, the length of the earning window and the qualifying plans can change.
+          The affiliate page in the application is the authority on what applies to you.
+        </Callout>
+      </>
+    ),
+  },
+  {
+    part: 'Enterprise and token',
     id: 'enterprise',
     nav: 'Enterprise',
     title: 'Enterprise',
@@ -907,10 +1130,10 @@ const SECTIONS = [
     ),
   },
   {
-    part: 'For builders',
+    part: 'Enterprise and token',
     id: 'token',
-    nav: '$OPEN and $HEY',
-    title: '$OPEN and $HEY',
+    nav: '$OPEN',
+    title: '$OPEN',
     body: (
       <>
         <Para>
@@ -934,21 +1157,61 @@ const SECTIONS = [
           rows={[
             ['Inference', 'The compute behind every call'],
             ['Platform costs', 'The cost of running the platform'],
-            ['$HEY credits', 'Compute already claimed'],
             ['Reserves', 'Held back, not spent'],
           ]}
           widths={['26%', '74%']}
         />
         <Para>
-          A portion of what remains funds the buyback, and the tokens bought are burned. $HEY is
-          described as a compute credit: staked $OPEN mints it, and holding it pays out compute
-          credit daily for any model on the network.
+          A portion of what remains funds the buyback, and the tokens bought are burned.
         </Para>
-        <Callout tag="Not available in the app yet" tone="stop">
-          The Staking page in the application reads Coming Soon. The marketing site describes
-          staking, buybacks and burns in the present tense, but there is nothing to stake against in
-          the product today. Treat the token material as a published plan rather than a feature you
-          can use.
+        <H3>The Token Dashboard</H3>
+        <Para>
+          AI Studio, Token Dashboard is where the staking terms are published. It opens without a
+          wallet connected; Connect Wallet is what reveals a position.
+        </Para>
+        <Table
+          head={['Term', 'What is published']}
+          rows={[
+            ['Annual yield', '6%, paid in $OPEN'],
+            ['Hey Open Pro', 'Free while $1,000 worth of $OPEN is staked'],
+            ['Unstaking', 'A 7 day cooling period before tokens are released'],
+          ]}
+          widths={['26%', '74%']}
+        />
+        <Para>
+          The same page carries the burn tracker: total $OPEN burned against the 1B fixed supply,
+          burn volume over 1W, 1M, 3M and 1Y, a buyback breakdown, and a live-looking feed of
+          individual burn events with their source and status.
+        </Para>
+        <Callout tag="The figures shown are samples" tone="stop">
+          The Token Dashboard is in the product, but its numbers are labelled Sample data and it
+          carries no live transactions. Staking is not yet something you can do. Read the yield,
+          the burn totals and the buyback charts as an illustration of how the programme is meant
+          to work, never as your own position.
+        </Callout>
+      </>
+    ),
+  },
+
+  {
+    /* Held back until $HEY is announced. Remove `draft` to publish; the
+       section then appears in the rail and the article in its order. */
+    draft: true,
+    part: 'Enterprise and token',
+    id: 'hey',
+    nav: '$HEY',
+    title: '$HEY',
+    body: (
+      <>
+        <Para>
+          $HEY is described as a compute credit. Staked $OPEN mints it, and holding it pays out
+          compute credit daily, usable against any model on the network. It is accounted for
+          separately from $OPEN: credits already claimed in $HEY come out of revenue before the
+          share that funds the $OPEN buyback is calculated.
+        </Para>
+        <Callout tag="Not available yet" tone="stop">
+          $HEY is a published design, not a feature you can use. There is nothing to mint, hold
+          or spend in the product today.
         </Callout>
       </>
     ),
@@ -956,6 +1219,8 @@ const SECTIONS = [
 
   /* ---------------- 6. HELP ---------------- */
   {
+    /* Held back. Remove `draft` to publish it again. */
+    draft: true,
     part: 'Help',
     id: 'soon',
     nav: 'Not available yet',
@@ -963,14 +1228,16 @@ const SECTIONS = [
     body: (
       <>
         <Para>
-          Four things appear in the interface but cannot be used in the current build. Knowing this
-          in advance saves a support ticket.
+          Several things appear in the interface but cannot be used in the current build. Knowing
+          this in advance saves a support ticket.
         </Para>
         <Table
           head={['Where', 'What it says it will do', 'State']}
           rows={[
+            ['Developer API', 'An OpenAI-compatible endpoint for your own applications', <Pill tone="s">Coming soon</Pill>],
             ['AI Studio, Model Factory', 'Customise and train your own AI models', <Pill tone="s">Coming soon</Pill>],
             ['AI Studio, Staking', 'Stake tokens to support the network and earn rewards', <Pill tone="s">Coming soon</Pill>],
+            ['AI Studio, Token Dashboard', 'Stake $OPEN at 6% for free Pro, and follow the burn', <Pill tone="s">Sample data</Pill>],
             ['Home, Voice Chat', 'Have natural, real-time conversations', <Pill tone="s">Coming soon</Pill>],
             ['More, Agents', 'Five agents in the marketplace', <Pill tone="s">All coming soon</Pill>],
           ]}
@@ -1065,7 +1332,12 @@ function FAQ({ group, items }) {
 
 /* The parts, derived rather than restated, so a section added above
    appears in the rail without a second edit. */
-const PARTS = SECTIONS.reduce((acc, s) => {
+/* Sections carrying `draft` are written but not published. They stay in
+   SECTIONS so the copy lives with the rest of the page and cannot drift,
+   and PUBLISHED is what the page actually renders. */
+const PUBLISHED = SECTIONS.filter((s) => !s.draft);
+
+const PARTS = PUBLISHED.reduce((acc, s) => {
   const last = acc[acc.length - 1];
   if (!last || last.name !== s.part) acc.push({ name: s.part, items: [s] });
   else last.items.push(s);
@@ -1073,10 +1345,12 @@ const PARTS = SECTIONS.reduce((acc, s) => {
 }, []);
 
 export default function HelpPage() {
-  const [active, setActive] = React.useState(SECTIONS[0].id);
+  const [active, setActive] = React.useState(PUBLISHED[0].id);
+  /* Phones only: the rail is a disclosure, closed on arrival. */
+  const [navOpen, setNavOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const marks = SECTIONS.map((s) => document.getElementById(s.id)).filter(Boolean);
+    const marks = PUBLISHED.map((s) => document.getElementById(s.id)).filter(Boolean);
     if (!marks.length) return undefined;
     const pick = () => {
       let current = marks[0].id;
@@ -1091,7 +1365,8 @@ export default function HelpPage() {
     return () => window.removeEventListener('scroll', pick);
   }, []);
 
-  const current = SECTIONS.find((s) => s.id === active) || SECTIONS[0];
+  const current = PUBLISHED.find((s) => s.id === active) || PUBLISHED[0];
+
 
   /* The sticky rails scroll independently, which on Windows draws a wide
      grey gutter down the middle of the page. Thin and transparent until
@@ -1108,7 +1383,7 @@ export default function HelpPage() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-card)' }}>
+    <Box className="help-root" sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-card)' }}>
       <PageMeta
         title="Help Center | Hey Open"
         description="How Hey Open works: choosing a model, the privacy filter, request modes, Consensus, memory, images and video, plans, the API and troubleshooting."
@@ -1118,10 +1393,11 @@ export default function HelpPage() {
 
       <Box sx={{ maxWidth: 1340, mx: 'auto', px: { xs: 2.5, sm: 4, md: 5 } }}>
         <Box
+          className="help-grid"
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '236px minmax(0, 1fr)', lg: '236px minmax(0, 1fr) 208px' },
-            columnGap: { md: 6, lg: 7 },
+            gridTemplateColumns: { xs: '1fr', md: '244px minmax(0, 1fr)' },
+            columnGap: { md: 7, lg: 9 },
             alignItems: 'start',
           }}
         >
@@ -1129,17 +1405,81 @@ export default function HelpPage() {
           <Box
             component="nav"
             aria-label="Help sections"
+            /* SmoothScroll captures wheel events document-wide, so a nested
+               scroller never receives them and the rail looks frozen unless
+               you grab its scrollbar. This hands wheel events back. */
+            data-lenis-prevent=""
             sx={{
               position: { md: 'sticky' },
               top: { md: 88 },
               maxHeight: { md: 'calc(100vh - 104px)' },
-              pt: { xs: 3, md: 5 },
-              pb: { xs: 3, md: 6 },
+              pt: { xs: 2.5, md: 5 },
+              pb: { xs: 0, md: 6 },
               mb: { xs: 3, md: 0 },
-              borderBottom: { xs: '1px solid var(--border-subtle)', md: 'none' },
               ...quietScroll,
+              /* quietScroll makes this a scroller, which is right for the
+                 sticky desktop rail and wrong for a phone, where the
+                 disclosure should simply grow the page. */
+              overflowY: { xs: 'visible', md: 'auto' },
             }}
           >
+            {/* Disclosure, small screens only. */}
+            <Box
+              component="button"
+              type="button"
+              onClick={() => setNavOpen((o) => !o)}
+              aria-expanded={navOpen}
+              aria-controls="help-section-list"
+              sx={{
+                display: { xs: 'flex', md: 'none' },
+                width: '100%', alignItems: 'center', justifyContent: 'space-between',
+                gap: 1, px: 1.8, py: 1.3, cursor: 'pointer',
+                font: 'inherit', textAlign: 'left',
+                borderRadius: '12px',
+                border: '1px solid var(--border-subtle)',
+                backgroundColor: 'var(--bg-card)',
+                color: 'var(--text-heading)',
+                boxShadow: 'var(--shadow-card)',
+              }}
+            >
+              <Box component="span" sx={{ minWidth: 0 }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'block', fontSize: '0.64rem', fontWeight: 700,
+                    letterSpacing: '0.09em', textTransform: 'uppercase',
+                    color: 'var(--text-muted)',
+                  }}
+                >
+                  {current.part}
+                </Box>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'block', fontSize: '0.95rem', fontWeight: 600,
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}
+                >
+                  {navOpen ? 'All sections' : current.nav}
+                </Box>
+              </Box>
+              <Box
+                component="span"
+                aria-hidden="true"
+                sx={{
+                  flexShrink: 0, fontSize: '0.8rem', color: 'var(--text-muted)',
+                  transform: navOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform .18s ease',
+                }}
+              >
+                &#9662;
+              </Box>
+            </Box>
+
+            <Box
+              id="help-section-list"
+              sx={{ display: { xs: navOpen ? 'block' : 'none', md: 'block' }, pt: { xs: 2.4, md: 0 } }}
+            >
             {PARTS.map((p) => (
               <Box key={p.name} sx={{ mb: 2.8 }}>
                 <Typography
@@ -1156,6 +1496,7 @@ export default function HelpPage() {
                       key={s.id}
                       component="a"
                       href={`#${s.id}`}
+                      onClick={() => setNavOpen(false)}
                       sx={{
                         display: 'block', textDecoration: 'none',
                         fontSize: '0.9rem', lineHeight: 1.45,
@@ -1175,10 +1516,11 @@ export default function HelpPage() {
                 </Box>
               </Box>
             ))}
+            </Box>
           </Box>
 
           {/* ---------------- article ---------------- */}
-          <Box component="main" sx={{ minWidth: 0, pt: { xs: 0, md: 5 }, pb: { xs: 7, md: 12 } }}>
+          <Box component="main" className="help-main" sx={{ minWidth: 0, pt: { xs: 0, md: 5 }, pb: { xs: 7, md: 12 } }}>
             {/* Breadcrumb, which is the only wayfinding above the title. */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.9, mb: 1.6, flexWrap: 'wrap' }}>
               <Typography sx={{ fontSize: '0.86rem', color: 'var(--text-muted)' }}>Help Center</Typography>
@@ -1194,15 +1536,16 @@ export default function HelpPage() {
                 textWrap: 'balance', mb: 2.2,
               }}
             >
-              Hey Open Help Center
+              Get Started
             </Typography>
 
-            <Typography sx={{ fontSize: '1.06rem', lineHeight: 1.72, color: 'var(--text-secondary)', maxWidth: '68ch', mb: 0 }}>
-              Everything Hey Open does and how to do it, from your first conversation to the API.
-              Twenty sections: start at the top, or jump to what you need.
+            <Typography sx={{ fontSize: '1.06rem', lineHeight: 1.72, color: 'var(--text-secondary)', maxWidth: '74ch', mb: 0 }}>
+              Everything Hey Open does and how to do it, from your first conversation to your
+              account and billing. {PUBLISHED.length} sections: start at the top, or jump to what
+              you need.
             </Typography>
 
-            {SECTIONS.map((s) => (
+            {PUBLISHED.map((s) => (
               <Box
                 key={s.id}
                 component="section"
@@ -1225,56 +1568,15 @@ export default function HelpPage() {
               </Box>
             ))}
 
-            <Box sx={{ mt: { xs: 6, md: 8 }, pt: 2.6, borderTop: '1px solid var(--border-subtle)', maxWidth: '68ch' }}>
+            <Box sx={{ mt: { xs: 6, md: 8 }, pt: 2.6, borderTop: '1px solid var(--border-subtle)', maxWidth: '74ch' }}>
               <Typography sx={{ fontSize: '0.84rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
-                Written from the Hey Open application and the product site, both walked on 4 and
-                5 November 2026. Model counts, badges, prices and availability were read from the
-                live model picker with the privacy filter set to Min. The application is the source
-                of truth: the catalogue changes as providers add and retire models, so treat every
-                count and price here as a snapshot of {SNAP}.
+                Last updated {SNAP}. The model catalogue changes as providers add and retire
+                models, so the application is always the authority on what is available to your
+                account, and on current prices.
               </Typography>
             </Box>
           </Box>
 
-          {/* ---------------- on this page ---------------- */}
-          <Box
-            component="aside"
-            aria-label="On this page"
-            sx={{
-              display: { xs: 'none', lg: 'block' },
-              position: 'sticky', top: 88,
-              maxHeight: 'calc(100vh - 104px)',
-              pt: 5, pb: 6,
-              ...quietScroll,
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.08em',
-                textTransform: 'uppercase', color: 'var(--text-muted)', mb: 1.2,
-              }}
-            >
-              On this page
-            </Typography>
-            {SECTIONS.map((s) => (
-              <Box
-                key={s.id}
-                component="a"
-                href={`#${s.id}`}
-                sx={{
-                  display: 'block', textDecoration: 'none',
-                  fontSize: '0.84rem', lineHeight: 1.42, py: 0.62, pl: 1.4,
-                  borderLeft: '2px solid',
-                  borderLeftColor: active === s.id ? 'var(--brand-accent)' : 'var(--border-subtle)',
-                  color: active === s.id ? 'var(--brand-accent)' : 'var(--text-muted)',
-                  transition: 'color .12s ease, border-color .12s ease',
-                  '&:hover': { color: 'var(--text-heading)' },
-                }}
-              >
-                {s.nav}
-              </Box>
-            ))}
-          </Box>
         </Box>
       </Box>
 
