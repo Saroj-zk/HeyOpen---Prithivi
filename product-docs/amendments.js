@@ -17,48 +17,28 @@
 // ---------------------------------------------------------------------
 const EDITS = [
   {
-    file: '10-open-and-token-economy/staking-and-benefits.md',
-    why: 'Threshold changed by the product team, 10 November 2026: Pro is granted for $1,000 worth of $OPEN staked, not a fixed 100 tokens.',
-    find: '| 100 $OPEN staked for Hey Open Pro | Advertised threshold; availability must be confirmed |',
-    replace: '| $1,000 worth of $OPEN staked for Hey Open Pro | Current threshold. It is a value in dollars, not a fixed number of tokens, so the quantity of $OPEN required moves with the token price |',
+    file: '01-getting-started/terminology.md',
+    why: 'Going to market as a web2 subscription, 10 November 2026. No token concepts are published.',
+    find: '| $OPEN | The OpenLedger ecosystem token discussed on the token and staking pages |\n',
+    replace: '',
   },
   {
-    file: '10-open-and-token-economy/staking-and-benefits.md',
-    why: 'The threshold is a dollar value, which behaves differently from a token count and is worth stating plainly.',
-    find: '## Before participating',
-    replace: [
-      '## How the Pro threshold works',
-      '',
-      'Hey Open Pro is granted while you hold **$1,000 worth of $OPEN** staked. The',
-      'threshold is denominated in dollars rather than in tokens, so the number of $OPEN',
-      'it takes to reach it changes as the token price changes. A position that qualifies',
-      'today can fall below the threshold without you selling anything, so check the',
-      'current requirement rather than assuming a fixed token count.',
-      '',
-      '## Before participating',
-    ].join('\n'),
+    file: '12-reference/glossary.md',
+    why: 'Going to market as a web2 subscription, 10 November 2026.',
+    find: "| $OPEN | Ecosystem token associated with OpenLedger and Hey Open's proposed economic mechanisms |\n",
+    replace: '',
   },
   {
-    file: '07-plans-billing-and-account/plans-and-pricing.md',
-    why: 'Staking is a second route to Pro and belongs where people compare prices.',
-    find: '## Paid usage beyond subscriptions',
-    replace: [
-      '## Two routes to Pro',
-      '',
-      'Pro can be paid for monthly, or unlocked by staking $OPEN.',
-      '',
-      '| Route | What it takes | Status |',
-      '| --- | --- | --- |',
-      '| Subscription | The monthly plan price | Available now |',
-      '| Staking | $1,000 worth of $OPEN staked, which you keep | Staking is not yet live in the application |',
-      '',
-      'Staking is not a cheaper subscription. The tokens stay yours and continue to earn,',
-      'but they are locked while staked, subject to an unstaking cooling period, and their',
-      'value moves with the market in a way a fixed monthly price does not. See',
-      '[Staking $OPEN](../10-open-and-token-economy/staking-and-benefits.md).',
-      '',
-      '## Paid usage beyond subscriptions',
-    ].join('\n'),
+    file: '12-reference/glossary.md',
+    why: 'Token economics, not a product concept. Web2 positioning, 10 November 2026.',
+    find: '| Buyback | Market purchase of a token using allocated funds |\n| Burn | Verifiable action intended to remove tokens from circulating supply |\n',
+    replace: '',
+  },
+  {
+    file: '12-reference/official-links.md',
+    why: 'Going to market as a web2 subscription, 10 November 2026.',
+    find: '- [Staking and $OPEN](https://hey-open.vercel.app/stake)\n- [Tokenomics](https://hey-open.vercel.app/token)\n',
+    replace: '',
   },
   {
     file: '01-getting-started/terminology.md',
@@ -85,9 +65,30 @@ const EDITS = [
 //    Nothing in the book may link to one, or the build fails.
 // ---------------------------------------------------------------------
 const DROP_PAGES = [
+  /* The whole $OPEN section. Hey Open is going to market as a web2
+     subscription, so nothing about the token, staking or the buyback is
+     published: not the route to Pro through a stake, not the yield, not
+     the burn. The articles stay in the review copy; empty this list to
+     publish them again. */
   {
     file: '10-open-and-token-economy/hey-compute-credits.md',
-    why: '$HEY is not announced yet, 10 November 2026. The article stays in the review copy; remove this entry to publish it.',
+    why: '$HEY is not announced. Web2 positioning, 10 November 2026.',
+  },
+  {
+    file: '10-open-and-token-economy/overview.md',
+    why: 'Web2 positioning, 10 November 2026.',
+  },
+  {
+    file: '10-open-and-token-economy/staking-and-benefits.md',
+    why: 'Web2 positioning, 10 November 2026. No route to Pro runs through a token.',
+  },
+  {
+    file: '10-open-and-token-economy/revenue-and-burns.md',
+    why: 'Web2 positioning, 10 November 2026.',
+  },
+  {
+    file: '10-open-and-token-economy/token-governance.md',
+    why: 'Web2 positioning, 10 November 2026.',
   },
 ];
 
@@ -177,4 +178,20 @@ relying on any figure here.
   },
 ];
 
-module.exports = { EDITS, NEW_PAGES, DROP_PAGES };
+// ---------------------------------------------------------------------
+// 4. The landing README, which is not one of the marked articles.
+// ---------------------------------------------------------------------
+const README_EDITS = [
+  {
+    why: 'Web2 positioning, 10 November 2026. The row pointed into the dropped $OPEN section.',
+    find: '| Understand $OPEN ecosystem concepts | [Token and ecosystem overview](10-open-and-token-economy/overview.md) |\n',
+    replace: '',
+  },
+  {
+    why: 'Web2 positioning, 10 November 2026.',
+    find: 'Some capabilities shown on the public website, especially token economics, staking benefits, and agent payments, are proposed or pending rollout. These pages clearly identify that status rather than presenting future systems as live.',
+    replace: 'Some capabilities shown on the public website are proposed or pending rollout. These pages clearly identify that status rather than presenting future systems as live.',
+  },
+];
+
+module.exports = { EDITS, NEW_PAGES, DROP_PAGES, README_EDITS };

@@ -22,8 +22,5 @@
 | API | Programmatic interface allowing applications to make requests |
 | API key | Secret credential used to authorize an API request |
 | x402 | Payment-related protocol discussed for agent and service interactions |
-| $OPEN | Ecosystem token associated with OpenLedger and Hey Open's proposed economic mechanisms |
-| Buyback | Market purchase of a token using allocated funds |
-| Burn | Verifiable action intended to remove tokens from circulating supply |
 | Enterprise workspace | Organization-managed environment with business controls, subject to agreement |
 | Custom-branded solution | AI product presented under a customer's brand and powered by Hey Open infrastructure |

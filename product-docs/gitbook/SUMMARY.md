@@ -89,13 +89,6 @@
 * [Compute cost protection for enterprises](09-enterprise/compute-price-protection.md)
 * [Enterprise onboarding checklist](09-enterprise/enterprise-onboarding.md)
 
-## $OPEN & Ecosystem
-
-* [Understanding $OPEN and Hey Open](10-open-and-token-economy/overview.md)
-* [Staking $OPEN and proposed benefits](10-open-and-token-economy/staking-and-benefits.md)
-* [Revenue, buybacks, and permanent burns](10-open-and-token-economy/revenue-and-burns.md)
-* [Token utility and governance concepts](10-open-and-token-economy/token-governance.md)
-
 ## Help & Troubleshooting
 
 * [Frequently asked questions](11-help-and-troubleshooting/faq.md)

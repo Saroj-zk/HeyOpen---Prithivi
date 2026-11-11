@@ -66,7 +66,8 @@
 
    1. Domain. Both documents give the website as heyopen.ai and the
       contact address as support@heyopen.ai. This site is served from
-      openledger.xyz and its footer contact is marketing@openledger.xyz.
+      openledger.xyz; its enterprise contact is now marketing@heyopen.ai,
+      so the addresses agree and only the domain differs.
    2. Spelling of the name. Both documents define the short form as
       "HeyOpen" and use it throughout. Every other page writes "Hey
       Open". The entity-name slots were filled with "Hey Open", so

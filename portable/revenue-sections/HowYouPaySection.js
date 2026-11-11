@@ -2,8 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { useThemeMode } from '@/context/ThemeContext';
-import { useReveal, revealSx } from '@/utils/reveal';
+import { useThemeMode } from './theme';
+import { useReveal, revealSx } from './reveal';
 
 /**
  * How you settle the bill.

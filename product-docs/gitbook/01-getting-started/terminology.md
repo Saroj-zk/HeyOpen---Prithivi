@@ -17,6 +17,5 @@ These terms appear throughout Hey Open documentation.
 | Credits | Platform usage units that may be included in plans or purchased separately |
 | API key | A secret credential authorizing developer API requests |
 | x402 | A payment-related protocol discussed for agent and API interactions |
-| $OPEN | The OpenLedger ecosystem token discussed on the token and staking pages |
 
 For the full list and examples, see the [Glossary](../12-reference/glossary.md). Model names and provider availability change over time, so the in-app catalog takes priority over static examples.

@@ -50,4 +50,4 @@ The product discusses x402-ready agent access, but the public sources do not spe
 
 ## Where can I ask for help?
 
-Contact **support@heyopen.ai**. For enterprise inquiries, the public Enterprise page also lists **marketing@openledger.xyz**.
+Contact **support@heyopen.ai**. For enterprise inquiries, the public Enterprise page also lists **marketing@heyopen.ai**.

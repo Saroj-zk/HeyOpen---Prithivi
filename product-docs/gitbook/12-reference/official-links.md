@@ -14,15 +14,13 @@ This page consolidates the publicly available source destinations used to draft 
 ## Platform and ecosystem
 
 - [Enterprise](https://hey-open.vercel.app/enterprise)
-- [Staking and $OPEN](https://hey-open.vercel.app/stake)
-- [Tokenomics](https://hey-open.vercel.app/token)
 
 ## Legal and support
 
 - [Privacy Policy](https://hey-open.vercel.app/privacy-policy)
 - [Terms of Service](https://hey-open.vercel.app/terms)
 - Support: **support@heyopen.ai**
-- Enterprise inquiry: **marketing@openledger.xyz**
+- Enterprise inquiry: **marketing@heyopen.ai**
 
 ## Reading this documentation
 

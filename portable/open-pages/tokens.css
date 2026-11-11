@@ -1,0 +1,20 @@
+/* Design tokens for the sections in this folder.
+ *
+ * These are the only custom properties the three components read. If the
+ * host app already defines variables of its own, map them here instead of
+ * taking these values, and the sections pick up the host's palette.
+ *
+ * Import once, above the components:  import './tokens.css';
+ */
+:root {
+  --bg-page: #F8F9FA;        /* the page behind the sections   */
+  --bg-card: #FFFFFF;        /* panels, cards, the funnel body */
+  --text-primary: #0F172A;   /* headings                       */
+  --text-secondary: #475569; /* body copy                      */
+  --text-muted: #64748B;     /* labels, captions, axis text    */
+}
+
+/* The accent is written literally as #ff6600 throughout the components
+   rather than as a variable, so it survives being dropped into a host
+   that has no tokens at all. Search and replace if the host brand
+   differs. */

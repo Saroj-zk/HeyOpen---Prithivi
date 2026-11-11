@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { useReveal, revealSx } from '@/utils/reveal';
+import { useReveal, revealSx } from './reveal';
 
 /**
  * Compute options, and what the business earns from them.

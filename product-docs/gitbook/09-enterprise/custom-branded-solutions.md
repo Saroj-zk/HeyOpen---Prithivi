@@ -26,4 +26,4 @@ A custom-branded solution is not necessarily a self-hosted model, a dedicated ph
 
 ## Contact
 
-The Enterprise page lists **marketing@openledger.xyz** for business inquiries. Contact the team for availability, specifications, and a tailored proposal.
+The Enterprise page lists **marketing@heyopen.ai** for business inquiries. Contact the team for availability, specifications, and a tailored proposal.

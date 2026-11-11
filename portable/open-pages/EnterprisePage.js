@@ -3,11 +3,8 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
-import PageHeader from '@/components/PageHeader';
-import Footer from '@/components/Footer';
-import { Reveal } from '@/components/ui/LedgerUI';
-import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from '@/components/ui/Ledger';
-import PageMeta from '@/components/PageMeta';
+import { Reveal } from './ui/LedgerUI';
+import { MONO, RULE, RULE_ON_INK, FIG, Label, Button } from './ui/Ledger';
 
 /**
  * The business behind $OPEN, at length.
@@ -43,7 +40,7 @@ const LINKS = { buy: '#', stake: '#', mint: '#', explorer: '#', marketCap: '#' }
    wired to anything: its submit handler clears the form, shows a toast
    promising a reply within two business hours, and discards what was
    typed. A second copy of that promise is not worth having. */
-const CONTACT = 'mailto:marketing@openledger.xyz?subject=Enterprise%20enquiry';
+const CONTACT = 'mailto:marketing@heyopen.ai?subject=Enterprise%20enquiry';
 
 /* The share of eligible net revenue spent buying $OPEN back. Not the return
    target quoted on the stake page: a different measure of a different thing,
@@ -1215,13 +1212,6 @@ function RevenueFlow() {
 export default function EnterprisePage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
-      <PageMeta
-        title="The economics behind $OPEN | Hey Open"
-        description="Hey Open powers Custom branded AI products for enterprises, with compute protection designed to keep costs predictable. As the business grows, its revenue connects real AI usage to $OPEN buybacks and burns."
-        path="/enterprise"
-      />
-
-      <PageHeader />
 
       {/* The sky behind the opening screen.
           It was a radial wash of brand orange, which is the one thing every
@@ -1558,8 +1548,6 @@ export default function EnterprisePage() {
           </Box>
         </Reveal>
       </Section>
-
-      <Footer />
     </Box>
   );
 }

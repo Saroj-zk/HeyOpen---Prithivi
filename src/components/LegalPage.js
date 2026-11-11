@@ -417,7 +417,7 @@ export default function LegalPage({ doc, description, path }) {
               </Typography>
               <Box
                 component="a"
-                href="mailto:marketing@openledger.xyz"
+                href="mailto:marketing@heyopen.ai"
                 sx={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -429,7 +429,7 @@ export default function LegalPage({ doc, description, path }) {
                   '&:hover': { textDecoration: 'underline' },
                 }}
               >
-                marketing@openledger.xyz
+                marketing@heyopen.ai
                 <Box component="span" aria-hidden="true">→</Box>
               </Box>
             </Box>

@@ -2,7 +2,7 @@
 
 For product support, account questions, billing issues, privacy requests, or security concerns, contact **support@heyopen.ai**.
 
-For enterprise or custom-branded AI inquiries, the public Enterprise page lists **marketing@openledger.xyz**.
+For enterprise or custom-branded AI inquiries, the public Enterprise page lists **marketing@heyopen.ai**.
 
 ## Help us diagnose the issue
 
