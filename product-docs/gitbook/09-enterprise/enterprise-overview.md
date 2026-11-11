@@ -20,6 +20,6 @@ Implementation details for tenant separation, data residency, audit exports, acc
 
 ## First step
 
-Define your target workload, model requirements, expected volume, privacy constraints, integration dependencies, and budget. Contact **marketing@openledger.xyz**, which is listed as an enterprise contact on the public site, or **support@heyopen.ai** for assistance.
+Define your target workload, model requirements, expected volume, privacy constraints, integration dependencies, and budget. Contact **marketing@heyopen.ai**, which is listed as an enterprise contact on the public site, or **support@heyopen.ai** for assistance.
 
 **Related:** [Enterprise controls](governance-and-controls.md), [Custom-branded solutions](custom-branded-solutions.md).

@@ -27,7 +27,7 @@ const ROOT = path.join(__dirname, 'gitbook');
 const ASSETS = path.join(ROOT, '.gitbook', 'assets');
 const SHOTS = path.join(__dirname, '..', 'public', 'help');
 
-const { EDITS, NEW_PAGES, DROP_PAGES = [] } = require('./amendments');
+const { EDITS, NEW_PAGES, DROP_PAGES = [], README_EDITS = [] } = require('./amendments');
 
 const SRC = process.argv[2] ||
   path.join(process.env.USERPROFILE || process.env.HOME,
@@ -89,6 +89,16 @@ const EXTRA_ASSETS = [
  * account ids. Those regions are pixelated in public/help, and this note
  * travels with the images so nobody re-shoots them unredacted. */
 const SHOT_NOTE = 'Account identifiers in the screenshots are redacted.';
+
+/* Straight renames: the same thing called by its current name. These are
+ * applied to every article and to the README, and are deliberately not
+ * EDITS, which exist for changes of substance and must match exactly once. */
+const RENAMES = [
+  ['marketing@openledger.xyz', 'marketing@heyopen.ai'],
+];
+
+const rename = (text) =>
+  RENAMES.reduce((acc, [from, to]) => acc.split(from).join(to), text);
 
 // ---------------------------------------------------------------- helpers
 
@@ -158,6 +168,17 @@ fs.mkdirSync(ASSETS, { recursive: true });
 let intro = src.slice(0, marks[0].at);
 intro = intro.replace(/^# Hey Open \| Complete GitBook Documentation[\s\S]*?\n---\n/, '');
 intro = intro.replace(/\n-{3,}\s*$/g, '\n').trim() + '\n';
+intro = rename(intro);
+
+/* README edits. It is not one of the marked articles, so it is amended
+ * here rather than through EDITS, and a miss fails the build the same way. */
+for (const e of README_EDITS) {
+  const n = intro.split(e.find).length - 1;
+  if (n !== 1) {
+    throw new Error('README amendment matched ' + n + ' times, expected 1:\n  ' + e.find);
+  }
+  intro = intro.replace(e.find, e.replace);
+}
 write('README.md', intro);
 
 /* Split first, into memory, so amendments can be applied before anything
@@ -166,7 +187,7 @@ const articles = marks.map((mk, i) => {
   const to = i + 1 < marks.length ? marks[i + 1].at : src.length;
   let body = src.slice(mk.end, to);
   body = body.replace(/^\s*\n+/, '').replace(/\n*-{3,}\s*$/, '\n').trimEnd() + '\n';
-  return { section: mk.section, file: mk.file, body };
+  return { section: mk.section, file: mk.file, body: rename(body) };
 });
 const byFile = new Map(articles.map((a) => [a.file, a]));
 
@@ -196,11 +217,18 @@ for (const d of DROP_PAGES) {
   if (at < 0) throw new Error('drop targets a missing article: ' + d.file);
   articles.splice(at, 1);
 }
+const dropped = new Set(DROP_PAGES.map((d) => d.file));
 for (const a of articles) {
-  for (const d of DROP_PAGES) {
-    const leaf = d.file.split('/').pop();
-    if (a.body.includes(leaf)) {
-      throw new Error(a.file + ' still links to the held-back ' + d.file);
+  /* Resolve each link against the article that holds it. Matching on the
+   * bare filename is not enough: three sections have an overview.md. */
+  const re = /\]\(([^)\s]+\.md)(?:#[^)]*)?\)/g;
+  let m;
+  while ((m = re.exec(a.body)) !== null) {
+    const target = path.posix.normalize(
+      path.posix.join(path.posix.dirname(a.file), m[1])
+    );
+    if (dropped.has(target)) {
+      throw new Error(a.file + ' still links to the held-back ' + target);
     }
   }
 }

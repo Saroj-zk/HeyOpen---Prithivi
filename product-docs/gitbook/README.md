@@ -20,7 +20,6 @@ Hey Open brings together **200+ advertised AI models** across text, coding, imag
 | Review plans, credits, and payments | [Plans and pricing](07-plans-billing-and-account/plans-and-pricing.md) |
 | Connect a software application | [Developer API](08-developer-api/api-overview.md) |
 | Evaluate enterprise solutions | [Hey Open for enterprises](09-enterprise/enterprise-overview.md) |
-| Understand $OPEN ecosystem concepts | [Token and ecosystem overview](10-open-and-token-economy/overview.md) |
 | Fix a problem | [Frequently asked questions](11-help-and-troubleshooting/faq.md) |
 
 ## Go to the product
@@ -33,11 +32,11 @@ Hey Open brings together **200+ advertised AI models** across text, coding, imag
 
 Hey Open can connect to independently operated AI models. Provider processing, model access, credit usage, and privacy protections vary by route and feature. Review the relevant disclosures before sharing sensitive information. AI-generated outputs can be inaccurate and should be verified when the stakes are high.
 
-Some capabilities shown on the public website, especially token economics, staking benefits, and agent payments, are proposed or pending rollout. These pages clearly identify that status rather than presenting future systems as live.
+Some capabilities shown on the public website are proposed or pending rollout. These pages clearly identify that status rather than presenting future systems as live.
 
 ## Need help?
 
-Contact **support@heyopen.ai**. For enterprise inquiries, the public Enterprise page also lists **marketing@openledger.xyz**.
+Contact **support@heyopen.ai**. For enterprise inquiries, the public Enterprise page also lists **marketing@heyopen.ai**.
 
 **Last reviewed:** 5 November 2026.
 

@@ -91,7 +91,7 @@ const STEPS = [
     glyph: 'cpu',
     zone: 'openledger',
     term: 'Private Inference',
-    line: 'PRIVATELY PROCESSED',
+    line: 'PRIVATELY PROCESSED*',
     detail:
       'The model answers your question, and Hey Open keeps no copy of it.',
   },
@@ -427,15 +427,15 @@ const getPrimaryCtaSx = (isDark) => ({
   // Liquid Glass Pill Base (from active tab in CoreFeaturesSection)
   backgroundColor: isDark ? 'rgba(255, 102, 0, 0.12)' : 'rgba(255, 255, 255, 0.88)',
   background: isDark
-      ? 'linear-gradient(180deg, rgba(255, 102, 0, 0.16) 0%, rgba(255, 255, 255, 0.08) 100%)'
-      : 'linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 243, 235, 0.84) 100%)',
+    ? 'linear-gradient(180deg, rgba(255, 102, 0, 0.16) 0%, rgba(255, 255, 255, 0.08) 100%)'
+    : 'linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 243, 235, 0.84) 100%)',
   backdropFilter: 'blur(16px)',
   border: isDark
     ? '1px solid rgba(255, 102, 0, 0.28)'
     : '1px solid rgba(255, 102, 0, 0.2)',
   boxShadow: isDark
-      ? '0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.3), inset 0 -0.5px 1px rgba(0, 0, 0, 0.3)'
-      : '0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95), inset 0 -0.5px 1px rgba(0, 0, 0, 0.04)',
+    ? '0 2px 8px rgba(0, 0, 0, 0.35), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.3), inset 0 -0.5px 1px rgba(0, 0, 0, 0.3)'
+    : '0 2px 6px rgba(15, 23, 42, 0.06), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95), inset 0 -0.5px 1px rgba(0, 0, 0, 0.04)',
 
   // Specular rim highlight (simulated using ::before)
   '&::before': {
@@ -587,9 +587,8 @@ function Lane({ accent, arrow = false, roundStart = false, delay = 0, duration =
             bottom: 0,
             left: 0,
             width: '32%',
-            background: `linear-gradient(90deg, transparent 0%, ${
-              accent ? 'rgba(255, 255, 255, 0.85)' : 'var(--border-strong)'
-            } 50%, transparent 100%)`,
+            background: `linear-gradient(90deg, transparent 0%, ${accent ? 'rgba(255, 255, 255, 0.85)' : 'var(--border-strong)'
+              } 50%, transparent 100%)`,
             animation: `olLanePulse ${duration}s linear ${delay}s infinite`,
           }}
         />
@@ -1053,9 +1052,8 @@ function Pipeline() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: isActive ? ORANGE : 'var(--bg-page)',
-                  border: `${isOurs ? '1.5px dashed' : '2px solid'} ${
-                    isActive ? ORANGE : 'var(--border-strong)'
-                  }`,
+                  border: `${isOurs ? '1.5px dashed' : '2px solid'} ${isActive ? ORANGE : 'var(--border-strong)'
+                    }`,
                   color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
                   boxShadow: isActive ? `0 0 0 6px ${ORANGE}1f` : 'none',
                   transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1387,8 +1385,10 @@ export default function PrivatePage() {
                       flexDirection: 'column',
                       px: { xs: 0, sm: 2.5, md: 2.75 },
                       py: ROW_PY,
-                      borderLeft: { sm: i % 2 === 0 ? 'none' : '1px solid var(--border-subtle)',
-                                    md: i === 0 ? 'none' : '1px solid var(--border-subtle)' },
+                      borderLeft: {
+                        sm: i % 2 === 0 ? 'none' : '1px solid var(--border-subtle)',
+                        md: i === 0 ? 'none' : '1px solid var(--border-subtle)'
+                      },
                       borderBottom: {
                         xs: i === PILLARS.length - 1 ? 'none' : '1px solid var(--border-subtle)',
                         md: 'none',

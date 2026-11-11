@@ -5,12 +5,12 @@ import Typography from '@mui/material/Typography';
 import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
-import { useReveal, revealSx } from '@/utils/reveal';
+import { useReveal, revealSx } from './reveal';
 /* The chart only. Its section is not mounted on the home page any more:
    this column is where that content now lives, and importing the figure
    rather than copying it keeps the price series and the crossing solve in
    one place. */
-import { ComputeOptionsFigure } from '@/components/ComputeOptionsSection';
+import { ComputeOptionsFigure } from './ComputeOptionsSection';
 
 /**
  * Where the money goes, and when enterprise pays for it.

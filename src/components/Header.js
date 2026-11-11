@@ -16,8 +16,8 @@ const NAV_ITEMS = [
   { label: 'Memory', href: '/memory' },
   { label: 'Private AI', href: '/private' },
   /* The staking page is about the token, so it is named after it. */
-  { label: '$OPEN', href: '/stake' },
-  { label: 'Enterprise', href: '/enterprise' },
+  /* $OPEN, Token and Enterprise moved to the OpenLedger site; their
+     pages live in portable/open-pages/. Nothing here links to them. */
   /* $HEY is hidden from the nav on request. Nothing else in the site links
      to /hey, so the page is now reachable only by typing the address.
      Uncomment to put it back. */
@@ -254,26 +254,40 @@ export default function Header() {
               </Box>
             </Box>
 
-            {/* Log in Link */}
-            <Box
-              component="a"
+            {/* Start a chat: the same destination and the same pill that
+                PageHeader uses on every other page. This one was a plain
+                sign-in link, which read as a different, smaller offer. */}
+            <Button
               onClick={handleTryClick}
               sx={{
-                display: { xs: 'none', sm: 'block' },
-                color: isDark ? '#FFFFFF' : '#0F172A',
-                fontSize: '0.96rem',
+                borderRadius: '9999px',
+                py: 0.75,
+                px: { xs: 2, sm: 2.5 },
+                fontSize: '0.88rem',
                 fontWeight: 700,
-                textDecoration: 'none',
-                cursor: 'pointer',
+                textTransform: 'none',
+                backgroundColor: '#FF6600',
+                color: '#FFFFFF',
                 fontFamily: '"Inter", -apple-system, sans-serif',
-                transition: 'opacity 0.2s ease',
+                boxShadow: isDark
+                  ? '0 4px 14px rgba(255,102,0,0.35)'
+                  : '0 4px 12px rgba(255,102,0,0.25)',
+                border: isDark
+                  ? '1px solid rgba(255,102,0,0.4)'
+                  : '1px solid rgba(255,102,0,0.2)',
+                transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
                 '&:hover': {
-                  opacity: 0.8,
+                  backgroundColor: '#e65c00',
+                  transform: 'translateY(-1px)',
+                  boxShadow: isDark
+                    ? '0 6px 20px rgba(255,102,0,0.45)'
+                    : '0 6px 20px rgba(255,102,0,0.35)',
                 },
+                '&:active': { transform: 'scale(0.95)' },
               }}
             >
-              Log in
-            </Box>
+              Start a chat
+            </Button>
 
             {/* Mobile Hamburger Toggle */}
             <IconButton
@@ -404,21 +418,24 @@ export default function Header() {
                 </Box>
               </Box>
               
-              <Box
-                component="a"
+              <Button
                 onClick={() => {
                   setMobileOpen(false);
                   handleTryClick();
                 }}
                 sx={{
-                  color: isDark ? '#FFFFFF' : '#0F172A',
-                  fontSize: '1.1rem',
+                  borderRadius: '9999px',
+                  py: 0.8,
+                  px: 2.5,
+                  fontSize: '0.9rem',
                   fontWeight: 700,
-                  cursor: 'pointer',
+                  textTransform: 'none',
+                  backgroundColor: '#FF6600',
+                  color: '#FFFFFF',
                 }}
               >
-                Log in
-              </Box>
+                Start a chat
+              </Button>
             </Box>
           </Box>
         </Box>

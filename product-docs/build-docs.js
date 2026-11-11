@@ -284,7 +284,7 @@ const about = doc(
         ['Network referenced', 'OpenLedger'],
         ['Web application', 'ais.openledger.xyz/chat'],
         ['Support, billing, privacy', 'support@heyopen.ai'],
-        ['Enterprise and custom-branded AI', 'marketing@openledger.xyz'],
+        ['Enterprise and custom-branded AI', 'marketing@heyopen.ai'],
         ['Legal entity and registered address', [{ ph: 'CONFIRM: entity name and registered address once the Terms placeholders are filled' }]],
       ],
       [3400, 6680]

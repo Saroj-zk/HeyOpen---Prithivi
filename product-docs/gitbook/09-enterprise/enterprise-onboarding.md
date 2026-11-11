@@ -35,4 +35,4 @@ Use this checklist to plan a Hey Open enterprise evaluation. Exact provisioning 
 
 ## Contact
 
-Send enterprise inquiries to **marketing@openledger.xyz** as shown on the Enterprise page, or contact **support@heyopen.ai** for general product assistance.
+Send enterprise inquiries to **marketing@heyopen.ai** as shown on the Enterprise page, or contact **support@heyopen.ai** for general product assistance.

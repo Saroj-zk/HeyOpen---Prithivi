@@ -47,7 +47,7 @@ const PANEL = {
 
 function Para({ children }) {
   return (
-    <Typography sx={{ mb: 1.6, maxWidth: '74ch', fontSize: '1rem', lineHeight: 1.72, color: 'var(--text-secondary)' }}>
+    <Typography sx={{ mb: 1.6, fontSize: '1rem', lineHeight: 1.72, color: 'var(--text-secondary)' }}>
       {children}
     </Typography>
   );
@@ -71,7 +71,7 @@ function H3({ children }) {
    steps read as a sequence rather than as a list that happens to count. */
 function Steps({ items }) {
   return (
-    <Box component="ol" sx={{ listStyle: 'none', m: '4px 0 20px', p: 0, maxWidth: '74ch' }}>
+    <Box component="ol" sx={{ listStyle: 'none', m: '4px 0 20px', p: 0 }}>
       {items.map(([title, body], i) => (
         <Box component="li" key={title} sx={{ position: 'relative', pl: 5.2, pb: i === items.length - 1 ? 0 : 2.4 }}>
           <Box
@@ -379,9 +379,8 @@ const SECTIONS = [
             ['Workspace', 'New Chat', 'Starts a fresh conversation', <Pill>Live</Pill>],
             ['', 'Consensus', 'Ask several models at once', <Pill tone="a">Pro</Pill>],
             ['', 'Home', 'Quick actions and the community feed', <Pill>Live</Pill>],
-            ['', 'More', 'Agents, Community Feed, API, Token Dashboard', <Pill>Live</Pill>],
+            ['', 'More', 'Agents, Community Feed and API', <Pill>Live</Pill>],
             ['AI Studio', 'Model Factory', 'Customise and train your own models', <Pill tone="s">Soon</Pill>],
-            ['', 'Staking', 'Stake tokens to support the network', <Pill tone="s">Soon</Pill>],
             ['Tools', 'Image', '9 single-purpose image tools', <Pill>Live</Pill>],
             ['', 'Audio', '3 audio tools', <Pill>Live</Pill>],
           ]}
@@ -400,12 +399,6 @@ const SECTIONS = [
           ]}
           widths={['26%', '18%', '56%']}
         />
-        <H3>What is under More</H3>
-        <Para>
-          More opens a submenu with four entries: Agents, Community Feed, API and Token Dashboard.
-        </Para>
-        <Shot src="/help/a20-more-menu.jpg" alt="The More submenu showing Agents, Community Feed, API and Token Dashboard." caption="More, in the Workspace group, opens a submenu of four." />
-
         <H3>Settings</H3>
         <Para>
           Settings opens from the account menu at the foot of the sidebar, not from the header. It
@@ -864,31 +857,6 @@ const SECTIONS = [
           ]}
           widths={['24%', '38%', '38%']}
         />
-        <H3>Staking instead of paying</H3>
-        <Para>
-          There is a third route to Pro that does not go through a card. Pro is granted while you
-          hold $1,000 worth of $OPEN staked, alongside a 6% annual yield paid in $OPEN and a 7 day
-          cooling period on unstaking.
-        </Para>
-        <Table
-          head={['Route to Pro', 'What it costs', 'Available']}
-          rows={[
-            ['Subscription', '$20 a month', <Pill tone="a">Now</Pill>],
-            ['Stake $OPEN', '$1,000 worth of $OPEN staked, which you keep', <Pill tone="s">Not yet</Pill>],
-          ]}
-          widths={['26%', '50%', '24%']}
-        />
-        <Callout tag="The threshold is a dollar value" tone="warn">
-          It is $1,000 worth of $OPEN, not a fixed number of tokens, so the quantity it takes
-          changes with the price. A position that qualifies today can fall below the threshold
-          without you selling anything.
-        </Callout>
-        <Callout tag="Staked tokens are not a payment" tone="warn">
-          Staking is not a cheaper subscription. The tokens stay yours and keep earning, but they
-          are locked while they are staked and take 7 days to come back, and their value moves with
-          the market in a way $20 a month does not. See $OPEN for the state of this.
-        </Callout>
-
         <H3>What Pro includes</H3>
         <Cards items={[
           ['All premium models', 'The whole catalogue, not a subset.'],
@@ -914,11 +882,9 @@ const SECTIONS = [
     title: 'How you pay',
     body: (
       <>
-        <Para>Two ways to cover your credits, and one of them leaves what you hold untouched.</Para>
-        <Cards items={[
-          ['Pay directly', 'Card or crypto, whichever you already use. One bill either way.'],
-          ['Or stake instead', 'Stake USDC, ETH or BTC and the yield covers your credits. The position stays yours, and unstaking simply stops the credits.'],
-        ]} />
+        <Para>
+          Pay by card or in cryptocurrency, whichever you already use. One bill either way.
+        </Para>
         <Table
           head={['', 'Card', 'Cryptocurrency']}
           rows={[
@@ -928,10 +894,6 @@ const SECTIONS = [
           ]}
           widths={['18%', '41%', '41%']}
         />
-        <Callout tag="Not a guaranteed return" tone="warn">
-          What a stake earns moves with the market. Rates are not fixed and nothing here is a
-          guaranteed return.
-        </Callout>
         <H3>Cancelling</H3>
         <Steps items={[
           ['Sign in with the identity that owns the subscription', 'A different wallet or browser profile may show a different plan.'],
@@ -940,8 +902,8 @@ const SECTIONS = [
           ['Keep the confirmation', 'Retain the message or email.'],
         ]} />
         <Para>
-          Cancelling does not revoke API keys, delete memory, close your account or unwind a stake.
-          Those are four separate actions.
+          Cancelling does not revoke API keys, delete your memory or close your account. Those
+          are three separate actions.
         </Para>
       </>
     ),
@@ -1096,7 +1058,7 @@ const SECTIONS = [
     ),
   },
   {
-    part: 'Enterprise and token',
+    part: 'Enterprise',
     id: 'enterprise',
     nav: 'Enterprise',
     title: 'Enterprise',
@@ -1118,7 +1080,7 @@ const SECTIONS = [
         ]} />
         <Para>
           The site states SOC 2 Type II Certified and Zero Model Training on Data. Enterprise
-          enquiries go to marketing@openledger.xyz.
+          enquiries go to marketing@heyopen.ai.
         </Para>
         <H3>Custom-branded products</H3>
         <Para>
@@ -1130,7 +1092,11 @@ const SECTIONS = [
     ),
   },
   {
-    part: 'Enterprise and token',
+    /* Held back: the product is going to market as a web2 subscription,
+       so nothing about the token appears in the Help Center. Remove
+       `draft` to publish it again. */
+    draft: true,
+    part: 'Enterprise',
     id: 'token',
     nav: '$OPEN',
     title: '$OPEN',
@@ -1197,7 +1163,7 @@ const SECTIONS = [
     /* Held back until $HEY is announced. Remove `draft` to publish; the
        section then appears in the rail and the article in its order. */
     draft: true,
-    part: 'Enterprise and token',
+    part: 'Enterprise',
     id: 'hey',
     nav: '$HEY',
     title: '$HEY',
@@ -1236,8 +1202,6 @@ const SECTIONS = [
           rows={[
             ['Developer API', 'An OpenAI-compatible endpoint for your own applications', <Pill tone="s">Coming soon</Pill>],
             ['AI Studio, Model Factory', 'Customise and train your own AI models', <Pill tone="s">Coming soon</Pill>],
-            ['AI Studio, Staking', 'Stake tokens to support the network and earn rewards', <Pill tone="s">Coming soon</Pill>],
-            ['AI Studio, Token Dashboard', 'Stake $OPEN at 6% for free Pro, and follow the burn', <Pill tone="s">Sample data</Pill>],
             ['Home, Voice Chat', 'Have natural, real-time conversations', <Pill tone="s">Coming soon</Pill>],
             ['More, Agents', 'Five agents in the marketplace', <Pill tone="s">All coming soon</Pill>],
           ]}
@@ -1261,7 +1225,7 @@ const SECTIONS = [
             ['Consensus will not open', 'Consensus requires signing in and a Pro plan. The gate states both.'],
             ['The model forgot something from earlier', 'The thread may have outgrown the context window, or trimming removed it. Restate the decisive requirement.'],
             ['A model gave a different answer than last time', 'If the pill reads Auto, two requests can be served by different models. Name a model when you need a reproducible result.'],
-            ['A page says Coming Soon', 'Model Factory, Staking, Voice Chat and every agent are unavailable in the current build.'],
+            ['A page says Coming Soon', 'Model Factory, Voice Chat and every agent are unavailable in the current build.'],
           ]}
           widths={['34%', '66%']}
         />
@@ -1300,7 +1264,6 @@ const SECTIONS = [
         ]} />
         <FAQ group="Plans" items={[
           ['Is Consensus Mode free?', 'No. It is available on the Pro plan and above, and requires signing in.'],
-          ['Can I stake tokens?', 'Not yet. Staking is a Coming Soon page in the current build.'],
           ['Can I cancel any time?', 'Yes. The site states cancel anytime, no lock-in. Cancellation generally takes effect at the end of the current paid period.'],
         ]} />
       </>
@@ -1539,7 +1502,7 @@ export default function HelpPage() {
               Get Started
             </Typography>
 
-            <Typography sx={{ fontSize: '1.06rem', lineHeight: 1.72, color: 'var(--text-secondary)', maxWidth: '74ch', mb: 0 }}>
+            <Typography sx={{ fontSize: '1.06rem', lineHeight: 1.72, color: 'var(--text-secondary)', mb: 0 }}>
               Everything Hey Open does and how to do it, from your first conversation to your
               account and billing. {PUBLISHED.length} sections: start at the top, or jump to what
               you need.
@@ -1568,7 +1531,7 @@ export default function HelpPage() {
               </Box>
             ))}
 
-            <Box sx={{ mt: { xs: 6, md: 8 }, pt: 2.6, borderTop: '1px solid var(--border-subtle)', maxWidth: '74ch' }}>
+            <Box sx={{ mt: { xs: 6, md: 8 }, pt: 2.6, borderTop: '1px solid var(--border-subtle)' }}>
               <Typography sx={{ fontSize: '0.84rem', lineHeight: 1.7, color: 'var(--text-muted)' }}>
                 Last updated {SNAP}. The model catalogue changes as providers add and retire
                 models, so the application is always the authority on what is available to your
