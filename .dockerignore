@@ -1,0 +1,54 @@
+# What never enters the build context.
+#
+# The working tree is about 1GB, and almost all of it is either rebuilt
+# inside the image or never served. Everything listed here is excluded
+# before the daemon is handed anything, which is what keeps the context
+# at roughly the size of public/.
+
+# Rebuilt in the image. Copying the host's would also drop a macOS
+# arm64 node_modules into a Linux image, where the SWC binary is wrong.
+node_modules
+.next
+out
+build
+.swc
+
+# 209MB of history, and nothing in the image reads it.
+.git
+.gitignore
+
+# Reference recordings for the demo panels. Already gitignored; they are
+# named here too so a fresh clone that still has them does not ship them.
+*.mov
+
+# Source artwork, not served. public/brand carries the derived files.
+brand
+New BG asset
+
+# The documentation generators and their GitBook. The site image does not
+# serve them: the compose "docs" service mounts this folder from the host
+# instead, so the previewer always reads what is actually on disk.
+product-docs
+
+# Written but unpublished routes. Outside pages/, so Next does not build
+# them, but there is no reason to send them either.
+page-drafts
+
+# Docker's own files, and local tooling.
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+DOCKER.md
+.claude
+.agent
+
+# Local environment and editor noise.
+.env*.local
+.vercel
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage
+*.pem
+*.tsbuildinfo

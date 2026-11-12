@@ -1,0 +1,84 @@
+# ===================================================================
+# HeyOpen, containerised.
+#
+#   docker compose up -d           site on :3000, GitBook preview on :4000
+#   docker compose --profile dev up   hot reloading dev server on :3000
+#   docker compose down
+#
+# "web" and "dev" both claim port 3000 and are never up together: dev
+# sits behind a profile, so the default `up` starts web and docs only.
+#
+# Ports are overridable without editing this file:
+#   WEB_PORT=8080 DOCS_PORT=8081 docker compose up
+# ===================================================================
+
+name: heyopen
+
+services:
+  # ---- the site, built and served the way it deploys ----
+  web:
+    build:
+      context: .
+      target: runner
+    image: heyopen-site:latest
+    container_name: heyopen-web
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
+    # Repeats the image's HEALTHCHECK so `docker compose ps` reports
+    # health even when the image is pulled rather than built here.
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+
+  # ---- the same site with hot reload ----
+  dev:
+    profiles: ["dev"]
+    build:
+      context: .
+      target: dev
+    image: heyopen-site:dev
+    container_name: heyopen-dev
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    volumes:
+      # The working tree, so an edit on the host recompiles in here.
+      - .:/app
+      # These two are named volumes layered back over the bind mount, so
+      # the container keeps its own. node_modules because the host's is
+      # a macOS arm64 install and its SWC binary will not load on Linux;
+      # .next because the host's is a 297MB build from `npm run build`
+      # that dev would otherwise be reading as its own cache.
+      - heyopen-node-modules:/app/node_modules
+      - heyopen-next-cache:/app/.next
+    environment:
+      NODE_ENV: development
+      # The bind mount is how file changes arrive, and on macOS and
+      # Windows those events do not always cross into the container.
+      # Polling is slower but it is the one that always fires.
+      WATCHPACK_POLLING: "true"
+
+  # ---- the GitBook previewer ----
+  # No build and no dependencies: product-docs/preview/server.js is
+  # node's own http and fs. The folder is mounted read only from the
+  # host, so the preview is always what is on disk, and rebuilding the
+  # book with the generators needs no container restart.
+  docs:
+    image: node:20-alpine
+    container_name: heyopen-docs
+    working_dir: /app
+    command: node product-docs/preview/server.js
+    ports:
+      - "${DOCS_PORT:-4000}:4000"
+    volumes:
+      - ./product-docs:/app/product-docs:ro
+    restart: unless-stopped
+
+volumes:
+  heyopen-node-modules:
+  heyopen-next-cache:
