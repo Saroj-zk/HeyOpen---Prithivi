@@ -117,8 +117,21 @@ export default function EnterpriseSection() {
     }, 1200);
   };
 
+  /* `isLast` drops the divider under the final row of a column. The left
+     column only becomes a column at lg, where the grid goes two up; below
+     that the two columns stack and its last row still needs a rule before
+     the next one starts. So it takes 'lg' rather than true, and the
+     breakpoint is expressed in the style instead of being measured.
+
+     This used to read window.innerWidth during render, which is one value
+     on the server and another in the browser, so the emotion class did not
+     match on hydration and React threw the server's markup away and
+     rendered the section again. */
   const renderFeatureRow = (feature, index, isLast) => {
     const IconComponent = feature.icon;
+    const rule = isDark ? '1px solid rgba(255, 255, 255, 0.07)' : '1px solid rgba(0, 0, 0, 0.07)';
+    const divider =
+      isLast === true ? 'none' : isLast === 'lg' ? { xs: rule, lg: 'none' } : rule;
 
     return (
       <Box
@@ -133,7 +146,7 @@ export default function EnterpriseSection() {
           gap: { xs: 1, sm: 3 },
           borderRadius: '16px',
           transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-          borderBottom: isLast ? 'none' : isDark ? '1px solid rgba(255, 255, 255, 0.07)' : '1px solid rgba(0, 0, 0, 0.07)',
+          borderBottom: divider,
           '&:hover': {
             backgroundColor: isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 102, 0, 0.03)',
             transform: 'translateX(3px)',
@@ -385,7 +398,7 @@ export default function EnterpriseSection() {
                 }}
               >
                 {leftFeatures.map((item, idx) =>
-                  renderFeatureRow(item, idx, idx === leftFeatures.length - 1 && typeof window !== 'undefined' && window.innerWidth >= 1200)
+                  renderFeatureRow(item, idx, idx === leftFeatures.length - 1 ? 'lg' : false)
                 )}
               </Box>
 
