@@ -59,11 +59,13 @@ const FOOTER_COLUMNS = [
 
 
 
+/* Hidden. X and Discord went to the other brand's accounts and Telegram
+   never had an address. Put entries back here with HeyOpen's own and the
+   row returns on its own; the icons and the styling are untouched. */
 const SOCIAL_PLATFORMS = [
-  { name: 'X', icon: SocialIcons.X, href: 'https://x.com/openledger' },
-  { name: 'Discord', icon: SocialIcons.Discord, href: 'https://discord.gg/openledger' },
-  /* Address to follow. Left on '#' deliberately until there is one. */
-  { name: 'Telegram', icon: SocialIcons.Telegram, href: '#' },
+  // { name: 'X', icon: SocialIcons.X, href: '' },
+  // { name: 'Discord', icon: SocialIcons.Discord, href: '' },
+  // { name: 'Telegram', icon: SocialIcons.Telegram, href: '' },
 ];
 
 export default function Footer({ showCta = false }) {
@@ -355,7 +357,9 @@ export default function Footer({ showCta = false }) {
               One private layer for every model. Chat anywhere, keep your memory, leave no trace.
             </Typography>
 
-            {/* Social Icons in Clean Rounded Square Boxes (Image 1 style) */}
+            {/* Social icons. The row takes itself out when there is nothing
+                in it, rather than leaving an empty box under the tagline. */}
+            {SOCIAL_PLATFORMS.length > 0 && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               {SOCIAL_PLATFORMS.map((platform) => {
                 const IconComponent = platform.icon;
@@ -389,6 +393,7 @@ export default function Footer({ showCta = false }) {
                 );
               })}
             </Box>
+            )}
 
           </Box>
 
