@@ -69,8 +69,8 @@ export default function MyApp(props) {
             on render order rather than on the page. The old fallback also
             said "AI-Powered Infrastructure" while the home page said "AI
             Assistant", so the site shipped two descriptions of itself. */}
-        <link rel="icon" href="/openchat_icon_mark.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/favicon.ico" />
+        <link rel="icon" href="/brand/heyopen-wordmark.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/brand/heyopen-wordmark.png" />
       </Head>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />

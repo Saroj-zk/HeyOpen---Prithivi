@@ -1,4 +1,4 @@
-/* Shared by the two stake sections: one glass recipe, three tints. */
+/* One glass recipe, three tints. */
 export const ORANGE = '#ff6600';
 export const INK = '#14161B';
 export const DASH_C = 'rgba(20, 22, 27, 0.42)';

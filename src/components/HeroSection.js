@@ -143,9 +143,9 @@ export default function HeroSection() {
           <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
             <Box
               component="img"
-              src="/Icons/Frosted logo OPL.png"
+              src="/brand/heyopen-wordmark.png"
               alt="HeyOpen"
-              sx={{ width: { xs: 60, md: 80 }, height: { xs: 60, md: 80 }, objectFit: 'contain' }}
+              sx={{ width: 'auto', height: { xs: 44, md: 58 }, objectFit: 'contain' }}
             />
           </Box>
           <Typography

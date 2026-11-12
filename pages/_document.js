@@ -10,8 +10,8 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <meta name="theme-color" content={theme.palette.background.default} />
-          <link rel="shortcut icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" href="/favicon.ico" />
+          <link rel="icon" href="/brand/heyopen-wordmark.png" type="image/png" />
+          <link rel="apple-touch-icon" href="/brand/heyopen-wordmark.png" />
           {/* Open Graph base tags — overridden per-page */}
           <meta property="og:type" content="website" />
           <meta property="og:site_name" content="HeyOpen" />

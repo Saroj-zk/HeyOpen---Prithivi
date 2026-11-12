@@ -1089,7 +1089,7 @@ export const TERMS_DOC = {
 
         { part: 'Financial Disclaimer' },
         'Nothing in the Services constitutes investment advice, a recommendation to purchase or sell digital assets, or a guarantee of financial returns.',
-        'Any functionality involving OPEN or other digital assets may be subject to additional product-specific terms and applicable laws.',
+        'Any functionality involving digital assets may be subject to additional product-specific terms and applicable laws.',
       ],
     },
 

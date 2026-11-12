@@ -337,14 +337,9 @@ export default function Footer({ showCta = false }) {
               }}
             >
               <img
-                src="/Open%20Ledegr%20Full%20Black.svg"
+                src="/brand/heyopen-wordmark.png"
                 alt="HeyOpen"
-                style={{
-                  height: 26,
-                  width: 'auto',
-                  display: 'block',
-                  filter: isDark ? 'brightness(0) invert(1)' : 'none',
-                }}
+                style={{ height: 30, width: 'auto', display: 'block' }}
               />
             </Box>
 

@@ -16,13 +16,8 @@ const NAV_LINKS = [
   { label: 'Models', href: '/models' },
   { label: 'Memory', href: '/memory' },
   { label: 'Private AI', href: '/private' },
-  /* The staking page is about the token, so it is named after it. */
-  /* $OPEN, Token and Enterprise moved to the OpenLedger site; their
-     pages live in portable/open-pages/. Nothing here links to them. */
-  /* $HEY is hidden from the nav on request. Nothing else in the site links
-     to /hey, so the page is now reachable only by typing the address.
-     Uncomment to put it back. */
-  // { label: '$HEY', href: '/hey' },
+  /* The token and enterprise pages belong to the OpenLedger site and are
+     served from there. Nothing on this site links to them. */
 ];
 
 /* `spacer` pushes page content clear of the fixed header. Pages whose first
@@ -76,14 +71,9 @@ export default function PageHeader({ spacer = true }) {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexShrink: 0 }}>
             <Link href="/" passHref style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', marginLeft: 8 }}>
               <img
-                src="/Open%20Ledegr%20Full%20Black.svg"
+                src="/brand/heyopen-wordmark.png"
                 alt="HeyOpen"
-                style={{
-                  height: 20,
-                  width: 'auto',
-                  display: 'block',
-                  filter: isDark ? 'brightness(0) invert(1)' : 'none',
-                }}
+                style={{ height: 22, width: 'auto', display: 'block' }}
               />
             </Link>
           </Box>
@@ -170,7 +160,6 @@ export default function PageHeader({ spacer = true }) {
               flexShrink: 0,
             }}
           >
-            {/* $OPEN button removed as requested */}
             <Box
               sx={{
                 position: 'relative',
