@@ -714,9 +714,6 @@ export default function ProductDemo({ flow = 'multimodel', active = true }) {
           </Box>
         )}
 
-        <Typography sx={{ mt: F.compact ? 0.5 : 0.8, textAlign: 'center', fontSize: '0.62rem', color: C.muted }}>
-          HeyOpen can make mistakes. Verify important information.
-        </Typography>
       </Box>
 
       <style>{`

@@ -69,8 +69,8 @@ export default function MyApp(props) {
             on render order rather than on the page. The old fallback also
             said "AI-Powered Infrastructure" while the home page said "AI
             Assistant", so the site shipped two descriptions of itself. */}
-        <link rel="icon" href="/brand/heyopen-wordmark.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/brand/heyopen-wordmark.png" />
+        {/* The icons are declared in _document, not here. Both files used
+            to carry them, which shipped every link tag twice. */}
       </Head>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />

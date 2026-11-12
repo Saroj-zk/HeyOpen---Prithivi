@@ -622,18 +622,6 @@ export function MemoryChatDemo() {
         </Box>
 
         {/* The app prints this under the composer. */}
-        <Typography
-          sx={{
-            px: 2,
-            pb: 2,
-            mt: -0.5,
-            textAlign: 'center',
-            fontSize: '0.74rem',
-            color: UI.muted,
-          }}
-        >
-          HeyOpen can make mistakes. Verify important information.
-        </Typography>
       </Box>
 
       {/* ── Memory, drawn as the app's own settings pane: the storage note,
