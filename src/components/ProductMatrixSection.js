@@ -8,6 +8,7 @@ import { useThemeMode } from '@/context/ThemeContext';
 import useInView from '@/utils/useInView';
 import { useReveal, revealSx } from '@/utils/reveal';
 import ProductDemo from '@/components/ProductDemo';
+import ClipPatch from '@/components/ui/ClipPatch';
 
 // Icons
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
@@ -143,21 +144,27 @@ const TabVideo = ({ src, isActive, primed, canPlay, onEnded, fastUntil = 0, fast
     }
   }, [isActive, canPlay, primed]);
 
+  /* The chat clip was recorded before the rename and still carries the
+     old disclaimer along its foot, so it goes through ClipPatch. The 0.8
+     opacity moves to the wrapper: a patch outside it would be mixed with
+     the card behind in a different proportion and stop matching. */
   return (
-    <Box
-      component="video"
-      ref={videoRef}
-      /* No src until this tab is next in line. Attaching all five on mount
-         starts ~58MB of parallel download during the first scroll. */
-      src={primed ? src : undefined}
-      muted
-      preload="none"
-      onEnded={onEnded}
-      onTimeUpdate={pace}
-      onLoadedMetadata={pace}
-      playsInline
-      sx={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }}
-    />
+    <ClipPatch src={src} videoRef={videoRef} sx={{ opacity: 0.8 }}>
+      <Box
+        component="video"
+        ref={videoRef}
+        /* No src until this tab is next in line. Attaching all five on mount
+           starts ~58MB of parallel download during the first scroll. */
+        src={primed ? src : undefined}
+        muted
+        preload="none"
+        onEnded={onEnded}
+        onTimeUpdate={pace}
+        onLoadedMetadata={pace}
+        playsInline
+        sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+      />
+    </ClipPatch>
   );
 };
 

@@ -15,6 +15,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/dist/ScrollToPlugin';
 import { useThemeMode } from '@/context/ThemeContext';
 import ProductDemo from '@/components/ProductDemo';
+import ClipPatch from '@/components/ui/ClipPatch';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -93,17 +94,22 @@ const TabClip = ({ src, play }) => {
     else v.pause();
   }, [play, primed]);
 
+  /* The agents clip still names the old brand on its routing card, so it
+     goes through ClipPatch, which covers it. Every other clip passes
+     straight through. */
   return (
-    <Box
-      component="video"
-      ref={ref}
-      src={primed ? src : undefined}
-      loop
-      muted
-      playsInline
-      preload="none"
-      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-    />
+    <ClipPatch src={src} videoRef={ref}>
+      <Box
+        component="video"
+        ref={ref}
+        src={primed ? src : undefined}
+        loop
+        muted
+        playsInline
+        preload="none"
+        sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+      />
+    </ClipPatch>
   );
 };
 
