@@ -1,6 +1,6 @@
 # Create and work with images
 
-Use an image-generation model when you need a visual result such as an illustration, product concept, diagram, or creative asset. Hey Open lists image models and providers in its model catalog.
+Use an image-generation model when you need a visual result such as an illustration, product concept, diagram, or creative asset. HeyOpen lists image models and providers in its model catalog.
 
 ![The nine image tools](../.gitbook/assets/a13-image-tools.jpg)
 

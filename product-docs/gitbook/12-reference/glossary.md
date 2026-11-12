@@ -14,7 +14,7 @@
 | Vision | Ability to interpret image inputs |
 | Multimodal | Operation across multiple data types such as text, images, video, and audio |
 | Universal Memory | Selected reusable context available across supported model interactions |
-| Consensus Mode | Multi-model comparison and possible synthesis workflow |
+| Compare | Multi-model comparison and possible synthesis workflow |
 | TEE | Hardware-isolated trusted execution environment |
 | E2EE | End-to-end encryption, requiring a precise endpoint and key-custody definition |
 | Zero retention | Specific arrangement limiting how covered content is retained, not blanket absence of all metadata |
@@ -23,4 +23,4 @@
 | API key | Secret credential used to authorize an API request |
 | x402 | Payment-related protocol discussed for agent and service interactions |
 | Enterprise workspace | Organization-managed environment with business controls, subject to agreement |
-| Custom-branded solution | AI product presented under a customer's brand and powered by Hey Open infrastructure |
+| Custom-branded solution | AI product presented under a customer's brand and powered by HeyOpen infrastructure |

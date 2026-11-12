@@ -1,6 +1,6 @@
 # Model badges, privacy labels, and limits
 
-The Hey Open model illustration shows a mixture of labels such as **Incognito**, **E2EE**, **TEE**, **web**, **vision**, and **uncensored**. These labels serve different purposes and must not be treated as equivalent guarantees.
+The HeyOpen model illustration shows a mixture of labels such as **Incognito**, **E2EE**, **TEE**, **web**, **vision**, and **uncensored**. These labels serve different purposes and must not be treated as equivalent guarantees.
 
 ![Model badges in the picker, and the detail card on hover](../.gitbook/assets/a11-model-picker.jpg)
 
@@ -24,6 +24,6 @@ Inspect the exact route, not simply the product's overall positioning. A TEE-bac
 
 ## Before a high-cost request
 
-Review visible charges, model capabilities, context limits, and whether the action calls multiple models. Consensus Mode and media generation can use different amounts of credit from a standard text response.
+Review visible charges, model capabilities, context limits, and whether the action calls multiple models. Compare and media generation can use different amounts of credit from a standard text response.
 
 If a property is not explicitly disclosed for a particular model, do not assume it applies. Consult the [Privacy Policy](https://hey-open.vercel.app/privacy-policy) for qualifications.

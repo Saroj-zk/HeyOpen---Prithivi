@@ -1,6 +1,6 @@
 # Close an account and request data deletion
 
-If you no longer want to use Hey Open, you may wish to cancel paid services, revoke integrations, and request eligible account-data deletion.
+If you no longer want to use HeyOpen, you may wish to cancel paid services, revoke integrations, and request eligible account-data deletion.
 
 ## Suggested sequence
 

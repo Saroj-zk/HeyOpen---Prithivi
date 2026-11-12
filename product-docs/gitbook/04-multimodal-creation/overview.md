@@ -1,6 +1,6 @@
 # Multimodal creation overview
 
-Hey Open promotes one workspace for text, code, images, video, audio, and music. The main benefit is the ability to choose different specialist models during a broader project rather than relying on one system for every output.
+HeyOpen promotes one workspace for text, code, images, video, audio, and music. The main benefit is the ability to choose different specialist models during a broader project rather than relying on one system for every output.
 
 ## Understand each modality
 

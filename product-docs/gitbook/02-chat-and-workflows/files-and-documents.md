@@ -1,6 +1,6 @@
 # Working with files and documents
 
-Hey Open's public product examples include document analysis, and the memory page illustrates an option to upload PDF or text files for retrieval alongside saved context. The illustrated memory file control states a **10 MB limit per file**, but the effective production limits may vary by feature.
+HeyOpen's public product examples include document analysis, and the memory page illustrates an option to upload PDF or text files for retrieval alongside saved context. The illustrated memory file control states a **10 MB limit per file**, but the effective production limits may vary by feature.
 
 ## Before you upload
 

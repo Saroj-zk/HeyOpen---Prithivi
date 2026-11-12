@@ -40,7 +40,7 @@
        Information below" and "Cookies and Similar Technologies below".
      - The contact block's standalone "HeyOpen" line and its "Legal
        Entity: OpenLeger" line were removed, and the entity name set to
-       Hey Open.
+       HeyOpen.
 
    ---------------------------------------------------------------------
    TERMS OF SERVICE - THIRTEEN SLOTS STILL OPEN
@@ -68,10 +68,12 @@
       contact address as support@heyopen.ai. This site is served from
       openledger.xyz; its enterprise contact is now marketing@heyopen.ai,
       so the addresses agree and only the domain differs.
-   2. Spelling of the name. Both documents define the short form as
-      "HeyOpen" and use it throughout. Every other page writes "Hey
-      Open". The entity-name slots were filled with "Hey Open", so
-      inside these two documents both spellings now appear.
+   2. Spelling of the name. SETTLED. Both documents define the short
+      form as "HeyOpen" and use it throughout, and the site now writes
+      the brand as one word everywhere, so the entity-name slots were
+      filled with "HeyOpen" to match. Where that left a sentence naming
+      the company and then defining the same string again, the
+      duplicate was dropped rather than printed twice.
    3. Three marketing claims become representations once they sit in a
       legal document. The supplied text hedges all three; the marketing
       pages do not. If any is untrue in production, it has to come off
@@ -110,8 +112,8 @@ export const PRIVACY_DOC = {
   numbered: true,
 
   preamble: [
-    'This Privacy Policy (“Privacy Policy”) describes how Hey Open (“HeyOpen,” “we,” “our,” or “us”) collects, uses, processes, stores, and discloses personal information from individuals (“you” or “your”) who access or use our website at https://heyopen.ai, together with our related applications, artificial intelligence services, APIs, and other products and services (collectively, the “Services”).',
-    'HeyOpen provides a unified platform for accessing artificial intelligence models and related functionality, including AI conversations, text and media generation, multi-model interactions, Universal Memory, Consensus Mode, APIs, and AI agents.',
+    'This Privacy Policy (“Privacy Policy”) describes how HeyOpen (“we,” “our,” or “us”) collects, uses, processes, stores, and discloses personal information from individuals (“you” or “your”) who access or use our website at https://heyopen.ai, together with our related applications, artificial intelligence services, APIs, and other products and services (collectively, the “Services”).',
+    'HeyOpen provides a unified platform for accessing artificial intelligence models and related functionality, including AI conversations, text and media generation, multi-model interactions, Universal Memory, Compare, APIs, and AI agents.',
     'We recognize the importance of privacy and seek to limit the collection and retention of personal information to what is reasonably necessary to operate, secure, and provide the Services.',
     'Different features and AI model providers may involve different processing arrangements. This Privacy Policy explains those differences where relevant.',
     'As used in this Privacy Policy, “personal information” means information relating to an identified or identifiable individual, including information classified as personal data or personal information under applicable privacy laws.',
@@ -307,13 +309,13 @@ export const PRIVACY_DOC = {
 
     /* ---------------------------------------------------------------- */
     {
-      heading: 'Consensus Mode and Multi-Model Processing',
+      heading: 'Compare and Multi-Model Processing',
       body: [
-        'HeyOpen may offer Consensus Mode, allowing multiple artificial intelligence models to process the same Prompt and generate individual or consolidated responses.',
-        'When you use Consensus Mode, your Prompt and relevant contextual information may be transmitted to multiple selected model providers.',
+        'HeyOpen may offer Compare, allowing multiple artificial intelligence models to process the same Prompt and generate individual or consolidated responses.',
+        'When you use Compare, your Prompt and relevant contextual information may be transmitted to multiple selected model providers.',
         'Where an evaluating or judging model is enabled, that model may receive responses produced by participating models to evaluate or synthesize them.',
         'Each participating provider may operate under different processing arrangements and privacy protections.',
-        'We may maintain operational information associated with Consensus Mode, such as participating model identifiers, request status, token consumption, and usage charges, for service administration, billing, security, and reliability.',
+        'We may maintain operational information associated with Compare, such as participating model identifiers, request status, token consumption, and usage charges, for service administration, billing, security, and reliability.',
         'Users should consider the nature of the information submitted when selecting multiple models, particularly where confidential or sensitive information is involved.',
       ],
     },
@@ -385,7 +387,7 @@ export const PRIVACY_DOC = {
         },
         {
           label: 'User-Authorized Functionality.',
-          text: 'To enable Universal Memory, Consensus Mode, APIs, integrations, AI agents, and other functionality selected or authorized by users.',
+          text: 'To enable Universal Memory, Compare, APIs, integrations, AI agents, and other functionality selected or authorized by users.',
         },
         'We may also generate aggregated or appropriately de-identified information for legitimate analytical, operational, and development purposes, subject to applicable law and our stated privacy commitments.',
       ],
@@ -616,7 +618,7 @@ export const PRIVACY_DOC = {
     {
       heading: 'Contact Information',
       body: [
-        'Hey Open is responsible for the processing activities described in this Privacy Policy to the extent it acts as the applicable data controller or business under relevant privacy laws.',
+        'HeyOpen is responsible for the processing activities described in this Privacy Policy to the extent it acts as the applicable data controller or business under relevant privacy laws.',
         'For questions, requests, complaints, or concerns regarding this Privacy Policy or the processing of personal information, please contact:',
         { label: 'Privacy Inquiries:', text: 'support@heyopen.ai' },
         { label: 'General Support:', text: 'support@heyopen.ai' },
@@ -639,7 +641,7 @@ export const TERMS_DOC = {
 
   preamble: [
     'Welcome to HeyOpen.',
-    'These Terms of Service (“Terms”) constitute a legally binding agreement between you and Hey Open, a company organized under the laws of [JURISDICTION OF INCORPORATION], with its registered office at [REGISTERED ADDRESS] (“HeyOpen,” “Company,” “we,” “us,” or “our”).',
+    'These Terms of Service (“Terms”) constitute a legally binding agreement between you and HeyOpen, a company organized under the laws of [JURISDICTION OF INCORPORATION], with its registered office at [REGISTERED ADDRESS] (“Company,” “we,” “us,” or “our”).',
     'These Terms govern your access to and use of the HeyOpen website at https://heyopen.ai, its applications, artificial intelligence services, APIs, subscription offerings, agent-based functionality, integrations, and all other related products and services (collectively, the “Services”).',
     'By creating an account, clicking to accept these Terms, subscribing to, accessing, or otherwise using the Services, you acknowledge that you have read, understood, and agree to be bound by these Terms and any additional terms expressly incorporated by reference.',
     'If you do not agree to these Terms, you must not access or use the Services.',
@@ -660,7 +662,7 @@ export const TERMS_DOC = {
       body: [
         { part: 'Description of Services' },
         'HeyOpen provides a unified artificial intelligence platform designed to enable users to access and interact with multiple AI models and related technologies through a single interface.',
-        'Depending on availability, subscription status, technical configuration, and applicable provider arrangements, the Services may include conversational AI, text and media generation, intelligent model routing, model switching, Universal Memory, Consensus Mode, developer APIs, connected applications, AI agents, and payment-enabled functionality.',
+        'Depending on availability, subscription status, technical configuration, and applicable provider arrangements, the Services may include conversational AI, text and media generation, intelligent model routing, model switching, Universal Memory, Compare, developer APIs, connected applications, AI agents, and payment-enabled functionality.',
         'Certain features may allow users to generate text, code, images, audio, video, and other forms of digital content.',
 
         { part: 'Third-Party Infrastructure' },
@@ -867,18 +869,18 @@ export const TERMS_DOC = {
 
     /* ---------------------------------------------------------------- */
     {
-      heading: 'Consensus Mode',
+      heading: 'Compare',
       body: [
         { part: 'Functionality' },
-        'Consensus Mode enables supported AI models to process the same request and generate individual or consolidated responses.',
-        'Depending on the selected configuration, Consensus Mode may use an additional evaluating or judging model to compare, assess, or synthesize participating model responses.',
+        'Compare enables supported AI models to process the same request and generate individual or consolidated responses.',
+        'Depending on the selected configuration, Compare may use an additional evaluating or judging model to weigh, assess, or synthesize participating model responses.',
 
         { part: 'Model Independence' },
         'Participating models may interpret Inputs differently and produce conflicting or inconsistent Outputs.',
         'A consolidated response or evaluation does not guarantee factual accuracy, correctness, or agreement among the participating models.',
 
         { part: 'Usage Charges' },
-        'Consensus Mode may generate multiple chargeable requests.',
+        'Compare may generate multiple chargeable requests.',
         'Charges may vary depending on the number of participating models, their respective pricing, token consumption, evaluation-model usage, and additional processing requirements.',
 
         { part: 'Usage Estimates' },
@@ -939,11 +941,11 @@ export const TERMS_DOC = {
       heading: 'Usage Credits and Billing',
       body: [
         { part: 'Credits' },
-        'HeyOpen may offer usage credits that can be consumed when accessing eligible AI models, media generation services, APIs, Consensus Mode, agents, and other usage-based features.',
+        'HeyOpen may offer usage credits that can be consumed when accessing eligible AI models, media generation services, APIs, Compare, agents, and other usage-based features.',
         'Credits may be included in paid subscriptions, purchased separately, or issued through promotional arrangements.',
 
         { part: 'Credit Consumption' },
-        'Credit usage may vary according to model selection, input and output tokens, request complexity, media generation, Consensus Mode participation, API activity, agent execution, and other processing requirements.',
+        'Credit usage may vary according to model selection, input and output tokens, request complexity, media generation, Compare participation, API activity, agent execution, and other processing requirements.',
         'Different models and features may consume credits at different rates.',
 
         { part: 'Usage Measurement' },
@@ -1096,7 +1098,7 @@ export const TERMS_DOC = {
       heading: 'Intellectual Property Rights',
       body: [
         { part: 'Platform Ownership' },
-        'HeyOpen, its software, interfaces, designs, documentation, trademarks, branding, proprietary technology, and other platform materials are owned by Hey Open or its licensors.',
+        'HeyOpen, its software, interfaces, designs, documentation, trademarks, branding, proprietary technology, and other platform materials are owned by HeyOpen or its licensors.',
 
         { part: 'Limited License' },
         'Subject to your continued compliance with these Terms, HeyOpen grants you a limited, non-exclusive, non-transferable, revocable license to access and use the Services for their intended purposes.',
@@ -1244,7 +1246,7 @@ export const TERMS_DOC = {
       heading: 'Limitation of Liability',
       body: [
         { part: 'Exclusion of Certain Damages' },
-        'To the fullest extent permitted by applicable law, HeyOpen, Hey Open, its affiliates, directors, officers, employees, contractors, and agents shall not be liable for indirect, incidental, special, consequential, exemplary, or punitive damages arising out of or relating to access to or use of the Services.',
+        'To the fullest extent permitted by applicable law, HeyOpen, its affiliates, directors, officers, employees, contractors, and agents shall not be liable for indirect, incidental, special, consequential, exemplary, or punitive damages arising out of or relating to access to or use of the Services.',
         'Such damages may include loss of profits, revenue, business opportunities, goodwill, data, or other intangible losses.',
 
         { part: 'Aggregate Liability' },
@@ -1353,7 +1355,7 @@ export const TERMS_DOC = {
       heading: 'Contact Information',
       body: [
         'The Services are offered and operated by:',
-        { label: 'Legal Entity:', text: 'Hey Open' },
+        { label: 'Legal Entity:', text: 'HeyOpen' },
         { label: 'General Support:', text: 'support@heyopen.ai' },
         'For questions regarding these Terms, account concerns, billing matters, subscriptions, or use of the Services, you may contact support@heyopen.ai.',
         'Formal legal notices may be directed to the registered address stated above or through another legally authorized notice method.',

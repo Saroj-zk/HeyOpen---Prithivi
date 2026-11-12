@@ -68,5 +68,5 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
   const pages = fs.readdirSync(BOOK, { recursive: true }).filter((f) => String(f).endsWith('.md')).length;
-  console.log(`Hey Open docs preview on http://localhost:${PORT}  (${pages} pages)`);
+  console.log(`HeyOpen docs preview on http://localhost:${PORT}  (${pages} pages)`);
 });

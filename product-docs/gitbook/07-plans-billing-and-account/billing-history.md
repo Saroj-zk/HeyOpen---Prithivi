@@ -1,6 +1,6 @@
 # Receipts and billing history
 
-For subscriptions and credit purchases, keep a copy of each receipt and payment reference. The Hey Open Privacy Policy states that subscription records, purchase history, transaction confirmations, and invoices may be retained as necessary for billing, accounting, compliance, and dispute resolution.
+For subscriptions and credit purchases, keep a copy of each receipt and payment reference. The HeyOpen Privacy Policy states that subscription records, purchase history, transaction confirmations, and invoices may be retained as necessary for billing, accounting, compliance, and dispute resolution.
 
 ![Credits History](../.gitbook/assets/a07-credits-history.jpg)
 

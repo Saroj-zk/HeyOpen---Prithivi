@@ -1,6 +1,6 @@
 # Explore the model catalog
 
-Hey Open advertises more than 200 models from 32 providers. The public [Models page](https://hey-open.vercel.app/models) groups AI systems across text, images, video, audio, and music, with examples from OpenAI, Anthropic, Google, xAI, DeepSeek, Meta, Mistral, Qwen, and specialized media providers.
+HeyOpen advertises more than 200 models from 32 providers. The public [Models page](https://hey-open.vercel.app/models) groups AI systems across text, images, video, audio, and music, with examples from OpenAI, Anthropic, Google, xAI, DeepSeek, Meta, Mistral, Qwen, and specialized media providers.
 
 ![The model picker, with privacy and capability badges](../.gitbook/assets/a11-model-picker.jpg)
 

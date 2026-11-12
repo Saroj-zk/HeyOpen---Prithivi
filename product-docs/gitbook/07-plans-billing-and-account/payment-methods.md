@@ -1,10 +1,10 @@
 # Card and cryptocurrency payments
 
-Hey Open's website promotes payment by card or cryptocurrency. These methods can differ in settlement, renewal, refund handling, and record visibility.
+HeyOpen's website promotes payment by card or cryptocurrency. These methods can differ in settlement, renewal, refund handling, and record visibility.
 
 ## Card payments
 
-Card payments are generally processed by an authorized payment provider. The provider may collect billing and card information, while Hey Open may receive transaction and subscription status information needed to administer the service. Check whether automatic renewal is enabled before paying.
+Card payments are generally processed by an authorized payment provider. The provider may collect billing and card information, while HeyOpen may receive transaction and subscription status information needed to administer the service. Check whether automatic renewal is enabled before paying.
 
 ## Cryptocurrency payments
 

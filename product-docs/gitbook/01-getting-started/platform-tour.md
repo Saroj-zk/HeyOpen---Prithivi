@@ -1,15 +1,15 @@
 # Product and navigation tour
 
-Hey Open includes a marketing and information site as well as the chat application.
+HeyOpen includes a marketing and information site as well as the chat application.
 
-![The Hey Open chat screen, signed in](../.gitbook/assets/a01-chat-signed-in.jpg)
+![The HeyOpen chat screen, signed in](../.gitbook/assets/a01-chat-signed-in.jpg)
 
-_The Hey Open chat screen, signed in. Account identifiers in the screenshots are redacted._
+_The HeyOpen chat screen, signed in. Account identifiers in the screenshots are redacted._
 
 
 | Destination | Purpose |
 | --- | --- |
-| [Hey Open website](https://hey-open.vercel.app/) | Product capabilities, positioning, models, pricing messaging, and entry points |
+| [HeyOpen website](https://hey-open.vercel.app/) | Product capabilities, positioning, models, pricing messaging, and entry points |
 | [Chat application](https://ais.openledger.xyz/chat) | Conversation interface and authenticated product functions |
 | [Models](https://hey-open.vercel.app/models) | Provider catalog and model descriptions |
 | [Universal Memory](https://hey-open.vercel.app/memory) | Memory behavior and user controls |
@@ -31,4 +31,4 @@ The unauthenticated application shell currently exposes **Memory**, **Privacy**,
 6. Review memory settings before relying on stored context or sharing information with outside models.
 7. Review pricing and limits before running a high-cost operation.
 
-**Tip:** Hey Open may expose different capabilities based on login state, region, provider restrictions, plan, and rollout. Never assume a feature shown in a marketing illustration is available to every session.
+**Tip:** HeyOpen may expose different capabilities based on login state, region, provider restrictions, plan, and rollout. Never assume a feature shown in a marketing illustration is available to every session.

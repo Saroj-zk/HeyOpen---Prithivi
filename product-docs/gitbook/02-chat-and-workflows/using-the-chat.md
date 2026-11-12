@@ -1,6 +1,6 @@
 # Using the chat interface
 
-Hey Open centers the experience around a conversation. You describe what you need, select a model or use automatic routing, and refine the result with follow-up messages.
+HeyOpen centers the experience around a conversation. You describe what you need, select a model or use automatic routing, and refine the result with follow-up messages.
 
 ![The chat screen: sidebar, composer and model picker](../.gitbook/assets/a01-chat-signed-in.jpg)
 

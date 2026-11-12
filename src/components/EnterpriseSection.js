@@ -542,7 +542,7 @@ export default function EnterpriseSection() {
                 </Typography>
               </Box>
               <Typography variant="h5" sx={{ fontWeight: 800, color: 'var(--text-heading)', letterSpacing: '-0.02em' }}>
-                Deploy Hey Open across your org
+                Deploy HeyOpen across your org
               </Typography>
               <Typography sx={{ fontSize: '0.9rem', color: 'var(--text-secondary)', mt: 0.5 }}>
                 Custom pricing, SLA guarantees, SSO/SCIM integration, and dedicated VPC options.
@@ -765,7 +765,7 @@ export default function EnterpriseSection() {
                 Zero Data Training
               </Typography>
               <Typography sx={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                Neither Hey Open nor downstream model providers (OpenAI, Anthropic, Google) ever use your enterprise prompts or attachments for model training.
+                Neither HeyOpen nor downstream model providers (OpenAI, Anthropic, Google) ever use your enterprise prompts or attachments for model training.
               </Typography>
             </Box>
 

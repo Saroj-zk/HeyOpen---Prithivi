@@ -1,6 +1,6 @@
 # Use AI responsibly and securely
 
-Hey Open offers access to powerful AI systems, including models with fewer content restrictions. Responsible use still requires appropriate judgment, permissions, and compliance with law and provider terms.
+HeyOpen offers access to powerful AI systems, including models with fewer content restrictions. Responsible use still requires appropriate judgment, permissions, and compliance with law and provider terms.
 
 ## Verify important outputs
 

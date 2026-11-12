@@ -4,7 +4,7 @@ This page consolidates the publicly available source destinations used to draft 
 
 ## Product
 
-- [Hey Open homepage](https://hey-open.vercel.app/)
+- [HeyOpen homepage](https://hey-open.vercel.app/)
 - [Chat application](https://ais.openledger.xyz/chat)
 - [Models catalog](https://hey-open.vercel.app/models)
 - [Universal Memory](https://hey-open.vercel.app/memory)

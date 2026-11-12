@@ -1,6 +1,6 @@
-# Hey Open for enterprises
+# HeyOpen for enterprises
 
-Hey Open presents a unified AI workspace and infrastructure layer for teams that need access to multiple models, governance, and privacy-focused processing options.
+HeyOpen presents a unified AI workspace and infrastructure layer for teams that need access to multiple models, governance, and privacy-focused processing options.
 
 ## Enterprise use cases
 

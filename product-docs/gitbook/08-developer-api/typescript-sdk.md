@@ -1,6 +1,6 @@
 # TypeScript integration example
 
-You can use an OpenAI-compatible client pattern for TypeScript with the base URL shown on the Hey Open website. This example illustrates the intended integration approach; test it with your issued key and current API requirements.
+You can use an OpenAI-compatible client pattern for TypeScript with the base URL shown on the HeyOpen website. This example illustrates the intended integration approach; test it with your issued key and current API requirements.
 
 ## Install
 

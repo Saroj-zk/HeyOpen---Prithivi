@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <>
       <PageMeta
-        title="Hey Open | Private, Multi-Model AI"
+        title="HeyOpen | Private, Multi-Model AI"
         description="Every major AI model in one private workspace. Nothing retained, nothing trained on, and one memory that carries across all of them."
         path="/"
       />

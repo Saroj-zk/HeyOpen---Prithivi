@@ -26,7 +26,7 @@ export default function CapabilitiesPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
       <PageMeta
-        title="Capabilities — Text, Photoreal Images, Voice & Video | Hey Open"
+        title="Capabilities — Text, Photoreal Images, Voice & Video | HeyOpen"
         description="Uncensored chat, photoreal image synthesis, speech-to-speech audio, and cinematic video. All private, with one subscription across 50+ models."
         path="/capabilities"
       />
@@ -522,7 +522,7 @@ export default function CapabilitiesPage() {
                   <Box
                     component="img"
                     src="/images/chat_feature_bg.jpg"
-                    alt="Hey Open Chat and Reasoning Feature"
+                    alt="HeyOpen Chat and Reasoning Feature"
                     sx={{
                       width: '100%',
                       height: 380,
@@ -599,7 +599,7 @@ export default function CapabilitiesPage() {
                   <Box
                     component="img"
                     src="/images/voice_orb.jpg"
-                    alt="Hey Open Voice and Audio Synthesis"
+                    alt="HeyOpen Voice and Audio Synthesis"
                     sx={{
                       width: '100%',
                       height: 380,
@@ -894,7 +894,7 @@ export default function CapabilitiesPage() {
                   <Box
                     component="img"
                     src="/images/agent_feature_bg.jpg"
-                    alt="Hey Open Autonomous Agent Infrastructure"
+                    alt="HeyOpen Autonomous Agent Infrastructure"
                     sx={{
                       width: '100%',
                       height: 380,

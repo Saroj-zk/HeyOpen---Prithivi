@@ -1,6 +1,6 @@
 # Switch models within your workflow
 
-A central Hey Open workflow is choosing the right model at each stage of a project. You can begin with a quick model for brainstorming, then select a deeper reasoning model for analysis, and move to a creative model for media generation.
+A central HeyOpen workflow is choosing the right model at each stage of a project. You can begin with a quick model for brainstorming, then select a deeper reasoning model for analysis, and move to a creative model for media generation.
 
 ## Recommended workflow
 

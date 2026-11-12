@@ -508,7 +508,7 @@ export default function ProductDemo({ flow = 'multimodel', active = true }) {
         {!sent && !F.prior ? (
           <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
             <Typography sx={{ fontFamily: '"Fraunces", Georgia, serif', fontStyle: 'italic', fontWeight: 600, fontSize: { xs: '1.15rem', sm: '1.4rem' }, lineHeight: 1.2, color: C.text }}>
-              Hey Open..
+              HeyOpen..
             </Typography>
             <Typography sx={{ mt: 1.2, fontSize: '0.76rem', lineHeight: 1.55, color: C.textSecondary }}>
               A private, multi-model AI experience
@@ -715,7 +715,7 @@ export default function ProductDemo({ flow = 'multimodel', active = true }) {
         )}
 
         <Typography sx={{ mt: F.compact ? 0.5 : 0.8, textAlign: 'center', fontSize: '0.62rem', color: C.muted }}>
-          Hey Open can make mistakes. Verify important information.
+          HeyOpen can make mistakes. Verify important information.
         </Typography>
       </Box>
 

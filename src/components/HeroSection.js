@@ -144,7 +144,7 @@ export default function HeroSection() {
             <Box
               component="img"
               src="/Icons/Frosted logo OPL.png"
-              alt="Hey Open"
+              alt="HeyOpen"
               sx={{ width: { xs: 60, md: 80 }, height: { xs: 60, md: 80 }, objectFit: 'contain' }}
             />
           </Box>
@@ -160,7 +160,7 @@ export default function HeroSection() {
               display: 'block',
             }}
           >
-            Hey Open..
+            HeyOpen..
           </Typography>
         </Box>
 

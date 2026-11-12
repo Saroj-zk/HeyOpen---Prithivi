@@ -44,7 +44,7 @@ const MARKER = /^> Section: (.+?) \| File: `(.+?)`\s*$/gm;
  */
 const IMAGES = {
   '01-getting-started/platform-tour.md':
-    ['a01-chat-signed-in.jpg', 'The Hey Open chat screen, signed in', null],
+    ['a01-chat-signed-in.jpg', 'The HeyOpen chat screen, signed in', null],
   '01-getting-started/guest-and-accounts.md':
     ['a03-account-menu.jpg', 'The account menu at the foot of the sidebar', null],
   '02-chat-and-workflows/using-the-chat.md':
@@ -57,8 +57,8 @@ const IMAGES = {
     ['a13-image-tools.jpg', 'The nine image tools', null],
   '05-universal-memory/memory-setup.md':
     ['a08-memory.jpg', 'Memory settings: three switches, and the saved memories list', null],
-  '05-universal-memory/consensus-mode.md':
-    ['a12-consensus.jpg', 'Consensus Mode: multiple models, one verdict', null],
+  '05-universal-memory/compare.md':
+    ['a12-consensus.jpg', 'Compare: multiple models, one verdict', null],
   '06-privacy-and-security/privacy-at-a-glance.md':
     ['a02-privacy-filter.jpg', 'The privacy filter, set to Min', null],
   '06-privacy-and-security/local-data-and-history.md':
@@ -75,7 +75,7 @@ const IMAGES = {
 
 /* The affiliate article carries its own figures inline, so they are listed
  * here only to be copied into the assets folder. The Token Dashboard
- * capture is deliberately absent: it still reads "Hey Open Pro is free at
+ * capture is deliberately absent: it still reads "HeyOpen Pro is free at
  * 100 staked", which the $1,000 threshold has superseded. */
 const EXTRA_ASSETS = [
   'a14-affiliate-hero.jpg',
@@ -92,13 +92,37 @@ const SHOT_NOTE = 'Account identifiers in the screenshots are redacted.';
 
 /* Straight renames: the same thing called by its current name. These are
  * applied to every article and to the README, and are deliberately not
- * EDITS, which exist for changes of substance and must match exactly once. */
+ * EDITS, which exist for changes of substance and must match exactly once.
+ *
+ * They run AFTER the amendments, so an amendment can go on quoting the
+ * review copy exactly as approved rather than being rewritten every time
+ * something is renamed.
+ *
+ * Longest first: "Consensus Mode" has to be taken before the bare
+ * "Consensus" rule can take half of it. */
 const RENAMES = [
   ['marketing@openledger.xyz', 'marketing@heyopen.ai'],
+  ['Hey Open', 'HeyOpen'],
+  ['HEY OPEN', 'HEYOPEN'],
+  ['Consensus Mode', 'Compare'],
+  ['Consensus mode', 'Compare'],
+  ['Consensus', 'Compare'],
 ];
 
 const rename = (text) =>
   RENAMES.reduce((acc, [from, to]) => acc.split(from).join(to), text);
+
+/* Article paths, renamed before the split. A path is both the marker that
+ * decides where an article is written and the target other articles link
+ * to it by, so this one runs over the whole source rather than per
+ * article, and both move together. */
+const PATHS = [
+  ['05-universal-memory/consensus-mode.md', '05-universal-memory/compare.md'],
+  ['01-getting-started/what-is-hey-open.md', '01-getting-started/what-is-heyopen.md'],
+];
+
+const repath = (text) =>
+  PATHS.reduce((acc, [from, to]) => acc.split(from).join(to), text);
 
 // ---------------------------------------------------------------- helpers
 
@@ -146,7 +170,7 @@ if (!fs.existsSync(SRC)) {
   console.error('Review copy not found: %s', SRC);
   process.exit(1);
 }
-const src = fs.readFileSync(SRC, 'utf8').replace(/\r\n/g, '\n');
+const src = repath(fs.readFileSync(SRC, 'utf8').replace(/\r\n/g, '\n'));
 
 const marks = [];
 let m;
@@ -168,7 +192,6 @@ fs.mkdirSync(ASSETS, { recursive: true });
 let intro = src.slice(0, marks[0].at);
 intro = intro.replace(/^# Hey Open \| Complete GitBook Documentation[\s\S]*?\n---\n/, '');
 intro = intro.replace(/\n-{3,}\s*$/g, '\n').trim() + '\n';
-intro = rename(intro);
 
 /* README edits. It is not one of the marked articles, so it is amended
  * here rather than through EDITS, and a miss fails the build the same way. */
@@ -179,7 +202,7 @@ for (const e of README_EDITS) {
   }
   intro = intro.replace(e.find, e.replace);
 }
-write('README.md', intro);
+write('README.md', rename(intro));
 
 /* Split first, into memory, so amendments can be applied before anything
  * reaches disk. */
@@ -187,7 +210,7 @@ const articles = marks.map((mk, i) => {
   const to = i + 1 < marks.length ? marks[i + 1].at : src.length;
   let body = src.slice(mk.end, to);
   body = body.replace(/^\s*\n+/, '').replace(/\n*-{3,}\s*$/, '\n').trimEnd() + '\n';
-  return { section: mk.section, file: mk.file, body: rename(body) };
+  return { section: mk.section, file: mk.file, body };
 });
 const byFile = new Map(articles.map((a) => [a.file, a]));
 
@@ -204,6 +227,8 @@ for (const e of EDITS) {
   art.body = art.body.replace(e.find, e.replace);
 }
 
+/* Renames last, over the amended text and over the pages added below,
+   so every article says the same thing whatever its source. */
 for (const p of NEW_PAGES) {
   const at = articles.findIndex((a) => a.file === p.after);
   if (at < 0) throw new Error('new page anchored to a missing article: ' + p.after);
@@ -217,6 +242,8 @@ for (const d of DROP_PAGES) {
   if (at < 0) throw new Error('drop targets a missing article: ' + d.file);
   articles.splice(at, 1);
 }
+for (const a of articles) a.body = rename(a.body);
+
 const dropped = new Set(DROP_PAGES.map((d) => d.file));
 for (const a of articles) {
   /* Resolve each link against the article that holds it. Matching on the
@@ -242,7 +269,12 @@ for (const a of articles) {
 
 // ---------------------------------------------------------------- SUMMARY
 
-const summary = ['# Table of contents', '', '* [Hey Open Documentation](README.md)', ''];
+/* The contents page is assembled from the section names in the markers and
+   from a fixed title, so none of it has been through rename() with the
+   article bodies. */
+const renameSummary = rename;
+
+const summary = ['# Table of contents', '', '* [HeyOpen Documentation](README.md)', ''];
 let current = null;
 for (const p of pages) {
   if (p.section !== current) {
@@ -254,7 +286,7 @@ for (const p of pages) {
     summary.push('');
   }
 }
-write('SUMMARY.md', summary.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n');
+write('SUMMARY.md', renameSummary(summary.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n'));
 
 // ---------------------------------------------------------------- config
 

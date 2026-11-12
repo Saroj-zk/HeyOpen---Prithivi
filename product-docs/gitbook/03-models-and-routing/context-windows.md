@@ -1,6 +1,6 @@
 # Context windows and long inputs
 
-A model's context window is the maximum amount of information it can process as part of a request, typically measured in tokens for language models. Hey Open's catalog lists different context sizes, including models with very large advertised limits.
+A model's context window is the maximum amount of information it can process as part of a request, typically measured in tokens for language models. HeyOpen's catalog lists different context sizes, including models with very large advertised limits.
 
 ## Context is not the same as memory
 

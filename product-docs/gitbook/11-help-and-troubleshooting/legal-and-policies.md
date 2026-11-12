@@ -1,6 +1,6 @@
 # Terms, privacy policy, and legal information
 
-Hey Open publishes a [Privacy Policy](https://hey-open.vercel.app/privacy-policy) and [Terms of Service](https://hey-open.vercel.app/terms). Both pages display an effective date of **27 October 2026** in the sources reviewed for this documentation.
+HeyOpen publishes a [Privacy Policy](https://hey-open.vercel.app/privacy-policy) and [Terms of Service](https://hey-open.vercel.app/terms). Both pages display an effective date of **27 October 2026** in the sources reviewed for this documentation.
 
 ## What the Terms cover
 
@@ -10,7 +10,7 @@ The Terms state a minimum age of 13, with parental or guardian consent required 
 
 ## What the Privacy Policy covers
 
-Account data, technical information, prompts and outputs, third-party AI providers, Universal Memory, Consensus Mode, connected services, payments, retention, rights, and support contacts.
+Account data, technical information, prompts and outputs, third-party AI providers, Universal Memory, Compare, connected services, payments, retention, rights, and support contacts.
 
 ## Important publication note
 

@@ -1,6 +1,6 @@
 # Credits, usage, and metering
 
-Hey Open's Terms describe **usage credits** that may be included in subscriptions, purchased separately, or issued through promotions. Credits may be consumed by eligible AI models, media tools, API requests, Consensus Mode, or agents.
+HeyOpen's Terms describe **usage credits** that may be included in subscriptions, purchased separately, or issued through promotions. Credits may be consumed by eligible AI models, media tools, API requests, Compare, or agents.
 
 ![Usage for the current billing period](../.gitbook/assets/a06-usage.jpg)
 
@@ -31,4 +31,4 @@ Choose an appropriate model, monitor estimated cost, set spending limits where a
 
 The platform may restrict chargeable requests when your balance or spending limits are insufficient. Check your plan, refresh status, and available credit-purchase options.
 
-**Related:** [Auto routing](../03-models-and-routing/auto-routing.md), [Consensus Mode](../05-universal-memory/consensus-mode.md).
+**Related:** [Auto routing](../03-models-and-routing/auto-routing.md), [Compare](../05-universal-memory/compare.md).

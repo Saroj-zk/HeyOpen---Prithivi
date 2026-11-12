@@ -36,7 +36,7 @@ const FOOTER_COLUMNS = [
       { label: 'Chat', href: 'https://ais.openledger.xyz/chat', external: true },
       { label: 'Product guide', href: '/docs' },
       { label: 'Models', href: '/models' },
-      { label: 'Consensus Mode', href: '/#consensus-mode' },
+      { label: 'Compare', href: '/#compare' },
       { label: 'Universal Memory', href: '/memory' },
       { label: 'Private AI', href: '/private' },
     ],
@@ -109,7 +109,7 @@ export default function Footer({ showCta = false }) {
               py: { xs: 8, sm: 10, md: 12 },
               textAlign: 'center',
               mb: { xs: 8, sm: 10, md: 12 },
-              // Ambient deep warm orange and amber light streaks matching Hey Open brand
+              // Ambient deep warm orange and amber light streaks matching HeyOpen brand
               backgroundColor: '#120802',
               backgroundImage: `
                 radial-gradient(ellipse 85% 65% at 50% 30%, rgba(255, 102, 0, 0.46) 0%, rgba(204, 75, 0, 0.22) 50%, rgba(18, 8, 2, 0.96) 85%),
@@ -338,7 +338,7 @@ export default function Footer({ showCta = false }) {
             >
               <img
                 src="/Open%20Ledegr%20Full%20Black.svg"
-                alt="Hey Open"
+                alt="HeyOpen"
                 style={{
                   height: 26,
                   width: 'auto',
@@ -562,7 +562,7 @@ export default function Footer({ showCta = false }) {
               textAlign: { xs: 'center', md: 'left' },
             }}
           >
-            © {new Date().getFullYear()} Hey Open. All rights reserved.
+            © {new Date().getFullYear()} HeyOpen. All rights reserved.
           </Typography>
 
         </Box>

@@ -1,6 +1,6 @@
 # Account and wallet security
 
-Protecting your account is a shared responsibility. Hey Open may use credentials, approved third-party authentication, wallet connections, API keys, or other methods depending on the feature.
+Protecting your account is a shared responsibility. HeyOpen may use credentials, approved third-party authentication, wallet connections, API keys, or other methods depending on the feature.
 
 ![Settings: General, Billing, and Data and Privacy](../.gitbook/assets/a04-settings-appearance.jpg)
 

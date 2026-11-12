@@ -1,6 +1,6 @@
 # Local history, storage, and deletion
 
-Hey Open's product material describes browser-local conversation history and Universal Memory. Data stored in a browser can behave differently from information associated with a server-side account.
+HeyOpen's product material describes browser-local conversation history and Universal Memory. Data stored in a browser can behave differently from information associated with a server-side account.
 
 ![Storage: chat history is kept in this browser](../.gitbook/assets/a09-storage.jpg)
 

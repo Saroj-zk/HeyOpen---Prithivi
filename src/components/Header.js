@@ -6,8 +6,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useThemeMode } from '@/context/ThemeContext';
 
-/* Each of these resolves to a section on this page. #consensus and #privacy
-   were in here before and matched nothing. */
+/* Each of these resolves to a section on this page. Two earlier anchors
+   matched nothing and were corrected; #compare is the one the Compare
+   section carries, which was called Consensus Mode until this change. */
 /* Destinations first, then the two anchors on this page. The first three
    are the subpages the second section links out to; before this they were
    only reachable from its EXPLORE links. */
@@ -22,7 +23,7 @@ const NAV_ITEMS = [
      to /hey, so the page is now reachable only by typing the address.
      Uncomment to put it back. */
   // { label: '$HEY', href: '/hey' },
-  { label: 'Consensus', href: '#consensus-mode' },
+  { label: 'Compare', href: '#compare' },
   { label: 'Pricing', href: '#pricing' },
 ];
 
@@ -123,7 +124,7 @@ export default function Header() {
             >
               <img
                 src="/Open%20Ledegr%20Full%20Black.svg"
-                alt="Hey Open"
+                alt="HeyOpen"
                 style={{
                   height: 20,
                   width: 'auto',

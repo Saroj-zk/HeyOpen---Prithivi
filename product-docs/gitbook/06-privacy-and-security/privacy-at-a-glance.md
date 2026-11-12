@@ -1,6 +1,6 @@
 # Privacy at a glance
 
-Privacy is a central part of Hey Open's positioning. The product promotes secure routing, reduced conversation retention, and privacy-enhanced model choices. The exact protections depend on your selected model, feature, provider, and processing route.
+Privacy is a central part of HeyOpen's positioning. The product promotes secure routing, reduced conversation retention, and privacy-enhanced model choices. The exact protections depend on your selected model, feature, provider, and processing route.
 
 ![The privacy filter, set to Min](../.gitbook/assets/a02-privacy-filter.jpg)
 
@@ -9,7 +9,7 @@ _The privacy filter, set to Min. Account identifiers in the screenshots are reda
 
 ## Key principles
 
-**Data minimization:** Hey Open's policy says it seeks to reduce unnecessary access to and retention of private conversation content.
+**Data minimization:** HeyOpen's policy says it seeks to reduce unnecessary access to and retention of private conversation content.
 
 **Provider-specific processing:** External AI providers may receive the prompt and context necessary to answer your request.
 

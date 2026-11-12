@@ -1,6 +1,6 @@
 # API authentication and key security
 
-The Hey Open website shows API requests authenticated with a bearer token. Do not publish or embed that secret in frontend code.
+The HeyOpen website shows API requests authenticated with a bearer token. Do not publish or embed that secret in frontend code.
 
 ## Request header
 
@@ -9,7 +9,7 @@ Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```
 
-Use a real key issued to your account through an official Hey Open workflow. A variable such as `OPENLEDGER_API_KEY` is only a suggested environment-variable name.
+Use a real key issued to your account through an official HeyOpen workflow. A variable such as `OPENLEDGER_API_KEY` is only a suggested environment-variable name.
 
 ## Recommended environment setup
 

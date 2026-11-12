@@ -1,6 +1,6 @@
 # Custom-branded AI applications
 
-Hey Open promotes **custom-branded AI solutions** in which a business delivers an AI product under its own brand while relying on Hey Open's inference and infrastructure layer.
+HeyOpen promotes **custom-branded AI solutions** in which a business delivers an AI product under its own brand while relying on HeyOpen's inference and infrastructure layer.
 
 ## Common delivery models
 

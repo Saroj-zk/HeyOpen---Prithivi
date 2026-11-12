@@ -1,14 +1,14 @@
 # Quickstart: your first AI conversation
 
-This quickstart gets you from opening Hey Open to receiving and refining your first response.
+This quickstart gets you from opening HeyOpen to receiving and refining your first response.
 
-## Step 1. Open Hey Open
+## Step 1. Open HeyOpen
 
 Go to the [chat application](https://ais.openledger.xyz/chat). The website promotes a way to begin without an account, although some models and paid actions may still require authentication.
 
 ## Step 2. Choose how to start
 
-If the interface presents a model picker, choose a model with capabilities that match your task. If Auto is available, select it to let Hey Open choose an appropriate model. Where a model displays a sign-in or payment requirement, follow the in-product prompt before continuing.
+If the interface presents a model picker, choose a model with capabilities that match your task. If Auto is available, select it to let HeyOpen choose an appropriate model. Where a model displays a sign-in or payment requirement, follow the in-product prompt before continuing.
 
 ## Step 3. Send a clear request
 

@@ -1,6 +1,6 @@
 # Use Auto routing through the API
 
-The homepage's API example uses `"model": "auto"`, consistent with Hey Open's broader model-routing proposition.
+The homepage's API example uses `"model": "auto"`, consistent with HeyOpen's broader model-routing proposition.
 
 ## What Auto is intended to do
 

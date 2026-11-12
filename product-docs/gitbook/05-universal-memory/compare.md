@@ -1,13 +1,13 @@
-# Consensus Mode: multiple model perspectives
+# Compare: multiple model perspectives
 
-Consensus Mode enables several supported AI models to work on the same prompt. A configuration may compare their answers and use a separate evaluating model to synthesize or assess them.
+Compare enables several supported AI models to work on the same prompt. A configuration may compare their answers and use a separate evaluating model to synthesize or assess them.
 
-![Consensus Mode: multiple models, one verdict](../.gitbook/assets/a12-consensus.jpg)
+![Compare: multiple models, one verdict](../.gitbook/assets/a12-consensus.jpg)
 
-_Consensus Mode: multiple models, one verdict. Account identifiers in the screenshots are redacted._
+_Compare: multiple models, one verdict. Account identifiers in the screenshots are redacted._
 
 
-## What Consensus Mode is good for
+## What Compare is good for
 
 - Comparing different interpretations of a complex question.
 - Reviewing an argument for blind spots.
@@ -16,7 +16,7 @@ _Consensus Mode: multiple models, one verdict. Account identifiers in the screen
 
 ## How to use it
 
-1. Open Consensus Mode if it is available in your account.
+1. Open Compare if it is available in your account.
 2. Choose the participating models or use the supported preset.
 3. Add your prompt and relevant context.
 4. If a judging or evaluating model is offered, review its role and cost.
@@ -27,7 +27,7 @@ The website illustrates four perspectives coming together, but the Terms allow d
 
 ## Pricing considerations
 
-Consensus Mode can trigger multiple model requests, so cost and credit consumption may exceed a single-model response. Review the estimate and usage rules before submitting.
+Compare can trigger multiple model requests, so cost and credit consumption may exceed a single-model response. Review the estimate and usage rules before submitting.
 
 ## Privacy considerations
 

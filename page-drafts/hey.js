@@ -142,7 +142,7 @@ export default function HeyPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'clip' }}>
       <PageMeta
-        title="$HEY: Compute Credit, Every Day | Hey Open"
+        title="$HEY: Compute Credit, Every Day | HeyOpen"
         description="$HEY is minted from staked $OPEN. Stake it and it pays out compute credit every day, for any model on the network, renewed daily."
         path="/hey"
       />

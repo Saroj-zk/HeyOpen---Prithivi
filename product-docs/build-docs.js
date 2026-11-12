@@ -105,7 +105,7 @@ function TABLE(headers, rows, widths) {
 
 function doc(meta, body) {
   return new Document({
-    creator: 'Hey Open',
+    creator: 'HeyOpen',
     title: meta.title,
     description: meta.summary,
     numbering: {
@@ -155,27 +155,27 @@ const RELATED = (items) => [H1('Related articles'), ...items.map((i) => BUL(i))]
 
 const about = doc(
   {
-    title: 'Hey Open: About & Features',
-    subtitle: 'What Hey Open is, who it serves, and how it differs from a single-model chatbot',
+    title: 'HeyOpen: About & Features',
+    subtitle: 'What HeyOpen is, who it serves, and how it differs from a single-model chatbot',
     category: 'Product & Marketing', owner: 'Marketing', location: 'Website / About & Features',
-    summary: 'What Hey Open is, who it serves, and how it differs from a single-model chatbot.',
+    summary: 'What HeyOpen is, who it serves, and how it differs from a single-model chatbot.',
   },
   [
-    P([ 'Hey Open is a privacy-focused, multi-model AI workspace. One subscription gives you conversational AI, analysis, coding help and creative generation across many providers, so you stop keeping a separate account, a separate bill and a separate conversation history for each one.' ]),
+    P([ 'HeyOpen is a privacy-focused, multi-model AI workspace. One subscription gives you conversational AI, analysis, coding help and creative generation across many providers, so you stop keeping a separate account, a separate bill and a separate conversation history for each one.' ]),
     P([ 'Available on: web at ', { ph: 'CONFIRM: the canonical public URL. The draft cites hey-open.vercel.app; the site metadata uses openledger.xyz' }, '. The application runs at ais.openledger.xyz/chat. Native desktop, iOS and Android availability: ', { ph: 'CONFIRM: which platforms have a released build, and the download links' }, '.' ]),
-    P([ 'Hey Open is the consumer-facing product. OpenLedger is the network and infrastructure name behind parts of it, which is why you may see the Hey Open brand on the website and an OpenLedger address in the application or the API. Seeing a blockchain feature described on a marketing page does not mean it is live in the chat product yet.' ]),
+    P([ 'HeyOpen is the consumer-facing product. OpenLedger is the network and infrastructure name behind parts of it, which is why you may see the HeyOpen brand on the website and an OpenLedger address in the application or the API. Seeing a blockchain feature described on a marketing page does not mean it is live in the chat product yet.' ]),
 
     H1('One workspace, every model'),
-    P([ 'Switching AI apps normally means starting over. In Hey Open the conversation and your saved context stay in one place: choose a different model for each task and it can pick up where the last one left off.' ]),
+    P([ 'Switching AI apps normally means starting over. In HeyOpen the conversation and your saved context stay in one place: choose a different model for each task and it can pick up where the last one left off.' ]),
     P([ 'The catalogue spans text, image, video, audio and music. The public site advertises ', { ph: 'CONFIRM: catalogue size. The site says 200+ models; the models page says 200+ from N providers' }, '. What any individual account can actually run depends on the current catalogue, provider availability, the plan and the processing route.' ]),
 
     H1('What else you can do'),
     TABLE(
       ['Feature', 'What it does'],
       [
-        ['Consensus Mode', 'Sends one prompt to several models at once and synthesises a combined answer, so you can see where they disagree.'],
+        ['Compare', 'Sends one prompt to several models at once and synthesises a combined answer, so you can see where they disagree.'],
         ['Universal Memory', 'Keeps selected preferences, project facts and decisions so every model you use already has the context.'],
-        ['Auto routing', 'You describe the task instead of picking a model, and Hey Open selects a capable one.'],
+        ['Auto routing', 'You describe the task instead of picking a model, and HeyOpen selects a capable one.'],
         ['Create', 'Images, video, audio and music from models in the same catalogue as chat.'],
         ['API and agents', 'An OpenAI-compatible chat-completions endpoint, plus agent workflows for developers.'],
         ['Token dashboard', 'Stake $OPEN. Described in the economics pages as linked to compute credits.'],
@@ -184,7 +184,7 @@ const about = doc(
     ),
     SPACER(),
 
-    H1('Who Hey Open is for'),
+    H1('Who HeyOpen is for'),
     TABLE(
       ['Audience', 'What they use it for'],
       [
@@ -197,7 +197,7 @@ const about = doc(
       [2900, 7180]
     ),
     SPACER(),
-    P([ 'You do not have to belong to one group. A single project can involve research, code, a presentation outline and image prompts, and Hey Open is built so you can choose a different model at each stage.' ]),
+    P([ 'You do not have to belong to one group. A single project can involve research, code, a presentation outline and image prompts, and HeyOpen is built so you can choose a different model at each stage.' ]),
 
     H1('What you can do'),
     H2('Chat and research'),
@@ -207,17 +207,17 @@ const about = doc(
     H2('Create across formats'),
     P([ 'Develop a story with a text model, design a still with an image model, build a moving shot with a video model. Whether a generated asset carries into the next model automatically or has to be reattached: ', { ph: 'CONFIRM: does a generated image pass to a video model automatically, or must the user reattach it' }, '.' ]),
     H2('Compare multiple models'),
-    P([ 'Consensus Mode is useful for surfacing disagreement on a consequential question. Agreement between models does not establish that an answer is true: models can share training data and repeat the same error. Running several models also consumes more usage than a single turn.' ]),
+    P([ 'Compare is useful for surfacing disagreement on a consequential question. Agreement between models does not establish that an answer is true: models can share training data and repeat the same error. Running several models also consumes more usage than a single turn.' ]),
     H2('Keep relevant context'),
     P([ 'Universal Memory stores selected reusable context, not a full copy of every conversation. The memory page describes browser-local storage and a control governing whether memory is shared with models routed to outside providers, which is off by default.' ]),
 
     H1('Privacy'),
-    P([ 'Hey Open states it does not use private chats or Universal Memory to train its own models without separate disclosed authorisation. Beyond that, privacy is not one property of the whole product: it depends on which model you choose and how that request is routed.' ]),
+    P([ 'HeyOpen states it does not use private chats or Universal Memory to train its own models without separate disclosed authorisation. Beyond that, privacy is not one property of the whole product: it depends on which model you choose and how that request is routed.' ]),
     TABLE(
       ['Layer', 'What happens', 'Who controls it'],
       [
         ['Your device', 'Conversation history can remain local to your browser.', 'You'],
-        ['Hey Open', 'Relays the request, adds selected memory context if enabled.', 'Hey Open'],
+        ['HeyOpen', 'Relays the request, adds selected memory context if enabled.', 'HeyOpen'],
         ['Model provider', 'Processes the prompt under its own retention and training terms.', 'The provider'],
       ],
       [2000, 5200, 2880]
@@ -231,21 +231,21 @@ const about = doc(
       ['Plan', 'Price', 'What you get'],
       [
         ['Free', ['$0. ', { ph: 'CONFIRM: what the free tier includes' }], [{ ph: 'CONFIRM: which models, which modalities, and the monthly allowance' }]],
-        ['Hey Open Pro', '$20 per month', ['Premium models across the catalogue, shared memory, and generation advertised as unlimited for supported text and image models. ', { ph: 'CONFIRM: whether video, audio and music are included or metered separately' }]],
+        ['HeyOpen Pro', '$12.99 per month', ['Premium models across the catalogue, shared memory, and generation advertised as unlimited for supported text and image models. ', { ph: 'CONFIRM: whether video, audio and music are included or metered separately' }]],
         ['Annual', [{ ph: 'CONFIRM: whether an annual plan exists and its total term price' }], [{ ph: 'CONFIRM: discount versus monthly' }]],
       ],
       [1900, 3200, 4980]
     ),
     SPACER(),
-    P([ 'The $20 figure is corroborated by the live pricing section, which sets it against eight separate subscriptions totalling $165. See the Plans, Pricing & Credits Guide for how usage is measured.' ]),
+    P([ 'The $12.99 figure is corroborated by the live pricing section, which sets it against eight separate subscriptions totalling $165. See the Plans, Pricing & Credits Guide for how usage is measured.' ]),
 
-    H1('Hey Open versus a single-model chatbot'),
+    H1('HeyOpen versus a single-model chatbot'),
     TABLE(
-      ['Area', 'Typical single-model chatbot', 'Hey Open'],
+      ['Area', 'Typical single-model chatbot', 'HeyOpen'],
       [
         ['Model choice', 'One provider or model family', 'Search and choose across providers and modalities'],
         ['Switching tasks', 'Another app or another subscription', 'Switch model inside the same workspace'],
-        ['Complex answers', 'One perspective at a time', 'Consensus Mode compares several models'],
+        ['Complex answers', 'One perspective at a time', 'Compare compares several models'],
         ['Lasting context', 'Tied to that provider’s app', 'Universal Memory carries context across models'],
         ['Media', 'Limited to one vendor’s capabilities', 'Text, image, video, audio and music in one catalogue'],
         ['Developer access', 'Provider-specific account and SDK', 'One OpenAI-compatible endpoint plus Auto routing'],
@@ -259,28 +259,28 @@ const about = doc(
     H1('Good to know'),
     BUL([ 'A quoted context window is a technical upper limit, not permission to upload unlimited content.' ]),
     BUL([ 'A privacy label such as TEE or E2EE is route-specific and may not mean the same thing across two providers.' ]),
-    BUL([ 'Consensus Mode is not fact-checking. It shows disagreement; it does not resolve it.' ]),
+    BUL([ 'Compare is not fact-checking. It shows disagreement; it does not resolve it.' ]),
     BUL([ 'Image, video and audio generation may be metered separately from text even on a plan advertising unlimited text.' ]),
-    BUL([ 'Minimum age to use Hey Open: ', { ph: 'CONFIRM: minimum age from the Terms' }, '.' ]),
+    BUL([ 'Minimum age to use HeyOpen: ', { ph: 'CONFIRM: minimum age from the Terms' }, '.' ]),
     BUL([ 'The published Terms still contain placeholders for the legal entity’s jurisdiction and registered address. Do not state an entity name, office address or regulated status until those are filled in.' ]),
 
     H1('Frequently asked questions'),
-    H3('How is Hey Open different from ChatGPT or Claude?'),
-    P([ 'Those are models. Hey Open is the workspace that brings many models together with shared context, so you pick the right one for each task instead of reorganising your work around a single vendor.' ]),
+    H3('How is HeyOpen different from ChatGPT or Claude?'),
+    P([ 'Those are models. HeyOpen is the workspace that brings many models together with shared context, so you pick the right one for each task instead of reorganising your work around a single vendor.' ]),
     H3('Do I need a separate subscription for each model?'),
-    P([ 'No. One Hey Open plan is intended to cover the catalogue. Which models your account can actually run depends on your plan, provider eligibility and region.' ]),
+    P([ 'No. One HeyOpen plan is intended to cover the catalogue. Which models your account can actually run depends on your plan, provider eligibility and region.' ]),
     H3('Can I switch models without losing context?'),
     P([ 'Yes, within a conversation. Different models support different context lengths, so a very long thread may not carry over in full.' ]),
     H3('Do I need an account to start?'),
     P([ 'You can open the application, read the whole model catalogue and look around without connecting a wallet. Sending a message requires signing in: every model in the picker shows a Sign in marker. Verified in the live application on 4 November 2026.' ]),
-    H3('Does Hey Open train on my chats?'),
-    P([ 'Hey Open states it does not train its own models on private chats or memory without separate authorisation. What the model provider does with a prompt is governed by that provider’s own terms.' ]),
+    H3('Does HeyOpen train on my chats?'),
+    P([ 'HeyOpen states it does not train its own models on private chats or memory without separate authorisation. What the model provider does with a prompt is governed by that provider’s own terms.' ]),
 
     H1('Company and contact'),
     TABLE(
       ['Item', 'Value'],
       [
-        ['Product brand', 'Hey Open'],
+        ['Product brand', 'HeyOpen'],
         ['Network referenced', 'OpenLedger'],
         ['Web application', 'ais.openledger.xyz/chat'],
         ['Support, billing, privacy', 'support@heyopen.ai'],
@@ -290,7 +290,7 @@ const about = doc(
       [3400, 6680]
     ),
     SPACER(),
-    ...RELATED([ 'Getting Started & Account Management Guide', 'Plans, Pricing & Credits Guide', 'AI Model Catalog & Routing Guide', 'Hey Open User Guide: Text, Images & Videos' ]),
+    ...RELATED([ 'Getting Started & Account Management Guide', 'Plans, Pricing & Credits Guide', 'AI Model Catalog & Routing Guide', 'HeyOpen User Guide: Text, Images & Videos' ]),
   ]
 );
 
@@ -306,20 +306,20 @@ const pricing = doc(
     summary: 'Plans, feature differences, credits, routing charges, balances, renewal and fair use.',
   },
   [
-    P([ 'Credits are how Hey Open measures usage. Sending a message, generating an image and creating a video all consume them, and your plan sets how many you get. This guide covers what each plan includes, what consumes credits, how to see your usage, and what happens at renewal.' ]),
+    P([ 'Credits are how HeyOpen measures usage. Sending a message, generating an image and creating a video all consume them, and your plan sets how many you get. This guide covers what each plan includes, what consumes credits, how to see your usage, and what happens at renewal.' ]),
 
     H1('1. Plans'),
     TABLE(
       ['Plan', 'Price', 'Credits per month', 'What you get'],
       [
         ['Free', '$0', [{ ph: 'CONFIRM: free credit grant' }], [{ ph: 'CONFIRM: which models and modalities are included on Free' }]],
-        ['Hey Open Pro', '$20 per month', [{ ph: 'CONFIRM: Pro credit grant, or confirm Pro is not credit-metered' }], 'Premium models across the catalogue, shared memory, generation advertised as unlimited for supported text and image models.'],
+        ['HeyOpen Pro', '$12.99 per month', [{ ph: 'CONFIRM: Pro credit grant, or confirm Pro is not credit-metered' }], 'Premium models across the catalogue, shared memory, generation advertised as unlimited for supported text and image models.'],
         ['Annual', [{ ph: 'CONFIRM: annual price' }], [{ ph: 'CONFIRM' }], [{ ph: 'CONFIRM: whether an annual plan is offered at all' }]],
       ],
       [1700, 2100, 2400, 3880]
     ),
     SPACER(),
-    P([ 'The $20 monthly figure is corroborated by the live pricing section. Every other figure in that table is unconfirmed.' ], { italics: true, color: MUTED }),
+    P([ 'The $12.99 monthly figure is corroborated by the live pricing section. Every other figure in that table is unconfirmed.' ], { italics: true, color: MUTED }),
 
     H2('What "unlimited" means'),
     P([ 'The landing page advertises unlimited supported text and image generation. The Terms of Service separately permit model-specific prices, included credits, rate limits and overages. Both cannot be published as written.' ]),
@@ -348,7 +348,7 @@ const pricing = doc(
         ['Image generation', 'The model and the requested resolution. Each regenerated variation is charged again.'],
         ['Video generation', 'Clip length and model. Typically the most expensive action available.'],
         ['Audio and music', 'Duration and model.'],
-        ['Consensus Mode', 'Every participating model, plus an optional evaluating model. One question can cost several times a single turn.'],
+        ['Compare', 'Every participating model, plus an optional evaluating model. One question can cost several times a single turn.'],
         ['Agents and API', ['Per request, under ', { ph: 'CONFIRM: whether API usage draws on the same credit balance or is billed separately' }]],
         ['Web search', [{ ph: 'CONFIRM: whether a retrieval-enabled turn carries an extra charge' }]],
       ],
@@ -381,7 +381,7 @@ const pricing = doc(
         ['Review a pull request', 'Coding', [{ ph: 'MEASURE' }], 'Context must fit the diff plus surrounding code.'],
         ['Generate one image', 'Image', [{ ph: 'MEASURE' }], 'Each variation is charged separately.'],
         ['Generate a six second clip', 'Video', [{ ph: 'MEASURE' }], ['Confirm whether a cancelled job is charged: ', { ph: 'CONFIRM' }]],
-        ['Ask four models at once', 'Consensus', [{ ph: 'MEASURE' }], 'Roughly the sum of the participants plus any judge model.'],
+        ['Ask four models at once', 'Compare', [{ ph: 'MEASURE' }], 'Roughly the sum of the participants plus any judge model.'],
       ],
       [2600, 1700, 1500, 4280]
     ),
@@ -439,7 +439,7 @@ const pricing = doc(
     P([ 'Refund window and policy: ', { ph: 'REQUIRED: the Terms preserve statutory refund rights but contain an unfilled refund-policy URL. No universal refund window can be stated until it is filled' }, '.' ]),
 
     H1('Good to know'),
-    BUL([ 'Consensus Mode charges for each participating model. It is the easiest way to spend a lot of credits by accident.' ]),
+    BUL([ 'Compare charges for each participating model. It is the easiest way to spend a lot of credits by accident.' ]),
     BUL([ 'Auto routing can reduce waste on some requests. It does not make a paid feature free, and two Auto calls are not guaranteed to pick the same model.' ]),
     BUL([ 'A long conversation costs more per turn than a short one, because earlier turns are resent as context.' ]),
     BUL([ 'Crypto sent on the wrong chain may be unrecoverable. Support cannot reverse it.' ]),
@@ -457,7 +457,7 @@ const pricing = doc(
     H3('Does the API use the same credits as chat?'),
     P([ { ph: 'CONFIRM: API metering and whether it shares the subscription balance' }, '.' ]),
 
-    ...RELATED([ 'Hey Open: About & Features', 'Getting Started & Account Management Guide', 'AI Model Catalog & Routing Guide' ]),
+    ...RELATED([ 'HeyOpen: About & Features', 'Getting Started & Account Management Guide', 'AI Model Catalog & Routing Guide' ]),
   ]
 );
 
@@ -473,7 +473,7 @@ const models = doc(
     summary: 'Model capabilities, privacy classification, routing tiers, selection, substitutions and outages.',
   },
   [
-    P([ 'Hey Open gives one account access to models from many providers, across text, image, video, audio and music. This guide explains how the catalogue is organised, what the privacy labels mean, how routing picks a model when you do not, and how to choose one yourself.' ]),
+    P([ 'HeyOpen gives one account access to models from many providers, across text, image, video, audio and music. This guide explains how the catalogue is organised, what the privacy labels mean, how routing picks a model when you do not, and how to choose one yourself.' ]),
 
     H1('1. How the catalogue is organised'),
     P([ 'Open the model picker and search by model name, provider or task. Models are grouped by what they can produce and by speciality: reasoning, coding, vision, long context and media generation.' ]),
@@ -614,7 +614,7 @@ const models = doc(
     H3('Can I exclude a provider?'),
     P([ { ph: 'CONFIRM: whether a user or an enterprise policy can exclude named providers from routing' }, '.' ]),
 
-    ...RELATED([ 'Hey Open User Guide: Text, Images & Videos', 'Plans, Pricing & Credits Guide', 'Hey Open: About & Features' ]),
+    ...RELATED([ 'HeyOpen User Guide: Text, Images & Videos', 'Plans, Pricing & Credits Guide', 'HeyOpen: About & Features' ]),
   ]
 );
 
@@ -630,13 +630,13 @@ const started = doc(
     summary: 'Sign-up, sign-in, first conversation, profile, plan changes and account deletion.',
   },
   [
-    P([ 'This guide takes you from opening Hey Open for the first time through to managing or closing the account. If you only want to ask one question, section 3 is enough.' ]),
+    P([ 'This guide takes you from opening HeyOpen for the first time through to managing or closing the account. If you only want to ask one question, section 3 is enough.' ]),
 
     H1('1. Before you begin'),
     BUL([ 'Use the official application address. Do not follow a link from an advertisement, a private message, or a wallet-connection popup embedded in another site.' ]),
     BUL([ 'Use a current browser with JavaScript enabled and a stable connection.' ]),
     BUL([ 'If you connect a wallet, use one you control. Wallet ownership is not the same as a conventional email account.' ]),
-    P([ 'A wallet connection is not a request to transfer tokens. If your wallet shows an unexpected spending approval or transaction, reject it and check the address bar. No legitimate Hey Open support request will ever ask for your seed phrase, private key, verification code or API credentials.' ]),
+    P([ 'A wallet connection is not a request to transfer tokens. If your wallet shows an unexpected spending approval or transaction, reject it and check the address bar. No legitimate HeyOpen support request will ever ask for your seed phrase, private key, verification code or API credentials.' ]),
 
     H1('2. Creating an account'),
     P([ 'Two entry descriptions currently exist and they do not agree. The website says a visitor can start without creating an account. The application presents Connect Wallet before authenticated details appear. A guest session, a standard account and a wallet-linked identity may differ in how long they persist, how they recover and what they can buy.' ]),
@@ -664,7 +664,7 @@ const started = doc(
       [
         ['Chat', 'The composer, the thread, and the model picker.'],
         ['Model picker', 'Search by model, provider or task. Shows modality, context and privacy labels.'],
-        ['Consensus Mode', 'Ask several models the same question and compare.'],
+        ['Compare', 'Ask several models the same question and compare.'],
         ['Universal Memory', 'Review, add, edit and delete the context carried between models.'],
         ['Settings', ['Illustrated with General, Appearance, Memory, Payments, Billing, Usage, Data & Information and Storage. ', { ph: 'CONFIRM: the real settings tabs in the authenticated app' }]],
       ],
@@ -721,12 +721,12 @@ const started = doc(
     BUL([ 'A different wallet or browser profile is a different identity, and may show a different plan.' ]),
     BUL([ 'A rejected model does not mean a broken account. It often means a plan or entitlement difference.' ]),
     BUL([ 'A mobile browser is not a native app. Add to Home Screen creates a shortcut, not an installation.' ]),
-    BUL([ 'Do not download a CLI or desktop build claiming to be Hey Open without verifying the source.' ]),
+    BUL([ 'Do not download a CLI or desktop build claiming to be HeyOpen without verifying the source.' ]),
     BUL([ 'Cancelling, deleting and unstaking are three separate actions with three separate effects.' ]),
 
     H1('Frequently asked questions'),
-    H3('Can I use Hey Open without an account?'),
-    P([ 'Partly. The application opens without a wallet and the full catalogue is browsable, as are Image Tools and Audio Tools. Sending a message to any model requires signing in, and Consensus additionally requires the Pro plan.' ]),
+    H3('Can I use HeyOpen without an account?'),
+    P([ 'Partly. The application opens without a wallet and the full catalogue is browsable, as are Image Tools and Audio Tools. Sending a message to any model requires signing in, and Compare additionally requires the Pro plan.' ]),
     H3('Is there a mobile app?'),
     P([ { ph: 'CONFIRM: iOS and Android availability and store links. No verified download path was found during review' }, '.' ]),
     H3('Will my history follow me to a new device?'),
@@ -734,7 +734,7 @@ const started = doc(
     H3('What if I lose my wallet?'),
     P([ { ph: 'REQUIRED: the account recovery path when the wallet used to sign in is lost' }, '.' ]),
 
-    ...RELATED([ 'Hey Open: About & Features', 'Plans, Pricing & Credits Guide', 'Hey Open User Guide: Text, Images & Videos' ]),
+    ...RELATED([ 'HeyOpen: About & Features', 'Plans, Pricing & Credits Guide', 'HeyOpen User Guide: Text, Images & Videos' ]),
   ]
 );
 
@@ -744,7 +744,7 @@ const started = doc(
 
 const guide = doc(
   {
-    title: 'Hey Open User Guide: Text, Images & Videos',
+    title: 'HeyOpen User Guide: Text, Images & Videos',
     subtitle: 'Working across chat, image, video and audio in one workspace',
     category: 'Product Guides', owner: 'Marketing', location: 'Help Center / Product Guide',
     summary: 'Text chat, reasoning, web search, images, video, uploads, exports, history and memory.',
@@ -828,7 +828,7 @@ const guide = doc(
     BUL([ 'Narration: specify language, tone, pace and pronunciation notes.' ]),
     BUL([ 'Music: specify genre, instrumentation, mood and approximate duration where configurable.' ]),
     BUL([ 'Transcription: ask for timestamps or speaker separation only if the provider supports them.' ]),
-    P([ 'Do not imitate a real person’s voice or upload a protected recording without rights and consent. A paid Hey Open plan does not grant ownership of third-party music or samples.' ]),
+    P([ 'Do not imitate a real person’s voice or upload a protected recording without rights and consent. A paid HeyOpen plan does not grant ownership of third-party music or samples.' ]),
 
     H1('6. File uploads'),
     TABLE(
@@ -877,7 +877,7 @@ const guide = doc(
     H1('11. Limitations'),
     BUL([ 'AI output can be inaccurate, outdated or unsuitable. Verify anything consequential.' ]),
     BUL([ 'A quoted context window is a technical upper limit, not permission to upload unlimited content.' ]),
-    BUL([ 'Consensus Mode is not fact-checking. Models can share training data and repeat the same error.' ]),
+    BUL([ 'Compare is not fact-checking. Models can share training data and repeat the same error.' ]),
     BUL([ 'A privacy label is route-specific and may not mean the same thing at two providers.' ]),
     BUL([ 'Media generation has different queuing, moderation and billing from chat.' ]),
     BUL([ 'An outline is not an exported artefact. No native slide-deck export or hosted app builder is established by the public site.' ]),
@@ -925,11 +925,11 @@ function extractDocumentXml(buf, zlib) {
 /* ---------------- write ---------------- */
 
 const FILES = [
-  ['1 - Hey Open - About & Features.docx', about],
+  ['1 - HeyOpen - About & Features.docx', about],
   ['2 - Plans, Pricing & Credits Guide.docx', pricing],
   ['3 - AI Model Catalog & Routing Guide.docx', models],
   ['4 - Getting Started & Account Management Guide.docx', started],
-  ['5 - Hey Open User Guide - Text, Images & Videos.docx', guide],
+  ['5 - HeyOpen User Guide - Text, Images & Videos.docx', guide],
 ];
 
 (async () => {

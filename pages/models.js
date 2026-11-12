@@ -207,7 +207,7 @@ export default function ModelsPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
       <PageMeta
-        title={`${CATALOG_SIZE} AI Models in One Subscription | Hey Open`}
+        title={`${CATALOG_SIZE} AI Models in One Subscription | HeyOpen`}
         description={`Access GPT-4o, Claude Opus 4, DeepSeek R1, Gemini 2.5 Pro, FLUX and ${CATALOG_SIZE} models from ${PROVIDERS.length} providers in one subscription, with no tracking.`}
         path="/models"
       />

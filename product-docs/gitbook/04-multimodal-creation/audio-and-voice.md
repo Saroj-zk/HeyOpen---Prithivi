@@ -1,6 +1,6 @@
 # Audio, voice, and transcription
 
-Hey Open lists audio-specialized providers in its model catalog and presents audio as part of its multimodal workflow. Individual capabilities may include speech generation, transcription, or other audio operations, depending on the selected model.
+HeyOpen lists audio-specialized providers in its model catalog and presents audio as part of its multimodal workflow. Individual capabilities may include speech generation, transcription, or other audio operations, depending on the selected model.
 
 ## Choose the right operation
 

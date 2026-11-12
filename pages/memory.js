@@ -198,7 +198,7 @@ const MECHANICS = [
     step: '01',
     term: 'Remember',
     line: 'Context worth keeping.',
-    detail: 'Hey Open remembers useful preferences, projects, decisions, and details.',
+    detail: 'HeyOpen remembers useful preferences, projects, decisions, and details.',
   },
   {
     step: '02',
@@ -210,7 +210,7 @@ const MECHANICS = [
     step: '03',
     term: 'Retrieve',
     line: 'The right context, when you need it.',
-    detail: 'Hey Open brings back what matters for the conversation you’re having now.',
+    detail: 'HeyOpen brings back what matters for the conversation you’re having now.',
   },
   {
     step: '04',
@@ -514,7 +514,7 @@ export default function MemoryPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)', position: 'relative', overflowX: 'hidden' }}>
       <PageMeta
-        title="Universal Memory — One Context Across Every AI Model | Hey Open"
+        title="Universal Memory — One Context Across Every AI Model | HeyOpen"
         description="Say it once, every model knows. Your preferences, active projects, and decisions live in one private memory layer, independent of which model you chat with."
         path="/memory"
       />
@@ -879,7 +879,7 @@ export default function MemoryPage() {
                   Switch models. Keep the context.
                 </Typography>
                 <Typography sx={LEAD_COPY}>
-                  Tell one model. Pick up with another. Hey Open brings the right context with you, so you don’t have to explain everything again.
+                  Tell one model. Pick up with another. HeyOpen brings the right context with you, so you don’t have to explain everything again.
                 </Typography>
               </Box>
             </Reveal>

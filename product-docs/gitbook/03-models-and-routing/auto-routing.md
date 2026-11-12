@@ -1,6 +1,6 @@
 # Auto routing and token optimization
 
-Auto routing is Hey Open's approach to choosing a model based on the request instead of sending every task to the same high-cost model. The website also describes context reuse and pruning as methods to reduce inference overhead.
+Auto routing is HeyOpen's approach to choosing a model based on the request instead of sending every task to the same high-cost model. The website also describes context reuse and pruning as methods to reduce inference overhead.
 
 ## Why routing matters
 

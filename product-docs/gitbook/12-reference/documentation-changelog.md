@@ -2,14 +2,14 @@
 
 ## Version 1.0 | 5 November 2026
 
-Initial GitBook documentation structure created from the publicly accessible Hey Open homepage, subpages, live chat shell, Privacy Policy, and Terms of Service.
+Initial GitBook documentation structure created from the publicly accessible HeyOpen homepage, subpages, live chat shell, Privacy Policy, and Terms of Service.
 
 ### Coverage
 
 - Getting started and user journeys.
 - Conversation, model selection, and Auto routing.
 - Multimodal generation and Universal Memory.
-- Consensus Mode, privacy controls, and data handling.
+- Compare, privacy controls, and data handling.
 - Subscriptions, payment methods, credits, and account management.
 - API examples, integration guidance, enterprise solutions, and ecosystem concepts.
 - Troubleshooting, FAQs, and support.
