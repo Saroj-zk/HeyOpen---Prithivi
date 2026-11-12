@@ -148,7 +148,11 @@ export default function HeroSection() {
               component="img"
               src="/brand/heyopen-wordmark.png"
               alt="HeyOpen"
-              sx={{ width: 'auto', height: { xs: 52, sm: 64, md: 80 }, objectFit: 'contain' }}
+              /* Sized to the headline it replaced. That h1 was Inter 700 at
+                 28/36/44px, whose cap height is 21/27/32px; the "H" in this
+                 asset is 0.818 of its height, so these are the heights that
+                 set the logo at the same cap height as the old text. */
+              sx={{ width: 'auto', height: { xs: 26, sm: 33, md: 40 }, objectFit: 'contain' }}
             />
           </Typography>
         </Box>
