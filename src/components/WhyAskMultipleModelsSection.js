@@ -574,7 +574,7 @@ export default function WhyAskMultipleModelsSection() {
             component="button"
             onClick={() => {
               if (typeof window !== 'undefined') {
-                window.open('https://ais.openledger.xyz/chat', '_blank', 'noopener,noreferrer');
+                window.open('https://heyopen.ai/app', '_blank', 'noopener,noreferrer');
               }
             }}
             sx={{

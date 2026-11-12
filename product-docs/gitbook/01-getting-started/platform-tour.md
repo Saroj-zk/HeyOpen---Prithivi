@@ -10,7 +10,7 @@ _The HeyOpen chat screen, signed in. Account identifiers in the screenshots are 
 | Destination | Purpose |
 | --- | --- |
 | [HeyOpen website](https://hey-open.vercel.app/) | Product capabilities, positioning, models, pricing messaging, and entry points |
-| [Chat application](https://ais.openledger.xyz/chat) | Conversation interface and authenticated product functions |
+| [Chat application](https://heyopen.ai/app) | Conversation interface and authenticated product functions |
 | [Models](https://hey-open.vercel.app/models) | Provider catalog and model descriptions |
 | [Universal Memory](https://hey-open.vercel.app/memory) | Memory behavior and user controls |
 | [Private AI](https://hey-open.vercel.app/private) | Privacy architecture and product claims |

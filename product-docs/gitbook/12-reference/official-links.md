@@ -5,7 +5,7 @@ This page consolidates the publicly available source destinations used to draft 
 ## Product
 
 - [HeyOpen homepage](https://hey-open.vercel.app/)
-- [Chat application](https://ais.openledger.xyz/chat)
+- [Chat application](https://heyopen.ai/app)
 - [Models catalog](https://hey-open.vercel.app/models)
 - [Universal Memory](https://hey-open.vercel.app/memory)
 - [Private AI](https://hey-open.vercel.app/private)

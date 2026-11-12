@@ -9,7 +9,7 @@ import { BrandTile } from '@/components/ui/LedgerUI';
 
    Values here are the app's own rather than the site's tokens, because the
    point is that this reads as the product and not as the page around it. */
-const APP = 'https://ais.openledger.xyz/chat';
+const APP = 'https://heyopen.ai/app';
 
 const D = {
   page: '#09090B',

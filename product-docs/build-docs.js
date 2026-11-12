@@ -282,7 +282,7 @@ const about = doc(
       [
         ['Product brand', 'HeyOpen'],
         ['Network referenced', 'OpenLedger'],
-        ['Web application', 'ais.openledger.xyz/chat'],
+        ['Web application', 'heyopen.ai/app'],
         ['Support, billing, privacy', 'support@heyopen.ai'],
         ['Enterprise and custom-branded AI', 'marketing@heyopen.ai'],
         ['Legal entity and registered address', [{ ph: 'CONFIRM: entity name and registered address once the Terms placeholders are filled' }]],
@@ -640,7 +640,7 @@ const started = doc(
 
     H1('2. Creating an account'),
     P([ 'Two entry descriptions currently exist and they do not agree. The website says a visitor can start without creating an account. The application presents Connect Wallet before authenticated details appear. A guest session, a standard account and a wallet-linked identity may differ in how long they persist, how they recover and what they can buy.' ]),
-    ...STEP(1, 'Open the application', [ 'Go to ais.openledger.xyz/chat and read the entry screen it actually shows.' ]),
+    ...STEP(1, 'Open the application', [ 'Go to heyopen.ai/app and read the entry screen it actually shows.' ]),
     ...STEP(2, 'Choose how to sign in', [ 'If wallet connection is requested, pick a wallet you control, confirm the domain and the permissions, and approve only an authentication signature you understand. If email or federated login is offered, complete its verification. Available methods: ', { ph: 'CONFIRM: the real list of sign-in options, for example wallet, Google, Apple, email' }, '.' ]),
     ...STEP(3, 'Verify if asked', [ 'Some accounts may need verification before full access. ', { ph: 'CONFIRM: whether verification exists, what it unlocks, and whether an unverified account is limited' }, '.' ]),
     ...STEP(4, 'Check the workspace reopens', [ 'Sign out and return. Confirm the same identity opens the same workspace with your history intact.' ]),

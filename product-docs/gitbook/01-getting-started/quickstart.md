@@ -4,7 +4,7 @@ This quickstart gets you from opening HeyOpen to receiving and refining your fir
 
 ## Step 1. Open HeyOpen
 
-Go to the [chat application](https://ais.openledger.xyz/chat). The website promotes a way to begin without an account, although some models and paid actions may still require authentication.
+Go to the [chat application](https://heyopen.ai/app). The website promotes a way to begin without an account, although some models and paid actions may still require authentication.
 
 ## Step 2. Choose how to start
 

@@ -632,7 +632,7 @@ export default function MemoryPage() {
 
                 <Box
                   component="a"
-                  href="https://ais.openledger.xyz/chat"
+                  href="https://heyopen.ai/app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -1386,7 +1386,7 @@ export default function MemoryPage() {
               >
                 <Box
                   component="a"
-                  href="https://ais.openledger.xyz/chat"
+                  href="https://heyopen.ai/app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={getPrimaryCtaSx(isDark)}

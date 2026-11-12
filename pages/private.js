@@ -10,7 +10,7 @@ import { useThemeMode } from '@/context/ThemeContext';
 import PageMeta from '@/components/PageMeta';
 
 const ORANGE = '#FF6600';
-const CHAT_URL = 'https://ais.openledger.xyz/chat';
+const CHAT_URL = 'https://heyopen.ai/app';
 
 /* One vertical scale for the whole page, so every band and row agrees. */
 const SECTION_PY = { xs: 8, md: 12 }; // padding inside each section band

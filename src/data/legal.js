@@ -65,9 +65,11 @@
    ---------------------------------------------------------------------
 
    1. Domain. Both documents give the website as heyopen.ai and the
-      contact address as support@heyopen.ai. This site is served from
-      openledger.xyz; its enterprise contact is now marketing@heyopen.ai,
-      so the addresses agree and only the domain differs.
+      contact address as support@heyopen.ai. The enterprise contact is
+      marketing@heyopen.ai and the application is now linked as
+      heyopen.ai/app, so those agree. What has not moved is this
+      marketing site itself, still served from and declared canonical at
+      openledger.xyz. That is the one address left to change.
    2. Spelling of the name. SETTLED. Both documents define the short
       form as "HeyOpen" and use it throughout, and the site now writes
       the brand as one word everywhere, so the entity-name slots were
@@ -92,7 +94,7 @@
    Note on scope: this repository is the marketing site. It holds no
    analytics, no wallet library and no authentication code. Anything
    either document says about what the app does is a question for
-   whoever owns ais.openledger.xyz.
+   whoever owns the application at heyopen.ai/app.
 
    ===================================================================== */
 
