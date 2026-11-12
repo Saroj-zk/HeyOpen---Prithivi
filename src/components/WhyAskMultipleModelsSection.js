@@ -7,7 +7,7 @@ import { BrandTile } from '@/components/ui/LedgerUI';
 import { useReveal, revealSx } from '@/utils/reveal';
 
 
-/* Light theme values from ais.openledger.xyz, so the panel reads as the app
+/* Light theme values from the live app, so the panel reads as the app
    rather than as a marketing illustration. */
 const C = {
   font: '"Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif',
@@ -49,7 +49,7 @@ const T = {
 };
 const LOOP = 17500;
 
-/* The first entry is the judge, which is how Consensus mode marks it. */
+/* The first entry is the judge, which is how Compare marks it. */
 const PANEL = [
   { code: 'AN', name: 'Claude Opus 5', web: true, secs: '3.3', pick: 'Manten Sushi', note: 'Quality and value without premium pricing.' },
   { code: 'OA', name: 'GPT 5.6 Sol', web: false, secs: '4.1', pick: 'Sushi Tokyo Ten', note: 'Good value omakase, central location.' },
@@ -172,7 +172,7 @@ export default function WhyAskMultipleModelsSection() {
   /* Each model starts only once the one before it has finished. */
   const answerLen = (i, text) =>
     Math.round(ramp(T.answerStart + i * T.answerStep, T.answerSpan) * text.length);
-  const consensus = t >= T.pickClose;
+  const compare = t >= T.pickClose;
   const summaryLen = Math.round(ramp(T.summaryStart, T.summarySpan) * SUMMARY.length);
   const analysisLen = Math.round(ramp(T.analysisStart, T.analysisSpan) * ANALYSIS.length);
 
@@ -182,7 +182,7 @@ export default function WhyAskMultipleModelsSection() {
     <Box
       ref={sectionRef}
       component="section"
-      id="consensus-mode"
+      id="compare"
       data-snap
       sx={{
         position: 'relative',
@@ -205,14 +205,14 @@ export default function WhyAskMultipleModelsSection() {
         <Box ref={headRef} sx={{ textAlign: 'center', mb: { xs: 3, md: 5 }, ...revealSx(headShown) }}>
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.8, mb: 1 }}>
             <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.12em', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
-              Multi-Model Consensus
+              Multi-Model Compare
             </Typography>
           </Box>
           <Typography variant="h2" sx={{ fontWeight: 800, fontSize: { xs: '2rem', md: '3rem', lg: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: 'var(--text-heading)', mb: 2 }}>
             Ask four models. Get one answer.
           </Typography>
           <Typography sx={{ color: 'var(--text-secondary)', fontSize: { xs: '1rem', md: '1.125rem' }, lineHeight: 1.6, maxWidth: 600, mx: 'auto' }}>
-            Ask once and get four perspectives. Consensus mode compares the responses and brings the best thinking together in one clear answer.
+            Ask once and get four perspectives. Compare puts the responses side by side and brings the best thinking together in one clear answer.
           </Typography>
         </Box>
 
@@ -253,7 +253,7 @@ export default function WhyAskMultipleModelsSection() {
                     color: C.text,
                   }}
                 >
-                  Hey Open..
+                  HeyOpen..
                 </Typography>
                 <Typography sx={{ mt: 1.75, fontSize: { xs: '0.85rem', md: '0.92rem' }, lineHeight: 1.6, color: C.textSecondary }}>
                   A private, multi-model AI experience
@@ -460,8 +460,8 @@ export default function WhyAskMultipleModelsSection() {
                 >
                   {typedLen > 0 && !sent
                     ? (<>{QUESTION.slice(0, typedLen)}{typedLen < QUESTION.length && <Caret />}</>)
-                    : consensus
-                      ? 'Ask Consensus mode…'
+                    : compare
+                      ? 'Ask Compare…'
                       : 'Send a message\u2026  (@ to mention, / for commands)'}
                 </Typography>
                 <Box sx={{ display: 'flex', color: C.muted, flexShrink: 0 }}>
@@ -475,11 +475,11 @@ export default function WhyAskMultipleModelsSection() {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 1.4, pb: 1.4 }}>
-                {consensus ? (
+                {compare ? (
                   <>
                     <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.6, px: 1, py: 0.45, borderRadius: '9999px', backgroundColor: C.chip }}>
                       <Scales size={12} color={C.textSecondary} />
-                      <Typography sx={{ fontSize: '0.76rem', color: C.text }}>Consensus</Typography>
+                      <Typography sx={{ fontSize: '0.76rem', color: C.text }}>Compare</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.35, ml: 0.3 }}>
                       {PANEL.map((m) => (
@@ -566,10 +566,10 @@ export default function WhyAskMultipleModelsSection() {
         {/* BOTTOM CAPTION & CTA */}
         <Box ref={footRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: { xs: 3, md: 4 }, gap: 2, ...revealSx(footShown) }}>
           <Typography sx={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: { xs: '0.95rem', md: '1.05rem' }, fontWeight: 500 }}>
-            A verifiable way to query frontier AI and get consensus truth.
+            A verifiable way to query frontier AI and see where the models agree.
           </Typography>
 
-          {/* Try Consensus Button */}
+          {/* Try Compare Button */}
           <Box
             component="button"
             onClick={() => {
@@ -615,7 +615,7 @@ export default function WhyAskMultipleModelsSection() {
               },
             }}
           >
-            Try Consensus Now
+            Try Compare Now
             <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 18, height: 18 }}>
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />

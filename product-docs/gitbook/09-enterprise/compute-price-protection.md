@@ -1,6 +1,6 @@
 # Compute cost protection for enterprises
 
-The Hey Open Enterprise page describes an approach intended to make enterprise compute costs more predictable. It combines sourcing compute capacity with financial protection against certain price movements.
+The HeyOpen Enterprise page describes an approach intended to make enterprise compute costs more predictable. It combines sourcing compute capacity with financial protection against certain price movements.
 
 ## The business problem
 

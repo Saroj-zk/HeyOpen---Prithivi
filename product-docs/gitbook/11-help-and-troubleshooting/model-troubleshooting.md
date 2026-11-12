@@ -20,7 +20,7 @@ Choose a model with an active search capability, where available, and request re
 
 ## Different models disagree
 
-This is normal. Review assumptions, check primary sources, and consider Consensus Mode for comparative analysis. Agreement is not proof.
+This is normal. Review assumptions, check primary sources, and consider Compare for comparative analysis. Agreement is not proof.
 
 ## Slow or failed generation
 

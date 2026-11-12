@@ -1,6 +1,6 @@
 # Enterprise onboarding checklist
 
-Use this checklist to plan a Hey Open enterprise evaluation. Exact provisioning steps and product configuration are defined through the commercial engagement, not through the publicly accessible app.
+Use this checklist to plan a HeyOpen enterprise evaluation. Exact provisioning steps and product configuration are defined through the commercial engagement, not through the publicly accessible app.
 
 ## Discovery
 

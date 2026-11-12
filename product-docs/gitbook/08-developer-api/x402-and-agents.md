@@ -1,6 +1,6 @@
 # x402-ready agents and payments
 
-Hey Open markets an agent-ready model interface and describes x402 as a way to support payment-enabled agent interactions. **The public site does not establish that every agent payment workflow is live or document an executable x402 integration contract.**
+HeyOpen markets an agent-ready model interface and describes x402 as a way to support payment-enabled agent interactions. **The public site does not establish that every agent payment workflow is live or document an executable x402 integration contract.**
 
 ## Why agents need a payment layer
 
@@ -15,7 +15,7 @@ An autonomous application may call paid models, invoke tools, purchase data, or 
 5. The tool or model returns the requested result.
 6. The application records cost, output, and execution status.
 
-This is a conceptual architecture, **not** a validated sequence of currently deployed Hey Open x402 endpoints.
+This is a conceptual architecture, **not** a validated sequence of currently deployed HeyOpen x402 endpoints.
 
 ## What to confirm before implementing
 

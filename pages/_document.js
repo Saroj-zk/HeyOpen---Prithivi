@@ -10,11 +10,19 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <meta name="theme-color" content={theme.palette.background.default} />
-          <link rel="shortcut icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" href="/favicon.ico" />
+          {/* The tab icon is the omega on its own. Everywhere a reader can
+              see the brand it is the whole wordmark, but this slot is
+              square and as small as 16px, where a 4.5:1 wordmark is
+              unreadable. Each size is cut from the master rather than
+              left to the browser to shrink, and favicon.ico exists so the
+              browser's own unprompted request for it does not 404. */}
+          <link rel="icon" href="/brand/heyopen-mark-32.png" sizes="32x32" type="image/png" />
+          <link rel="icon" href="/brand/heyopen-mark.png" sizes="256x256" type="image/png" />
+          <link rel="apple-touch-icon" href="/brand/heyopen-mark-180.png" sizes="180x180" />
+          <link rel="alternate icon" href="/favicon.ico" sizes="48x48" />
           {/* Open Graph base tags — overridden per-page */}
           <meta property="og:type" content="website" />
-          <meta property="og:site_name" content="Hey Open" />
+          <meta property="og:site_name" content="HeyOpen" />
           <meta property="og:image" content="https://openledger.xyz/og-image.png" />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />

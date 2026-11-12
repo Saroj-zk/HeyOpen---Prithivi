@@ -1,6 +1,6 @@
 # Your data rights and privacy settings
 
-Privacy rights depend on applicable law and the nature of the data involved. The Hey Open Privacy Policy describes possible rights to access, correct, delete, restrict, object to processing, withdraw consent, and unsubscribe from marketing communications.
+Privacy rights depend on applicable law and the nature of the data involved. The HeyOpen Privacy Policy describes possible rights to access, correct, delete, restrict, object to processing, withdraw consent, and unsubscribe from marketing communications.
 
 ## Manage what you control in the application
 
@@ -22,6 +22,6 @@ Users may be able to unsubscribe from promotional communications. Administrative
 
 ## Third-party actions
 
-A privacy request to Hey Open does not automatically delete information lawfully retained by independent model providers, connected applications, payment processors, or blockchain networks. Those parties may have separate processes.
+A privacy request to HeyOpen does not automatically delete information lawfully retained by independent model providers, connected applications, payment processors, or blockchain networks. Those parties may have separate processes.
 
 **Source of authority:** [Official Privacy Policy](https://hey-open.vercel.app/privacy-policy). This guide summarizes it and does not replace the policy.

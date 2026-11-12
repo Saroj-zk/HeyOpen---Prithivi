@@ -119,7 +119,7 @@ function Callout({ tag, tone = 'note', children }) {
 /* The comparison total. On a phone the table scrolls sideways and the
    "Paid separately" header goes with it, so the strike carries the
    meaning the header would have: this is the eight-subscription total
-   you do not pay, not a former price for Hey Open. The row label says
+   you do not pay, not a former price for HeyOpen. The row label says
    so too, for anyone the styling does not reach. */
 function Strike({ children }) {
   return (
@@ -298,24 +298,24 @@ const SECTIONS = [
   {
     part: 'Start here',
     id: 'what',
-    nav: 'What is Hey Open?',
-    title: 'What is Hey Open?',
+    nav: 'What is HeyOpen?',
+    title: 'What is HeyOpen?',
     body: (
       <>
         <Para>
-          Hey Open is a private, multi-model AI workspace. One app gives you 133 AI models, a privacy
+          HeyOpen is a private, multi-model AI workspace. One app gives you 133 AI models, a privacy
           level you set per conversation, a memory that follows you between models, and tools for
           images, video and audio in the same place.
         </Para>
         <Para>
-          <Em>Available on:</Em> web at <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>ais.openledger.xyz</Box>.
+          <Em>Available on:</Em> <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>the web app</Box>.
           The app opens straight into a chat. You can browse the whole catalogue without an account;
           sending a message requires signing in.
         </Para>
-        <Shot src="/help/a01-chat-signed-in.jpg" alt="The Hey Open chat screen signed in, with the sidebar, composer and model picker." caption="The chat screen, signed in. The sidebar foot shows the wallet, the plan and the credits left." />
+        <Shot src="/help/a01-chat-signed-in.jpg" alt="The HeyOpen chat screen signed in, with the sidebar, composer and model picker." caption="The chat screen, signed in. The sidebar foot shows the wallet, the plan and the credits left." />
         <H3>What makes it different</H3>
         <Cards items={[
-          ['Every model, one subscription', 'Paying for ChatGPT, Claude, Gemini and the rest separately comes to about $165 a month. Hey Open is $20.'],
+          ['Every model, one subscription', 'Paying for ChatGPT, Claude, Gemini and the rest separately comes to about $165 a month. HeyOpen is $12.99.'],
           ['Privacy per conversation', 'A filter in the header decides which models you may use, by how strongly each protects the prompt.'],
           ['Speed or cost, per request', 'A request mode on the composer biases the gateway toward the cheapest or the fastest providers.'],
           ['One memory across models', 'Saved details are reused in new chats, whichever model answers.'],
@@ -334,7 +334,7 @@ const SECTIONS = [
       <>
         <Para>You do not need an account to look around. You do need one to send a message.</Para>
         <Steps items={[
-          ['Open the app', <>Go to <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>ais.openledger.xyz/chat</Box>. It opens on the chat screen.</>],
+          ['Open the app', <>Open <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>the web app</Box>. It opens on the chat screen.</>],
           ['Set your privacy level, if it matters', 'Click Privacy in the header and pick Min, Mid or Max. Leave it on Min for ordinary work.'],
           ['Choose a model, or leave it on Auto', 'The pill under the composer reads Auto, which picks a model per message. Click it to choose one yourself.'],
           ['Type your question', 'Be specific about what you want back. Instead of "write a launch post", try "write a 400 word launch announcement for enterprise IT buyers, with a headline, a subhead and three benefits".'],
@@ -377,7 +377,7 @@ const SECTIONS = [
           head={['Group', 'Item', 'What it does', 'State']}
           rows={[
             ['Workspace', 'New Chat', 'Starts a fresh conversation', <Pill>Live</Pill>],
-            ['', 'Consensus', 'Ask several models at once', <Pill tone="a">Pro</Pill>],
+            ['', 'Compare', 'Ask several models at once', <Pill tone="a">Pro</Pill>],
             ['', 'Home', 'Quick actions and the community feed', <Pill>Live</Pill>],
             ['', 'More', 'Agents, Community Feed and API', <Pill>Live</Pill>],
             ['AI Studio', 'Model Factory', 'Customise and train your own models', <Pill tone="s">Soon</Pill>],
@@ -426,7 +426,7 @@ const SECTIONS = [
     body: (
       <>
         <Para>
-          Hey Open holds 133 models. The picker in the app is the source of truth; what follows is a
+          HeyOpen holds 133 models. The picker in the app is the source of truth; what follows is a
           snapshot taken on 4 November 2026.
         </Para>
         <Steps items={[
@@ -554,7 +554,7 @@ const SECTIONS = [
         <H3>Token optimisation</H3>
         <Para>
           A request carries more than your message: the instruction, the chat history, retrieved
-          memory, tool definitions and any media. Hey Open trims duplicated or irrelevant material
+          memory, tool definitions and any media. HeyOpen trims duplicated or irrelevant material
           and reuses context where it can, which the site describes as up to 60% fewer tokens billed
           on a typical example.
         </Para>
@@ -568,28 +568,28 @@ const SECTIONS = [
   },
   {
     part: 'Chatting',
-    id: 'consensus',
-    nav: 'Consensus Mode',
-    title: 'Consensus Mode',
+    id: 'compare',
+    nav: 'Compare',
+    title: 'Compare',
     body: (
       <>
         <Para>
-          Consensus sends one prompt to several models and brings their answers together, so you can
+          Compare sends one prompt to several models and brings their answers together, so you can
           see where they disagree before you act.
         </Para>
-        <Shot src="/help/a12-consensus.jpg" alt="The Consensus sign-in gate." caption="Consensus requires signing in, and a Pro plan." />
+        <Shot src="/help/a12-consensus.jpg" alt="The Compare sign-in gate." caption="Compare requires signing in, and a Pro plan." />
         <Callout tag="Availability" tone="warn">
-          Consensus is available to members on the Pro plan and above, and requires signing in.
+          Compare is available to members on the Pro plan and above, and requires signing in.
           Opening it without an account shows a sign-in gate.
         </Callout>
         <Steps items={[
-          ['Open Consensus from the sidebar', 'It carries a NEW badge in the Workspace group.'],
+          ['Open Compare from the sidebar', 'It carries a NEW badge in the Workspace group.'],
           ['Ask a question worth the cost', 'Use it for a decision, a review or a trade-off analysis, not for everyday questions.'],
           ['Read the individual answers first', 'The disagreements are the useful part. A combined answer can hide them.'],
           ['Verify anything that matters', 'Agreement between models is not proof. They can share training data and repeat the same error.'],
         ]} />
         <Callout tag="Cost" tone="warn">
-          Every participating model consumes usage. One Consensus question can cost several times a
+          Every participating model consumes usage. One Compare question can cost several times a
           single-model turn, which makes it the easiest way to spend a lot of credits by accident.
         </Callout>
       </>
@@ -824,8 +824,8 @@ const SECTIONS = [
     body: (
       <>
         <Para>
-          Hey Open Pro is $20 a month. The comparison the site makes is against paying for each AI
-          separately.
+          HeyOpen Pro is $12.99 a month. The comparison the site makes is against paying for each
+          AI separately.
         </Para>
         <Table
           head={['Paid separately', 'Per month']}
@@ -839,7 +839,7 @@ const SECTIONS = [
             ['GitHub Copilot', '$10'],
             ['Runway Gen-2', '$15'],
             ['Total, bought separately', <Strike>$165</Strike>],
-            ['Hey Open Pro', '$20'],
+            ['HeyOpen Pro', '$12.99'],
           ]}
           widths={['68%', '32%']}
         />
@@ -849,11 +849,11 @@ const SECTIONS = [
           a monthly renewal at US$40.00 and an allowance of 40 credits a period.
         </Para>
         <Table
-          head={['', 'Hey Open Pro', 'HeyOpen Pro+']}
+          head={['', 'HeyOpen Pro', 'HeyOpen Pro+']}
           rows={[
-            ['Price', '$20 per month, as advertised on the site', 'US$40.00 per month, as shown at renewal'],
+            ['Price', '$12.99 per month, as advertised on the site', 'US$40.00 per month, as shown at renewal'],
             ['Credit allowance', 'Not shown on the site', '40 credits a period'],
-            ['Consensus Mode', 'Included', 'Included'],
+            ['Compare', 'Included', 'Included'],
           ]}
           widths={['24%', '38%', '38%']}
         />
@@ -863,7 +863,7 @@ const SECTIONS = [
           ['Unified context and memory', 'One memory across every model.'],
           ['Zero hidden API costs', 'No separate per-provider bill.'],
           ['Unlimited text and image generation', 'Subject to the caveat below.'],
-          ['Consensus Mode', 'Pro plan and above.'],
+          ['Compare', 'Pro plan and above.'],
           ['Cancel anytime', 'No lock-in, per the site.'],
         ]} />
         <Callout tag="What unlimited covers" tone="warn">
@@ -1016,7 +1016,7 @@ const SECTIONS = [
     body: (
       <>
         <Para>
-          Hey Open pays a commission on users you refer who go on to subscribe. Both ways in are
+          HeyOpen pays a commission on users you refer who go on to subscribe. Both ways in are
           in the account menu at the foot of the sidebar: Copy referral link hands you your link
           straight away, and Affiliate opens the programme page with the terms, a dashboard and an
           earnings calculator.
@@ -1084,104 +1084,14 @@ const SECTIONS = [
         </Para>
         <H3>Custom-branded products</H3>
         <Para>
-          Hey Open also powers AI products that ship under the customer&rsquo;s own name, in three
+          HeyOpen also powers AI products that ship under the customer&rsquo;s own name, in three
           shapes: a branded AI workspace, an enterprise model API, and an agent platform. Compute
           costs behind them can be hedged with compute-price options so a quoted rate holds.
         </Para>
       </>
     ),
   },
-  {
-    /* Held back: the product is going to market as a web2 subscription,
-       so nothing about the token appears in the Help Center. Remove
-       `draft` to publish it again. */
-    draft: true,
-    part: 'Enterprise',
-    id: 'token',
-    nav: '$OPEN',
-    title: '$OPEN',
-    body: (
-      <>
-        <Para>
-          $OPEN is the capital asset behind the product. The published model is that real usage
-          generates revenue, a share of the net revenue buys $OPEN on the open market, and those
-          tokens are burned.
-        </Para>
-        <Table
-          head={['Line', 'Revenue source']}
-          rows={[
-            ['01', 'Enterprise inference and API'],
-            ['02', 'Hey Open subscriptions'],
-            ['03', 'Pay-as-you-go inference'],
-            ['04', 'Compute agent marketplace'],
-          ]}
-          widths={['14%', '86%']}
-        />
-        <H3>What comes out before the buyback</H3>
-        <Table
-          head={['Deduction', 'What it covers']}
-          rows={[
-            ['Inference', 'The compute behind every call'],
-            ['Platform costs', 'The cost of running the platform'],
-            ['Reserves', 'Held back, not spent'],
-          ]}
-          widths={['26%', '74%']}
-        />
-        <Para>
-          A portion of what remains funds the buyback, and the tokens bought are burned.
-        </Para>
-        <H3>The Token Dashboard</H3>
-        <Para>
-          AI Studio, Token Dashboard is where the staking terms are published. It opens without a
-          wallet connected; Connect Wallet is what reveals a position.
-        </Para>
-        <Table
-          head={['Term', 'What is published']}
-          rows={[
-            ['Annual yield', '6%, paid in $OPEN'],
-            ['Hey Open Pro', 'Free while $1,000 worth of $OPEN is staked'],
-            ['Unstaking', 'A 7 day cooling period before tokens are released'],
-          ]}
-          widths={['26%', '74%']}
-        />
-        <Para>
-          The same page carries the burn tracker: total $OPEN burned against the 1B fixed supply,
-          burn volume over 1W, 1M, 3M and 1Y, a buyback breakdown, and a live-looking feed of
-          individual burn events with their source and status.
-        </Para>
-        <Callout tag="The figures shown are samples" tone="stop">
-          The Token Dashboard is in the product, but its numbers are labelled Sample data and it
-          carries no live transactions. Staking is not yet something you can do. Read the yield,
-          the burn totals and the buyback charts as an illustration of how the programme is meant
-          to work, never as your own position.
-        </Callout>
-      </>
-    ),
-  },
 
-  {
-    /* Held back until $HEY is announced. Remove `draft` to publish; the
-       section then appears in the rail and the article in its order. */
-    draft: true,
-    part: 'Enterprise',
-    id: 'hey',
-    nav: '$HEY',
-    title: '$HEY',
-    body: (
-      <>
-        <Para>
-          $HEY is described as a compute credit. Staked $OPEN mints it, and holding it pays out
-          compute credit daily, usable against any model on the network. It is accounted for
-          separately from $OPEN: credits already claimed in $HEY come out of revenue before the
-          share that funds the $OPEN buyback is calculated.
-        </Para>
-        <Callout tag="Not available yet" tone="stop">
-          $HEY is a published design, not a feature you can use. There is nothing to mint, hold
-          or spend in the product today.
-        </Callout>
-      </>
-    ),
-  },
 
   /* ---------------- 6. HELP ---------------- */
   {
@@ -1222,7 +1132,7 @@ const SECTIONS = [
           rows={[
             ['A model has disappeared from the picker', 'Two settings hide models. The privacy filter: on Mid or Max only Private, TEE and E2EE models appear. The request mode: models badged Not in Boost disappear in Boost mode.'],
             ['I cannot send a message', 'Sending requires signing in; browsing the catalogue does not. Click Connect Wallet.'],
-            ['Consensus will not open', 'Consensus requires signing in and a Pro plan. The gate states both.'],
+            ['Compare will not open', 'Compare requires signing in and a Pro plan. The gate states both.'],
             ['The model forgot something from earlier', 'The thread may have outgrown the context window, or trimming removed it. Restate the decisive requirement.'],
             ['A model gave a different answer than last time', 'If the pill reads Auto, two requests can be served by different models. Name a model when you need a reproducible result.'],
             ['A page says Coming Soon', 'Model Factory, Voice Chat and every agent are unavailable in the current build.'],
@@ -1245,8 +1155,8 @@ const SECTIONS = [
     title: 'Frequently asked questions',
     body: (
       <>
-        <FAQ group="Hey Open" items={[
-          ['How is Hey Open different from ChatGPT or Claude?', 'Those are models. Hey Open is the workspace that brings 133 of them together, with one memory and a privacy setting you choose per conversation, so you pick the right model per task instead of reorganising your work around one vendor.'],
+        <FAQ group="HeyOpen" items={[
+          ['How is HeyOpen different from ChatGPT or Claude?', 'Those are models. HeyOpen is the workspace that brings 133 of them together, with one memory and a privacy setting you choose per conversation, so you pick the right model per task instead of reorganising your work around one vendor.'],
           ['Do I need a separate subscription for each model?', 'No. One plan covers the catalogue. What your account can run depends on your plan and provider eligibility.'],
           ['Do I need an account to start?', 'You can open the app, browse all 133 models and open the Image and Audio Tools without an account. Sending a message requires signing in.'],
           ['Can I switch models without losing context?', 'Yes, within a conversation. Different models support different context lengths, so a very long thread may not carry over in full.'],
@@ -1255,7 +1165,7 @@ const SECTIONS = [
           ['What do Min, Mid and Max do?', 'They are a privacy filter, not a speed or cost setting. Min allows every model, Mid allows Private, TEE and E2EE models only, and Max allows TEE and E2EE models only.'],
           ['Is Incognito the same as private?', 'No. Incognito means the provider does not receive your identity. It does not mean the provider stores nothing. Private means zero data retention, and TEE and E2EE are stronger again.'],
           ['Which models are the most private?', 'The nine badged E2EE. The prompt is encrypted on your device and decrypted only inside a verified enclave.'],
-          ['Does Hey Open train on my chats?', 'Hey Open states it does not train its own models on private chats or memory without separate authorisation. What a model provider does with a prompt is governed by that provider’s own terms, which is why the privacy filter exists.'],
+          ['Does HeyOpen train on my chats?', 'HeyOpen states it does not train its own models on private chats or memory without separate authorisation. What a model provider does with a prompt is governed by that provider’s own terms, which is why the privacy filter exists.'],
         ]} />
         <FAQ group="Models and usage" items={[
           ['What is the difference between the privacy filter and request mode?', 'The privacy filter decides which models you may use. Request mode decides which provider serves them, biased toward cost or speed.'],
@@ -1263,7 +1173,7 @@ const SECTIONS = [
           ['How much does video cost?', 'Thirteen video models publish a price per second of output, from $0.02 to $0.28. Ten seconds therefore runs from $0.20 to $2.80.'],
         ]} />
         <FAQ group="Plans" items={[
-          ['Is Consensus Mode free?', 'No. It is available on the Pro plan and above, and requires signing in.'],
+          ['Is Compare free?', 'No. It is available on the Pro plan and above, and requires signing in.'],
           ['Can I cancel any time?', 'Yes. The site states cancel anytime, no lock-in. Cancellation generally takes effect at the end of the current paid period.'],
         ]} />
       </>
@@ -1348,8 +1258,8 @@ export default function HelpPage() {
   return (
     <Box className="help-root" sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-card)' }}>
       <PageMeta
-        title="Help Center | Hey Open"
-        description="How Hey Open works: choosing a model, the privacy filter, request modes, Consensus, memory, images and video, plans, the API and troubleshooting."
+        title="Help Center | HeyOpen"
+        description="How HeyOpen works: choosing a model, the privacy filter, request modes, Compare, memory, images and video, plans, the API and troubleshooting."
         path="/help"
       />
       <PageHeader spacer />
@@ -1503,7 +1413,7 @@ export default function HelpPage() {
             </Typography>
 
             <Typography sx={{ fontSize: '1.06rem', lineHeight: 1.72, color: 'var(--text-secondary)', mb: 0 }}>
-              Everything Hey Open does and how to do it, from your first conversation to your
+              Everything HeyOpen does and how to do it, from your first conversation to your
               account and billing. {PUBLISHED.length} sections: start at the top, or jump to what
               you need.
             </Typography>

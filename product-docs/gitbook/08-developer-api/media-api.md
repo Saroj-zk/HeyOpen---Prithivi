@@ -1,6 +1,6 @@
 # Media and multimodal API capabilities
 
-Hey Open promotes text, image, video, audio, and music capabilities, but the public source material does **not** specify a complete authenticated API schema for generating each media type.
+HeyOpen promotes text, image, video, audio, and music capabilities, but the public source material does **not** specify a complete authenticated API schema for generating each media type.
 
 ## Known and unknown
 

@@ -219,7 +219,7 @@ figure, img { break-inside: avoid; }
 
 const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
-<title>Hey Open | Product and Developer Handbook</title>
+<title>HeyOpen | Product and Developer Handbook</title>
 <style>
 @page { size: A4; margin: 18mm 17mm 16mm; }
 ${CSS}
@@ -232,7 +232,7 @@ ${CSS}
   <h1>Complete Product<br>Documentation</h1>
   <div class="cover-sub">A practical, end-to-end guide to getting started, working with AI
   models, using privacy and memory features, managing subscriptions, building with the API,
-  and understanding the Hey Open ecosystem.</div>
+  and understanding the HeyOpen ecosystem.</div>
   <div class="cover-meta">
     <div><b>Edition 1.0</b>Reviewed ${REVIEWED}</div>
     <div><b>Scope</b>${n} articles &middot; ${sections.length} sections</div>

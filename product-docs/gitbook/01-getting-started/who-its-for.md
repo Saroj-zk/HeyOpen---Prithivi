@@ -1,14 +1,14 @@
-# Who is Hey Open for?
+# Who is HeyOpen for?
 
-Hey Open serves people who want flexibility in their AI workflow without managing every provider separately. You can begin with a simple question and move to specialized models as the task becomes more complex.
+HeyOpen serves people who want flexibility in their AI workflow without managing every provider separately. You can begin with a simple question and move to specialized models as the task becomes more complex.
 
 ## Individuals and everyday users
 
-Use Hey Open to brainstorm, summarize information, prepare drafts, ask follow-up questions, and explore ideas. Auto routing is useful when you care about the result more than the model name. For important information, verify claims against trustworthy sources.
+Use HeyOpen to brainstorm, summarize information, prepare drafts, ask follow-up questions, and explore ideas. Auto routing is useful when you care about the result more than the model name. For important information, verify claims against trustworthy sources.
 
 ## Researchers, students, and analysts
 
-Compare explanations, ask models to challenge an argument, review long-form material within a model's context limit, or use Consensus Mode to see where models agree and disagree. Multi-model agreement is not independent proof of factual accuracy.
+Compare explanations, ask models to challenge an argument, review long-form material within a model's context limit, or use Compare to see where models agree and disagree. Multi-model agreement is not independent proof of factual accuracy.
 
 ## Developers and technical teams
 
@@ -20,7 +20,7 @@ Combine text, images, video, sound, and music across supported models. A typical
 
 ## Businesses
 
-Hey Open promotes managed AI workspaces, custom-branded solutions, inference APIs, and enterprise governance controls. Enterprise deployment, data handling, integrations, and commercial terms must be confirmed directly with the team.
+HeyOpen promotes managed AI workspaces, custom-branded solutions, inference APIs, and enterprise governance controls. Enterprise deployment, data handling, integrations, and commercial terms must be confirmed directly with the team.
 
 ## Agents and automation builders
 

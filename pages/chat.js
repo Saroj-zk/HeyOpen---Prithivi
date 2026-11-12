@@ -8,7 +8,7 @@ export default function ChatPage() {
   return (
     <>
       <PageMeta
-        title="Chat | Hey Open"
+        title="Chat | HeyOpen"
         description="Open a private chat across every supported model, with nothing retained and no account required to start."
         path="/chat"
       />

@@ -4,7 +4,7 @@
 
 The landing site advertises a guest-first chat experience. Some models, account features, and paid actions may require authentication.
 
-## Is Hey Open one AI model?
+## Is HeyOpen one AI model?
 
 No. It is a multi-model platform that connects users to different models and providers through one interface.
 
@@ -36,15 +36,15 @@ The marketing page uses broad unlimited messaging, while the Terms describe vari
 
 The website advertises crypto payments where supported. Confirm the live network, asset, total amount, and renewal behavior at checkout.
 
-## Is Consensus Mode always correct?
+## Is Compare always correct?
 
 No. Multiple models can agree on a mistaken answer. Check important facts independently.
 
-## Can I integrate Hey Open with my application?
+## Can I integrate HeyOpen with my application?
 
 The website shows an OpenAI-compatible chat completion example. Production access and the complete API specification must be confirmed for your account.
 
-## Does Hey Open support x402?
+## Does HeyOpen support x402?
 
 The product discusses x402-ready agent access, but the public sources do not specify a complete live integration contract.
 

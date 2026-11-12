@@ -1,13 +1,13 @@
 # Conversation history and temporary chats
 
-Conversation history is the record of messages and outputs in a chat. Hey Open's privacy page describes conversations being available in the browser rather than as permanent server-side chat history. The marketing interface also illustrates **Temporary Chat**.
+Conversation history is the record of messages and outputs in a chat. HeyOpen's privacy page describes conversations being available in the browser rather than as permanent server-side chat history. The marketing interface also illustrates **Temporary Chat**.
 
 ## What to expect
 
 - A chat thread provides short-term continuity for follow-up questions.
 - Universal Memory stores selected reusable details separately from the thread.
 - Browser-local information may be lost if site storage is cleared, the browser profile changes, or private browsing data is discarded.
-- External providers and media-processing routes may have different temporary retention arrangements even when Hey Open itself does not keep a permanent conversation copy.
+- External providers and media-processing routes may have different temporary retention arrangements even when HeyOpen itself does not keep a permanent conversation copy.
 
 ## Temporary chat
 

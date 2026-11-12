@@ -12,7 +12,7 @@ Review whether your plan was configured for automatic renewal and whether cancel
 
 ## Credit balance looks wrong
 
-Check recent usage and the selected model. Consensus Mode, media features, and certain API or agent workflows may consume more credits than a basic text request. Metering can be reconciled after provider reporting.
+Check recent usage and the selected model. Compare, media features, and certain API or agent workflows may consume more credits than a basic text request. Metering can be reconciled after provider reporting.
 
 ## Credits disappeared or expired
 

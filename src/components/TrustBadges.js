@@ -149,7 +149,7 @@ export default function TrustBadges({ onIosClick, onAndroidClick }) {
                 color: isDark ? 'rgba(255,255,255,0.7)' : 'rgba(15,23,42,0.7)',
               }}
             >
-              Hey Open Mobile
+              HeyOpen Mobile
             </Typography>
           </Box>
           <IconButton
@@ -174,7 +174,7 @@ export default function TrustBadges({ onIosClick, onAndroidClick }) {
                 color: isDark ? '#FFFFFF' : '#0F172A',
               }}
             >
-              Get Hey Open on your phone
+              Get HeyOpen on your phone
             </Typography>
             <Typography
               variant="body2"
@@ -339,7 +339,7 @@ export default function TrustBadges({ onIosClick, onAndroidClick }) {
               </Box>
 
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, fontSize: '1.1rem' }}>
-                {activePlatform === 'ios' ? 'Hey Open for iOS' : 'Hey Open for Android'}
+                {activePlatform === 'ios' ? 'HeyOpen for iOS' : 'HeyOpen for Android'}
               </Typography>
 
               <Box
@@ -411,7 +411,7 @@ export default function TrustBadges({ onIosClick, onAndroidClick }) {
                     <Button
                       size="small"
                       fullWidth
-                      onClick={() => handleSimulateAction('Downloading Hey Open.apk...')}
+                      onClick={() => handleSimulateAction('Downloading HeyOpen.apk...')}
                       startIcon={<DownloadIcon sx={{ fontSize: 16 }} />}
                       sx={{
                         py: 0.75,

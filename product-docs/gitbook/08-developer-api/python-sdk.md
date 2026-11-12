@@ -1,6 +1,6 @@
 # Python integration example
 
-Hey Open's product guide describes an OpenAI-compatible client pattern. The following example uses the common OpenAI Python SDK interface with the **website-advertised base URL**. It has not been validated against a live authenticated account.
+HeyOpen's product guide describes an OpenAI-compatible client pattern. The following example uses the common OpenAI Python SDK interface with the **website-advertised base URL**. It has not been validated against a live authenticated account.
 
 ## Install and configure
 

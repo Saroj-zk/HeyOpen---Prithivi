@@ -1,6 +1,6 @@
 # Agent integration patterns
 
-Hey Open can serve as a model-access layer within an agent workflow. The public product guide illustrates a support agent that routes easy requests to lightweight models and escalates complex cases to stronger ones.
+HeyOpen can serve as a model-access layer within an agent workflow. The public product guide illustrates a support agent that routes easy requests to lightweight models and escalates complex cases to stronger ones.
 
 ## Pattern 1. Intelligent triage
 
@@ -29,4 +29,4 @@ Set per-request budgets and maximum tool-call counts. Capture the final model us
 
 ## Status
 
-The above are design patterns consistent with the advertised platform direction. Integration-specific SDKs, x402 handling, and action schemas must be confirmed before representing them as live Hey Open APIs.
+The above are design patterns consistent with the advertised platform direction. Integration-specific SDKs, x402 handling, and action schemas must be confirmed before representing them as live HeyOpen APIs.

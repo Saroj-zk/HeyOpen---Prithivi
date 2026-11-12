@@ -1,11 +1,11 @@
 # Table of contents
 
-* [Hey Open Documentation](README.md)
+* [HeyOpen Documentation](README.md)
 
 ## Getting Started
 
-* [What is Hey Open?](01-getting-started/what-is-hey-open.md)
-* [Who is Hey Open for?](01-getting-started/who-its-for.md)
+* [What is HeyOpen?](01-getting-started/what-is-heyopen.md)
+* [Who is HeyOpen for?](01-getting-started/who-its-for.md)
 * [Product and navigation tour](01-getting-started/platform-tour.md)
 * [Quickstart: your first AI conversation](01-getting-started/quickstart.md)
 * [Guest sessions, sign-in, and wallets](01-getting-started/guest-and-accounts.md)
@@ -38,14 +38,14 @@
 * [Music generation and usage](04-multimodal-creation/music-generation.md)
 * [Example: create a campaign across modalities](04-multimodal-creation/end-to-end-creative-workflow.md)
 
-## Memory & Consensus
+## Memory & Compare
 
 * [Universal Memory explained](05-universal-memory/overview.md)
 * [Set up Universal Memory](05-universal-memory/memory-setup.md)
 * [Add, review, edit, and delete memories](05-universal-memory/manage-memories.md)
 * [Universal Memory sharing and privacy](05-universal-memory/sharing-and-privacy.md)
 * [Using documents alongside memory](05-universal-memory/memory-with-files.md)
-* [Consensus Mode: multiple model perspectives](05-universal-memory/consensus-mode.md)
+* [Compare: multiple model perspectives](05-universal-memory/compare.md)
 
 ## Privacy & Security
 
@@ -83,7 +83,7 @@
 
 ## Enterprise
 
-* [Hey Open for enterprises](09-enterprise/enterprise-overview.md)
+* [HeyOpen for enterprises](09-enterprise/enterprise-overview.md)
 * [Enterprise workspaces and governance](09-enterprise/governance-and-controls.md)
 * [Custom-branded AI applications](09-enterprise/custom-branded-solutions.md)
 * [Compute cost protection for enterprises](09-enterprise/compute-price-protection.md)

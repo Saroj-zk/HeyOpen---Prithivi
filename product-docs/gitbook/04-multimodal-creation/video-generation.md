@@ -1,6 +1,6 @@
 # Create videos with AI
 
-Video models can help turn a concept, script, or visual direction into generated motion. Hey Open's product guide illustrates a workflow in which a text scene becomes an image and then a moving shot.
+Video models can help turn a concept, script, or visual direction into generated motion. HeyOpen's product guide illustrates a workflow in which a text scene becomes an image and then a moving shot.
 
 ## Prepare a strong video request
 

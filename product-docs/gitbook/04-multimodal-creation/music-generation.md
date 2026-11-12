@@ -1,6 +1,6 @@
 # Music generation and usage
 
-The Hey Open models catalog includes music as a generation modality and lists specialized providers. Use music-generation workflows for original soundtrack ideas, ambient beds, jingles, or other creative outputs where your selected model supports them.
+The HeyOpen models catalog includes music as a generation modality and lists specialized providers. Use music-generation workflows for original soundtrack ideas, ambient beds, jingles, or other creative outputs where your selected model supports them.
 
 ## Write a music brief
 

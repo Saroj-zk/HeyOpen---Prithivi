@@ -1,6 +1,6 @@
 # Key product concepts
 
-These terms appear throughout Hey Open documentation.
+These terms appear throughout HeyOpen documentation.
 
 | Term | Meaning |
 | --- | --- |
@@ -11,7 +11,7 @@ These terms appear throughout Hey Open documentation.
 | Token | A unit used by many language models to measure input or generated text |
 | Context window | The amount of information a model can process in one request |
 | Universal Memory | User-managed context intended to work across supported models |
-| Consensus Mode | A workflow that compares multiple model responses and may synthesize them |
+| Compare | A workflow that compares multiple model responses and may synthesize them |
 | TEE | Trusted Execution Environment, an isolated computing environment available on certain routes |
 | E2EE | End-to-end encryption, a distinct property that should only be claimed for routes that support it |
 | Credits | Platform usage units that may be included in plans or purchased separately |

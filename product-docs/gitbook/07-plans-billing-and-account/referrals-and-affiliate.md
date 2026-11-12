@@ -1,6 +1,6 @@
 # Referrals and the affiliate programme
 
-Hey Open pays a commission for users you refer who go on to subscribe. There are two
+HeyOpen pays a commission for users you refer who go on to subscribe. There are two
 entry points, both in the account menu at the foot of the sidebar: **Copy referral
 link**, which gives you your link straight away, and **Affiliate**, which opens the
 programme page with the terms, a dashboard and an earnings calculator.
@@ -60,8 +60,8 @@ co-marketing.
 > **Two things on this page need settling before it is quoted to partners.**
 >
 > **The programme page names the wrong product.** Its copy refers throughout to
-> "Anuma" rather than Hey Open, and the commission examples are calculated against
-> $9.99 and $19.99 plans that do not match Hey Open's published pricing. The page
+> "Anuma" rather than HeyOpen, and the commission examples are calculated against
+> $9.99 and $19.99 plans that do not match HeyOpen's published pricing. The page
 > appears to carry template copy that was never rebranded.
 >
 > **The duration contradicts itself.** The summary cards say commission is "recurring

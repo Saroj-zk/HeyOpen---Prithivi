@@ -111,7 +111,7 @@ export function ChatStudio() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box sx={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#FF6600', boxShadow: '0 0 8px #FF6600' }} />
             <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '0.02em' }}>
-              Hey Open
+              HeyOpen
             </Typography>
           </Box>
         </Box>

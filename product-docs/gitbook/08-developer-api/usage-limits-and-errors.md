@@ -1,6 +1,6 @@
 # Usage limits, error handling, and reliability
 
-A reliable AI integration must handle delays, rejected requests, variable model availability, and usage limits. Hey Open's Terms allow rate limits, concurrency restrictions, quotas, model-specific restrictions, and changes in availability.
+A reliable AI integration must handle delays, rejected requests, variable model availability, and usage limits. HeyOpen's Terms allow rate limits, concurrency restrictions, quotas, model-specific restrictions, and changes in availability.
 
 ## Recommended client behavior
 
@@ -23,11 +23,11 @@ A reliable AI integration must handle delays, rejected requests, variable model 
 | Provider error | Upstream availability, timeout, or model restriction |
 | Network error | Connectivity, DNS, TLS, and retry policy |
 
-These are general troubleshooting categories, not a verified Hey Open error-code specification.
+These are general troubleshooting categories, not a verified HeyOpen error-code specification.
 
 ## Metering
 
-Usage can depend on model, tokens, media, Consensus Mode, and agent execution. The Terms note that some final charges may differ from estimates or be reconciled after provider reporting.
+Usage can depend on model, tokens, media, Compare, and agent execution. The Terms note that some final charges may differ from estimates or be reconciled after provider reporting.
 
 ## Service levels
 

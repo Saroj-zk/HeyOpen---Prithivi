@@ -80,7 +80,7 @@ const STEPS = [
   {
     step: '02',
     glyph: 'shield',
-    zone: 'openledger',
+    zone: 'heyopen',
     term: 'Secure Routing',
     line: 'SENT SECURELY',
     detail:
@@ -89,11 +89,11 @@ const STEPS = [
   {
     step: '03',
     glyph: 'cpu',
-    zone: 'openledger',
+    zone: 'heyopen',
     term: 'Private Inference',
     line: 'PRIVATELY PROCESSED*',
     detail:
-      'The model answers your question, and Hey Open keeps no copy of it.',
+      'The model answers your question, and HeyOpen keeps no copy of it.',
   },
   {
     step: '04',
@@ -115,7 +115,7 @@ const FLOWS = [
     note: 'Another layer decides what reaches the model.',
   },
   {
-    label: 'Hey Open',
+    label: 'HeyOpen',
     accent: true,
     note: 'Your request goes straight to the model, with no platform filter in between.',
   },
@@ -910,7 +910,7 @@ function Pipeline() {
       >
         {STEPS.map((s, i) => {
           const isActive = i === active;
-          const isOurs = s.zone === 'openledger';
+          const isOurs = s.zone === 'heyopen';
           const passed = i < active;
           const top = isOurs ? LOW : HIGH;
 
@@ -945,7 +945,7 @@ function Pipeline() {
                     color: i === 1 ? 'var(--text-muted)' : ORANGE,
                   }}
                 >
-                  {i === 1 ? 'Hey Open infrastructure' : 'Your device'}
+                  {i === 1 ? 'HeyOpen infrastructure' : 'Your device'}
                 </Typography>
               )}
 
@@ -1174,7 +1174,7 @@ export default function PrivatePage() {
       }}
     >
       <PageMeta
-        title="Private AI — Confidential Intelligence | Hey Open"
+        title="Private AI — Confidential Intelligence | HeyOpen"
         description="Use powerful AI without giving up your privacy. Zero retention, no training, and local-only history by default."
         path="/private"
       />
@@ -1261,7 +1261,7 @@ export default function PrivatePage() {
                   mb: 4.5,
                 }}
               >
-                Ask anything. Your conversations stay private, your prompts aren’t used for training, and Hey Open doesn’t keep your chat history on its servers.
+                Ask anything. Your conversations stay private, your prompts aren’t used for training, and HeyOpen doesn’t keep your chat history on its servers.
               </Typography>
 
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 5 }}>
@@ -1464,7 +1464,7 @@ export default function PrivatePage() {
             <SectionHead
               eyebrow="How it works"
               title="Your request goes in. Your data doesn’t stick around."
-              lede="Ask your question, get your answer, keep your conversation. Hey Open handles the request without keeping a permanent copy on its servers."
+              lede="Ask your question, get your answer, keep your conversation. HeyOpen handles the request without keeping a permanent copy on its servers."
             />
             <Reveal delay={120}>
               <Pipeline />
@@ -1617,7 +1617,7 @@ export default function PrivatePage() {
                       mb: 4,
                     }}
                   >
-                    Choose your model, start a private session, and ask what you want without leaving a permanent chat history on Hey Open’s servers.
+                    Choose your model, start a private session, and ask what you want without leaving a permanent chat history on HeyOpen’s servers.
                   </Typography>
 
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>

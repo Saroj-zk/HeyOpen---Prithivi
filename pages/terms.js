@@ -6,7 +6,7 @@ export default function TermsPage() {
   return (
     <LegalPage
       doc={TERMS_DOC}
-      description="The terms that apply when you use Hey Open."
+      description="The terms that apply when you use HeyOpen."
       path="/terms"
     />
   );

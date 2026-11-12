@@ -138,33 +138,26 @@ export default function HeroSection() {
           py: { xs: 1.5, md: 3 },
         }}
       >
-        {/* Headline with Icon */}
+        {/* The logo is the headline. It used to sit above an h1 that
+            also read "HeyOpen", which opened the page with the name
+            twice; the heading is still an h1 and still has the name, it
+            is just set in the logo and read out of the alt text. */}
         <Box id="hero-headline" sx={{ mb: { xs: 3, sm: 4 }, opacity: 1 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          <Typography component="h1" sx={{ display: 'flex', justifyContent: 'center', m: 0 }}>
             <Box
               component="img"
-              src="/Icons/Frosted logo OPL.png"
-              alt="Hey Open"
-              sx={{ width: { xs: 60, md: 80 }, height: { xs: 60, md: 80 }, objectFit: 'contain' }}
+              src="/brand/heyopen-wordmark.png"
+              alt="HeyOpen"
+              /* Sized to the headline it replaced. That h1 was Inter 700 at
+                 28/36/44px, whose cap height is 21/27/32px; the "H" in this
+                 asset is 0.818 of its height, so these are the heights that
+                 set the logo at the same cap height as the old text. */
+              sx={{ width: 'auto', height: { xs: 26, sm: 33, md: 40 }, objectFit: 'contain' }}
             />
-          </Box>
-          <Typography
-            component="h1"
-            sx={{
-              fontFamily: '"Inter", -apple-system, sans-serif',
-              fontWeight: 700,
-              fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' },
-              lineHeight: 1.2,
-              letterSpacing: '-0.035em',
-              color: 'rgb(71, 85, 105)',
-              display: 'block',
-            }}
-          >
-            Hey Open..
           </Typography>
         </Box>
 
-        {/* Interactive Chat Box matching openledger_chat. The id is what
+        {/* The interactive chat box, matching the app. The id is what
             the intro timeline animates. */}
         <Box id="hero-chat-container">
           <HeroChatBox

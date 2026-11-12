@@ -106,7 +106,7 @@ export default function MemorySettingsPanel() {
       href={APP}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Open Hey Open and manage what it remembers"
+      aria-label="Open HeyOpen and manage what it remembers"
       sx={{
         display: 'block',
         textDecoration: 'none',
@@ -172,7 +172,7 @@ export default function MemorySettingsPanel() {
 
           <Box sx={{ borderRadius: '14px', backgroundColor: '#1A1A1D', p: 1.4, display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box sx={{ minWidth: 0 }}>
-              <Typography sx={{ fontSize: 11.5, fontWeight: 700, color: D.ink, lineHeight: 1.25 }}>Hey Open</Typography>
+              <Typography sx={{ fontSize: 11.5, fontWeight: 700, color: D.ink, lineHeight: 1.25 }}>HeyOpen</Typography>
               <Typography sx={{ fontSize: 10, color: D.inkDim, lineHeight: 1.3 }}>Unlock more capabilities</Typography>
             </Box>
             <Box sx={{ flex: 1 }} />

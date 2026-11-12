@@ -1,6 +1,6 @@
 # Developer API overview
 
-Hey Open's public website describes one API layer for accessing multiple models and integrating AI into applications. The published example uses an **OpenAI-compatible chat completion format** with an `auto` model option.
+HeyOpen's public website describes one API layer for accessing multiple models and integrating AI into applications. The published example uses an **OpenAI-compatible chat completion format** with an `auto` model option.
 
 ## Published integration pattern
 

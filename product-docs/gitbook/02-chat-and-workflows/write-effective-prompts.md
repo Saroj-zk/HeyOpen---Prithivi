@@ -1,6 +1,6 @@
 # Writing effective prompts
 
-You do not need a specialized command language to use Hey Open. Good results usually come from specifying the outcome and giving the model enough relevant context.
+You do not need a specialized command language to use HeyOpen. Good results usually come from specifying the outcome and giving the model enough relevant context.
 
 ## A practical prompt formula
 
@@ -28,7 +28,7 @@ If the initial answer is close, be specific: "Keep the first section, shorten th
 
 ## Work with uncertain information
 
-Ask the model to identify unknowns, distinguish facts from guesses, and cite sources when an external source is available. Model agreement, including Consensus Mode output, is not a substitute for source verification.
+Ask the model to identify unknowns, distinguish facts from guesses, and cite sources when an external source is available. Model agreement, including Compare output, is not a substitute for source verification.
 
 ## Handling sensitive inputs
 

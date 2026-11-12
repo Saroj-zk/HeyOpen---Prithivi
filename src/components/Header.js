@@ -6,8 +6,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { useThemeMode } from '@/context/ThemeContext';
 
-/* Each of these resolves to a section on this page. #consensus and #privacy
-   were in here before and matched nothing. */
+/* Each of these resolves to a section on this page. Two earlier anchors
+   matched nothing and were corrected; #compare is the one the Compare
+   section carries, which was called Consensus Mode until this change. */
 /* Destinations first, then the two anchors on this page. The first three
    are the subpages the second section links out to; before this they were
    only reachable from its EXPLORE links. */
@@ -15,14 +16,9 @@ const NAV_ITEMS = [
   { label: 'Models', href: '/models' },
   { label: 'Memory', href: '/memory' },
   { label: 'Private AI', href: '/private' },
-  /* The staking page is about the token, so it is named after it. */
-  /* $OPEN, Token and Enterprise moved to the OpenLedger site; their
-     pages live in portable/open-pages/. Nothing here links to them. */
-  /* $HEY is hidden from the nav on request. Nothing else in the site links
-     to /hey, so the page is now reachable only by typing the address.
-     Uncomment to put it back. */
-  // { label: '$HEY', href: '/hey' },
-  { label: 'Consensus', href: '#consensus-mode' },
+  /* The token and enterprise pages are served from the other site.
+     Nothing here links to them. */
+  { label: 'Compare', href: '#compare' },
   { label: 'Pricing', href: '#pricing' },
 ];
 
@@ -122,14 +118,9 @@ export default function Header() {
               }}
             >
               <img
-                src="/Open%20Ledegr%20Full%20Black.svg"
-                alt="Hey Open"
-                style={{
-                  height: 20,
-                  width: 'auto',
-                  display: 'block',
-                  filter: isDark ? 'brightness(0) invert(1)' : 'none',
-                }}
+                src="/brand/heyopen-wordmark.png"
+                alt="HeyOpen"
+                style={{ height: 22, width: 'auto', display: 'block' }}
               />
             </Box>
 

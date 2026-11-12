@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { BrandTile } from '@/components/ui/LedgerUI';
 
-/* The app itself, measured off ais.openledger.xyz in dark mode, and then run:
+/* The app itself, measured off the live build in dark mode, and then run:
    the picker opens out of the composer, the list scrolls under a cursor that
    stays put, and the card beside it keeps up with whatever row it lands on.
 
@@ -184,7 +184,7 @@ export default function ProductWindow() {
       href={APP}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Open Hey Open and pick a model"
+      aria-label="Open HeyOpen and pick a model"
       sx={{
         display: 'block',
         textDecoration: 'none',
@@ -235,7 +235,7 @@ export default function ProductWindow() {
                 the app, rather than showing through it. */}
             <Box ref={headRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Typography sx={{ fontFamily: '"Fraunces", Georgia, serif', fontStyle: 'italic', fontWeight: 500, fontSize: { xs: '1.5rem', sm: '2rem', md: '2.6rem' }, lineHeight: 1.18, color: D.ink, textAlign: 'center' }}>
-                Hey Open..
+                HeyOpen..
               </Typography>
               <Typography sx={{ mt: { xs: 1.2, md: 1.8 }, fontSize: { xs: 11, md: 13.5 }, lineHeight: 1.6, color: D.inkMuted, textAlign: 'center', maxWidth: 360 }}>
                 A private, multi-model AI experience with no account required to start.

@@ -1,6 +1,6 @@
 # Encryption, E2EE, and trusted execution
 
-Hey Open's privacy page describes encryption in transit and Trusted Execution Environments (TEEs), and the model mockup distinguishes certain **E2EE** and **TEE** routes. These are different technical concepts.
+HeyOpen's privacy page describes encryption in transit and Trusted Execution Environments (TEEs), and the model mockup distinguishes certain **E2EE** and **TEE** routes. These are different technical concepts.
 
 ## Encryption in transit
 

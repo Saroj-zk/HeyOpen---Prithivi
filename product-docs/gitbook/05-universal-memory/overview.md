@@ -1,6 +1,6 @@
 # Universal Memory explained
 
-Universal Memory is Hey Open's cross-model context feature. It is designed to keep useful details such as preferences, projects, decisions, and constraints available when you work with different supported AI models.
+Universal Memory is HeyOpen's cross-model context feature. It is designed to keep useful details such as preferences, projects, decisions, and constraints available when you work with different supported AI models.
 
 ## Why it matters
 

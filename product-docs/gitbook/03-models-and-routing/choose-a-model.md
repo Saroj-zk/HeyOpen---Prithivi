@@ -1,6 +1,6 @@
 # Choose the right AI model
 
-No single AI model is best at every task. Hey Open lets you pick the one that matches your priority: speed, depth, code quality, context length, media format, or privacy route.
+No single AI model is best at every task. HeyOpen lets you pick the one that matches your priority: speed, depth, code quality, context length, media format, or privacy route.
 
 ## A practical decision process
 

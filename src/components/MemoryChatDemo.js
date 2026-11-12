@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { BrandTile } from '@/components/ui/LedgerUI';
 
-/* Pulled from the live app at ais.openledger.xyz in its light theme, so the
+/* Pulled from the live app in its light theme, so the
    demo reads as the product rather than as the marketing page. The lab()
    tokens there resolve to these sRGB values. Orange is kept only for the
    memory highlights, which are a demo affordance the product has no
@@ -622,18 +622,6 @@ export function MemoryChatDemo() {
         </Box>
 
         {/* The app prints this under the composer. */}
-        <Typography
-          sx={{
-            px: 2,
-            pb: 2,
-            mt: -0.5,
-            textAlign: 'center',
-            fontSize: '0.74rem',
-            color: UI.muted,
-          }}
-        >
-          Hey Open can make mistakes. Verify important information.
-        </Typography>
       </Box>
 
       {/* ── Memory, drawn as the app's own settings pane: the storage note,

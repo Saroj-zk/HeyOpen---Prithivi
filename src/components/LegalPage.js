@@ -310,7 +310,7 @@ export default function LegalPage({ doc, description, path }) {
 
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: 'var(--bg-page)' }}>
-      <PageMeta title={`${doc.title} | Hey Open`} description={description} path={path} />
+      <PageMeta title={`${doc.title} | HeyOpen`} description={description} path={path} />
 
       {/* Separate from PageMeta because this one is conditional: not worth
           indexing while it is a holding page, and not safe to index while it

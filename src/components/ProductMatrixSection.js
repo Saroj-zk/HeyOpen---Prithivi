@@ -52,6 +52,11 @@ const OPTIONS = [
     title: 'Video Gen',
     icon: PlayCircleOutlineRoundedIcon,
     video: '/Videos/AI ecosystem/video gen new.mp4',
+    /* The clip runs 20s and the last nine of them are a decapitation.
+       The blow lands at 11.0s, so it ends on the raised sword instead.
+       timeupdate fires about every 200ms, which is why this is not set
+       at the edge and why the frame is seeked back to exactly it. */
+    stopAt: 10.5,
     overlayEyebrow: 'VIDEO GENERATION',
     overlayTitle: 'High-fidelity video\nand motion synthesis.',
   },
@@ -94,18 +99,30 @@ const GlassCard = ({ children, sx = {}, borderRadius = 24, ...props }) => {
   );
 };
 
-const TabVideo = ({ src, isActive, primed, canPlay, onEnded, fastUntil = 0, fastRate = 1 }) => {
+const TabVideo = ({ src, isActive, primed, canPlay, onEnded, fastUntil = 0, fastRate = 1, stopAt = 0 }) => {
   const videoRef = React.useRef(null);
 
   /* timeupdate fires often enough to switch at the boundary, and reading
      currentTime means the rate resets correctly when the clip loops. */
   const pace = React.useCallback(
     (e) => {
+      /* A clip can be cut short of its own end. Pause first, so the
+         frame it stops on is the one chosen, then hand over exactly as
+         a natural end would, which is what advances the tab. */
+      if (stopAt && e.target.currentTime >= stopAt) {
+        e.target.pause();
+        /* timeupdate is coarse, so pausing alone leaves whichever frame
+           it happened to fire on. Seek back, and the frame it rests on
+           is the one that was chosen. */
+        e.target.currentTime = stopAt;
+        if (onEnded) onEnded();
+        return;
+      }
       if (!fastUntil) return;
       const want = e.target.currentTime < fastUntil ? fastRate : 1;
       if (e.target.playbackRate !== want) e.target.playbackRate = want;
     },
-    [fastUntil, fastRate]
+    [fastUntil, fastRate, stopAt, onEnded]
   );
 
   /* Restart from the top each time the tab is selected, as before. */
@@ -392,6 +409,7 @@ export default function ProductMatrixSection() {
                       onEnded={handleNext}
                       fastUntil={opt.fastUntil}
                       fastRate={opt.fastRate}
+                      stopAt={opt.stopAt}
                     />
                   )}
                 </Box>

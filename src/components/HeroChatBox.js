@@ -28,7 +28,7 @@ const SAMPLE_PROMPTS = [
   'Analyze global weather patterns and atmospheric pressure shifts this week...',
   'Draft an engaging product launch announcement for an autonomous AI model...',
   'Compare DeepSeek R1 vs Claude 3.5 Sonnet on mathematical reasoning...',
-  'Write a Solidity smart contract for automated token staking and rewards...',
+  'Write a Solidity smart contract for a multi-signature treasury...',
   'Hyper-realistic portrait of an astronaut octopus floating in deep space, 8k...',
   'Help me debug a memory leak in my Next.js server-rendered application...',
   'What are the latest breakthroughs in on-chain verifiable AI inference?...',
@@ -329,7 +329,7 @@ export default function HeroChatBox({ prompt, setPrompt }) {
           >
             {/* Left: Automatically Rotating Multi-Model Pill */}
             <Tooltip
-              title="Hey Open dynamically routes prompts across multiple leading AI models"
+              title="HeyOpen dynamically routes prompts across multiple leading AI models"
               placement="top"
             >
               <Box
@@ -497,7 +497,7 @@ export default function HeroChatBox({ prompt, setPrompt }) {
               </Tooltip>
 
               {/* Send Button */}
-              <Tooltip title="Open in Hey Open" placement="top">
+              <Tooltip title="Open in HeyOpen" placement="top">
                 <IconButton
                   onClick={() => handleSend()}
                   aria-label="Send message"

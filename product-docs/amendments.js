@@ -58,6 +58,12 @@ const EDITS = [
     find: '| $HEY | Proposed compute-credit concept described in ecosystem materials |\n',
     replace: '',
   },
+  {
+    file: '07-plans-billing-and-account/plans-and-pricing.md',
+    why: 'Pro is $12.99 a month, 12 November 2026. The site was changed the same day.',
+    find: 'offer displayed at **US$20 per month**',
+    replace: 'offer displayed at **US$12.99 per month**',
+  },
 ];
 
 // ---------------------------------------------------------------------

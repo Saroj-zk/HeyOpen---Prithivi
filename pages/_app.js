@@ -69,8 +69,8 @@ export default function MyApp(props) {
             on render order rather than on the page. The old fallback also
             said "AI-Powered Infrastructure" while the home page said "AI
             Assistant", so the site shipped two descriptions of itself. */}
-        <link rel="icon" href="/openchat_icon_mark.svg" type="image/svg+xml" />
-        <link rel="alternate icon" href="/favicon.ico" />
+        {/* The icons are declared in _document, not here. Both files used
+            to carry them, which shipped every link tag twice. */}
       </Head>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />

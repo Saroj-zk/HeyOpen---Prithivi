@@ -1,6 +1,6 @@
 # Enterprise workspaces and governance
 
-Hey Open's homepage promotes capabilities intended to help IT and operations teams manage organization-wide AI adoption. Exact implementation and availability must be confirmed during enterprise onboarding.
+HeyOpen's homepage promotes capabilities intended to help IT and operations teams manage organization-wide AI adoption. Exact implementation and availability must be confirmed during enterprise onboarding.
 
 ## Control categories
 

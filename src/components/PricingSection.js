@@ -135,25 +135,26 @@ export default function PricingSection() {
             <Box component="span" sx={{ color: '#ff6600' }}>every AI separately.</Box>
           </Typography>
           {/* The figures are the ones the cards below show: eight of them at
-              $165 the hard way against $20 here. $20 is what ChatGPT Plus,
+              $165 the hard way against $12.99 here. $20 is what ChatGPT Plus,
               Claude Pro, Gemini Pro and Perplexity Pro each ask on their own,
-              which is the comparison being drawn. It does not claim to undercut
-              the cheapest, since Copilot is $10 and Runway $15.
+              which is the comparison being drawn, and Pro now sits under all
+              four of them rather than level with them. It still does not claim
+              to undercut the whole list, since Copilot is $10.
 
               What the price includes belongs in the same sentence as the price,
               not on a line of its own: split out, it read as a separate boast
-              rather than as part of what the $20 buys. Unlimited generation is
+              rather than as part of what the price buys. Unlimited generation is
               the claim doing the work here, so it carries the weight in the
               heading ink, and uncensored keeps the orange, since that is the
               one none of those eight will sell at any price. Both are made
               elsewhere on the site already: uncensored on the Private AI and
-              capabilities pages, unlimited on the $20 card below, which still
+              capabilities pages, unlimited on the price card below, which still
               says "messages" and says nothing about images. */}
           <Typography sx={{ color: secondaryText, fontSize: { xs: '1rem', md: '1.125rem' }, fontWeight: 500, maxWidth: 680, mx: 'auto', lineHeight: 1.65, textWrap: 'balance' }}>
             Separate subscriptions to ChatGPT, Claude, Gemini and the rest come to{' '}
             <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$165 a month</Box>.
             All of them, and 200+ more, cost{' '}
-            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$20</Box> here, with{' '}
+            <Box component="span" sx={{ color: '#ff6600', fontWeight: 700 }}>$12.99</Box> here, with{' '}
             <Box component="span" sx={{ color: primaryText, fontWeight: 700 }}>
               unlimited text and image generation
             </Box>
@@ -299,7 +300,7 @@ export default function PricingSection() {
             />
           </Box>
 
-          {/* RIGHT COLUMN: Hey Open Pro Premium Card */}
+          {/* RIGHT COLUMN: HeyOpen Pro Premium Card */}
           <Box ref={rightRef} sx={{ width: { xs: '100%', sm: 380 }, flexShrink: 0, position: 'relative', mt: { xs: 0, lg: '28px' }, ...revealSx(rightShown, 220) }}>
             <style>{`
               @keyframes floatCard {
@@ -372,7 +373,7 @@ export default function PricingSection() {
                     flexWrap: 'wrap', gap: 1, mb: 2,
                   }}>
                     <Typography sx={{ fontSize: { xs: '1.05rem', sm: '1.2rem' }, fontWeight: 900, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
-                      <span style={{ color: primaryText }}>HEY OPEN</span> <span style={{ color: '#ff6600' }}>PRO</span>
+                      <span style={{ color: primaryText }}>HEYOPEN</span> <span style={{ color: '#ff6600' }}>PRO</span>
                     </Typography>
                     <Box sx={{
                       backgroundColor: 'rgba(255,102,0,0.1)',
@@ -389,8 +390,8 @@ export default function PricingSection() {
 
                   {/* Price Block */}
                   <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 2 }}>
-                    <Typography sx={{ fontSize: '3rem', fontWeight: 900, color: primaryText, lineHeight: 1, letterSpacing: '-0.04em' }}>
-                      $20
+                    <Typography sx={{ fontSize: { xs: '2.5rem', sm: '2.75rem' }, fontWeight: 900, color: primaryText, lineHeight: 1, letterSpacing: '-0.04em' }}>
+                      $12.99
                     </Typography>
                     <Typography sx={{ fontSize: '0.85rem', fontWeight: 700, color: secondaryText, textTransform: 'uppercase' }}>
                       / mo

@@ -1,6 +1,6 @@
 # Web search and current information
 
-Some models listed on Hey Open advertise live-search capabilities, and the model interface depicts web-related badges on certain entries. Availability depends on the selected model and its current configuration.
+Some models listed on HeyOpen advertise live-search capabilities, and the model interface depicts web-related badges on certain entries. Availability depends on the selected model and its current configuration.
 
 ## When to use a search-capable model
 

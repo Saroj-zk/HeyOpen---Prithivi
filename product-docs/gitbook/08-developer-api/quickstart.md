@@ -1,10 +1,10 @@
 # API quickstart with cURL
 
-This example is based on the request shape displayed on Hey Open's homepage. It demonstrates a chat request to the published endpoint. Validate the endpoint and model eligibility using issued credentials before deploying.
+This example is based on the request shape displayed on HeyOpen's homepage. It demonstrates a chat request to the published endpoint. Validate the endpoint and model eligibility using issued credentials before deploying.
 
 ## Prerequisite
 
-Obtain a valid API key through your approved Hey Open developer access flow and store it in the environment variable `OPENLEDGER_API_KEY`.
+Obtain a valid API key through your approved HeyOpen developer access flow and store it in the environment variable `OPENLEDGER_API_KEY`.
 
 ## Send a chat request
 

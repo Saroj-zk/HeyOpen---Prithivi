@@ -1,6 +1,6 @@
 # Manage your subscription
 
-Hey Open subscriptions provide access to plan-specific functionality for a defined billing period. The published Terms describe recurring subscriptions that generally renew automatically unless checkout states otherwise.
+HeyOpen subscriptions provide access to plan-specific functionality for a defined billing period. The published Terms describe recurring subscriptions that generally renew automatically unless checkout states otherwise.
 
 ![The Billing tab: current plan, extra credits and invoices](../.gitbook/assets/a05-billing.jpg)
 

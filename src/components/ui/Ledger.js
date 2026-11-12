@@ -4,16 +4,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 /**
- * The ledger parts, shared by the two token pages.
+ * The ledger parts: entries set with leader dots, figures in a monospace
+ * with tabular numerals so columns line up, and a double rule above a
+ * total, which is the one piece of accounting grammar a reader does not
+ * have to be taught.
  *
- * Staking is bookkeeping and this is OpenLedger, so both pages are drawn from
- * the same material: entries set with leader dots, figures in a monospace with
- * tabular numerals so columns line up, and a double rule above a total, which
- * is the one piece of accounting grammar a reader does not have to be taught.
- *
- * These live here rather than in either page because $OPEN and $HEY describe
- * one system from two ends. A figure styled one way on one page and another
- * way on the other would read as two products.
+ * They were drawn for a pair of pages that have since been taken off the
+ * site. What is left is used by the Help Center and the copy switch, so
+ * it stays, and it stays here rather than in a page so that a figure is
+ * set the same way wherever it appears.
  */
 
 /* Ink is a near black with a blue cast rather than a true black, so a dark

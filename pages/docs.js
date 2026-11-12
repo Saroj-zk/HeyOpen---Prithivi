@@ -8,14 +8,14 @@ import useInView from '@/utils/useInView';
 import PageMeta from '@/components/PageMeta';
 
 /**
- * What Hey Open is for.
+ * What HeyOpen is for.
  *
  * The page has one job: someone lands here and understands what they could
  * build. The earlier pass answered that with three rows of four cards, and
  * since every card was a dark panel of small monospace, the whole answer read
  * as twelve identical rectangles. You could not tell the film from the API.
  *
- * So the structure is now the product's own claim. Hey Open is one
+ * So the structure is now the product's own claim. HeyOpen is one
  * conversation in which the model changes underneath you, and that is exactly
  * what the page is: a single thread, three chapters hanging off it, the
  * modality chip changing down the right hand side. A transcript is the most
@@ -216,8 +216,11 @@ function Mono({ children, sx }) {
 /* `from` skips a lead-in. The generation clip opens on about three seconds
    of flat grey while its own UI animates, so starting at zero shows an empty
    panel every time the loop comes round. Looping is done by hand for the
-   same reason. */
-function Clip({ src, from = 0 }) {
+   same reason.
+
+   `to` cuts a clip short of its own end: the gladiator clip runs on into
+   a decapitation, so it loops from the raised sword instead. */
+function Clip({ src, from = 0, to = 0 }) {
   const [ref, inView] = useInView('300px');
   const videoRef = React.useRef(null);
   const [primed, setPrimed] = React.useState(false);
@@ -238,6 +241,16 @@ function Clip({ src, from = 0 }) {
     if (v && from > 0 && v.currentTime < from) v.currentTime = from;
   }, [from]);
 
+  /* The cut point, watched on timeupdate rather than left to `ended`. */
+  const cut = React.useCallback(
+    (e) => {
+      if (to > 0 && e.target.currentTime >= to) {
+        e.target.currentTime = from;
+      }
+    },
+    [to, from]
+  );
+
   const again = React.useCallback(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -255,6 +268,7 @@ function Clip({ src, from = 0 }) {
         playsInline
         preload="none"
         onLoadedMetadata={seek}
+        onTimeUpdate={cut}
         onEnded={again}
         sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />
@@ -275,7 +289,7 @@ const COMPARE = [
   ['Content limits', 'Fixed by whoever built it', 'Pick an uncensored model'],
   ['Your prompts afterwards', 'Kept, tied to your account', 'Not retained'],
   ['Account to start', 'Required', 'Not needed'],
-  ['Every month', '$165', '$20'],
+  ['Every month', '$165', '$12.99'],
 ];
 
 /* The thread carrying on past the three worked examples. These are whole
@@ -332,6 +346,7 @@ const THREADS = [
         kind: 'video',
         video: '/Videos/AI ecosystem/video gen new.mp4',
         from: 4,
+        to: 10.5,
       },
       {
         mode: 'Audio',
@@ -362,7 +377,7 @@ const THREADS = [
         lines: [
           { t: 'new OpenAI({' },
           { t: '  baseURL: ".../v1",', hot: true },
-          { t: '  apiKey: OPENLEDGER_KEY' },
+          { t: '  apiKey: HEYOPEN_KEY' },
           { t: '})' },
         ],
       },
@@ -490,7 +505,7 @@ function Artifact({ turn, fill }) {
        has not arrived rather than as a hole in the thread. */
     return (
       <Box sx={{ ...art(fill), backgroundColor: T.ink }}>
-        <Clip src={turn.video} from={turn.from || 0} />
+        <Clip src={turn.video} from={turn.from || 0} to={turn.to || 0} />
       </Box>
     );
   }
@@ -1275,7 +1290,7 @@ export default function DocsPage() {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: T.bg, position: 'relative', overflowX: 'clip' }}>
       <PageMeta
-        title="What You Can Build With Hey Open | Hey Open"
+        title="What You Can Build With HeyOpen | HeyOpen"
         description="Make a film in one thread, build on one API key across 200+ models, or put sensitive documents through AI that keeps nothing."
         path="/docs"
       />
@@ -1336,7 +1351,7 @@ export default function DocsPage() {
                 }}
               >
                 Write a script, draw the shot, move it, score it, and ship the API behind it. Same
-                conversation, 200+ models, $20 a month, no account and nothing kept.
+                conversation, 200+ models, $12.99 a month, no account and nothing kept.
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                 <Button href={APP} primary>
@@ -1477,7 +1492,7 @@ export default function DocsPage() {
             >
               <Mono sx={{ display: { xs: 'none', md: 'block' } }}>{' '}</Mono>
               <Mono>Four separate tools</Mono>
-              <Mono sx={{ color: T.brand }}>Hey Open</Mono>
+              <Mono sx={{ color: T.brand }}>HeyOpen</Mono>
             </Box>
             {COMPARE.map(([k, a, b], i) => (
               <Box

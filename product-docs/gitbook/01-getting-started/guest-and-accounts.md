@@ -1,6 +1,6 @@
 # Guest sessions, sign-in, and wallets
 
-Hey Open's public pages promote guest access. This means you can explore certain AI experiences without creating an account. It does **not** mean every model, saved setting, subscription, API feature, or paid action is available anonymously.
+HeyOpen's public pages promote guest access. This means you can explore certain AI experiences without creating an account. It does **not** mean every model, saved setting, subscription, API feature, or paid action is available anonymously.
 
 ![The account menu at the foot of the sidebar](../.gitbook/assets/a03-account-menu.jpg)
 
