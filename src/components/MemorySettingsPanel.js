@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 
    Everything stated here is what the app actually says. The copy is lifted,
    not written: it is the only honest way to show someone what they will get. */
-const APP = 'https://ais.openledger.xyz/chat';
+const APP = 'https://heyopen.ai/app';
 
 const D = {
   shell: '#0B0B0D',

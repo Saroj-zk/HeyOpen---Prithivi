@@ -339,7 +339,7 @@ export default function ProductMatrixSection() {
 
               <Box
                 component="a"
-                href="https://ais.openledger.xyz/chat"
+                href="https://heyopen.ai/app"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{

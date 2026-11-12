@@ -33,7 +33,7 @@ const FOOTER_COLUMNS = [
   {
     title: 'Product',
     links: [
-      { label: 'Chat', href: 'https://ais.openledger.xyz/chat', external: true },
+      { label: 'Chat', href: 'https://heyopen.ai/app', external: true },
       { label: 'Models', href: '/models' },
       { label: 'Compare', href: '/#compare' },
       { label: 'Universal Memory', href: '/memory' },
@@ -230,7 +230,7 @@ export default function Footer({ showCta = false }) {
                 {/* Primary White Pill Button with warm orange glow */}
                 <Button
                   variant="contained"
-                  onClick={() => window.open('https://ais.openledger.xyz/chat', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://heyopen.ai/app', '_blank', 'noopener,noreferrer')}
                   endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: '1.1rem !important' }} />}
                   sx={{
                     backgroundColor: '#FFFFFF',

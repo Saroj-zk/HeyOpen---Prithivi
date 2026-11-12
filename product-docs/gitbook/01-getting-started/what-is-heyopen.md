@@ -19,4 +19,4 @@ HeyOpen is not a single proprietary AI model and does not necessarily operate ev
 
 ## Start here
 
-Open the [chat application](https://ais.openledger.xyz/chat) to see the currently available entry points, or read [Quickstart](quickstart.md) for a guided introduction. The [Models](../03-models-and-routing/model-catalog.md) and [Privacy](../06-privacy-and-security/privacy-at-a-glance.md) guides explain important decisions before your first sensitive or paid request.
+Open the [chat application](https://heyopen.ai/app) to see the currently available entry points, or read [Quickstart](quickstart.md) for a guided introduction. The [Models](../03-models-and-routing/model-catalog.md) and [Privacy](../06-privacy-and-security/privacy-at-a-glance.md) guides explain important decisions before your first sensitive or paid request.

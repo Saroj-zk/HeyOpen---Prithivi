@@ -216,7 +216,7 @@ export default function PageHeader({ spacer = true }) {
 
             {/* Start a chat */}
             <Button
-              onClick={() => window.open('https://ais.openledger.xyz/chat', '_blank', 'noopener,noreferrer')}
+              onClick={() => window.open('https://heyopen.ai/app', '_blank', 'noopener,noreferrer')}
               sx={{
                 borderRadius: '9999px',
                 py: 0.75,
@@ -420,7 +420,7 @@ export default function PageHeader({ spacer = true }) {
               <Button
                 onClick={() => {
                   setMobileOpen(false);
-                  window.open('https://ais.openledger.xyz/chat', '_blank', 'noopener,noreferrer');
+                  window.open('https://heyopen.ai/app', '_blank', 'noopener,noreferrer');
                 }}
                 sx={{
                   borderRadius: '9999px',

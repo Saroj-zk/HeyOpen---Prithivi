@@ -302,7 +302,7 @@ export default function ModelsPage() {
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2.5, justifyContent: 'center' }}>
                 <Box
                   component="a"
-                  href="https://ais.openledger.xyz/chat"
+                  href="https://heyopen.ai/app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -647,7 +647,7 @@ export default function ModelsPage() {
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: { xs: 4, md: 5 } }}>
               <Box
                 component="a"
-                href="https://ais.openledger.xyz/chat"
+                href="https://heyopen.ai/app"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{
@@ -915,7 +915,7 @@ export default function ModelsPage() {
                   <Box
                     component="a"
                     className="model-open"
-                    href="https://ais.openledger.xyz/chat"
+                    href="https://heyopen.ai/app"
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{
@@ -1008,7 +1008,7 @@ export default function ModelsPage() {
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2.5, justifyContent: 'center' }}>
                 <Box
                   component="a"
-                  href="https://ais.openledger.xyz/chat"
+                  href="https://heyopen.ai/app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{

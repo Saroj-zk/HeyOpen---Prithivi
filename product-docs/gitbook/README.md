@@ -24,7 +24,7 @@ HeyOpen brings together **200+ advertised AI models** across text, coding, image
 
 ## Go to the product
 
-- [Open HeyOpen Chat](https://ais.openledger.xyz/chat)
+- [Open HeyOpen Chat](https://heyopen.ai/app)
 - [Browse the Models page](https://hey-open.vercel.app/models)
 - [Learn about Universal Memory](https://hey-open.vercel.app/memory)
 

@@ -29,7 +29,7 @@ import PageMeta from '@/components/PageMeta';
  * Tokens are page scoped, from a reference supplied for this page alone.
  */
 
-const APP = 'https://ais.openledger.xyz/chat';
+const APP = 'https://heyopen.ai/app';
 
 /* ---- page scoped tokens ------------------------------------------ */
 const T = {

@@ -62,7 +62,7 @@ export default function Header() {
   }, []);
 
   const handleTryClick = () => {
-    window.open('https://ais.openledger.xyz/chat', '_blank', 'noopener,noreferrer');
+    window.open('https://heyopen.ai/app', '_blank', 'noopener,noreferrer');
   };
 
   return (

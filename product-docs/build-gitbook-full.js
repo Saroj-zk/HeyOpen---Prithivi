@@ -102,6 +102,9 @@ const SHOT_NOTE = 'Account identifiers in the screenshots are redacted.';
  * "Consensus" rule can take half of it. */
 const RENAMES = [
   ['marketing@openledger.xyz', 'marketing@heyopen.ai'],
+  ['https://ais.openledger.xyz/chat', 'https://heyopen.ai/app'],
+  ['ais.openledger.xyz/chat', 'heyopen.ai/app'],
+  ['ais.openledger.xyz', 'heyopen.ai/app'],
   ['Hey Open', 'HeyOpen'],
   ['HEY OPEN', 'HEYOPEN'],
   ['Consensus Mode', 'Compare'],

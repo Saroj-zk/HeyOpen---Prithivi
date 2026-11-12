@@ -169,7 +169,7 @@ export default function CapabilitiesPage() {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2.5, mb: 4 }}>
               <Box
                 component="a"
-                href="https://ais.openledger.xyz/chat"
+                href="https://heyopen.ai/app"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{
@@ -1042,7 +1042,7 @@ export default function CapabilitiesPage() {
               >
                 <Box
                   component="a"
-                  href="https://ais.openledger.xyz/chat"
+                  href="https://heyopen.ai/app"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{

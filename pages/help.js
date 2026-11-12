@@ -33,7 +33,7 @@ import { MONO, RULE } from '@/components/ui/Ledger';
  */
 
 const SNAP = '10 November 2026';
-const APP = 'https://ais.openledger.xyz/chat';
+const APP = 'https://heyopen.ai/app';
 
 /* ------------------------------------------------------------------ */
 /* Blocks                                                              */

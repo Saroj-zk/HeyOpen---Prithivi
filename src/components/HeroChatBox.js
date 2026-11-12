@@ -117,9 +117,9 @@ export default function HeroChatBox({ prompt, setPrompt }) {
     if (!query && placeholderText) {
       query = placeholderText.replace(/\.\.\.$/, '').trim();
     }
-    let targetUrl = 'https://ais.openledger.xyz/chat';
+    let targetUrl = 'https://heyopen.ai/app';
     if (query) {
-      targetUrl = `https://ais.openledger.xyz/chat?q=${encodeURIComponent(query)}`;
+      targetUrl = `https://heyopen.ai/app?q=${encodeURIComponent(query)}`;
     }
     window.open(targetUrl, '_blank', 'noopener,noreferrer');
   };
