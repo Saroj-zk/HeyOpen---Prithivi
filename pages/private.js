@@ -80,7 +80,7 @@ const STEPS = [
   {
     step: '02',
     glyph: 'shield',
-    zone: 'openledger',
+    zone: 'heyopen',
     term: 'Secure Routing',
     line: 'SENT SECURELY',
     detail:
@@ -89,7 +89,7 @@ const STEPS = [
   {
     step: '03',
     glyph: 'cpu',
-    zone: 'openledger',
+    zone: 'heyopen',
     term: 'Private Inference',
     line: 'PRIVATELY PROCESSED*',
     detail:
@@ -910,7 +910,7 @@ function Pipeline() {
       >
         {STEPS.map((s, i) => {
           const isActive = i === active;
-          const isOurs = s.zone === 'openledger';
+          const isOurs = s.zone === 'heyopen';
           const passed = i < active;
           const top = isOurs ? LOW : HIGH;
 

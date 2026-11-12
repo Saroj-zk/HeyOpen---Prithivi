@@ -16,8 +16,8 @@ const NAV_LINKS = [
   { label: 'Models', href: '/models' },
   { label: 'Memory', href: '/memory' },
   { label: 'Private AI', href: '/private' },
-  /* The token and enterprise pages belong to the OpenLedger site and are
-     served from there. Nothing on this site links to them. */
+  /* The token and enterprise pages are served from the other site.
+     Nothing here links to them. */
 ];
 
 /* `spacer` pushes page content clear of the fixed header. Pages whose first

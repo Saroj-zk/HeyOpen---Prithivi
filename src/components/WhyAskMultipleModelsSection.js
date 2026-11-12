@@ -7,7 +7,7 @@ import { BrandTile } from '@/components/ui/LedgerUI';
 import { useReveal, revealSx } from '@/utils/reveal';
 
 
-/* Light theme values from ais.openledger.xyz, so the panel reads as the app
+/* Light theme values from the live app, so the panel reads as the app
    rather than as a marketing illustration. */
 const C = {
   font: '"Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif',

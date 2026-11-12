@@ -16,8 +16,8 @@ const NAV_ITEMS = [
   { label: 'Models', href: '/models' },
   { label: 'Memory', href: '/memory' },
   { label: 'Private AI', href: '/private' },
-  /* The token and enterprise pages belong to the OpenLedger site and are
-     served from there. Nothing on this site links to them. */
+  /* The token and enterprise pages are served from the other site.
+     Nothing here links to them. */
   { label: 'Compare', href: '#compare' },
   { label: 'Pricing', href: '#pricing' },
 ];

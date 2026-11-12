@@ -377,7 +377,7 @@ const THREADS = [
         lines: [
           { t: 'new OpenAI({' },
           { t: '  baseURL: ".../v1",', hot: true },
-          { t: '  apiKey: OPENLEDGER_KEY' },
+          { t: '  apiKey: HEYOPEN_KEY' },
           { t: '})' },
         ],
       },

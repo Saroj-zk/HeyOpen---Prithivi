@@ -308,7 +308,7 @@ const SECTIONS = [
           images, video and audio in the same place.
         </Para>
         <Para>
-          <Em>Available on:</Em> web at <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>ais.openledger.xyz</Box>.
+          <Em>Available on:</Em> <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>the web app</Box>.
           The app opens straight into a chat. You can browse the whole catalogue without an account;
           sending a message requires signing in.
         </Para>
@@ -334,7 +334,7 @@ const SECTIONS = [
       <>
         <Para>You do not need an account to look around. You do need one to send a message.</Para>
         <Steps items={[
-          ['Open the app', <>Go to <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>ais.openledger.xyz/chat</Box>. It opens on the chat screen.</>],
+          ['Open the app', <>Open <Box component="a" href={APP} sx={{ color: 'var(--brand-accent)' }}>the web app</Box>. It opens on the chat screen.</>],
           ['Set your privacy level, if it matters', 'Click Privacy in the header and pick Min, Mid or Max. Leave it on Min for ordinary work.'],
           ['Choose a model, or leave it on Auto', 'The pill under the composer reads Auto, which picks a model per message. Click it to choose one yourself.'],
           ['Type your question', 'Be specific about what you want back. Instead of "write a launch post", try "write a 400 word launch announcement for enterprise IT buyers, with a headline, a subhead and three benefits".'],

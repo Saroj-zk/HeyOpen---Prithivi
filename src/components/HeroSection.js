@@ -138,33 +138,22 @@ export default function HeroSection() {
           py: { xs: 1.5, md: 3 },
         }}
       >
-        {/* Headline with Icon */}
+        {/* The logo is the headline. It used to sit above an h1 that
+            also read "HeyOpen", which opened the page with the name
+            twice; the heading is still an h1 and still has the name, it
+            is just set in the logo and read out of the alt text. */}
         <Box id="hero-headline" sx={{ mb: { xs: 3, sm: 4 }, opacity: 1 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          <Typography component="h1" sx={{ display: 'flex', justifyContent: 'center', m: 0 }}>
             <Box
               component="img"
               src="/brand/heyopen-wordmark.png"
               alt="HeyOpen"
-              sx={{ width: 'auto', height: { xs: 44, md: 58 }, objectFit: 'contain' }}
+              sx={{ width: 'auto', height: { xs: 52, sm: 64, md: 80 }, objectFit: 'contain' }}
             />
-          </Box>
-          <Typography
-            component="h1"
-            sx={{
-              fontFamily: '"Inter", -apple-system, sans-serif',
-              fontWeight: 700,
-              fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' },
-              lineHeight: 1.2,
-              letterSpacing: '-0.035em',
-              color: 'rgb(71, 85, 105)',
-              display: 'block',
-            }}
-          >
-            HeyOpen..
           </Typography>
         </Box>
 
-        {/* Interactive Chat Box matching openledger_chat. The id is what
+        {/* The interactive chat box, matching the app. The id is what
             the intro timeline animates. */}
         <Box id="hero-chat-container">
           <HeroChatBox

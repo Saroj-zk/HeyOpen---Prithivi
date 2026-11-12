@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { BrandTile } from '@/components/ui/LedgerUI';
 
-/* The app itself, measured off ais.openledger.xyz in dark mode, and then run:
+/* The app itself, measured off the live build in dark mode, and then run:
    the picker opens out of the composer, the list scrolls under a cursor that
    stays put, and the card beside it keeps up with whatever row it lands on.
 

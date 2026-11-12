@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { BrandTile } from '@/components/ui/LedgerUI';
 
-/* Light theme values from ais.openledger.xyz. These panels stand in for the
+/* Light theme values from the live app. These panels stand in for the
    screen recordings, so they follow the app rather than the marketing page. */
 const C = {
   font: '"Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif',

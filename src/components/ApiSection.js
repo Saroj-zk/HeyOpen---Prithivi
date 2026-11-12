@@ -42,8 +42,8 @@ export default function ApiSection() {
   };
 
   const codeSnippets = {
-    curl: `curl https://api.openledger.xyz/v1/chat/completions \\
-  -H "Authorization: Bearer $OPENLEDGER_API_KEY" \\
+    curl: `curl https://api.heyopen.ai/v1/chat/completions \\
+  -H "Authorization: Bearer $HEYOPEN_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
       "model": "auto",
@@ -52,20 +52,20 @@ export default function ApiSection() {
       ]
     }'`,
     python: `import os
-from openledger import Client
+from heyopen import Client
 
 client = Client(
-    api_key=os.getenv("OPENLEDGER_API_KEY")
+    api_key=os.getenv("HEYOPEN_API_KEY")
 )
 
 chat = client.chat.create(model="auto")
 chat.append(user("Explain quantum computing"))
 response = chat.sample()
 print(response.content)`,
-    typescript: `import { OpenLedger } from 'openledger-node';
+    typescript: `import { HeyOpen } from 'heyopen-node';
 
-const client = new OpenLedger({
-  apiKey: process.env.OPENLEDGER_API_KEY
+const client = new HeyOpen({
+  apiKey: process.env.HEYOPEN_API_KEY
 });
 
 const response = await client.chat.completions.create({
@@ -76,8 +76,8 @@ console.log(response.choices[0].message.content);`,
     openai: `import OpenAI from 'openai';
 
 const client = new OpenAI({
-  apiKey: process.env.OPENLEDGER_API_KEY,
-  baseURL: 'https://api.openledger.xyz/v1'
+  apiKey: process.env.HEYOPEN_API_KEY,
+  baseURL: 'https://api.heyopen.ai/v1'
 });
 
 const response = await client.chat.completions.create({
