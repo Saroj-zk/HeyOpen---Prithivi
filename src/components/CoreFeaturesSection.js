@@ -70,6 +70,14 @@ const TABS = [
     tagline: 'Give your agents more ways to get things done.',
     description: 'Connect agents to leading models through one API, with x402-ready access for agent-to-agent interactions and transactions.',
     hasExplore: false,
+    /* Built rather than recorded. The clip names the other brand four
+       times -- in the chat bubble, on the routing card, and twice in the
+       status lines -- and it is woven through an animation rather than
+       sitting in one spot, so there is nothing to mask. ProductDemo
+       already has an agent flow, the same one the ecosystem section
+       uses, so this tab shows that instead. The clip is left on disk in
+       case it is ever re-cut. */
+    demo: 'agent',
     video: '/Videos/Why HeyOpen/Built For Agents.webm',
     tags: ['x402 Enabled', 'Agent Ready'],
   },
