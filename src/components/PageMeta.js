@@ -22,12 +22,12 @@ import Head from 'next/head';
  * apart from each other because nothing can set one without the others.
  *
  * ------------------------------------------------------------------
- * SITE IS THE ORIGIN THE OG IMAGE ALREADY POINTS AT. It is the only
- * absolute URL in the repo, so it is the only evidence of where this
- * deploys. og:url and canonical must be absolute, so if the site serves
- * from somewhere else, this constant is the one line to change.
+ * SITE IS WHERE THIS DEPLOYS. og:url and canonical have to be absolute,
+ * so this constant is what every page declares itself to be. If the site
+ * ever serves from somewhere else, this is the one line to change, and
+ * the og:image in _document has to follow it.
  */
-const SITE = 'https://openledger.xyz';
+const SITE = 'https://heyopen.ai';
 
 export default function PageMeta({ title, description, path = '/' }) {
   /* Canonical URLs do not carry a trailing slash except at the root. */

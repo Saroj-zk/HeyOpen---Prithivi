@@ -66,10 +66,9 @@
 
    1. Domain. Both documents give the website as heyopen.ai and the
       contact address as support@heyopen.ai. The enterprise contact is
-      marketing@heyopen.ai and the application is now linked as
-      heyopen.ai/app, so those agree. What has not moved is this
-      marketing site itself, still served from and declared canonical at
-      openledger.xyz. That is the one address left to change.
+      marketing@heyopen.ai, the application is linked as heyopen.ai/app,
+      and this site now declares itself canonical at heyopen.ai, so the
+      documents and the site agree on the domain throughout.
    2. Spelling of the name. SETTLED. Both documents define the short
       form as "HeyOpen" and use it throughout, and the site now writes
       the brand as one word everywhere, so the entity-name slots were
