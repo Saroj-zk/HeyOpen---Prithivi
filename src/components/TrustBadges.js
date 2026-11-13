@@ -19,6 +19,12 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import { useThemeMode } from '@/context/ThemeContext';
 
+/* Hidden for now. The button is the only thing this component puts on the
+   page, so the whole block comes out rather than just the label: left in
+   place and merely invisible, its wrapper would still hold its own bottom
+   margin open under the hero. Set this back to true to restore it. */
+const SHOW_WAITLIST = false;
+
 export default function TrustBadges({ onIosClick, onAndroidClick }) {
   const { isDark } = useThemeMode();
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -66,6 +72,7 @@ export default function TrustBadges({ onIosClick, onAndroidClick }) {
 
   return (
     <>
+      {SHOW_WAITLIST && (
       <Box
         id="hero-trust-badges"
         sx={{
@@ -117,6 +124,7 @@ export default function TrustBadges({ onIosClick, onAndroidClick }) {
           Join the waitlist
         </Button>
       </Box>
+      )}
 
       {/* Interactive Mobile Download Modal */}
       <Dialog
